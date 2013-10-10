@@ -12,23 +12,26 @@ namespace StudMap.Data.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Node
+    public partial class Nodes
     {
-        public Node()
+        public Nodes()
         {
-            this.EdgeStart = new HashSet<Edge>();
-            this.EdgeEnd = new HashSet<Edge>();
+            this.Edges = new HashSet<Edges>();
+            this.Edges1 = new HashSet<Edges>();
+            this.NodeInformationSet = new HashSet<NodeInformationSet>();
         }
     
         public int Id { get; set; }
         public decimal X { get; set; }
         public decimal Y { get; set; }
         public string Floor { get; set; }
+        public int Graph_Id { get; set; }
+        public int Floor1_Id { get; set; }
     
-        public virtual Graph Graph { get; set; }
-        public virtual ICollection<Edge> EdgeStart { get; set; }
-        public virtual ICollection<Edge> EdgeEnd { get; set; }
-        public virtual Floor Floor1 { get; set; }
-        public virtual NodeInformation NodeInformation { get; set; }
+        public virtual ICollection<Edges> Edges { get; set; }
+        public virtual ICollection<Edges> Edges1 { get; set; }
+        public virtual Floors Floors { get; set; }
+        public virtual Graphs Graphs { get; set; }
+        public virtual ICollection<NodeInformationSet> NodeInformationSet { get; set; }
     }
 }

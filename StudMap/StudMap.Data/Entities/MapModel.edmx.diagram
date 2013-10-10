@@ -4,21 +4,21 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7838b45f688d414aba5c13eb0f04199d" Name="Diagram1" >
-        <EntityTypeShape EntityType="MapModel.Map" Width="1.5" PointX="0.625" PointY="0.5" />
-        <EntityTypeShape EntityType="MapModel.Floor" Width="1.5" PointX="2.75" PointY="0.5" />
-        <EntityTypeShape EntityType="MapModel.Graph" Width="1.5" PointX="0.625" PointY="2.625" FillColor="0, 64, 0" />
-        <EntityTypeShape EntityType="MapModel.Node" Width="1.5" PointX="2.75" PointY="3.625" FillColor="0, 64, 0" />
-        <EntityTypeShape EntityType="MapModel.Edge" Width="1.5" PointX="4.75" PointY="2.25" FillColor="0, 64, 0" />
-        <AssociationConnector Association="MapModel.GraphNode" />
-        <AssociationConnector Association="MapModel.GraphEdge" />
-        <AssociationConnector Association="MapModel.EdgeNode" />
-        <AssociationConnector Association="MapModel.EdgeNode1" />
-        <AssociationConnector Association="MapModel.NodeFloor" />
-        <AssociationConnector Association="MapModel.MapFloor" />
-        <AssociationConnector Association="MapModel.MapGraph" />
-        <EntityTypeShape EntityType="MapModel.NodeInformation" Width="1.5" PointX="0.625" PointY="5.5" FillColor="192, 0, 0" />
-        <AssociationConnector Association="MapModel.NodeNodeInformation" />
+      <Diagram DiagramId="4a63d4d6c68e485f90393aebd55d5d26" Name="Diagram1">
+        <EntityTypeShape EntityType="StudMapModel.Edges" Width="1.5" PointX="3" PointY="4.5" />
+        <EntityTypeShape EntityType="StudMapModel.Floors" Width="1.5" PointX="5.25" PointY="7.875" />
+        <EntityTypeShape EntityType="StudMapModel.Graphs" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="StudMapModel.Maps" Width="1.5" PointX="3" PointY="7.875" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformationSet" Width="1.5" PointX="9.75" PointY="6" />
+        <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="7.5" PointY="5.625" />
+        <AssociationConnector Association="StudMapModel.FK_EdgeNode" />
+        <AssociationConnector Association="StudMapModel.FK_EdgeNode1" />
+        <AssociationConnector Association="StudMapModel.FK_GraphEdge" />
+        <AssociationConnector Association="StudMapModel.FK_MapFloor" />
+        <AssociationConnector Association="StudMapModel.FK_NodeFloor" />
+        <AssociationConnector Association="StudMapModel.FK_GraphNode" />
+        <AssociationConnector Association="StudMapModel.FK_MapGraph" />
+        <AssociationConnector Association="StudMapModel.FK_NodeNodeInformation" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
