@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="MapModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="MapModelTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="MapModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="MapModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Maps" EntityType="MapModel.Map" />
+          <EntitySet Name="Floors" EntityType="MapModel.Floor" />
+          <EntitySet Name="Graphs" EntityType="MapModel.Graph" />
+          <EntitySet Name="Nodes" EntityType="MapModel.Node" />
+          <EntitySet Name="Edges" EntityType="MapModel.Edge" />
+          <AssociationSet Name="GraphNode" Association="MapModel.GraphNode">
+            <End Role="Graph" EntitySet="Graphs" />
+            <End Role="Node" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="GraphEdge" Association="MapModel.GraphEdge">
+            <End Role="Graph" EntitySet="Graphs" />
+            <End Role="Edge" EntitySet="Edges" />
+          </AssociationSet>
+          <AssociationSet Name="EdgeNode" Association="MapModel.EdgeNode">
+            <End Role="Edge" EntitySet="Edges" />
+            <End Role="Node" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="EdgeNode1" Association="MapModel.EdgeNode1">
+            <End Role="Edge" EntitySet="Edges" />
+            <End Role="Node" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="NodeFloor" Association="MapModel.NodeFloor">
+            <End Role="Node" EntitySet="Nodes" />
+            <End Role="Floor" EntitySet="Floors" />
+          </AssociationSet>
+          <AssociationSet Name="MapFloor" Association="MapModel.MapFloor">
+            <End Role="Map" EntitySet="Maps" />
+            <End Role="Floor" EntitySet="Floors" />
+          </AssociationSet>
+          <AssociationSet Name="MapGraph" Association="MapModel.MapGraph">
+            <End Role="Map" EntitySet="Maps" />
+            <End Role="Graph" EntitySet="Graphs" />
+          </AssociationSet>
+          <EntitySet Name="NodeInformationSet" EntityType="MapModel.NodeInformation" />
+          <AssociationSet Name="NodeNodeInformation" Association="MapModel.NodeNodeInformation">
+            <End Role="Node" EntitySet="Nodes" />
+            <End Role="NodeInformation" EntitySet="NodeInformationSet" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Map">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Floor" Relationship="MapModel.MapFloor" FromRole="Map" ToRole="Floor" />
+          <NavigationProperty Name="Graph" Relationship="MapModel.MapGraph" FromRole="Map" ToRole="Graph" />
+        </EntityType>
+        <EntityType Name="Floor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Node" Relationship="MapModel.NodeFloor" FromRole="Floor" ToRole="Node" />
+          <NavigationProperty Name="Map" Relationship="MapModel.MapFloor" FromRole="Floor" ToRole="Map" />
+        </EntityType>
+        <EntityType Name="Graph">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Node" Relationship="MapModel.GraphNode" FromRole="Graph" ToRole="Node" />
+          <NavigationProperty Name="Edge" Relationship="MapModel.GraphEdge" FromRole="Graph" ToRole="Edge" />
+          <NavigationProperty Name="Map" Relationship="MapModel.MapGraph" FromRole="Graph" ToRole="Map" />
+        </EntityType>
+        <EntityType Name="Node">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Graph" Relationship="MapModel.GraphNode" FromRole="Node" ToRole="Graph" />
+          <NavigationProperty Name="EdgeStart" Relationship="MapModel.EdgeNode" FromRole="Node" ToRole="Edge" />
+          <NavigationProperty Name="EdgeEnd" Relationship="MapModel.EdgeNode1" FromRole="Node" ToRole="Edge" />
+          <Property Type="Decimal" Name="X" Nullable="false" />
+          <Property Type="Decimal" Name="Y" Nullable="false" />
+          <Property Type="String" Name="Floor" Nullable="false" />
+          <NavigationProperty Name="Floor1" Relationship="MapModel.NodeFloor" FromRole="Node" ToRole="Floor" />
+          <NavigationProperty Name="NodeInformation" Relationship="MapModel.NodeNodeInformation" FromRole="Node" ToRole="NodeInformation" />
+        </EntityType>
+        <EntityType Name="Edge">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Graph" Relationship="MapModel.GraphEdge" FromRole="Edge" ToRole="Graph" />
+          <NavigationProperty Name="NodeStart" Relationship="MapModel.EdgeNode" FromRole="Edge" ToRole="Node" />
+          <NavigationProperty Name="NodeEnd" Relationship="MapModel.EdgeNode" FromRole="Edge" ToRole="Node" />
+        </EntityType>
+        <Association Name="GraphNode">
+          <End Type="MapModel.Graph" Role="Graph" Multiplicity="1" />
+          <End Type="MapModel.Node" Role="Node" Multiplicity="*" />
+        </Association>
+        <Association Name="GraphEdge">
+          <End Type="MapModel.Graph" Role="Graph" Multiplicity="1" />
+          <End Type="MapModel.Edge" Role="Edge" Multiplicity="*" />
+        </Association>
+        <Association Name="EdgeNode">
+          <End Type="MapModel.Edge" Role="Edge" Multiplicity="*" />
+          <End Type="MapModel.Node" Role="Node" Multiplicity="1" />
+        </Association>
+        <Association Name="EdgeNode1">
+          <End Type="MapModel.Edge" Role="Edge" Multiplicity="*" />
+          <End Type="MapModel.Node" Role="Node" Multiplicity="1" />
+        </Association>
+        <Association Name="NodeFloor">
+          <End Type="MapModel.Node" Role="Node" Multiplicity="*" />
+          <End Type="MapModel.Floor" Role="Floor" Multiplicity="1" />
+        </Association>
+        <Association Name="MapFloor">
+          <End Type="MapModel.Map" Role="Map" Multiplicity="1" />
+          <End Type="MapModel.Floor" Role="Floor" Multiplicity="*" />
+        </Association>
+        <Association Name="MapGraph">
+          <End Type="MapModel.Map" Role="Map" Multiplicity="1" />
+          <End Type="MapModel.Graph" Role="Graph" Multiplicity="1" />
+        </Association>
+        <EntityType Name="NodeInformation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Node" Relationship="MapModel.NodeNodeInformation" FromRole="NodeInformation" ToRole="Node" />
+          <Property Type="String" Name="DisplayName" Nullable="true" />
+          <Property Type="String" Name="RoomName" Nullable="false" />
+          <Property Type="String" Name="QRCode" Nullable="false" />
+          <Property Type="String" Name="NFCTag" Nullable="false" />
+        </EntityType>
+        <Association Name="NodeNodeInformation">
+          <End Type="MapModel.Node" Role="Node" Multiplicity="1" />
+          <End Type="MapModel.NodeInformation" Role="NodeInformation" Multiplicity="0..1" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="MapModel" />
+        <Alias Key="Target" Value="MapModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="MapModelContainer" StorageEntityContainer="MapModelTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7838b45f688d414aba5c13eb0f04199d" Name="Diagram1" >
+        <EntityTypeShape EntityType="MapModel.Map" Width="1.5" PointX="0.625" PointY="0.5" />
+        <EntityTypeShape EntityType="MapModel.Floor" Width="1.5" PointX="2.75" PointY="0.5" />
+        <EntityTypeShape EntityType="MapModel.Graph" Width="1.5" PointX="0.625" PointY="2.625" FillColor="0, 64, 0" />
+        <EntityTypeShape EntityType="MapModel.Node" Width="1.5" PointX="2.75" PointY="3.625" FillColor="0, 64, 0" />
+        <EntityTypeShape EntityType="MapModel.Edge" Width="1.5" PointX="4.75" PointY="2.25" FillColor="0, 64, 0" />
+        <AssociationConnector Association="MapModel.GraphNode" />
+        <AssociationConnector Association="MapModel.GraphEdge" />
+        <AssociationConnector Association="MapModel.EdgeNode" />
+        <AssociationConnector Association="MapModel.EdgeNode1" />
+        <AssociationConnector Association="MapModel.NodeFloor" />
+        <AssociationConnector Association="MapModel.MapFloor" />
+        <AssociationConnector Association="MapModel.MapGraph" />
+        <EntityTypeShape EntityType="MapModel.NodeInformation" Width="1.5" PointX="0.625" PointY="5.5" FillColor="192, 0, 0" />
+        <AssociationConnector Association="MapModel.NodeNodeInformation" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
