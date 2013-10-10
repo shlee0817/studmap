@@ -12,16 +12,15 @@ namespace StudMap.Data.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Map
+    public partial class NodeInformationSet
     {
-        public Map()
-        {
-            this.Floor = new HashSet<Floor>();
-        }
-    
         public int Id { get; set; }
+        public string DisplayName { get; set; }
+        public string RoomName { get; set; }
+        public string QRCode { get; set; }
+        public string NFCTag { get; set; }
+        public int Node_Id { get; set; }
     
-        public virtual ICollection<Floor> Floor { get; set; }
-        public virtual Graph Graph { get; set; }
+        public virtual Nodes Nodes { get; set; }
     }
 }

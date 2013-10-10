@@ -12,12 +12,15 @@ namespace StudMap.Data.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Edge
+    public partial class Edges
     {
         public int Id { get; set; }
+        public int Graph_Id { get; set; }
+        public int NodeStart_Id { get; set; }
+        public int EdgeNode1_Edge_Id { get; set; }
     
-        public virtual Graph Graph { get; set; }
-        public virtual Node NodeStart { get; set; }
-        public virtual Node NodeEnd { get; set; }
+        public virtual Nodes Nodes { get; set; }
+        public virtual Nodes Nodes1 { get; set; }
+        public virtual Graphs Graphs { get; set; }
     }
 }

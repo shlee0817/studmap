@@ -13,10 +13,10 @@ namespace StudMap.Data.Entities
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MapModelContainer : DbContext
+    public partial class MapEntities : DbContext
     {
-        public MapModelContainer()
-            : base("name=MapModelContainer")
+        public MapEntities()
+            : base("name=MapEntities")
         {
         }
     
@@ -25,11 +25,11 @@ namespace StudMap.Data.Entities
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Map> Maps { get; set; }
-        public DbSet<Floor> Floors { get; set; }
-        public DbSet<Graph> Graphs { get; set; }
-        public DbSet<Node> Nodes { get; set; }
-        public DbSet<Edge> Edges { get; set; }
-        public DbSet<NodeInformation> NodeInformationSet { get; set; }
+        public DbSet<Edges> Edges { get; set; }
+        public DbSet<Floors> Floors { get; set; }
+        public DbSet<Graphs> Graphs { get; set; }
+        public DbSet<Maps> Maps { get; set; }
+        public DbSet<NodeInformationSet> NodeInformationSet { get; set; }
+        public DbSet<Nodes> Nodes { get; set; }
     }
 }

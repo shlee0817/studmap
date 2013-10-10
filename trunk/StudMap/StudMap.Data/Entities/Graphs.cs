@@ -12,18 +12,19 @@ namespace StudMap.Data.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Graph
+    public partial class Graphs
     {
-        public Graph()
+        public Graphs()
         {
-            this.Node = new HashSet<Node>();
-            this.Edge = new HashSet<Edge>();
+            this.Edges = new HashSet<Edges>();
+            this.Nodes = new HashSet<Nodes>();
+            this.Maps = new HashSet<Maps>();
         }
     
         public int Id { get; set; }
     
-        public virtual ICollection<Node> Node { get; set; }
-        public virtual ICollection<Edge> Edge { get; set; }
-        public virtual Map Map { get; set; }
+        public virtual ICollection<Edges> Edges { get; set; }
+        public virtual ICollection<Nodes> Nodes { get; set; }
+        public virtual ICollection<Maps> Maps { get; set; }
     }
 }
