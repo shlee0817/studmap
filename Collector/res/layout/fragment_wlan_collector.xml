@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/wlanCollector_PointId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textNoSuggestions" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/wlanCollector_Scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/wlanCollector_ScanTxt" />
+
+    <ListView
+        android:id="@+id/wlanCollector_APList"
+        android:layout_width="match_parent"
+        android:layout_height="322dp" >
+    </ListView>
+
+    <Button
+        android:id="@+id/wlanCollector_Save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.88"
+        android:text="@string/wlanCollector_SaveTxt" />
+
+</LinearLayout>
