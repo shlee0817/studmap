@@ -1,4 +1,4 @@
-﻿namespace StudMap.Admin
+﻿namespace StudMap.Admin.App_Start
 {
     public static class AuthConfig
     {
