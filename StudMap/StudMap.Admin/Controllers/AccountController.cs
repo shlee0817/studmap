@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Security;
 using StudMap.Admin.Filters;
@@ -31,7 +32,8 @@ namespace StudMap.Admin.Controllers
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, model.RememberMe))
             {
-                return RedirectToLocal(returnUrl);
+                var roles = new List<string>(Roles.GetRolesForUser(model.UserName));
+                return roles.Contains("Admins") ? RedirectToAction("Admin", "Home") : RedirectToLocal(returnUrl);
             }
 
             // If we got this far, something failed, redisplay form
@@ -131,7 +133,7 @@ namespace StudMap.Admin.Controllers
 
                 if (changePasswordSucceeded)
                 {
-                    return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    return RedirectToAction("Manage", new {Message = ManageMessageId.ChangePasswordSuccess});
                 }
                 ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
             }
@@ -199,6 +201,7 @@ namespace StudMap.Admin.Controllers
                         "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
             }
         }
+
         #endregion
     }
 }
