@@ -1,6 +1,5 @@
 package de.whs.fia.studmap.collector.fragments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -16,70 +15,60 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 import de.whs.fia.studmap.collector.R;
 import de.whs.fia.studmap.collector.data.APsDataSource;
 import de.whs.fia.studmap.collector.data.ScansDataSource;
 import de.whs.fia.studmap.collector.models.AP;
 import de.whs.fia.studmap.collector.models.Scan;
 
-/**
- * Enthält alle Funktionen, die in der Ansicht benötigt werden um einen
- * Wlan-Fingerprint zu erstellen.
- * 
- * @author Thomas
- * 
- */
-public class WlanCollectorFragment extends Fragment {
+public class WlanPositioningFragment extends Fragment {
 
-	private ListView ap;
-	private EditText nodeIdField;
-	
 	private WifiReceiver wifiReceiver;
 	private WifiManager wifiManager;
 	private List<ScanResult> wifiList;
-	
-	private List<Scan> scans = new ArrayList<Scan>();
 
 	private ProgressDialog pDialog;
+	private ListView ap;
+
+	private ScanResult selectedAP;
 	
 	private ScansDataSource scansDatasource;
 	private APsDataSource apsDatasource;
 	
-	
-	public WlanCollectorFragment() {
+	public WlanPositioningFragment() {
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_wlan_collector,
+		View rootView = inflater.inflate(R.layout.fragment_wlan_positioning,
 				container, false);
-
+		
 		scansDatasource = new ScansDataSource(getActivity());
 		apsDatasource = new APsDataSource(getActivity());
 		
 		wifiManager = (WifiManager) this.getActivity().getSystemService(
 				Context.WIFI_SERVICE);
-		
-		if(!wifiManager.isWifiEnabled()){
+
+		if (!wifiManager.isWifiEnabled()) {
 			wifiManager.setWifiEnabled(true);
 		}
-		
+
 		wifiReceiver = new WifiReceiver();
 		getActivity().registerReceiver(wifiReceiver,
 				new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
-		
 		pDialog = new ProgressDialog(getActivity());
 		pDialog.setMessage("Scanning...");
 		pDialog.setCancelable(false);
-		
-		
-		Button scan = (Button) rootView.findViewById(R.id.wlanCollector_Scan);
+
+		Button scan = (Button) rootView.findViewById(R.id.wlanPositioningScan);
 		scan.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -90,34 +79,62 @@ public class WlanCollectorFragment extends Fragment {
 			}
 		});
 
-		ap = (ListView) rootView.findViewById(R.id.wlanCollector_APList);
-		
-		Button save = (Button) rootView.findViewById(R.id.wlanCollector_Save);
-		save.setOnClickListener(new OnClickListener() {
+		ap = (ListView) rootView.findViewById(R.id.wlanPositioningWifiList);
+		ap.setChoiceMode(1);
+		ap.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+
+				ap.setItemChecked(arg2, true);
+				
+				selectedAP = (ScanResult)arg0.getItemAtPosition(arg2);
+			}
+		});
+
+		Button position = (Button) rootView
+				.findViewById(R.id.wlanPositioningFindMe);
+		position.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
+				if(wifiList == null || wifiList.size() == 0){
+					Toast.makeText(
+							getActivity(),
+							"Zur Positionierung werden APs in der Nähe benötigt.",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if (selectedAP == null) {
+
+					Toast.makeText(
+							getActivity(),
+							"Zur Positionierung wird ein AP als Referenz benötigt.",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+
+				List<Scan> scans = scansDatasource.getScans();
+				
 				scansDatasource.open();
-				apsDatasource.open();
+				apsDatasource.open();				
 				for(Scan scan : scans){
 					
-					Scan createdScan = scansDatasource.createScan(scan.getNodeId());
+					for(AP ap : apsDatasource.getAPsToScan(scan.getId())){
 					
-					for(AP ap : scan.getAPs()){
-						
-						apsDatasource.createAP(ap.getBSSID(), ap.getRSS(), createdScan.getId());
+						scan.addAP(ap);
 					}
-				}
+				}				
 				scansDatasource.close();
 				apsDatasource.close();
 				
-				nodeIdField.getText().clear();
-				ap.setAdapter(null);
+				// TODO: Positionierungsalg. entwerfen
+				
+				//TODO: Ausgabe des Ergebnis in das Textfeld
 			}
 		});
-		
-		nodeIdField = (EditText)rootView.findViewById(R.id.wlanCollector_PointId);
 
 		return rootView;
 	}
@@ -136,34 +153,13 @@ public class WlanCollectorFragment extends Fragment {
 	class WifiReceiver extends BroadcastReceiver {
 		public void onReceive(Context c, Intent intent) {
 
-			Scan s = new Scan();
-			
-			int nodeId = 0;
-			try{
-				String nodeIdFieldStr = nodeIdField.getText().toString();
-				nodeId = Integer.parseInt(nodeIdFieldStr);	
-			}catch(Exception ex){
-				
-			}
-			
-			s.setNodeId(nodeId);
-			
 			wifiList = wifiManager.getScanResults();
 
-			for(ScanResult r : wifiList){
-				
-				AP ap = new AP();
-				ap.setBSSID(r.BSSID);
-				ap.setRSS(r.level);
-				s.addAP(ap);
-			}
-			
-			scans.add(s);
-			
 			pDialog.dismiss();
-			
-			final ArrayAdapter<AP> adapter = new ArrayAdapter<AP>(getActivity(),
-					android.R.layout.simple_list_item_1, s.getAPs());
+
+			final ArrayAdapter<ScanResult> adapter = new ArrayAdapter<ScanResult>(
+					getActivity(), android.R.layout.simple_list_item_checked,
+					wifiList);
 
 			ap.setAdapter(adapter);
 		}
