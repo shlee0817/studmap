@@ -2,8 +2,6 @@ package de.whs.fia.studmap.collector;
 
 import java.util.Locale;
 
-import de.whs.fia.studmap.collector.fragments.WlanCollectorFragment;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +13,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import de.whs.fia.studmap.collector.fragments.WlanCollectorFragment;
+import de.whs.fia.studmap.collector.fragments.WlanPositioningFragment;
 
 public class MainActivity extends FragmentActivity {
 
@@ -32,6 +32,8 @@ public class MainActivity extends FragmentActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,9 @@ public class MainActivity extends FragmentActivity {
         	switch (position) {
             case 0:
             	fragment = new WlanCollectorFragment();
+            	break;
+            case 1:
+            	fragment = new WlanPositioningFragment();
             	break;
             default:
             	fragment = new DummySectionFragment();
