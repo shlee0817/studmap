@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import de.whs.fia.studmap.collector.fragments.WlanCollectorFragment;
+import de.whs.fia.studmap.collector.fragments.WlanConfigFragment;
 import de.whs.fia.studmap.collector.fragments.WlanPositioningFragment;
 
 public class MainActivity extends FragmentActivity {
@@ -49,6 +50,8 @@ public class MainActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        
+        //TODO: Upload der Daten in den Webservice anbieten.
     }
 
     @Override
@@ -83,6 +86,9 @@ public class MainActivity extends FragmentActivity {
             	break;
             case 1:
             	fragment = new WlanPositioningFragment();
+            	break;
+            case 2:
+            	fragment = new WlanConfigFragment();
             	break;
             default:
             	fragment = new DummySectionFragment();

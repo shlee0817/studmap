@@ -130,7 +130,7 @@ public class WlanPositioningFragment extends Fragment {
 				scansDatasource.close();
 				apsDatasource.close();
 				
-				// TODO: Positionierungsalg. entwerfen
+				// TODO: Positionierungsalg. entwerfen (Faktor mit Daten aus Datenbank(Webservice) vergleichen
 				
 				//TODO: Ausgabe des Ergebnis in das Textfeld
 			}
