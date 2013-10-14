@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace StudMap.Service.Controllers
 {
@@ -14,6 +10,10 @@ namespace StudMap.Service.Controllers
         {
             return View();
         }
-
+        
+        public ActionResult QR()
+        {
+            return View();
+        }
     }
 }
