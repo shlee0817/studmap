@@ -29,7 +29,6 @@ public class ScansDataSource {
 		dbHelper.close();
 	}
 
-	//TODO: Überprüfen, ob es den Scan schon gibt und ansonsten den alten Scan zurück geben
 	public Scan createScan(int nodeId) {
 		ContentValues values = new ContentValues();
 		values.put(MySQLiteHelper.SCANS_COLUMN_NODEID, nodeId);

@@ -5,9 +5,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_section1">Wlan Collector</string>
     <string name="title_section2">Wlan Positionierung</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section3">Wlan Konfiguration</string>
     <string name="wlanCollector_ScanTxt">Scanen</string>
     <string name="wlanCollector_SaveTxt">Speichern</string>
     <string name="wlanPositioning_FindMeTxt">Positionieren</string>
+    <string name="wlanConfig_ConfigurateTxt">Konfigurieren</string>
 
 </resources>

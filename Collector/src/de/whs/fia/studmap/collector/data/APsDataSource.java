@@ -29,8 +29,6 @@ public class APsDataSource {
 		dbHelper.close();
 	}
 
-	// TODO: Überprüfen, ob es den AP mit dem Scan schon gibt. Wenn ja
-	// Mittelwerte bilden.
 	public AP createAP(String BSSID, int RSS, int ScanId) {
 
 		ContentValues values = new ContentValues();
