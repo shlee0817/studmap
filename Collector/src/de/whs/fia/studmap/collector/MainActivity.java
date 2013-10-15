@@ -2,17 +2,20 @@ package de.whs.fia.studmap.collector;
 
 import java.util.Locale;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import de.whs.fia.studmap.collector.fragments.NFCReaderFragment;
 import de.whs.fia.studmap.collector.fragments.WlanCollectorFragment;
 import de.whs.fia.studmap.collector.fragments.WlanConfigFragment;
 import de.whs.fia.studmap.collector.fragments.WlanPositioningFragment;
@@ -61,6 +64,16 @@ public class MainActivity extends FragmentActivity {
         return true;
     }
     
+    @Override
+    protected void onNewIntent(Intent intent) {
+    	try {
+    		NFCReaderFragment mFragment = (NFCReaderFragment) mSectionsPagerAdapter.getItem(3);	
+    		mFragment.onNewIntent(intent);
+    	}
+   		catch (Exception e) {
+			e.printStackTrace();
+   		}
+    }
     
 
     /**
@@ -90,6 +103,9 @@ public class MainActivity extends FragmentActivity {
             case 2:
             	fragment = new WlanConfigFragment();
             	break;
+            case 3:
+            	fragment = new NFCReaderFragment();
+            	break;
             default:
             	fragment = new DummySectionFragment();
             	break;
@@ -104,7 +120,7 @@ public class MainActivity extends FragmentActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
@@ -117,7 +133,9 @@ public class MainActivity extends FragmentActivity {
                     return getString(R.string.title_section2).toUpperCase(l);
                 case 2:
                     return getString(R.string.title_section3).toUpperCase(l);
-            }
+                case 3:
+                	return getString(R.string.title_section4).toUpperCase(l);
+               }
             return null;
         }
     }
