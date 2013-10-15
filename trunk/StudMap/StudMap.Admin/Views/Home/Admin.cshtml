@@ -1,5 +1,10 @@
-﻿@{
+﻿@using StudMap.Admin.Models
+@model List<FloorViewModel>
+@{
     ViewBag.Title = "Admin";
+}
+@section styles{
+    <link rel="stylesheet" href="@Url.Content("~/Content/Home/Admin.css")" type="text/css"/>
 }
 @section scripts
 {
@@ -8,6 +13,26 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/Home/Admin.js")"></script>
 }
 <h2>Admin</h2>
+<br/>
+<br/>
+@if (Model != null && Model.Count > 0)
+{
+    <div class="table">
+        <div class="tableCell Headline">
+            <div class="tableRow">FloorId</div>
+            <div class="tableRow">MapId</div>
+            <div class="tableRow">FloorImageFile</div>
+        </div>
+        @foreach (FloorViewModel floor in Model)
+        {
+            <div class="tableCell" onclick=" Admin.loadFloorplan(@floor.FloorId) ">
+                <div class="tableRow">@floor.FloorId</div>
+                <div class="tableRow">@floor.MapId</div>
+                <div class="tableRow">@floor.FloorImageFile</div>
+            </div>
+        }
+    </div>
+}
 
 @using (Html.BeginForm("UploadMap", "Home", FormMethod.Post, new{ enctype = "multipart/form-data" }))
 {

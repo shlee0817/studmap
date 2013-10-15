@@ -1,0 +1,17 @@
+﻿.table {
+    display: table;
+}
+
+.tableCell {
+    display: table-row;
+    cursor: pointer;
+}
+
+.tableCell.Headline {
+    background-color: gainsboro;
+}
+
+.tableRow {
+    display: table-cell;
+    padding: 4px 6px;
+}

@@ -1,5 +1,7 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
+using StudMap.Admin.Models;
 
 namespace StudMap.Admin.Controllers
 {
@@ -15,7 +17,29 @@ namespace StudMap.Admin.Controllers
         [Authorize(Roles = "Admins")]
         public ActionResult Admin()
         {
-            return View();
+            var floors = new List<FloorViewModel>
+                {
+                    new FloorViewModel
+                        {
+                            FloorId = 1,
+                            FloorImageFile = _serverUploadFolder + "\\" + "test1.png",
+                            MapId = 1
+                        },
+                    new FloorViewModel
+                        {
+                            FloorId = 2,
+                            FloorImageFile = _serverUploadFolder + "\\" + "test2.png",
+                            MapId = 1
+                        },
+                    new FloorViewModel
+                        {
+                            FloorId = 3,
+                            FloorImageFile = _serverUploadFolder + "\\" + "test3.png",
+                            MapId = 1
+                        }
+                };
+
+            return View(floors);
         }
 
         [Authorize(Roles = "Admins")]
