@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Admin";
+}
+
+<h2>Admin</h2>
+
+@using (Html.BeginForm("UploadMap", "Home", FormMethod.Post, new{ enctype = "multipart/form-data" }))
+{
+    <input id="data" name="data" type="file" />
+    <input id="send" type="submit" value="submit" />
+}
