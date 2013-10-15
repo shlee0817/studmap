@@ -20,7 +20,16 @@
                     </section>
                     <nav>
                         <ul id="menu">
+                            @{
+                                var r = (RolePrincipal)User;
+                                var rolesArray = new List<string>(r.GetRoles());
+                                bool isAdmin = rolesArray.Contains("Admins");
+                            }
                             <li>@Html.ActionLink("Übersicht", "Index", "Home")</li>
+                            @if (isAdmin)
+                            {
+                                <li>@Html.ActionLink("Admin", "Admin", "Home")</li>
+                            }
                         </ul>
                     </nav>
                 </div>
