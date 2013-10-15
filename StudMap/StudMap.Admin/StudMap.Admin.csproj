@@ -99,10 +99,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\FloorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\StudMap.sdf" />
+    <Content Include="Content\Home\Admin.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
@@ -142,7 +144,16 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Admin.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\StudMap.Core\StudMap.Core.csproj">
+      <Project>{7b805a9e-c5e1-4952-b2a2-0effc2269e6c}</Project>
+      <Name>StudMap.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudMap.Data\StudMap.Data.csproj">
+      <Project>{176113b2-a7a6-4610-a6e6-42296d2e18d8}</Project>
+      <Name>StudMap.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

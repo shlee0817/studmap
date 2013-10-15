@@ -1,6 +1,9 @@
 ﻿var Admin = {
     
-    init: function() {
+    init: function (floorId) {
+
+        $('#map').html("");
+
         var xscale = d3.scale.linear()
             .domain([0, 50.0])
             .range([0, 720]),
@@ -25,7 +28,7 @@
             .addLayer(pathplot)
             .addLayer(overlays);
 
-        d3.json("GetMapData", function(data) {
+        d3.json("GetMapData/" + floorId, function (data) {
             mapdata[overlays.id()] = data.overlays;
             mapdata[pathplot.id()] = data.pathplot;
 
@@ -33,9 +36,9 @@
                 .attr("height", 487).attr("width", 720)
                 .datum(mapdata).call(map);
         });
+    },
+    
+    loadFloorplan: function(floorId) {
+        this.init(floorId);
     }
 };
-
-$(document).ready(function() {
-    Admin.init();
-});
