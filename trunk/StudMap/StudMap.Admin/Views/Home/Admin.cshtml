@@ -1,7 +1,12 @@
 ﻿@{
     ViewBag.Title = "Admin";
 }
-
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.floorplan.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Home/Admin.js")"></script>
+}
 <h2>Admin</h2>
 
 @using (Html.BeginForm("UploadMap", "Home", FormMethod.Post, new{ enctype = "multipart/form-data" }))
@@ -9,3 +14,7 @@
     <input id="data" name="data" type="file" />
     <input id="send" type="submit" value="submit" />
 }
+
+<div id="map">
+    
+</div>
