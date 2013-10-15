@@ -48,7 +48,7 @@ public class WlanConfigFragment extends Fragment {
 				new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 		
 		Button configurate = (Button)getActivity().findViewById(R.id.wlanConfig_BtnConfigurate);
-		configurate.setOnClickListener(new OnClickListener() {
+		/*configurate.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -56,7 +56,7 @@ public class WlanConfigFragment extends Fragment {
 				wifiManager.startScan();
 			}
 		});
-		
+		*/
 		
 		return rootView;
 	}
