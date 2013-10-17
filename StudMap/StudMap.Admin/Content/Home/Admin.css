@@ -15,3 +15,15 @@
     display: table-cell;
     padding: 4px 6px;
 }
+
+/*GraphLayer*/
+.node {
+    cursor: pointer;
+}
+
+.link {
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+  cursor: default;
+}

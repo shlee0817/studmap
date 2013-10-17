@@ -1,5 +1,7 @@
 ﻿var Admin = {
     
+    graph: null,
+    
     init: function (floorId) {
 
         $('#map').html("");
@@ -14,10 +16,11 @@
             imagelayer = d3.floorplan.imagelayer(),
             pathplot = d3.floorplan.pathplot(),
             overlays = d3.floorplan.overlays().editMode(true),
-            mapdata = {};
+            mapdata = {},
+            graph = d3.floorplan.graph();
 
         mapdata[imagelayer.id()] = [{
-            url: window.imgBasePath + 'Sample_Floorplan.jpg',
+            url: window.basePath + 'Admin/GetFloorplanImage/0/' + floorId,
             x: 0,
             y: 0,
             height: 33.79,
@@ -26,19 +29,30 @@
 
         map.addLayer(imagelayer)
             .addLayer(pathplot)
-            .addLayer(overlays);
+            .addLayer(overlays)
+            .addLayer(graph);
 
-        d3.json("GetMapData/" + floorId, function (data) {
+        d3.json(window.basePath + "Admin/GetMapData/" + floorId, function (data) {
             mapdata[overlays.id()] = data.overlays;
             mapdata[pathplot.id()] = data.pathplot;
+            mapdata[graph.id()] = data.graph;
 
             d3.select("#map").append("svg")
                 .attr("height", 487).attr("width", 720)
                 .datum(mapdata).call(map);
         });
+        this.graph = graph;
     },
-    
-    loadFloorplan: function(floorId) {
+
+    getGraph: function() {
+        return { "Nodes": this.graph.getNodes(), "Edges": this.graph.getLinks() };
+    },
+
+    loadFloors: function(mapId) {
+        $('#floors').html("").load(window.basePath + "Admin/GetFloorsForMap/" + mapId);
+    },
+
+    loadFloorplan: function (floorId) {
         this.init(floorId);
     }
 };

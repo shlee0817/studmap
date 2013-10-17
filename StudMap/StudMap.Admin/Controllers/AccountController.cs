@@ -33,7 +33,7 @@ namespace StudMap.Admin.Controllers
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, model.RememberMe))
             {
                 var roles = new List<string>(Roles.GetRolesForUser(model.UserName));
-                return roles.Contains("Admins") ? RedirectToAction("Admin", "Home") : RedirectToLocal(returnUrl);
+                return roles.Contains("Admins") ? RedirectToAction("Index", "Admin") : RedirectToLocal(returnUrl);
             }
 
             // If we got this far, something failed, redisplay form

@@ -37,7 +37,7 @@
                             <li>@Html.ActionLink("Übersicht", "Index", "Home")</li>
                             @if (isAdmin)
                             {
-                                <li>@Html.ActionLink("Admin", "Admin", "Home")</li>
+                                <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
                             }
                         </ul>
                     </nav>
@@ -60,6 +60,7 @@
         @Scripts.Render("~/bundles/jquery")
         <script type="text/javascript">
             var imgBasePath = '@Url.Content("~/Images/")';
+            var basePath = '@Url.Content("~/")';
         </script>
         @RenderSection("scripts", required: false)
     </body>
