@@ -1,1 +1,9 @@
 \select@language {ngerman}
+\contentsline {chapter}{\numberline {1}Recherche}{1}{chapter.2}
+\contentsline {section}{\numberline {1.1}QR-Codes}{1}{section.3}
+\contentsline {subsection}{\numberline {1.1.1}Serverseitig}{1}{subsection.4}
+\contentsline {subsection}{\numberline {1.1.2}Clientseitig}{1}{subsection.5}
+\contentsline {section}{\numberline {1.2}WLAN Fingerprinting}{2}{section.7}
+\contentsline {subsection}{\numberline {1.2.1}Sammeln von WLAN Fingerprints}{2}{subsection.8}
+\contentsline {subsection}{\numberline {1.2.2}Kalibrierung}{3}{subsection.10}
+\contentsline {subsection}{\numberline {1.2.3}Positionierung mittels WLAN Fingerprints}{3}{subsection.11}

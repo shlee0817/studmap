@@ -1,0 +1,31 @@
+\section{QR-Codes}
+QR-Codes sind weit verbreitet, einfach zu erstellen und mit vielen Geräten 
+einzulesen. Dadurch bieten QR-Codes die Möglichkeit Informationen einfach an 
+Orten anzubringen und von Maschinen einzulesen.\\
+Wir haben uns zwei Konzepte überlegt, QR-Codes in unserem Projekt einzubauen. 
+Dazu haben wir einmal die Möglichkeit betrachtet die Auswertung des QR-Codes 
+am Server zu realisieren und mit der Möglichkeit verglichen die Auswertung 
+direkt am Client des Nutzers zu implementieren.
+
+\subsection{Serverseitig}
+Für die serverseitige Umsetzung hat gesprochen, dass das Smartphone keine 
+Rechenleistung benötigt um die QR-Codes zu dekodieren. Des Weiteren wird durch 
+eine serverseitige Implementierung vermieden, dass der Nutzer weitere Apps auf 
+seinem Smartphone installieren muss.\\
+Für die Implementierung in den Webservice haben wir uns für die offene 
+Bibliothek \href{http://zxingnet.codeplex.com/}{ZXing.NET} benutzt. Allerdings 
+ist uns bei der Implementierung und Testen der Bibliothek direkt aufgefallen, 
+dass die Bilder zuvor am Smartphone verkleinert werden müssen um Bandbreite zu 
+sparen und die Laufzeit der Bibliothek zu verringern. Dadurch wird, obwohl es 
+ein Ziel der serverseitigen Umsetzung war, Rechenleistung benötigt. Darüber 
+hinaus mussten wir feststellen, dass die Bibliothek keine zuverlässige 
+Dekodierung der QR-Codes bietet.
+
+\subsection{Clientseitig}
+Im Gegensatz zur serverseitigen Umsetzung wird bei dieser Implementierung die 
+gesamte Dekodierung am Client vorgenommen. Dadurch wird die Netzlast 
+verringert, der Aufwand am Client aber erhöht.\\
+Hier bot sich zum einen an eine Bibliothek in den Client aufzunehmen, oder 
+eine externe Anwendung zum Dekodieren der QR-Codes zu benutzen. Wir haben uns 
+schlussendlich dazu entschieden \todo{Entscheidung beim QR-Code Reader 
+aufschreiben und warum}
