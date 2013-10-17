@@ -1,0 +1,42 @@
+﻿@using StudMap.Admin.Models
+@model List<MapViewModel>
+@{
+    ViewBag.Title = "Admin";
+}
+@section styles{
+    <link rel="stylesheet" href="@Url.Content("~/Content/Home/Admin.css")" type="text/css"/>
+}
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.floorplan.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/graph.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/Admin.js")"></script>
+}
+<h2>Admin</h2>
+<br/>
+<br/>
+@if (Model != null && Model.Count > 0)
+{
+    <div class="table">
+        <div class="tableCell Headline">
+            <div class="tableRow">MapId</div>
+            <div class="tableRow">Name</div>
+        </div>
+        @foreach (var map in Model)
+        {
+            <div class="tableCell" onclick=" Admin.loadFloors(@map.MapId) ">
+                <div class="tableRow">@map.MapId</div>
+                <div class="tableRow">@map.Name</div>
+            </div>
+        }
+    </div>
+    <div>@Html.ActionLink("Anlegen", "AddMap", "Admin")</div>
+    <br />
+    <br />
+    <div id="floors"></div>
+}
+else
+{
+    <div>Es wurden noch keine Karten angelegt. Neue Karte @Html.ActionLink("erstellen", "AddMap", "Admin")?</div>
+}

@@ -93,26 +93,32 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\AdminModels.cs" />
     <Compile Include="Models\FloorViewModel.cs" />
+    <Compile Include="Models\MapViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\floors\Sample_Floorplan3.jpg" />
+    <Content Include="App_Data\floors\Sample_Floorplan2.jpg" />
+    <Content Include="App_Data\floors\Sample_Floorplan1.jpg" />
     <Content Include="App_Data\StudMap.sdf" />
     <Content Include="Content\Home\Admin.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
-    <Content Include="Images\Sample_Floorplan.jpg" />
     <Content Include="Scripts\d3.floorplan.min.js" />
     <Content Include="Scripts\d3.v3.js" />
     <Content Include="Scripts\d3.v3.min.js" />
-    <Content Include="Scripts\Home\Admin.js" />
+    <Content Include="Scripts\Admin\Admin.js" />
+    <Content Include="Scripts\Admin\graph.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
@@ -142,7 +148,9 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Home\Admin.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\AddMap.cshtml" />
+    <Content Include="Views\Admin\_Floors.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StudMap.Core\StudMap.Core.csproj">
@@ -156,6 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

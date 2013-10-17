@@ -1,0 +1,28 @@
+@model List<StudMap.Admin.Models.FloorViewModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="table">
+        <div class="tableCell Headline">
+            <div class="tableRow">FloorId</div>
+            <div class="tableRow">MapId</div>
+            <div class="tableRow">FloorImageFile</div>
+        </div>
+        @foreach (var floor in Model)
+        {
+            <div class="tableCell" onclick=" Admin.loadFloorplan(@floor.FloorId) ">
+                <div class="tableRow">@floor.FloorId</div>
+                <div class="tableRow">@floor.MapId</div>
+                <div class="tableRow">@floor.FloorImageFile</div>
+            </div>
+        }
+    </div>
+}
+
+@using (Html.BeginForm("UploadFloorPlan", "Admin", FormMethod.Post, new{ enctype = "multipart/form-data" }))
+{
+    <input id="data" name="data" type="file" />
+    <input id="send" type="submit" value="submit" />
+}
+
+<div id="map"></div>

@@ -1,0 +1,25 @@
+﻿@model StudMap.Admin.Models.MapModel
+@{
+    ViewBag.Title = "Map anlegen";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Registration Form</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.MapName)
+                @Html.TextBoxFor(m => m.MapName)
+            </li>
+        </ol>
+        <input type="submit" value="Anlegen" />
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
