@@ -1,8 +1,20 @@
 package de.whs.fia.studmap.collector;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentFilter.MalformedMimeTypeException;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NfcF;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +27,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.whs.fia.studmap.collector.fragments.NFCReaderFragment;
 import de.whs.fia.studmap.collector.fragments.WlanCollectorFragment;
 import de.whs.fia.studmap.collector.fragments.WlanConfigFragment;
@@ -22,6 +35,11 @@ import de.whs.fia.studmap.collector.fragments.WlanPositioningFragment;
 
 public class MainActivity extends FragmentActivity {
 
+    public static final String MIME_TEXT_PLAIN = "text/plain";
+    public static final String TAG = "Nfc";
+    
+    private NfcAdapter mNfcAdapter;
+	
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -38,14 +56,15 @@ public class MainActivity extends FragmentActivity {
     ViewPager mViewPager;
     
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
 
-        // Create the adapter that will return a fragment for each of the three
+        // Create the adapter that will return a fragment for each of the four
         // primary sections of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -53,7 +72,6 @@ public class MainActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        
         //TODO: Upload der Daten in den Webservice anbieten.
     }
 
@@ -65,17 +83,64 @@ public class MainActivity extends FragmentActivity {
     }
     
     @Override
-    protected void onNewIntent(Intent intent) {
-    	try {
-    		NFCReaderFragment mFragment = (NFCReaderFragment) mSectionsPagerAdapter.getItem(3);	
-    		mFragment.onNewIntent(intent);
-    	}
-   		catch (Exception e) {
-			e.printStackTrace();
-   		}
+    public void onResume() {
+		setupForegroundDispatch(this, mNfcAdapter);
+		super.onResume();
     }
     
-
+	@Override
+	public void onPause() {
+        stopForegroundDispatch(this, mNfcAdapter);
+        super.onPause();
+    }
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		handleIntent(intent);
+		super.onNewIntent(intent);
+	}
+	
+	
+	private void handleIntent(Intent intent){
+	    String action = intent.getAction();
+	    if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+	    	mViewPager.setCurrentItem(3, true);
+	    	
+	    	NFCReaderFragment nfcFrag = (NFCReaderFragment)  getSupportFragmentManager().findFragmentById(3);
+	    	nfcFrag.handleIntent(intent);
+	    	
+	    } 
+	} 
+         
+    /**
+     * @param activity The corresponding {@link Activity} requesting the foreground dispatch.
+     * @param adapter The {@link NfcAdapter} used for the foreground dispatch.
+     */
+    private void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+        IntentFilter[] filters = new IntentFilter[1];
+        String[][] techList = new String[][]{};
+        // Notice that this is the same filter as in our manifest.
+        filters[0] = new IntentFilter();
+        filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+        try {
+            filters[0].addDataType(MIME_TEXT_PLAIN);
+        } catch (MalformedMimeTypeException e) {
+            throw new RuntimeException("Check your mime type.");
+        }
+        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
+    }
+    /**
+     * @param activity The corresponding {@link BaseActivity} requesting to stop the foreground dispatch.
+     * @param adapter The {@link NfcAdapter} used for the foreground dispatch.
+     */
+    private void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        adapter.disableForegroundDispatch(activity);
+    }
+        
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -163,5 +228,7 @@ public class MainActivity extends FragmentActivity {
             return rootView;
         }
     }
+        
+    
     
 }
