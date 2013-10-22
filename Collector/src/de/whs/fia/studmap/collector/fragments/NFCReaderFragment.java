@@ -149,7 +149,7 @@ public class NFCReaderFragment extends Fragment {
             for (NdefRecord ndefRecord : records) {
                 if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
                     try {
-                        return readText(ndefRecord);
+                        return "ID: " + readID(tag.getId())+ "\n" + "Read content: \n" + readText(ndefRecord);
                     } catch (UnsupportedEncodingException e) {
                         Log.e(TAG, "Unsupported Encoding", e);
                     }
@@ -157,6 +157,13 @@ public class NFCReaderFragment extends Fragment {
             }
             return null;
         }
+        
+        private String readID(byte[] id) throws UnsupportedEncodingException{
+        	String textEncoding = ((id[0] & 128) == 0) ? "UTF-8" : "UTF-16";
+            int languageCodeLength = id[0] & 0063;
+            return  new String(id, languageCodeLength + 1, id.length - languageCodeLength - 1, textEncoding);
+        }
+        
         private String readText(NdefRecord record) throws UnsupportedEncodingException {
             /*
              * See NFC forum specification for "Text Record Type Definition" at 3.2.1
@@ -180,7 +187,7 @@ public class NFCReaderFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                mTextView.setText("Read content: \n" + result);
+                mTextView.setText( result);
             }
         }
     }
