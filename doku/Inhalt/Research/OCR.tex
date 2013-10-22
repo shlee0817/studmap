@@ -1,0 +1,57 @@
+\section{OCR der Raumschilder}
+Anstatt QR- oder NFC-Tags an den Räumen der FH anzubringen, besteht die Möglichkeit
+die bereits angebrachten Türschilder zu verwenden. Hierzu ist eine Erkennung der
+Raumnummer auf dem Türschild notwendig. Die OCR (Optical Character Recognition)
+kann über eine Bibliothek sowohl auf Client-, als auch auf Serverseite erfolgen.
+Erfolgt die Erkennung auf dem Client, dann könnten ebenfalls bestehende Apps zur 
+Texterkennung verwendet werden.
+
+\subsection{Bibliothek tesseract}
+Tesseract\footnote{\url{https://code.google.com/p/tesseract-ocr/}}
+ist eine native Bibliothek für die Erkennung von Text in Bilddateien.
+Es gibt sowohl für .NET als auch für Java (Android) entsprechende Wrapper,
+die von uns verwendet werden können. Bei den Tests zu der OCR-Bibliothek haben 
+sich allerdings einige Schwächen gezeigt. Tesseract ist für die Texterkennung 
+von gescannten Dokumenten gedacht und arbeitet deshalb nur stabil, wenn sich
+auf dem Bild ausschließlich Text befindet. Dies wird an folgenden Beispielbildern
+deutlich.
+
+Auf dem Bild mit Raumschild und Wand wird nur unzuverlässig Text erkannt
+(siehe \ref{fig:RaumschildGross}). Die Ergebnisse variieren von "Kein Text erkannt"
+bis hin zu "Buchstabensalat mit Raumnummer". Schneidet man den relevanten Teil
+per Hand aus (siehe \ref{fig:RaumschildKlein}), wird der Text einwandfrei erkannt.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{Bilder/Raumschild_gross}
+\caption{Gesamtes Bild Raumschild}
+\label{fig:RaumschildGross}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{Bilder/Raumschild_klein}
+\caption{Ausschnitt Raumschild}
+\label{fig:RaumschildKlein}
+\end{figure}
+
+Damit die Raumschilder zuverlässig erkannt werden, ist es notwendig,
+dass aufgenommene Bilder zunächst auf den Bereich mit der Raumnummer
+zugeschnitten werden. Dies erfordert einen hohen Entwicklungsaufwand.
+
+
+\subsection{App Google Goggles}
+Google
+Goggles\footnote{\url{https://play.google.com/store/apps/details?id=com.google.android.apps.unveil}}
+ist eine Android-App, die zur Erkennung von Text, Symbolen
+und QR-Tags verwendet werden kann. Diese App lieferte in Tests auch bei
+suboptimalen Bildern gute Ergebnisse. Außerdem ist die App gut in das
+Android-Umfeld eingebettet und lässt sich leicht bedienen.
+
+Allerdings gibt esr die Verwendung von Google Googles noch keine öffentliche
+API\footnote{\url{http://stackoverflow.com/questions/2080731/google-goggles-api}}.
+Diese ist zwar von Google geplant, aber nie umgesetzt worden. Auch wenn die
+App eine komfortable Möglichkeit zur OCR-Erkennung bietet, kann diese ohne
+API nicht in unserem Projekt verwendet werden.
+
+
