@@ -1,6 +1,7 @@
 package de.whs.fia.studmap.collector.fragments;
 
 import java.io.UnsupportedEncodingException;
+import java.util.StringTokenizer;
 
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -15,19 +16,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.whs.fia.studmap.collector.R;
+import de.whs.fia.studmap.collector.models.AP;
+import de.whs.fia.studmap.collector.models.NfcTag;
+import de.whs.fia.studmap.collector.models.Scan;
 
 public class NFCReaderFragment extends Fragment {
 	
     public static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String TAG = "Nfc";
+    
 	
 	private NfcAdapter mNfcAdapter;
 	private TextView mTextView;
-	private String mTextViewString = "";
-		
+	private EditText mEditText;
+	private NfcTag mNfcTag = null; 
+	
 	public NFCReaderFragment(){
 		
 	}
@@ -40,6 +49,7 @@ public class NFCReaderFragment extends Fragment {
 				container, false);
 		
 		mTextView = (TextView) rootView.findViewById(R.id.NfcReader_TextView);
+		mEditText = (EditText) rootView.findViewById(R.id.NfcReader_Node);
 						
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
         if (mNfcAdapter == null) {
@@ -47,14 +57,38 @@ public class NFCReaderFragment extends Fragment {
             Toast.makeText(getActivity(), "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
             return rootView;
         }
-        if (!mNfcAdapter.isEnabled()) {
-            mTextView.setText("NFC is disabled.");
+        if (!mNfcAdapter.isEnabled()) {        	
+        		mTextView.setText("NFC is disabled.");        	
         } else {
-            mTextView.setText("NFC is enabled. Waiting for discovering a nfc tag.");
+        	if (mNfcTag == null)
+        		mTextView.setText("NFC is enabled. Waiting for discovering a nfc tag.");
+        	else
+        		setTextView();
         }
+        
+        Button save = (Button) rootView.findViewById(R.id.NfcReader_Save);
+		save.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String node = mEditText.getText().toString();
+				//TODO mNfcTag entsprechendem Knoten in DB zuweisen.				
+			}
+		});
         
 		return rootView;
 	}
+	
+	private void setTextView(){
+		
+		
+		String s = "Tag discovered!\n\n";
+		s += "UID: " + mNfcTag.getId() + "\n";
+		s += "Inhalt: " + mNfcTag.getTagInfo();
+		
+		mTextView.setText(s);
+	}
+	
 		
 	public void handleIntent(Intent intent){
 	    String action = intent.getAction();
@@ -68,7 +102,8 @@ public class NFCReaderFragment extends Fragment {
 					
 					@Override
 					public void onTaskDone(String result) {
-						mTextView.setText(result);			
+						mNfcTag = new NfcTag(result);
+						setTextView();
 					}
 	            });
 	            
@@ -108,7 +143,7 @@ public class NFCReaderFragment extends Fragment {
             for (NdefRecord ndefRecord : records) {
                // if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
                     try {
-                    	String s = readText(ndefRecord); 
+                    	String s = readId(tag) + NfcTag.STRINGSEPARATOR + readText(ndefRecord); 
                         return s;
                     } catch (UnsupportedEncodingException e) {
                         Log.e(TAG, "Unsupported Encoding", e);
@@ -131,12 +166,33 @@ public class NFCReaderFragment extends Fragment {
             // Get the Text Encoding
             String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16";
             // Get the Language Code
-            int languageCodeLength = payload[0] & 0063;
+            //int languageCodeLength = payload[0] & 0063;
             // String languageCode = new String(payload, 1, languageCodeLength, "US-ASCII");
             // e.g. "en"
             // Get the Text
            // return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
             return new String(payload, textEncoding);
+        }
+        
+        private String readId(Tag tag) throws UnsupportedEncodingException {
+            byte[] id = tag.getId();
+            
+            
+            StringBuilder stringBuilder = new StringBuilder("0x");
+            if (id == null || id.length <= 0) {
+                return null;
+            }
+
+            //Convert byteArray to Hex
+            char[] buffer = new char[2];
+            for (int i = 0; i < id.length; i++) {
+                buffer[0] = Character.forDigit((id[i] >>> 4) & 0x0F, 16);  
+                buffer[1] = Character.forDigit(id[i] & 0x0F, 16);  
+                System.out.println(buffer);
+                stringBuilder.append(buffer);
+            }
+
+            return stringBuilder.toString();
         }
         
         @Override
