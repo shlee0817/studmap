@@ -7,8 +7,25 @@
     <TextView
         android:id="@+id/NfcReader_TextView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Large Text"
+        android:layout_height="352dp"
+        android:layout_weight="0.86"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/NfcReader_Node"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/NfcReader_EditText" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/NfcReader_Save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/NfcReader_SaveButton" />
 
 </LinearLayout>

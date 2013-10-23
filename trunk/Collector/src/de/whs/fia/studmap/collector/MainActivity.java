@@ -1,6 +1,6 @@
 package de.whs.fia.studmap.collector;
 
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -8,26 +8,18 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
-import android.nfc.tech.NfcF;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import de.whs.fia.studmap.collector.fragments.NFCReaderFragment;
 import de.whs.fia.studmap.collector.fragments.WlanCollectorFragment;
 import de.whs.fia.studmap.collector.fragments.WlanConfigFragment;
@@ -106,7 +98,7 @@ public class MainActivity extends FragmentActivity {
 	    if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
 	    	mViewPager.setCurrentItem(3, true);
 	    	
-	    	NFCReaderFragment nfcFrag = (NFCReaderFragment)  getSupportFragmentManager().findFragmentById(3);
+	    	NFCReaderFragment nfcFrag = (NFCReaderFragment) mSectionsPagerAdapter.getItem(3);
 	    	nfcFrag.handleIntent(intent);
 	    	
 	    } 
@@ -147,8 +139,16 @@ public class MainActivity extends FragmentActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+    	private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
+    	   	
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+         
+        fragments.add(new WlanCollectorFragment());
+        fragments.add(new WlanPositioningFragment());
+        fragments.add(new WlanConfigFragment());
+        fragments.add(new NFCReaderFragment());
+            
         }
 
         @Override
@@ -158,6 +158,7 @@ public class MainActivity extends FragmentActivity {
             // below) with the page number as its lone argument.
         	Fragment fragment;
         	
+        	/**
         	switch (position) {
             case 0:
             	fragment = new WlanCollectorFragment();
@@ -175,10 +176,20 @@ public class MainActivity extends FragmentActivity {
             	fragment = new DummySectionFragment();
             	break;
         	}
+        	**/
         	
+        	if (position >= 0 && position < fragments.size()){
+        		fragment = fragments.get(position);
+        	}
+        	else
+        		fragment = new DummySectionFragment();
+        	
+        	
+        	/**
             Bundle args = new Bundle();
             args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
             fragment.setArguments(args);
+            **/
             return fragment;
         }
 
