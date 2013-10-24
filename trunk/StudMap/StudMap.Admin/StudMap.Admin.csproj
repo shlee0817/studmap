@@ -47,12 +47,19 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework.SqlServerCompact">
+      <HintPath>..\packages\EntityFramework.SqlServerCompact.6.0.1\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -126,16 +133,26 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\floors\RN_Ebene_0.png" />
-    <Content Include="App_Data\floors\RN_Ebene_1.png" />
-    <Content Include="App_Data\floors\RN_Ebene_2.png" />
-    <Content Include="App_Data\floors\Sample_Floorplan3.jpg" />
-    <Content Include="App_Data\floors\Sample_Floorplan2.jpg" />
-    <Content Include="App_Data\floors\Sample_Floorplan1.jpg" />
     <Content Include="App_Data\StudMap.sdf" />
     <Content Include="Content\Home\Admin.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceer40EN.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlcecompact40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceca40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\README_ENU.txt" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\msvcr90.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlcese40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceqp40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceme40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceer40EN.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlcecompact40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceca40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\d3.floorplan.min.js" />
     <Content Include="Scripts\d3.v3.js" />
@@ -174,15 +191,14 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\CreateMap.cshtml" />
     <Content Include="Views\Admin\_Floors.cshtml" />
+    <Content Include="Views\Admin\_Maps.cshtml" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StudMap.Core\StudMap.Core.csproj">
       <Project>{7b805a9e-c5e1-4952-b2a2-0effc2269e6c}</Project>
       <Name>StudMap.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StudMap.Data\StudMap.Data.csproj">
-      <Project>{176113b2-a7a6-4610-a6e6-42296d2e18d8}</Project>
-      <Name>StudMap.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\StudMap.Service\StudMap.Service.csproj">
       <Project>{f2894fd7-7319-429f-98d5-88a4fee03d0d}</Project>
