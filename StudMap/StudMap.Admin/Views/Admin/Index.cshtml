@@ -1,5 +1,5 @@
-﻿@using StudMap.Admin.Models
-@model List<MapViewModel>
+﻿@using StudMap.Core.Maps
+@model List<Map>
 @{
     ViewBag.Title = "Admin";
 }
@@ -25,18 +25,18 @@
         </div>
         @foreach (var map in Model)
         {
-            <div class="tableCell" onclick=" Admin.loadFloors(@map.MapId) ">
-                <div class="tableRow">@map.MapId</div>
+            <div class="tableCell" onclick=" Admin.loadFloors(@map.Id) ">
+                <div class="tableRow">@map.Id</div>
                 <div class="tableRow">@map.Name</div>
             </div>
         }
     </div>
-    <div>@Html.ActionLink("Anlegen", "AddMap", "Admin")</div>
+    <div>@Html.ActionLink("Anlegen", "CreateMap", "Admin")</div>
     <br />
     <br />
     <div id="floors"></div>
 }
 else
 {
-    <div>Es wurden noch keine Karten angelegt. Neue Karte @Html.ActionLink("erstellen", "AddMap", "Admin")?</div>
+    <div>Es wurden noch keine Karten angelegt. Neue Karte @Html.ActionLink("erstellen", "CreateMap", "Admin")?</div>
 }

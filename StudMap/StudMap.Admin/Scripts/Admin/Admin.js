@@ -15,7 +15,6 @@
             map = d3.floorplan().xScale(xscale).yScale(yscale),
             imagelayer = d3.floorplan.imagelayer(),
             pathplot = d3.floorplan.pathplot(),
-            overlays = d3.floorplan.overlays().editMode(true),
             mapdata = {},
             graph = d3.floorplan.graph();
 
@@ -29,11 +28,9 @@
 
         map.addLayer(imagelayer)
             .addLayer(pathplot)
-            .addLayer(overlays)
             .addLayer(graph);
 
         d3.json(window.basePath + "Admin/GetMapData/" + floorId, function (data) {
-            mapdata[overlays.id()] = data.overlays;
             mapdata[pathplot.id()] = data.pathplot;
             mapdata[graph.id()] = data.graph;
 
