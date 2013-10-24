@@ -1,4 +1,4 @@
-@model List<StudMap.Admin.Models.FloorViewModel>
+@model List<StudMap.Core.Maps.Floor>
 
 @if (Model != null && Model.Count > 0)
 {
@@ -10,10 +10,10 @@
         </div>
         @foreach (var floor in Model)
         {
-            <div class="tableCell" onclick=" Admin.loadFloorplan(@floor.FloorId) ">
-                <div class="tableRow">@floor.FloorId</div>
+            <div class="tableCell" onclick=" Admin.loadFloorplan(@floor.Id) ">
+                <div class="tableRow">@floor.Id</div>
                 <div class="tableRow">@floor.MapId</div>
-                <div class="tableRow">@floor.FloorImageFile</div>
+                <div class="tableRow">@floor.ImageUrl</div>
             </div>
         }
     </div>
@@ -24,5 +24,3 @@
     <input id="data" name="data" type="file" />
     <input id="send" type="submit" value="submit" />
 }
-
-<div id="map"></div>

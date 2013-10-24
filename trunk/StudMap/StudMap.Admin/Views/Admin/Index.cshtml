@@ -14,37 +14,12 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/Admin.js")"></script>
 }
 
-<div id="pointermenu">
-    <ul>
-        <li><span>Maps</span></li>
-        <li><span>Floors</span></li>
-        <li><span>Layer</span></li>
-    </ul>
-    <br style="clear: left" />
-
+<div>
+    <div class="tab active">Maps</div>
+    <div class="tab">Floors</div>
+    <div class="tab">Layer</div>
+    <br style="clear:both"/>
 </div>
-
-@if (Model != null && Model.Count > 0)
-{
-    <div class="table">
-        <div class="tableCell Headline">
-            <div class="tableRow">MapId</div>
-            <div class="tableRow">Name</div>
-        </div>
-        @foreach (var map in Model)
-        {
-            <div class="tableCell" onclick=" Admin.loadFloors(@map.Id) ">
-                <div class="tableRow">@map.Id</div>
-                <div class="tableRow">@map.Name</div>
-            </div>
-        }
-    </div>
-    <div>@Html.ActionLink("Anlegen", "CreateMap", "Admin")</div>
-    <br />
-    <br />
-    <div id="floors"></div>
-}
-else
-{
-    <div>Es wurden noch keine Karten angelegt. Neue Karte @Html.ActionLink("erstellen", "CreateMap", "Admin")?</div>
-}
+<div id="adminContent">
+    @Html.Partial("_Maps")
+</div>

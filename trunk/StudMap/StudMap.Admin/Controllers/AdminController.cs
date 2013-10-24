@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
-using StudMap.Admin.Models;
 using StudMap.Core;
 using StudMap.Core.Maps;
 using StudMap.Service.Controllers;
@@ -11,14 +9,11 @@ namespace StudMap.Admin.Controllers
     public class AdminController : Controller
     {
         private readonly string _serverUploadFolder = System.Web.HttpContext.Current.Server.MapPath("~/App_Data");
-        
+
         [Authorize(Roles = "Admins")]
         public ActionResult Index()
         {
-            var mapsCtrl = new MapsController();
-            var maps = mapsCtrl.GetMaps();
-
-            return View(maps);
+            return View();
         }
 
         [Authorize(Roles = "Admins")]
@@ -49,36 +44,28 @@ namespace StudMap.Admin.Controllers
             return View("Index");
         }
 
+        #region Partial Views
         [Authorize(Roles = "Admins")]
         [HttpGet]
         public ActionResult GetFloorsForMap(int id)
         {
-            //TODO: Auslesen aus der Datenbank
-            var floors = new List<FloorViewModel>
-                {
-                    new FloorViewModel
-                        {
-                            FloorId = 1,
-                            FloorImageFile = _serverUploadFolder + "\\floors\\RN_Ebene_0.png",
-                            MapId = 1
-                        },
-                    new FloorViewModel
-                        {
-                            FloorId = 2,
-                            FloorImageFile = _serverUploadFolder + "\\floors\\RN_Ebene_1.png",
-                            MapId = 1
-                        },
-                    new FloorViewModel
-                        {
-                            FloorId = 3,
-                            FloorImageFile = _serverUploadFolder + "\\floors\\RN_Ebene_2.png",
-                            MapId = 1
-                        }
-                };
+            var mapsCtrl = new MapsController();
+            var floors = mapsCtrl.GetFloorsForMap(id);
 
             return PartialView("_Floors", floors);
         }
-        
+
+        [Authorize(Roles = "Admins")]
+        [HttpGet]
+        public ActionResult GetMaps()
+        {
+            var mapsCtrl = new MapsController();
+            var maps = mapsCtrl.GetMaps();
+
+            return PartialView("_Maps", maps);
+        }
+        #endregion
+
         [Authorize(Roles = "Admins")]
         public ActionResult GetFloorplanImage(int mapId, int floorId)
         {

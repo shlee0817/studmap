@@ -4,7 +4,7 @@
     
     init: function (floorId) {
 
-        $('#map').html("");
+        $('#adminContent').html("");
 
         var xscale = d3.scale.linear()
             .domain([0, 50.0])
@@ -34,7 +34,7 @@
             mapdata[pathplot.id()] = data.pathplot;
             mapdata[graph.id()] = data.graph;
 
-            d3.select("#map").append("svg")
+            d3.select("#adminContent").append("svg")
                 .attr("height", 487).attr("width", 720)
                 .datum(mapdata).call(map);
         });
@@ -45,11 +45,21 @@
         return { "Nodes": this.graph.getNodes(), "Edges": this.graph.getLinks() };
     },
 
-    loadFloors: function(mapId) {
-        $('#floors').html("").load(window.basePath + "Admin/GetFloorsForMap/" + mapId);
+    loadMaps: function() {
+        $('.tab').removeClass('active');
+        $(this).addClass('active');
+        $('#adminContent').html("").load(window.basePath + "Admin/GetMaps");
+    },
+
+    loadFloors: function (mapId) {
+        $('.tab').removeClass('active');
+        $(this).addClass('active');
+        $('#adminContent').html("").load(window.basePath + "Admin/GetFloorsForMap/" + mapId);
     },
 
     loadFloorplan: function (floorId) {
+        $('.tab').removeClass('active');
+        $(this).addClass('active');
         this.init(floorId);
     }
 };
