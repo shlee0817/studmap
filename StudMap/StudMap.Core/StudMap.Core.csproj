@@ -43,6 +43,7 @@
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\GraphResponse.cs" />
     <Compile Include="Graph\Node.cs" />
+    <Compile Include="ListResponse.cs" />
     <Compile Include="Maps\Floor.cs" />
     <Compile Include="Maps\FloorsResponse.cs" />
     <Compile Include="Maps\Map.cs" />

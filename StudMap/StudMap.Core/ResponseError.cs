@@ -4,6 +4,10 @@
     {
         None = 0,
 
+        #region General
+        DatabaseError = 1,
+        #endregion
+
         #region Register
         UserNameDuplicate = 101,
         UserNameInvalid = 102,
