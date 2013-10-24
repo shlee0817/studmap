@@ -21,6 +21,7 @@ namespace StudMap.Data.Entities
     
         public int Id { get; set; }
         public int Graph_Id { get; set; }
+        public string Name { get; set; }
     
         public virtual ICollection<Floors> Floors { get; set; }
         public virtual Graphs Graphs { get; set; }

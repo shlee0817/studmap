@@ -95,6 +95,7 @@
     <None Include="Entities\MapModel.edmx.diagram">
       <DependentUpon>MapModel.edmx</DependentUpon>
     </None>
+    <None Include="Entities\MapModel.edmx.sqlce" />
     <None Include="Entities\MapModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>MapModel.edmx</DependentUpon>
