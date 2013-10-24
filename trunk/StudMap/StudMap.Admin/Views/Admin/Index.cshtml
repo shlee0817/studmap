@@ -13,9 +13,17 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/graph.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/Admin.js")"></script>
 }
-<h2>Admin</h2>
-<br/>
-<br/>
+
+<div id="pointermenu">
+    <ul>
+        <li><span>Maps</span></li>
+        <li><span>Floors</span></li>
+        <li><span>Layer</span></li>
+    </ul>
+    <br style="clear: left" />
+
+</div>
+
 @if (Model != null && Model.Count > 0)
 {
     <div class="table">
