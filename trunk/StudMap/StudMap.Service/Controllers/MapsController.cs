@@ -14,23 +14,55 @@ namespace StudMap.Service.Controllers
         #region Map
         public MapsResponse CreateMap(string mapName)
         {
-            //TODO Implement
-            return new MapsResponse
+            var result = new MapsResponse();
+
+            try
+            {
+                using (var entities = new MapEntities())
                 {
-                    Status = RespsonseStatus.Ok,
-                    ErrorCode = ResponseError.None,
-                    Map = new Map { Id = 1, Name = "WHS" }
-                };
+                    Maps newMap = new Maps();
+                    newMap.Name = mapName;
+                    Maps insertedMap = entities.Maps.Add(newMap);
+                    entities.SaveChanges();
+
+                    result.Map = new Map
+                    {
+                        Id = insertedMap.Id,
+                        Name = insertedMap.Name
+                    };
+                }
+            }
+            catch (DataException ex)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
         }
 
         public BaseResponse DeleteMap(int mapId)
         {
-            //TODO Implement
-            return new BaseResponse
+            var result = new BaseResponse();
+
+            try
+            {
+                using (var entities = new MapEntities())
                 {
-                    Status = RespsonseStatus.Ok,
-                    ErrorCode = ResponseError.None
-                };
+                    Maps mapToDelete = entities.Maps.Find(mapId);
+                    if (mapToDelete == null)
+                        return result;
+                    entities.Maps.Remove(mapToDelete);
+                    entities.SaveChanges();
+                }
+            }
+            catch (DataException ex)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
         }
 
         public ListResponse<Map> GetMaps()
