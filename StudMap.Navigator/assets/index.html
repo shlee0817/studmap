@@ -1,0 +1,97 @@
+<html><head>
+<meta charset="utf-8">
+<title>Floor Plan</title>
+<!--<script type="text/javascript" src="lib/jquery/jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript" src="lib/jquery/jquery-ui-1.8.21.custom.min.js"></script>-->
+<script type="text/javascript" src="js/d3.v3.min.js"></script>
+<script type="text/javascript" src="js/d3.floorplan.min.js"></script>
+<style type="text/css">
+	/*@import url('lib/jquery/jquery-ui.css');*/
+	@import url('css/d3.floorplan.css');
+	
+	body {
+	  font-size: 14px;
+	  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	  /*margin: 50px auto 20px;
+	  width: 720px;*/
+	  background: #fcfcfc;
+	 /* line-height: 1.45em;*/
+	 margin:0;
+	}
+	a {
+	  color: #555;
+	}
+	a:hover {
+	  color: #000;
+	}
+	ul {
+	  margin: 0 ;
+	  padding: 0;
+	}
+	div.code {
+		border: 1px solid #ccc;
+		background: #eee;
+		/*margin: 10px 0 10px 0;
+		padding: 10px;
+		width: 720px;*/
+	}
+	
+	.map-controls
+	{
+	display:none;
+	}
+</style>
+</head>
+<body style="">
+
+<div id="map">
+</div>
+
+<script id="demo-code" type="text/javascript">
+var xscale = d3.scale.linear()
+               .domain([0,1])
+               .range([0,window.innerWidth]),
+    yscale = d3.scale.linear()
+               .domain([0,1])
+               .range([0,window.innerHeight]),
+    map = d3.floorplan().xScale(xscale).yScale(yscale),
+    imagelayer = d3.floorplan.imagelayer(),
+    heatmap = d3.floorplan.heatmap(),
+    vectorfield = d3.floorplan.vectorfield(),
+    pathplot = d3.floorplan.pathplot(),
+    overlays = d3.floorplan.overlays().editMode(true),
+    mapdata = {};
+
+mapdata[imagelayer.id()] = [{
+    url: 'maps/RN_Ebene_0.png',
+    x: 0,
+    y: 0,
+    height: 1,
+    width: 1
+     }];
+
+map.addLayer(imagelayer)
+   .addLayer(heatmap)
+   .addLayer(vectorfield)
+   .addLayer(pathplot)
+   .addLayer(overlays);
+/*
+d3.json("demo-data.json", function(data) {
+	mapdata[heatmap.id()] = data.heatmap;
+	mapdata[overlays.id()] = data.overlays;
+	mapdata[vectorfield.id()] = data.vectorfield;
+	mapdata[pathplot.id()] = data.pathplot;
+	
+	
+});
+*/
+
+d3.select("#map").append("svg")
+		.attr("height", "100%").attr("width","100%")
+		.datum(mapdata).call(map);
+</script>
+
+
+
+</body></html>
