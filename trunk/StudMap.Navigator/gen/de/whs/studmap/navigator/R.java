@@ -38,11 +38,14 @@ public final class R {
         public static final int venus=0x7f02000b;
     }
     public static final class id {
-        public static final int action_websearch=0x7f090004;
+        public static final int EditText01=0x7f090003;
+        public static final int action_websearch=0x7f090007;
+        public static final int button1=0x7f090004;
         public static final int content_frame=0x7f090001;
         public static final int drawer_layout=0x7f090000;
         public static final int left_drawer=0x7f090002;
-        public static final int webview1=0x7f090003;
+        public static final int left_drawer_list=0x7f090005;
+        public static final int webview1=0x7f090006;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
