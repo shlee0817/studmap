@@ -2,17 +2,13 @@ package de.whs.studmap.navigator;
 
 import java.util.Locale;
 
-//import com.example.android.navigationdrawerexample.R;
-//import com.example.android.navigationdrawerexample.MainActivity.DrawerItemClickListener;
-//import com.example.android.navigationdrawerexample.MainActivity.PlanetFragment;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,8 +24,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+//import com.example.android.navigationdrawerexample.R;
+//import com.example.android.navigationdrawerexample.MainActivity.DrawerItemClickListener;
+//import com.example.android.navigationdrawerexample.MainActivity.PlanetFragment;
 
 public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
@@ -209,7 +207,7 @@ public class MainActivity extends Activity {
             WebView webView = (WebView) rootView.findViewById(R.id.webview1);
             webView.setWebViewClient(new WebViewClient());
             webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("http://www.google.de");
+            webView.loadUrl("file:///android_asset/index.html");
             
            // ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
            // getActivity().setTitle(planet);
