@@ -1,0 +1,24 @@
+﻿@using StudMap.Core.Maps
+@model List<Map>
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="table">
+        <div class="tableCell Headline">
+            <div class="tableRow">MapId</div>
+            <div class="tableRow">Name</div>
+        </div>
+        @foreach (var map in Model)
+        {
+            <div class="tableCell" onclick=" Admin.loadFloors(@map.Id) ">
+                <div class="tableRow">@map.Id</div>
+                <div class="tableRow">@map.Name</div>
+            </div>
+        }
+    </div>
+    <div>@Html.ActionLink("Anlegen", "CreateMap", "Admin")</div>
+}
+else
+{
+    <div>Es wurden noch keine Karten angelegt. Neue Karte @Html.ActionLink("erstellen", "CreateMap", "Admin")?</div>
+}
