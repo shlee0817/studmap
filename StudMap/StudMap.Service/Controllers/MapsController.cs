@@ -20,9 +20,8 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapEntities())
                 {
-                    Maps newMap = new Maps();
-                    newMap.Name = mapName;
-                    Maps insertedMap = entities.Maps.Add(newMap);
+                    var newMap = new Maps { Name = mapName };
+                    var insertedMap = entities.Maps.Add(newMap);
                     entities.SaveChanges();
 
                     result.Map = new Map
@@ -93,7 +92,7 @@ namespace StudMap.Service.Controllers
         #endregion
 
         #region Floor
-        
+
         [HttpPost]
         public FloorsResponse CreateFloor(int mapId)
         {
@@ -118,7 +117,7 @@ namespace StudMap.Service.Controllers
             {
                 Status = RespsonseStatus.Ok,
                 ErrorCode = ResponseError.None
-                
+
             };
         }
 

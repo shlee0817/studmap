@@ -27,3 +27,21 @@
   stroke-width: 4px;
   cursor: default;
 }
+
+#adminContent {
+    background-color: #DFE9EE;
+    padding: 12px;
+}
+
+/*Menü im Adminbereich*/
+.tab {
+    float: left;
+    font-weight: bold;
+    padding: 6px 22px;
+    background-color: #DFE9EE;
+    cursor: pointer;
+}
+
+.tab.active {
+    background-color: #a6dbed;
+}
