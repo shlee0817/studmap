@@ -3,6 +3,9 @@ using System.Web.Http;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Maps;
+using StudMap.Data.Entities;
+using System.Data;
+using System.Linq;
 
 namespace StudMap.Service.Controllers
 {
@@ -30,10 +33,30 @@ namespace StudMap.Service.Controllers
                 };
         }
 
-        public IEnumerable<Map> GetMaps()
+        public ListResponse<Map> GetMaps()
         {
-            //TODO Implement
-            return new List<Map>();
+            var result = new ListResponse<Map>();
+
+            try
+            {
+                using (var entities = new MapEntities())
+                {
+                    var maps = from map in entities.Maps
+                               select new Map
+                               {
+                                   Id = map.Id,
+                                   Name = map.Name
+                               };
+                    result.List = maps.ToList();
+                }
+            }
+            catch (DataException ex)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
         }
         #endregion
 
