@@ -31,13 +31,15 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
     private LinearLayout mLeftDrawer;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mPlanetTitles;
+    
+    private final int REQUEST_ID_POIS = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,22 +49,15 @@ public class MainActivity extends Activity {
         mTitle = mDrawerTitle = getTitle();
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
+        mDrawerListView = (ListView) findViewById(R.id.left_drawer_listView);
         mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-               R.layout.drawer_list_item, mPlanetTitles));
-        
-        
-        
-        //TextView tv = new TextView(this);
-       // mDrawerList.addView(tv);
-        
-        
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerListView.setAdapter(new ArrayAdapter<String>(this,R.layout.simple_list_item, mPlanetTitles));
+               
+        mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -144,19 +139,24 @@ public class MainActivity extends Activity {
     }
 
     private void selectItem(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mLeftDrawer);
+    	if (position == 1)
+    		startActivityForResult(new Intent(this,POIActivity.class),REQUEST_ID_POIS);
+    	else {
+    	
+	        // update the main content by replacing fragments
+	        Fragment fragment = new PlanetFragment();
+	        Bundle args = new Bundle();
+	        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+	        fragment.setArguments(args);
+	
+	        FragmentManager fragmentManager = getFragmentManager();
+	        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+	
+	        // update selected item and title, then close the drawer
+	        mDrawerListView.setItemChecked(position, true);
+	        setTitle(mPlanetTitles[position]);
+	        mDrawerLayout.closeDrawer(mLeftDrawer);
+    	}
     }
 
     @Override
@@ -182,6 +182,22 @@ public class MainActivity extends Activity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	    switch (requestCode) {
+			case REQUEST_ID_POIS :
+				if (resultCode == RESULT_OK){
+					int nodeID =data.getIntExtra(POIActivity.EXTRA_NODE_ID, -1);
+					//TODO: mittels der KnotenID einen neuen Zielpunkt setzen und die neue Route anzeigen	
+
+					Toast.makeText(getApplicationContext(), String.valueOf(nodeID), Toast.LENGTH_LONG).show();
+					
+				}
+			break;
+			}
+    	
     }
 
     /**

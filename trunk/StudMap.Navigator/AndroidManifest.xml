@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +21,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="de.whs.studmap.navigator.POIActivity"
+            android:label="@string/title_activity_poi"
+            android:parentActivityName="de.whs.studmap.navigator.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.whs.studmap.navigator.MainActivity" />
         </activity>
     </application>
 
