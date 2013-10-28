@@ -1,14 +1,16 @@
 ﻿@using StudMap.Core.Maps
-@model List<Map>
+@using StudMap.Core
 
-@if (Model != null && Model.Count > 0)
+@model ListResponse<Map>
+
+@if (Model != null && Model.List.Count > 0)
 {
     <div class="table">
         <div class="tableCell Headline">
             <div class="tableRow">MapId</div>
             <div class="tableRow">Name</div>
         </div>
-        @foreach (var map in Model)
+        @foreach (var map in Model.List)
         {
             <div class="tableCell" onclick=" Admin.loadFloors(@map.Id) ">
                 <div class="tableRow">@map.Id</div>

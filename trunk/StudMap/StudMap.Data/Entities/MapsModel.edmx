@@ -1,0 +1,472 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="StudMapModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="StudMapModelStoreContainer">
+          <EntitySet Name="Edges" EntityType="StudMapModel.Store.Edges" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Floors" EntityType="StudMapModel.Store.Floors" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Graphs" EntityType="StudMapModel.Store.Graphs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Maps" EntityType="StudMapModel.Store.Maps" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="NodeInformation" EntityType="StudMapModel.Store.NodeInformation" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Nodes" EntityType="StudMapModel.Store.Nodes" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.Store.FK_Edges_EndNodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Edges" EntitySet="Edges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Edges_Graphs" Association="StudMapModel.Store.FK_Edges_Graphs">
+            <End Role="Graphs" EntitySet="Graphs" />
+            <End Role="Edges" EntitySet="Edges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Edges_StartNodes" Association="StudMapModel.Store.FK_Edges_StartNodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Edges" EntitySet="Edges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Floors_Maps" Association="StudMapModel.Store.FK_Floors_Maps">
+            <End Role="Maps" EntitySet="Maps" />
+            <End Role="Floors" EntitySet="Floors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Graphs_Maps" Association="StudMapModel.Store.FK_Graphs_Maps">
+            <End Role="Maps" EntitySet="Maps" />
+            <End Role="Graphs" EntitySet="Graphs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NodeInformation_Nodes" Association="StudMapModel.Store.FK_NodeInformation_Nodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="NodeInformation" EntitySet="NodeInformation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Nodes_Floors" Association="StudMapModel.Store.FK_Nodes_Floors">
+            <End Role="Floors" EntitySet="Floors" />
+            <End Role="Nodes" EntitySet="Nodes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Edges">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="GraphId" Type="int" Nullable="false" />
+          <Property Name="NodeStartId" Type="int" Nullable="false" />
+          <Property Name="NodeEndId" Type="int" Nullable="false" />
+          <Property Name="CreationTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Floors">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MapId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="CreationTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Graphs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MapId" Type="int" Nullable="false" />
+          <Property Name="CreationTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Maps">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreationTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NodeInformation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="NodeId" Type="int" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
+          <Property Name="QRCode" Type="nvarchar" MaxLength="255" />
+          <Property Name="NFCTag" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreationTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Nodes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FloorId" Type="int" Nullable="false" />
+          <Property Name="X" Type="decimal" Nullable="false" Scale="4" />
+          <Property Name="Y" Type="decimal" Nullable="false" Scale="4" />
+          <Property Name="CreationTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Edges_EndNodes">
+          <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="1" />
+          <End Role="Edges" Type="StudMapModel.Store.Edges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Edges">
+              <PropertyRef Name="NodeEndId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Edges_Graphs">
+          <End Role="Graphs" Type="StudMapModel.Store.Graphs" Multiplicity="1" />
+          <End Role="Edges" Type="StudMapModel.Store.Edges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Graphs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Edges">
+              <PropertyRef Name="GraphId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Edges_StartNodes">
+          <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="1" />
+          <End Role="Edges" Type="StudMapModel.Store.Edges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Edges">
+              <PropertyRef Name="NodeStartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Floors_Maps">
+          <End Role="Maps" Type="StudMapModel.Store.Maps" Multiplicity="1" />
+          <End Role="Floors" Type="StudMapModel.Store.Floors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Maps">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Floors">
+              <PropertyRef Name="MapId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Graphs_Maps">
+          <End Role="Maps" Type="StudMapModel.Store.Maps" Multiplicity="1" />
+          <End Role="Graphs" Type="StudMapModel.Store.Graphs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Maps">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Graphs">
+              <PropertyRef Name="MapId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_NodeInformation_Nodes">
+          <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="1" />
+          <End Role="NodeInformation" Type="StudMapModel.Store.NodeInformation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeInformation">
+              <PropertyRef Name="NodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Nodes_Floors">
+          <End Role="Floors" Type="StudMapModel.Store.Floors" Multiplicity="1" />
+          <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Floors">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Nodes">
+              <PropertyRef Name="FloorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StudMapModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MapsEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Edges" EntityType="StudMapModel.Edges" />
+          <EntitySet Name="Floors" EntityType="StudMapModel.Floors" />
+          <EntitySet Name="Graphs" EntityType="StudMapModel.Graphs" />
+          <EntitySet Name="Maps" EntityType="StudMapModel.Maps" />
+          <EntitySet Name="NodeInformation" EntityType="StudMapModel.NodeInformation" />
+          <EntitySet Name="Nodes" EntityType="StudMapModel.Nodes" />
+          <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.FK_Edges_EndNodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Edges" EntitySet="Edges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Edges_Graphs" Association="StudMapModel.FK_Edges_Graphs">
+            <End Role="Graphs" EntitySet="Graphs" />
+            <End Role="Edges" EntitySet="Edges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Edges_StartNodes" Association="StudMapModel.FK_Edges_StartNodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Edges" EntitySet="Edges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Floors_Maps" Association="StudMapModel.FK_Floors_Maps">
+            <End Role="Maps" EntitySet="Maps" />
+            <End Role="Floors" EntitySet="Floors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Nodes_Floors" Association="StudMapModel.FK_Nodes_Floors">
+            <End Role="Floors" EntitySet="Floors" />
+            <End Role="Nodes" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Graphs_Maps" Association="StudMapModel.FK_Graphs_Maps">
+            <End Role="Maps" EntitySet="Maps" />
+            <End Role="Graphs" EntitySet="Graphs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NodeInformation_Nodes" Association="StudMapModel.FK_NodeInformation_Nodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="NodeInformation" EntitySet="NodeInformation" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Edges">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="GraphId" Type="Int32" Nullable="false" />
+          <Property Name="NodeStartId" Type="Int32" Nullable="false" />
+          <Property Name="NodeEndId" Type="Int32" Nullable="false" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Edges_EndNodes" FromRole="Edges" ToRole="Nodes" />
+          <NavigationProperty Name="Graphs" Relationship="StudMapModel.FK_Edges_Graphs" FromRole="Edges" ToRole="Graphs" />
+          <NavigationProperty Name="Nodes1" Relationship="StudMapModel.FK_Edges_StartNodes" FromRole="Edges" ToRole="Nodes" />
+        </EntityType>
+        <EntityType Name="Floors">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="MapId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Maps" Relationship="StudMapModel.FK_Floors_Maps" FromRole="Floors" ToRole="Maps" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Floors" ToRole="Nodes" />
+        </EntityType>
+        <EntityType Name="Graphs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="MapId" Type="Int32" Nullable="false" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Edges" Relationship="StudMapModel.FK_Edges_Graphs" FromRole="Graphs" ToRole="Edges" />
+          <NavigationProperty Name="Maps" Relationship="StudMapModel.FK_Graphs_Maps" FromRole="Graphs" ToRole="Maps" />
+        </EntityType>
+        <EntityType Name="Maps">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Floors_Maps" FromRole="Maps" ToRole="Floors" />
+          <NavigationProperty Name="Graphs" Relationship="StudMapModel.FK_Graphs_Maps" FromRole="Maps" ToRole="Graphs" />
+        </EntityType>
+        <EntityType Name="NodeInformation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="NodeId" Type="Int32" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="RoomName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="QRCode" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="NFCTag" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="NodeInformation" ToRole="Nodes" />
+        </EntityType>
+        <EntityType Name="Nodes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="FloorId" Type="Int32" Nullable="false" />
+          <Property Name="X" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="Y" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="CreationTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Edges" Relationship="StudMapModel.FK_Edges_EndNodes" FromRole="Nodes" ToRole="Edges" />
+          <NavigationProperty Name="Edges1" Relationship="StudMapModel.FK_Edges_StartNodes" FromRole="Nodes" ToRole="Edges" />
+          <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Nodes" ToRole="Floors" />
+          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="Nodes" ToRole="NodeInformation" />
+        </EntityType>
+        <Association Name="FK_Edges_EndNodes">
+          <End Role="Nodes" Type="StudMapModel.Nodes" Multiplicity="1" />
+          <End Role="Edges" Type="StudMapModel.Edges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Edges">
+              <PropertyRef Name="NodeEndId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Edges_Graphs">
+          <End Role="Graphs" Type="StudMapModel.Graphs" Multiplicity="1" />
+          <End Role="Edges" Type="StudMapModel.Edges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Graphs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Edges">
+              <PropertyRef Name="GraphId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Edges_StartNodes">
+          <End Role="Nodes" Type="StudMapModel.Nodes" Multiplicity="1" />
+          <End Role="Edges" Type="StudMapModel.Edges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Edges">
+              <PropertyRef Name="NodeStartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Floors_Maps">
+          <End Role="Maps" Type="StudMapModel.Maps" Multiplicity="1" />
+          <End Role="Floors" Type="StudMapModel.Floors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Maps">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Floors">
+              <PropertyRef Name="MapId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Nodes_Floors">
+          <End Role="Floors" Type="StudMapModel.Floors" Multiplicity="1" />
+          <End Role="Nodes" Type="StudMapModel.Nodes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Floors">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Nodes">
+              <PropertyRef Name="FloorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Graphs_Maps">
+          <End Role="Maps" Type="StudMapModel.Maps" Multiplicity="1" />
+          <End Role="Graphs" Type="StudMapModel.Graphs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Maps">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Graphs">
+              <PropertyRef Name="MapId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_NodeInformation_Nodes">
+          <End Role="Nodes" Type="StudMapModel.Nodes" Multiplicity="1" />
+          <End Role="NodeInformation" Type="StudMapModel.NodeInformation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeInformation">
+              <PropertyRef Name="NodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StudMapModelStoreContainer" CdmEntityContainer="MapsEntities">
+          <EntitySetMapping Name="Edges">
+            <EntityTypeMapping TypeName="StudMapModel.Edges">
+              <MappingFragment StoreEntitySet="Edges">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="GraphId" ColumnName="GraphId" />
+                <ScalarProperty Name="NodeStartId" ColumnName="NodeStartId" />
+                <ScalarProperty Name="NodeEndId" ColumnName="NodeEndId" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Floors">
+            <EntityTypeMapping TypeName="StudMapModel.Floors">
+              <MappingFragment StoreEntitySet="Floors">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MapId" ColumnName="MapId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Graphs">
+            <EntityTypeMapping TypeName="StudMapModel.Graphs">
+              <MappingFragment StoreEntitySet="Graphs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MapId" ColumnName="MapId" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Maps">
+            <EntityTypeMapping TypeName="StudMapModel.Maps">
+              <MappingFragment StoreEntitySet="Maps">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NodeInformation">
+            <EntityTypeMapping TypeName="StudMapModel.NodeInformation">
+              <MappingFragment StoreEntitySet="NodeInformation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="QRCode" ColumnName="QRCode" />
+                <ScalarProperty Name="NFCTag" ColumnName="NFCTag" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Nodes">
+            <EntityTypeMapping TypeName="StudMapModel.Nodes">
+              <MappingFragment StoreEntitySet="Nodes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FloorId" ColumnName="FloorId" />
+                <ScalarProperty Name="X" ColumnName="X" />
+                <ScalarProperty Name="Y" ColumnName="Y" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

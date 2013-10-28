@@ -46,7 +46,7 @@
     },
 
     loadMaps: function() {
-        $('.tab').removeClass('active');
+        $('.tab').removeClass('active').removeClass("selectable");
         $(this).addClass('active');
         $('#adminContent').html("").load(window.basePath + "Admin/GetMaps");
     },

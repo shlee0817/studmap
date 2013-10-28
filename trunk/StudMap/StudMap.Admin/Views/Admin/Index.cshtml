@@ -15,11 +15,13 @@
 }
 
 <div>
-    <div class="tab active">Maps</div>
-    <div class="tab">Floors</div>
-    <div class="tab">Layer</div>
+    <div id="mapsTab" class="tab active">Maps</div>
+    <div id="floorsTab" class="tab">Floors</div>
+    <div id="layerTab" class="tab">Layer</div>
     <br style="clear:both"/>
 </div>
 <div id="adminContent">
-    @Html.Partial("_Maps")
+    @{
+        Html.RenderAction("GetMaps");
+    }
 </div>

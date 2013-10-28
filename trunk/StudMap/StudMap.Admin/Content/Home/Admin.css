@@ -39,6 +39,9 @@
     font-weight: bold;
     padding: 6px 22px;
     background-color: #DFE9EE;
+}
+
+.tab.selectable {
     cursor: pointer;
 }
 

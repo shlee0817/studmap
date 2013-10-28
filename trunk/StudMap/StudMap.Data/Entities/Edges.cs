@@ -15,12 +15,13 @@ namespace StudMap.Data.Entities
     public partial class Edges
     {
         public int Id { get; set; }
-        public int Graph_Id { get; set; }
-        public int NodeStart_Id { get; set; }
-        public int EdgeNode1_Edge_Id { get; set; }
+        public int GraphId { get; set; }
+        public int NodeStartId { get; set; }
+        public int NodeEndId { get; set; }
+        public System.DateTime CreationTime { get; set; }
     
         public virtual Nodes Nodes { get; set; }
-        public virtual Nodes Nodes1 { get; set; }
         public virtual Graphs Graphs { get; set; }
+        public virtual Nodes Nodes1 { get; set; }
     }
 }

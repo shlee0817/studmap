@@ -12,19 +12,16 @@ namespace StudMap.Data.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Floors
+    public partial class NodeInformation
     {
-        public Floors()
-        {
-            this.Nodes = new HashSet<Nodes>();
-        }
-    
         public int Id { get; set; }
-        public int MapId { get; set; }
-        public string Name { get; set; }
+        public int NodeId { get; set; }
+        public string DisplayName { get; set; }
+        public string RoomName { get; set; }
+        public string QRCode { get; set; }
+        public string NFCTag { get; set; }
         public System.DateTime CreationTime { get; set; }
     
-        public virtual Maps Maps { get; set; }
-        public virtual ICollection<Nodes> Nodes { get; set; }
+        public virtual Nodes Nodes { get; set; }
     }
 }

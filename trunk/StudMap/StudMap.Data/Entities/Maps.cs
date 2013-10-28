@@ -17,13 +17,14 @@ namespace StudMap.Data.Entities
         public Maps()
         {
             this.Floors = new HashSet<Floors>();
+            this.Graphs = new HashSet<Graphs>();
         }
     
         public int Id { get; set; }
-        public int Graph_Id { get; set; }
         public string Name { get; set; }
+        public System.DateTime CreationTime { get; set; }
     
         public virtual ICollection<Floors> Floors { get; set; }
-        public virtual Graphs Graphs { get; set; }
+        public virtual ICollection<Graphs> Graphs { get; set; }
     }
 }

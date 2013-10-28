@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1dc31dabc882474bb9d1ad8a2c8024c7" Name="Diagram1">
+        <EntityTypeShape EntityType="StudMapModel.Edges" Width="1.5" PointX="7.5" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudMapModel.Floors" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudMapModel.Graphs" Width="1.5" PointX="3" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudMapModel.Maps" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformation" Width="1.5" PointX="7.5" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="5.25" PointY="2.75" IsExpanded="true" />
+        <AssociationConnector Association="StudMapModel.FK_Edges_EndNodes" ManuallyRouted="false" />
+        <AssociationConnector Association="StudMapModel.FK_Edges_Graphs" ManuallyRouted="false" />
+        <AssociationConnector Association="StudMapModel.FK_Edges_StartNodes" ManuallyRouted="false" />
+        <AssociationConnector Association="StudMapModel.FK_Floors_Maps" ManuallyRouted="false" />
+        <AssociationConnector Association="StudMapModel.FK_Nodes_Floors" ManuallyRouted="false" />
+        <AssociationConnector Association="StudMapModel.FK_Graphs_Maps" ManuallyRouted="false" />
+        <AssociationConnector Association="StudMapModel.FK_NodeInformation_Nodes" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
