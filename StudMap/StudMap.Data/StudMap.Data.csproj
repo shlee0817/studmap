@@ -58,70 +58,44 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Edges.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
+      <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Floors.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
+      <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Graphs.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\MapModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MapModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\MapModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\MapModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MapModel.edmx</DependentUpon>
+      <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Maps.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
+      <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\NodeInformationSet.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
+    <Compile Include="Entities\MapsModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MapsModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MapsModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MapsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MapsModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MapsModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\NodeInformation.cs">
+      <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Nodes.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\UserModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\UserModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\UserModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\UserProfile.cs">
-      <DependentUpon>UserModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\webpages_Membership.cs">
-      <DependentUpon>UserModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\webpages_OAuthMembership.cs">
-      <DependentUpon>UserModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\webpages_Roles.cs">
-      <DependentUpon>UserModel.tt</DependentUpon>
+      <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -129,39 +103,22 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <EntityDeploy Include="Entities\MapModel.edmx">
+    <EntityDeploy Include="Entities\MapsModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MapModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>MapsModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Entities\MapModel.Context.tt">
+    <None Include="Entities\MapsModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MapModel.edmx</DependentUpon>
-      <LastGenOutput>MapModel.Context.cs</LastGenOutput>
+      <DependentUpon>MapsModel.edmx</DependentUpon>
+      <LastGenOutput>MapsModel.Context.cs</LastGenOutput>
     </None>
-    <None Include="Entities\MapModel.edmx.diagram">
-      <DependentUpon>MapModel.edmx</DependentUpon>
+    <None Include="Entities\MapsModel.edmx.diagram">
+      <DependentUpon>MapsModel.edmx</DependentUpon>
     </None>
-    <None Include="Entities\MapModel.tt">
+    <None Include="Entities\MapsModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MapModel.edmx</DependentUpon>
-      <LastGenOutput>MapModel.cs</LastGenOutput>
-    </None>
-    <EntityDeploy Include="Entities\UserModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>UserModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Entities\UserModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>UserModel.edmx</DependentUpon>
-      <LastGenOutput>UserModel.Context.cs</LastGenOutput>
-    </None>
-    <None Include="Entities\UserModel.edmx.diagram">
-      <DependentUpon>UserModel.edmx</DependentUpon>
-    </None>
-    <None Include="Entities\UserModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>UserModel.edmx</DependentUpon>
-      <LastGenOutput>UserModel.cs</LastGenOutput>
+      <DependentUpon>MapsModel.edmx</DependentUpon>
+      <LastGenOutput>MapsModel.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -1,37 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Web.Http;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Maps;
 using StudMap.Data.Entities;
-using System.Data;
-using System.Linq;
 
 namespace StudMap.Service.Controllers
 {
     public class MapsController : ApiController
     {
         #region Map
+
         public MapsResponse CreateMap(string mapName)
         {
             var result = new MapsResponse();
 
             try
             {
-                using (var entities = new MapEntities())
+                using (var entities = new MapsEntities())
                 {
-                    var newMap = new Maps { Name = mapName };
-                    var insertedMap = entities.Maps.Add(newMap);
+                    var newMap = new Maps
+                        {
+                            Name = mapName,
+                            CreationTime = DateTime.Now
+                        };
+                    Maps insertedMap = entities.Maps.Add(newMap);
                     entities.SaveChanges();
 
                     result.Map = new Map
-                    {
-                        Id = insertedMap.Id,
-                        Name = insertedMap.Name
-                    };
+                        {
+                            Id = insertedMap.Id,
+                            Name = insertedMap.Name
+                        };
                 }
             }
-            catch (DataException ex)
+            catch (DataException)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
@@ -46,16 +52,16 @@ namespace StudMap.Service.Controllers
 
             try
             {
-                using (var entities = new MapEntities())
+                using (var entities = new MapsEntities())
                 {
-                    Maps mapToDelete = entities.Maps.Find(mapId);
+                    var mapToDelete = entities.Maps.Find(mapId);
                     if (mapToDelete == null)
                         return result;
                     entities.Maps.Remove(mapToDelete);
                     entities.SaveChanges();
                 }
             }
-            catch (DataException ex)
+            catch (DataException)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
@@ -70,18 +76,18 @@ namespace StudMap.Service.Controllers
 
             try
             {
-                using (var entities = new MapEntities())
+                using (var entities = new MapsEntities())
                 {
                     var maps = from map in entities.Maps
-                               select new Map
-                               {
-                                   Id = map.Id,
-                                   Name = map.Name
-                               };
+                                           select new Map
+                                               {
+                                                   Id = map.Id,
+                                                   Name = map.Name
+                                               };
                     result.List = maps.ToList();
                 }
             }
-            catch (DataException ex)
+            catch (DataException)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
@@ -89,6 +95,7 @@ namespace StudMap.Service.Controllers
 
             return result;
         }
+
         #endregion
 
         #region Floor
@@ -114,11 +121,10 @@ namespace StudMap.Service.Controllers
         {
             //TODO Implement
             return new BaseResponse
-            {
-                Status = RespsonseStatus.Ok,
-                ErrorCode = ResponseError.None
-
-            };
+                {
+                    Status = RespsonseStatus.Ok,
+                    ErrorCode = ResponseError.None
+                };
         }
 
         public IEnumerable<Floor> GetFloorsForMap(int mapId)
@@ -128,25 +134,26 @@ namespace StudMap.Service.Controllers
         }
 
         [HttpPost]
-        public FloorsResponse UploadFloorImage(int floorId, [FromBody]object floor)
+        public FloorsResponse UploadFloorImage(int floorId, [FromBody] object floor)
         {
             //TODO Implement 
             return new FloorsResponse
-            {
-                Status = RespsonseStatus.Ok,
-                ErrorCode = ResponseError.None,
-                Floor = new Floor
                 {
-                    Id = 1,
-                    ImageUrl = "",
-                    MapId = 1
-                }
-            };
+                    Status = RespsonseStatus.Ok,
+                    ErrorCode = ResponseError.None,
+                    Floor = new Floor
+                        {
+                            Id = 1,
+                            ImageUrl = "",
+                            MapId = 1
+                        }
+                };
         }
 
         #endregion
 
         #region Layer: Graph
+
         public GraphResponse SaveGraphForFloor(int floorId, Graph graph)
         {
             //TODO Implement
@@ -166,16 +173,17 @@ namespace StudMap.Service.Controllers
         {
             //TODO Implement
             return new GraphResponse
-            {
-                Status = RespsonseStatus.Ok,
-                ErrorCode = ResponseError.None,
-                Graph = new Graph
                 {
-                    Edges = new List<Edge>(),
-                    Nodes = new List<Node>()
-                }
-            };
+                    Status = RespsonseStatus.Ok,
+                    ErrorCode = ResponseError.None,
+                    Graph = new Graph
+                        {
+                            Edges = new List<Edge>(),
+                            Nodes = new List<Node>()
+                        }
+                };
         }
+
         #endregion
     }
 }
