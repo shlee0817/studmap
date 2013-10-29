@@ -28,8 +28,10 @@
                 d3.select("svg").classed("active", true);
 
                 if (d3.event.ctrlKey || mousedownNode) return;
-                
-                nodes.push({ id: ++nodeCount, fixed: true, x: d3.event.offsetX, y: d3.event.offsetY });
+
+                var mouse = d3.mouse(this);
+
+                nodes.push({ id: ++nodeCount, fixed: true, x: mouse[0], y: mouse[1] });
                 graph.start();
             }).on("mouseup", function () {
                 d3.select("svg").classed("active", false);
