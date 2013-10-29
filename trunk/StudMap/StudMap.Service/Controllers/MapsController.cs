@@ -226,17 +226,60 @@ namespace StudMap.Service.Controllers
 
         public GraphResponse SaveGraphForFloor(int floorId, Graph graph)
         {
-            //TODO Implement
-            return new GraphResponse
+            var result = new GraphResponse();
+
+            try
+            {
+                using (var entities = new MapsEntities())
                 {
-                    Status = RespsonseStatus.Ok,
-                    ErrorCode = ResponseError.None,
-                    Graph = new Graph
+                    var foundFloors = from floor in entities.Floors
+                                      where floor.Id == floorId
+                                      select floor;
+                    if (!foundFloors.Any())
+                    {
+                        result.SetError(ResponseError.FloorIdDoesNotExist);
+                        return result;
+                    }
+
+                    Dictionary<int, int> nodeIdMap = new Dictionary<int, int>();
+                    
+                    // Nodes in den Floor hinzufügen
+                    foreach (Node node in graph.Nodes) 
+                    {
+                        var newNode = new Nodes {
+                            FloorId = floorId,
+                            X = node.X,
+                            Y = node.Y
+                        };
+                        entities.Nodes.Add(newNode);
+                        nodeIdMap.Add(node.Id, newNode.Id);
+                    }
+                    
+                    // Edges im Graph hinzufügen
+                    Floors targetFloor = foundFloors.First();
+                    Graphs newGraph = entities.Graphs.Add(new Graphs {
+                        MapId  = targetFloor.MapId,
+                        CreationTime = DateTime.Now
+                    });
+
+                    foreach (Edge edge in graph.Edges)
+                    {
+                        newGraph.Edges.Add(new Edges
                         {
-                            Edges = new List<Edge>(),
-                            Nodes = new List<Node>()
-                        }
-                };
+                            NodeStartId = nodeIdMap[edge.StartNodeId],
+                            NodeEndId = nodeIdMap[edge.EndNodeId],
+                            CreationTime = DateTime.Now
+                        });
+                    }
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
         }
 
         public GraphResponse GetGraphForFloor(int floorId)

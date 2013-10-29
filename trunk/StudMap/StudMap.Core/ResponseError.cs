@@ -20,6 +20,7 @@
 
         #region Maps
         MapIdDoesNotExist = 201,
+        FloorIdDoesNotExist = 202
         #endregion
     }
 }
