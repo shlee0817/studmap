@@ -10,6 +10,7 @@
         <EntityTypeShape EntityType="StudMapModel.webpages_OAuthMembership" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="StudMapModel.webpages_Roles" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
         <AssociationConnector Association="StudMapModel.webpages_UsersInRoles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="StudMapModel.ActiveUser" Width="1.5" PointX="5.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

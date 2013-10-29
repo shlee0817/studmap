@@ -39,54 +39,74 @@ namespace StudMap.Service.Controllers
         [HttpPost]
         public BaseResponse Login(string userName, string password)
         {
-            throw new NotImplementedException();
-            //TODO: Implement
-            return new BaseResponse
-            {
-                Status = RespsonseStatus.Ok,
-                ErrorCode = ResponseError.None
-            };
-        }
-
-        public BaseResponse Logout(string userName)
-        {
-            throw new NotImplementedException();
-        }
-        /*
-         * // AGcXU29c/e4LDcPk6pEUMoWkiXXDnFPEyKjtnLpX/rqpU//oQDLKPkS2EV+haRE9hg==
-            var hash = Crypto.HashPassword(password);
-            var b = Crypto.VerifyHashedPassword(hash, password);
-            var b1 = Crypto.VerifyHashedPassword(
-                "AGcXU29c/e4LDcPk6pEUMoWkiXXDnFPEyKjtnLpX/rqpU//oQDLKPkS2EV+haRE9hg==", password);
-            if (hash == "AGcXU29c/e4LDcPk6pEUMoWkiXXDnFPEyKjtnLpX/rqpU//oQDLKPkS2EV+haRE9hg==")
-            {
-                
-            }
-            var sha1 = Crypto.SHA1(password);
-            if (sha1 == "AGcXU29c/e4LDcPk6pEUMoWkiXXDnFPEyKjtnLpX/rqpU//oQDLKPkS2EV+haRE9hg==")
-            {
-                
-            }*/
-        public ListResponse<User> GetActiveUsers()
-        {
-            var response = new ListResponse<User> {ErrorCode = ResponseError.None, Status = RespsonseStatus.Ok};
             try
             {
                 using (var entities = new UserEntities())
                 {
-                    foreach (var userProfile in entities.UserProfile)
-                        response.List.Add(new User {Name = userProfile.UserName});
+                    var user = entities.UserProfile.FirstOrDefault(u => u.UserName == userName);
+                    if (user == null)
+                        return new BaseResponse{Status=RespsonseStatus.Error, ErrorCode= ResponseError.LoginInvalid};
+
+                    var membership = entities.webpages_Membership.First(m => m.UserId == user.UserId);
+                    if (!Crypto.VerifyHashedPassword(membership.Password, password))
+                        return new BaseResponse { Status = RespsonseStatus.Error, ErrorCode = ResponseError.LoginInvalid };
+
+                    entities.ActiveUsers.Add(new ActiveUser {UserId = user.UserId, LoginDate = DateTime.Now});
+                    entities.SaveChanges();
+
+                    return new BaseResponse {Status = RespsonseStatus.Ok, ErrorCode = ResponseError.None};
                 }
             }
-            catch (Exception e)
+            catch (DataException)
             {
-                Debug.WriteLine("Exception in GetActiveUsers: " + e.Message);
-                Debug.WriteLine(e.StackTrace);
-
-                response.Status = RespsonseStatus.Error;
-                response.ErrorCode = ResponseError.DatabaseError;
+                return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.DatabaseError};
             }
-            return response;
+        }
+
+        public BaseResponse Logout(string userName)
+        {
+            try
+            {
+                using (var entities = new UserEntities())
+                {
+                    var user = entities.UserProfile.FirstOrDefault(u => u.UserName == userName);
+                    if (user == null)
+                        return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.LoginInvalid};
+
+                    var activeUser = entities.ActiveUsers.FirstOrDefault(u => u.UserId == user.UserId);
+                    if (activeUser != null)
+                    {
+                        entities.ActiveUsers.Remove(activeUser);
+                        entities.SaveChanges();
+                    }
+                    return new BaseResponse {Status = RespsonseStatus.Ok, ErrorCode = ResponseError.None};
+                }
+            }
+            catch (DataException)
+            {
+                return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.DatabaseError};
+            }
+        }
+
+        public ListResponse<User> GetActiveUsers()
+        {
+            try
+            {
+                using (var entities = new UserEntities())
+                {
+                    var response = new ListResponse<User> { ErrorCode = ResponseError.None, Status = RespsonseStatus.Ok };
+                    foreach (var activeUser in entities.ActiveUsers)
+                        response.List.Add(new User
+                        {
+                            Name = entities.UserProfile.First(u => u.UserId == activeUser.UserId).UserName
+                        });
+                    return response;
+                }
+            }
+            catch (DataException)
+            {
+                return new ListResponse<User> {Status = RespsonseStatus.Error, ErrorCode = ResponseError.DatabaseError};
+            }
         }
 
         #region Private Helpers
