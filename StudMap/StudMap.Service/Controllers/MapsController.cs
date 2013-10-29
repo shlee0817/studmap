@@ -127,10 +127,37 @@ namespace StudMap.Service.Controllers
                 };
         }
 
-        public IEnumerable<Floor> GetFloorsForMap(int mapId)
+        public ListResponse<Floor> GetFloorsForMap(int mapId)
         {
-            //TODO Implement
-            return new List<Floor>();
+            var result = new ListResponse<Floor>();
+
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    bool mapExists = entities.Maps.Any(m => m.Id == mapId);
+                    if (!mapExists)
+                    {
+                        result.SetError(ResponseError.MapIdDoesNotExist);
+                        return result;
+                    }
+
+                    var floors = from floor in entities.Floors
+                               select new Floor
+                               {
+                                   Id = floor.Id,
+                                   MapId = mapId
+                               };
+                    result.List = floors.ToList();
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
         }
 
         [HttpPost]
