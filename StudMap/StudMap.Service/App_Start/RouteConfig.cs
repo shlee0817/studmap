@@ -9,10 +9,11 @@ namespace StudMap.Service.App_Start
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}",
-                defaults: new { controller = "Tests", action = "OCR" }
+                defaults: new { controller = "Users", action = "Register" }
             );
         }
     }
