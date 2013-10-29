@@ -95,13 +95,13 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="StudMapUsers" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="StudMapEntities" p1:LazyLoadingEnabled="true">
-          <EntitySet Name="UserProfile" EntityType="StudMapUsers.UserProfile" />
-          <EntitySet Name="webpages_Membership" EntityType="StudMapUsers.webpages_Membership" />
-          <EntitySet Name="webpages_OAuthMembership" EntityType="StudMapUsers.webpages_OAuthMembership" />
-          <EntitySet Name="webpages_Roles" EntityType="StudMapUsers.webpages_Roles" />
-          <AssociationSet Name="webpages_UsersInRoles" Association="StudMapUsers.webpages_UsersInRoles">
+      <Schema Namespace="StudMapModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="UserEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="UserProfile" EntityType="StudMapModel.UserProfile" />
+          <EntitySet Name="webpages_Membership" EntityType="StudMapModel.webpages_Membership" />
+          <EntitySet Name="webpages_OAuthMembership" EntityType="StudMapModel.webpages_OAuthMembership" />
+          <EntitySet Name="webpages_Roles" EntityType="StudMapModel.webpages_Roles" />
+          <AssociationSet Name="webpages_UsersInRoles" Association="StudMapModel.webpages_UsersInRoles">
             <End Role="webpages_Roles" EntitySet="webpages_Roles" />
             <End Role="UserProfile" EntitySet="UserProfile" />
           </AssociationSet>
@@ -112,7 +112,7 @@
           </Key>
           <Property Name="UserId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="56" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="webpages_Roles" Relationship="StudMapUsers.webpages_UsersInRoles" FromRole="UserProfile" ToRole="webpages_Roles" />
+          <NavigationProperty Name="webpages_Roles" Relationship="StudMapModel.webpages_UsersInRoles" FromRole="UserProfile" ToRole="webpages_Roles" />
         </EntityType>
         <EntityType Name="webpages_Membership">
           <Key>
@@ -145,20 +145,20 @@
           </Key>
           <Property Name="RoleId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
           <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="UserProfile" Relationship="StudMapUsers.webpages_UsersInRoles" FromRole="webpages_Roles" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile" Relationship="StudMapModel.webpages_UsersInRoles" FromRole="webpages_Roles" ToRole="UserProfile" />
         </EntityType>
         <Association Name="webpages_UsersInRoles">
-          <End Role="webpages_Roles" Type="StudMapUsers.webpages_Roles" Multiplicity="*" />
-          <End Role="UserProfile" Type="StudMapUsers.UserProfile" Multiplicity="*" />
+          <End Role="webpages_Roles" Type="StudMapModel.webpages_Roles" Multiplicity="*" />
+          <End Role="UserProfile" Type="StudMapModel.UserProfile" Multiplicity="*" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="StudMapUsersStoreContainer" CdmEntityContainer="StudMapEntities">
+        <EntityContainerMapping StorageEntityContainer="StudMapUsersStoreContainer" CdmEntityContainer="UserEntities">
           <EntitySetMapping Name="UserProfile">
-            <EntityTypeMapping TypeName="StudMapUsers.UserProfile">
+            <EntityTypeMapping TypeName="StudMapModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
@@ -166,7 +166,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="webpages_Membership">
-            <EntityTypeMapping TypeName="StudMapUsers.webpages_Membership">
+            <EntityTypeMapping TypeName="StudMapModel.webpages_Membership">
               <MappingFragment StoreEntitySet="webpages_Membership">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
@@ -183,7 +183,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="webpages_OAuthMembership">
-            <EntityTypeMapping TypeName="StudMapUsers.webpages_OAuthMembership">
+            <EntityTypeMapping TypeName="StudMapModel.webpages_OAuthMembership">
               <MappingFragment StoreEntitySet="webpages_OAuthMembership">
                 <ScalarProperty Name="Provider" ColumnName="Provider" />
                 <ScalarProperty Name="ProviderUserId" ColumnName="ProviderUserId" />
@@ -192,14 +192,14 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="webpages_Roles">
-            <EntityTypeMapping TypeName="StudMapUsers.webpages_Roles">
+            <EntityTypeMapping TypeName="StudMapModel.webpages_Roles">
               <MappingFragment StoreEntitySet="webpages_Roles">
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="webpages_UsersInRoles" TypeName="StudMapUsers.webpages_UsersInRoles" StoreEntitySet="webpages_UsersInRoles">
+          <AssociationSetMapping Name="webpages_UsersInRoles" TypeName="StudMapModel.webpages_UsersInRoles" StoreEntitySet="webpages_UsersInRoles">
             <EndProperty Name="webpages_Roles">
               <ScalarProperty Name="RoleId" ColumnName="RoleId" />
             </EndProperty>

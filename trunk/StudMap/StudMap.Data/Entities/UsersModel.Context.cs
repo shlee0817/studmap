@@ -13,10 +13,10 @@ namespace StudMap.Data.Entities
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class StudMapEntities : DbContext
+    public partial class UserEntities : DbContext
     {
-        public StudMapEntities()
-            : base("name=StudMapEntities")
+        public UserEntities()
+            : base("name=UserEntities")
         {
         }
     
