@@ -1,6 +1,8 @@
 ﻿using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using StudMap.Core;
+using StudMap.Core.Graph;
 using StudMap.Core.Maps;
 using StudMap.Service.Controllers;
 
@@ -67,9 +69,20 @@ namespace StudMap.Admin.Controllers
         #endregion
 
         [Authorize(Roles = "Admins")]
-        public ActionResult GetFloorplanImage(int mapId, int floorId)
+        public JsonResult GetFloorplanImage(int mapId, int floorId)
         {
-            return File(_serverUploadFolder + "\\floors\\RN_Ebene_" + floorId + ".png", "image/png");
+            var mapsCtrl = new MapsController();
+            var floor = mapsCtrl.GetFloorplanImage(mapId, floorId);
+            return Json(floor, JsonRequestBehavior.AllowGet);
+        }
+
+        [Authorize(Roles = "Admins")]
+        [HttpPost]
+        public JsonResult SaveGraphForMap(int mapId, Graph graph)
+        {
+            var mapsCtrl = new MapsController();
+            var floor = mapsCtrl.SaveGraphForFloor(1, graph);
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
         //Zu Testzwecken (später besser in die API)

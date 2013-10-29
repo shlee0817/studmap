@@ -10,7 +10,7 @@
         </div>
         @foreach (var floor in Model)
         {
-            <div class="tableCell" onclick=" Admin.loadFloorplan(@floor.Id) ">
+            <div class="tableCell" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">
                 <div class="tableRow">@floor.Id</div>
                 <div class="tableRow">@floor.MapId</div>
                 <div class="tableRow">@floor.ImageUrl</div>

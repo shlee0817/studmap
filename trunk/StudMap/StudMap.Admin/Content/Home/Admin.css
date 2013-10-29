@@ -48,3 +48,9 @@
 .tab.active {
     background-color: #a6dbed;
 }
+
+/* map menu controls */
+.ui-active rect {fill: #212121}
+.ui-active text {fill: #fff}
+.ui-default rect {fill: #e6e6e6}
+.ui-default text {fill: #000}
