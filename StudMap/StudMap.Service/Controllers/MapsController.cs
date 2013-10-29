@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Mvc;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Maps;
@@ -100,7 +101,7 @@ namespace StudMap.Service.Controllers
 
         #region Floor
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public FloorsResponse CreateFloor(int mapId, string name = "")
         {
             var result = new FloorsResponse();
@@ -203,7 +204,42 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpPost]
+        public FloorImageResponse GetFloorplanImage(int mapId, int floorId)
+        {
+            var result = new FloorImageResponse();
+
+            if (mapId == 0 || floorId == 0)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.None;
+                return result;
+            }
+
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    var floor = entities.Floors.FirstOrDefault(x => x.Id == floorId && x.MapId == mapId);
+                    if (floor != null)
+                    {
+                        result.ImageUrl = floor.ImageUrl;
+                    }
+                    else
+                    {
+                        result.Status = RespsonseStatus.Error;
+                        result.ErrorCode = ResponseError.None;
+                    }
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+            return result;
+        }
+
+        [System.Web.Http.HttpPost]
         public FloorsResponse UploadFloorImage(int floorId, [FromBody] object floor)
         {
             //TODO Implement 
