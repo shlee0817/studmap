@@ -104,6 +104,7 @@
             <End Role="webpages_Roles" EntitySet="webpages_Roles" />
             <End Role="UserProfile" EntitySet="UserProfile" />
           </AssociationSet>
+          <EntitySet Name="ActiveUsers" EntityType="StudMapModel.ActiveUser" />
         </EntityContainer>
         <EntityType Name="UserProfile">
           <Key>
@@ -150,6 +151,13 @@
           <End Role="webpages_Roles" Type="StudMapModel.webpages_Roles" Multiplicity="*" />
           <End Role="UserProfile" Type="StudMapModel.UserProfile" Multiplicity="*" />
         </Association>
+        <EntityType Name="ActiveUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="Int32" Name="UserId" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="DateTime" Name="LoginDate" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
