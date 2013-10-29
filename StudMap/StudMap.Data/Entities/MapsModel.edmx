@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="StudMapModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="StudMapModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="StudMapModelStoreContainer">
           <EntitySet Name="Edges" EntityType="StudMapModel.Store.Edges" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Floors" EntityType="StudMapModel.Store.Floors" store:Type="Tables" Schema="dbo" />
@@ -58,6 +58,7 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="MapId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="ImageUrl" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CreationTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Graphs">
@@ -182,8 +183,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="StudMapModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -246,6 +246,7 @@
           <Property Name="CreationTime" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Maps" Relationship="StudMapModel.FK_Floors_Maps" FromRole="Floors" ToRole="Maps" />
           <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Floors" ToRole="Nodes" />
+          <Property Type="String" Name="ImageUrl" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Graphs">
           <Key>
@@ -398,6 +399,7 @@
           <EntitySetMapping Name="Floors">
             <EntityTypeMapping TypeName="StudMapModel.Floors">
               <MappingFragment StoreEntitySet="Floors">
+                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="MapId" ColumnName="MapId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

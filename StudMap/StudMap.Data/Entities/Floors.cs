@@ -23,6 +23,7 @@ namespace StudMap.Data.Entities
         public int MapId { get; set; }
         public string Name { get; set; }
         public System.DateTime CreationTime { get; set; }
+        public string ImageUrl { get; set; }
     
         public virtual Maps Maps { get; set; }
         public virtual ICollection<Nodes> Nodes { get; set; }
