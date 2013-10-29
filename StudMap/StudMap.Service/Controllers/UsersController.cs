@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
 using StudMap.Core;
@@ -58,10 +59,26 @@ namespace StudMap.Service.Controllers
             };
         }
 
-        public IEnumerable<User> GetActiveUsers()
+        public ListResponse<User> GetActiveUsers()
         {
-            //TODO: Implement
-            return new List<User>();
+            var response = new ListResponse<User> {ErrorCode = ResponseError.None, Status = RespsonseStatus.Ok};
+            try
+            {
+                using (var entities = new UserEntities())
+                {
+                    foreach (var userProfile in entities.UserProfile)
+                        response.List.Add(new User {Name = userProfile.UserName});
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Exception in GetActiveUsers: " + e.Message);
+                Debug.WriteLine(e.StackTrace);
+
+                response.Status = RespsonseStatus.Error;
+                response.ErrorCode = ResponseError.DatabaseError;
+            }
+            return response;
         }
     }
 }
