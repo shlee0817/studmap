@@ -101,36 +101,76 @@ namespace StudMap.Service.Controllers
         #region Floor
 
         [HttpPost]
-        public FloorsResponse CreateFloor(int mapId)
+        public FloorsResponse CreateFloor(int mapId, string name = "")
         {
-            //TODO Post Body auslesen 
-            return new FloorsResponse
+            var result = new FloorsResponse();
+
+            try
+            {
+                using (var entities = new MapsEntities())
                 {
-                    Status = RespsonseStatus.Ok,
-                    ErrorCode = ResponseError.None,
-                    Floor = new Floor
-                        {
-                            Id = 1,
-                            ImageUrl = "",
-                            MapId = 1
-                        }
-                };
+                    bool mapExists = entities.Maps.Any(m => m.Id == mapId);
+                    if (!mapExists)
+                    {
+                        result.SetError(ResponseError.MapIdDoesNotExist);
+                        return result;
+                    }
+
+                    var newFloor = new Floors
+                    {
+                        MapId = mapId,
+                        Name = name,
+                        CreationTime = DateTime.Now
+                    };
+                    var insertedFloor = entities.Floors.Add(newFloor);
+                    entities.SaveChanges();
+
+                    result.Floor = new Floor
+                    {
+                        Id = insertedFloor.Id,
+                        MapId = insertedFloor.MapId,
+                        Name = insertedFloor.Name,
+                        CreationTime = insertedFloor.CreationTime
+                    };
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
         }
 
         public BaseResponse DeleteFloor(int floorId)
         {
-            //TODO Implement
-            return new BaseResponse
+            var result = new BaseResponse();
+
+            try
+            {
+                using (var entities = new MapsEntities())
                 {
-                    Status = RespsonseStatus.Ok,
-                    ErrorCode = ResponseError.None
-                };
+                    var floorToDelete = entities.Floors.Find(floorId);
+                    if (floorToDelete == null)
+                        return result;
+                    entities.Floors.Remove(floorToDelete);
+                    entities.SaveChanges();
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
         }
 
         public ListResponse<Floor> GetFloorsForMap(int mapId)
         {
             var result = new ListResponse<Floor>();
-
+           
             try
             {
                 using (var entities = new MapsEntities())
@@ -146,7 +186,10 @@ namespace StudMap.Service.Controllers
                                select new Floor
                                {
                                    Id = floor.Id,
-                                   MapId = mapId
+                                   MapId = mapId,
+                                   Name =  floor.Name,
+                                   ImageUrl = floor.ImageUrl,
+                                   CreationTime = floor.CreationTime
                                };
                     result.List = floors.ToList();
                 }
