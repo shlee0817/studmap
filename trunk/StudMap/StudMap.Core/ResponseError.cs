@@ -17,5 +17,9 @@
         #region Login
         LoginInvalid = 110,
         #endregion
+
+        #region Maps
+        MapIdDoesNotExist = 201,
+        #endregion
     }
 }
