@@ -64,7 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\ActiveUser.cs">
+    <Compile Include="Entities\ActiveUsers.cs">
       <DependentUpon>UsersModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Edges.cs">

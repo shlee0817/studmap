@@ -25,10 +25,10 @@ namespace StudMap.Data.Entities
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<ActiveUsers> ActiveUsers { get; set; }
         public DbSet<UserProfile> UserProfile { get; set; }
         public DbSet<webpages_Membership> webpages_Membership { get; set; }
         public DbSet<webpages_OAuthMembership> webpages_OAuthMembership { get; set; }
         public DbSet<webpages_Roles> webpages_Roles { get; set; }
-        public DbSet<ActiveUser> ActiveUsers { get; set; }
     }
 }
