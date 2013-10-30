@@ -1,6 +1,8 @@
-@model List<StudMap.Core.Maps.Floor>
+@using StudMap.Core
+@using StudMap.Core.Maps
+@model ListResponse<Floor>
 
-@if (Model != null && Model.Count > 0)
+@if (Model != null && Model.List.Count > 0)
 {
     <div class="table">
         <div class="tableCell Headline">
@@ -8,7 +10,7 @@
             <div class="tableRow">MapId</div>
             <div class="tableRow">FloorImageFile</div>
         </div>
-        @foreach (var floor in Model)
+        @foreach (var floor in Model.List)
         {
             <div class="tableCell" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">
                 <div class="tableRow">@floor.Id</div>

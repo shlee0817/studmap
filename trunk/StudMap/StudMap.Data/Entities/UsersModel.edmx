@@ -6,6 +6,7 @@
     <edmx:StorageModels>
     <Schema Namespace="StudMapUsers.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="StudMapUsersStoreContainer">
+          <EntitySet Name="ActiveUsers" EntityType="StudMapUsers.Store.ActiveUsers" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="StudMapUsers.Store.UserProfile" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="webpages_Membership" EntityType="StudMapUsers.Store.webpages_Membership" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="webpages_OAuthMembership" EntityType="StudMapUsers.Store.webpages_OAuthMembership" store:Type="Tables" Schema="dbo" />
@@ -20,6 +21,13 @@
             <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ActiveUsers">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="LoginDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserProfile">
           <Key>
             <PropertyRef Name="UserId" />
@@ -214,6 +222,14 @@
               <ScalarProperty Name="UserId" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ActiveUsers">
+            <EntityTypeMapping TypeName="IsTypeOf(StudMapModel.ActiveUser)">
+              <MappingFragment StoreEntitySet="ActiveUsers">
+                <ScalarProperty Name="LoginDate" ColumnName="LoginDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

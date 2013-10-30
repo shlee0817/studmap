@@ -72,7 +72,7 @@ namespace StudMap.Admin.Controllers
         public JsonResult GetFloorplanImage(int mapId, int floorId)
         {
             var mapsCtrl = new MapsController();
-            var floor = mapsCtrl.GetFloorplanImage(mapId, floorId);
+            var floor = mapsCtrl.GetFloorplanImage(floorId);
             return Json(floor, JsonRequestBehavior.AllowGet);
         }
 
@@ -81,7 +81,7 @@ namespace StudMap.Admin.Controllers
         public JsonResult SaveGraphForMap(int mapId, Graph graph)
         {
             var mapsCtrl = new MapsController();
-            var floor = mapsCtrl.SaveGraphForFloor(1, graph);
+            var floor = mapsCtrl.SaveGraphForFloor(2, graph);
             return Json("", JsonRequestBehavior.AllowGet);
         }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Mvc;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Maps;
@@ -101,7 +100,7 @@ namespace StudMap.Service.Controllers
 
         #region Floor
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public FloorsResponse CreateFloor(int mapId, string name = "")
         {
             var result = new FloorsResponse();
@@ -121,6 +120,7 @@ namespace StudMap.Service.Controllers
                     {
                         MapId = mapId,
                         Name = name,
+                        ImageUrl = "",
                         CreationTime = DateTime.Now
                     };
                     var insertedFloor = entities.Floors.Add(newFloor);
@@ -131,11 +131,12 @@ namespace StudMap.Service.Controllers
                         Id = insertedFloor.Id,
                         MapId = insertedFloor.MapId,
                         Name = insertedFloor.Name,
+                        ImageUrl = insertedFloor.ImageUrl,
                         CreationTime = insertedFloor.CreationTime
                     };
                 }
             }
-            catch (DataException)
+            catch (DataException )
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
@@ -144,6 +145,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [HttpPost]
         public BaseResponse DeleteFloor(int floorId)
         {
             var result = new BaseResponse();
@@ -204,22 +206,15 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public FloorImageResponse GetFloorplanImage(int mapId, int floorId)
+        public FloorImageResponse GetFloorplanImage(int floorId)
         {
             var result = new FloorImageResponse();
-
-            if (mapId == 0 || floorId == 0)
-            {
-                result.Status = RespsonseStatus.Error;
-                result.ErrorCode = ResponseError.None;
-                return result;
-            }
 
             try
             {
                 using (var entities = new MapsEntities())
                 {
-                    var floor = entities.Floors.FirstOrDefault(x => x.Id == floorId && x.MapId == mapId);
+                    var floor = entities.Floors.FirstOrDefault(f => f.Id == floorId);
                     if (floor != null)
                     {
                         result.ImageUrl = floor.ImageUrl;
@@ -227,7 +222,7 @@ namespace StudMap.Service.Controllers
                     else
                     {
                         result.Status = RespsonseStatus.Error;
-                        result.ErrorCode = ResponseError.None;
+                        result.ErrorCode = ResponseError.FloorIdDoesNotExist;
                     }
                 }
             }
@@ -239,7 +234,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public FloorsResponse UploadFloorImage(int floorId, [FromBody] object floor)
         {
             //TODO Implement 
@@ -268,6 +263,8 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
+                    // TODO: Alten Graphen auf dem Floor löschen!
+
                     var foundFloors = from floor in entities.Floors
                                       where floor.Id == floorId
                                       select floor;
@@ -285,9 +282,11 @@ namespace StudMap.Service.Controllers
                         var newNode = new Nodes {
                             FloorId = floorId,
                             X = node.X,
-                            Y = node.Y
+                            Y = node.Y,
+                            CreationTime = DateTime.Now
                         };
                         entities.Nodes.Add(newNode);
+                        entities.SaveChanges();
                         nodeIdMap.Add(node.Id, newNode.Id);
                     }
                     
@@ -307,6 +306,8 @@ namespace StudMap.Service.Controllers
                             CreationTime = DateTime.Now
                         });
                     }
+
+                    entities.SaveChanges();
                 }
             }
             catch (DataException)
