@@ -1,16 +1,16 @@
 ﻿using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
+using StudMap.Admin.Models;
 using StudMap.Core;
-using StudMap.Core.Graph;
 using StudMap.Core.Maps;
 using StudMap.Service.Controllers;
+using Graph = StudMap.Core.Graph.Graph;
 
 namespace StudMap.Admin.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly string _serverUploadFolder = System.Web.HttpContext.Current.Server.MapPath("~/App_Data");
+        private readonly string _serverUploadFolder = System.Web.HttpContext.Current.Server.MapPath("~/Images");
 
         [Authorize(Roles = "Admins")]
         public ActionResult Index()
@@ -35,18 +35,44 @@ namespace StudMap.Admin.Controllers
         }
 
         [Authorize(Roles = "Admins")]
-        [HttpPost]
-        public ActionResult UploadFloorPlan(HttpPostedFileBase data)
+        public ActionResult CreateFloor(int mapId)
         {
-            if (data != null)
-            {
-                data.SaveAs(_serverUploadFolder + "\\floors\\" + data.FileName);
-            }
+            ViewBag.MapId = mapId;
+            return View();
+        }
 
-            return View("Index");
+        [Authorize(Roles = "Admins")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult CreateFloor(int mapId, Floor floor, HttpPostedFileBase data)
+        {
+            var mapsCtrl = new MapsController();
+            var response = mapsCtrl.CreateFloor(floor.MapId, floor.Name);
+
+            if (response.Status == RespsonseStatus.Ok && data != null)
+            {
+                var filename = _serverUploadFolder + "\\Floors\\" + data.FileName;
+                data.SaveAs(filename);
+
+                mapsCtrl.UploadFloorImage(response.Floor.Id, "Images/Floors/" + data.FileName);
+            }
+            var floors = mapsCtrl.GetFloorsForMap(mapId);
+            ViewBag.MapId = mapId;
+            return response.Status == RespsonseStatus.Error ? View("Error") : View("_Floors", floors);
         }
 
         #region Partial Views
+
+        [Authorize(Roles = "Admins")]
+        [HttpGet]
+        public ActionResult GetFloor(int id)
+        {
+            var mapsCtrl = new MapsController();
+            var floor = mapsCtrl.GetFloor(id);
+
+            return PartialView("_Layer", floor);
+        }
+
         [Authorize(Roles = "Admins")]
         [HttpGet]
         public ActionResult GetFloorsForMap(int id)
@@ -54,6 +80,7 @@ namespace StudMap.Admin.Controllers
             var mapsCtrl = new MapsController();
             var floors = mapsCtrl.GetFloorsForMap(id);
 
+            ViewBag.MapId = id;
             return PartialView("_Floors", floors);
         }
 
@@ -78,18 +105,25 @@ namespace StudMap.Admin.Controllers
 
         [Authorize(Roles = "Admins")]
         [HttpPost]
-        public JsonResult SaveGraphForMap(int mapId, Graph graph)
+        public JsonResult SaveGraphForMap(int floorId, Graph graph)
         {
             var mapsCtrl = new MapsController();
-            var floor = mapsCtrl.SaveGraphForFloor(2, graph);
-            return Json("", JsonRequestBehavior.AllowGet);
+            var floor = mapsCtrl.SaveGraphForFloor(floorId, graph);
+            return Json(floor, JsonRequestBehavior.AllowGet);
         }
 
-        //Zu Testzwecken (später besser in die API)
-        public ContentResult GetMapData(int id)
+        public JsonResult GetMapData(int id)
         {
-            const string data = "{\"pathplot\":[{\"id\":\"flt-1\",\"classes\":\"planned\",\"points\":[{\"x\":23.8,\"y\":30.6},{\"x\":19.5,\"y\":25.7},{\"x\":14.5,\"y\":25.7},{\"x\":13.2,\"y\":12.3}]}],\"graph\":[{\"id\":\"flt-2\",\"classes\":\"planned\",\"points\":[{\"x\":23.8,\"y\":30.6},{\"x\":19.5,\"y\":25.7},{\"x\":14.5,\"y\":25.7},{\"x\":13.2,\"y\":12.3}]}]}";
-            return Content(data, "application/json");
+            var floorPlanData = new FloorPlanData();
+            var mapsCtrl = new MapsController();
+            
+            var result = mapsCtrl.GetGraphForFloor(id);
+            if (result.Status == RespsonseStatus.Ok)
+            {
+                floorPlanData.Graph = result.Graph;
+            }
+
+            return Json(floorPlanData, JsonRequestBehavior.AllowGet);
         }
     }
 }

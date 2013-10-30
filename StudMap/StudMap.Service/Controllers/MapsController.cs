@@ -206,6 +206,40 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        public FloorsResponse GetFloor(int floorId)
+        {
+            var result = new FloorsResponse();
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    var floor = entities.Floors.FirstOrDefault(x => x.Id == floorId);
+                    if (floor != null)
+                    {
+                        result.Status = RespsonseStatus.Ok;
+                        result.Floor = new Floor
+                        {
+                            Id = floor.Id,
+                            ImageUrl = floor.ImageUrl,
+                            Name = floor.Name,
+                            MapId = floor.MapId
+                        };
+                    }
+                    else
+                    {
+                        result.Status = RespsonseStatus.Error;
+                        result.ErrorCode = ResponseError.FloorIdDoesNotExist;
+                    }
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+            return result;
+        }
+
         public FloorImageResponse GetFloorplanImage(int floorId)
         {
             var result = new FloorImageResponse();
@@ -235,20 +269,41 @@ namespace StudMap.Service.Controllers
         }
 
         [HttpPost]
-        public FloorsResponse UploadFloorImage(int floorId, [FromBody] object floor)
+        public FloorsResponse UploadFloorImage(int floorId, string filename)
         {
-            //TODO Implement 
-            return new FloorsResponse
+            var result = new FloorsResponse();
+            try
+            {
+                using (var entities = new MapsEntities())
                 {
-                    Status = RespsonseStatus.Ok,
-                    ErrorCode = ResponseError.None,
-                    Floor = new Floor
-                        {
-                            Id = 1,
-                            ImageUrl = "",
-                            MapId = 1
-                        }
-                };
+                    var floor = entities.Floors.FirstOrDefault(x => x.Id == floorId);
+                    if (floor != null)
+                    {
+                        floor.ImageUrl = filename;
+
+                        entities.SaveChanges();
+
+                        result.Status = RespsonseStatus.Ok;
+                        result.Floor = new Floor
+                            {
+                                Id = floor.Id,
+                                ImageUrl = floor.ImageUrl,
+                                Name = floor.Name
+                            };
+                    }
+                    else
+                    {
+                        result.Status = RespsonseStatus.Error;
+                        result.ErrorCode = ResponseError.FloorIdDoesNotExist;
+                    }
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+            return result;
         }
 
         #endregion
