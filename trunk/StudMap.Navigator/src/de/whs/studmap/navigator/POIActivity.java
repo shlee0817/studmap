@@ -43,7 +43,7 @@ public class POIActivity extends Activity {
 		mInputSearch = (EditText) findViewById(R.id.POI_inputSearch);		
 		mListView = (ListView) findViewById(R.id.POI_List); 
 		
-		mListAdapter = new ArrayAdapter<String>(this, R.layout.simple_list_item, new ArrayList<String>(mPOIs.keySet()));
+		mListAdapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_white, new ArrayList<String>(mPOIs.keySet()));
 		mListView.setAdapter(mListAdapter);
 		
 		//Listener

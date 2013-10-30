@@ -22,4 +22,8 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:textColor="#fff" />
+    android:textColor="@android:color/white"
+    android:shadowColor="@android:color/holo_green_dark"
+    android:shadowRadius="1.5"
+    android:shadowDx="1"
+    android:shadowDy="1" />
