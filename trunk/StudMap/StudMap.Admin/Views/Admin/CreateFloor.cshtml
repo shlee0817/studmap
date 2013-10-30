@@ -1,0 +1,34 @@
+﻿@model StudMap.Core.Maps.Floor
+@{
+    ViewBag.Title = "Floor anlegen";
+}
+
+@using (Html.BeginForm("CreateFloor", "Admin", FormMethod.Post, new{ enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    @Html.Hidden("mapId", new { mapId = ViewBag.MapId })
+
+    <fieldset>
+        <legend>Floor Form</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(x => x.MapId)
+                <span>@ViewBag.MapId</span>
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.ImageUrl)
+                <input id="data" name="data" type="file" />
+            </li>
+        </ol>
+        <input type="submit" value="Anlegen" />
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -19,10 +19,9 @@
             </div>
         }
     </div>
+    <div>@Html.ActionLink("Anlegen", "CreateFloor/", "Admin", new { mapId = ViewBag.MapId }, null)</div>
 }
-
-@using (Html.BeginForm("UploadFloorPlan", "Admin", FormMethod.Post, new{ enctype = "multipart/form-data" }))
+else
 {
-    <input id="data" name="data" type="file" />
-    <input id="send" type="submit" value="submit" />
+    <div>Es wurden noch kein Stockwerk angelegt. Neue Karte @Html.ActionLink("erstellen", "CreateFloor", "Admin", new { mapId = ViewBag.MapId }, null)?</div>
 }
