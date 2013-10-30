@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import de.whs.studmap.data.Node;
+import de.whs.studmap.web.Service;
 
 public class POIActivity extends Activity {
 	
@@ -87,7 +88,7 @@ public class POIActivity extends Activity {
 	}
 
 	private void getPOIsFromWebService(){
-		//TODO: Daten vom Webservice holen
+		/*Test
 		for(int i = 0; i < 3; i++){
 			Node n = new Node(i,"ABC" + i);
 			mPOIs.put(n.getName(),n);	
@@ -95,7 +96,13 @@ public class POIActivity extends Activity {
 		for(int i = 0; i < 3; i++){
 			Node n = new Node(i+3,"DEF" + i);
 			mPOIs.put(n.getName(),n);	
-		}	
+		}*/
+		
+		List<Node> nodes =Service.getPOIs();
+		for (Node n : nodes){
+			mPOIs.put(n.getName(),n);	
+		}
+		
 	}
 	
 	private class mTextWatcher implements TextWatcher{
