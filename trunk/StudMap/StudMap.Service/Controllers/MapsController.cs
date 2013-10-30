@@ -255,6 +255,7 @@ namespace StudMap.Service.Controllers
 
         #region Layer: Graph
 
+        [HttpPost]
         public GraphResponse SaveGraphForFloor(int floorId, Graph graph)
         {
             var result = new GraphResponse();
@@ -263,7 +264,13 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    // TODO: Alten Graphen auf dem Floor löschen!
+                    // Zuerst den alten Graphen löschen
+                    var deleteResult = DeleteGraphForFloor(floorId);
+                    if (deleteResult.Status == RespsonseStatus.Error)
+                    {
+                        result.SetError(deleteResult.ErrorCode);
+                        return result;
+                    }
 
                     var foundFloors = from floor in entities.Floors
                                       where floor.Id == floorId
@@ -307,6 +314,40 @@ namespace StudMap.Service.Controllers
                         });
                     }
 
+                    entities.SaveChanges();
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public BaseResponse DeleteGraphForFloor(int floorId)
+        {
+            var result = new BaseResponse();
+
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    var floorToDelete = entities.Floors.Find(floorId);
+                    if (floorToDelete == null)
+                        return result;
+
+                    var nodes = floorToDelete.Nodes;
+                    var nodeIds = nodes.Select(n => n.Id);
+                    var edges = from edge in entities.Edges
+                                where nodeIds.Contains(edge.NodeStartId)
+                                || nodeIds.Contains(edge.NodeEndId)
+                                select edge;
+                    
+                    entities.Edges.RemoveRange(edges);
+                    entities.Nodes.RemoveRange(nodes);
                     entities.SaveChanges();
                 }
             }
