@@ -51,7 +51,7 @@ namespace StudMap.Service.Controllers
                     if (!Crypto.VerifyHashedPassword(membership.Password, password))
                         return new BaseResponse { Status = RespsonseStatus.Error, ErrorCode = ResponseError.LoginInvalid };
 
-                    entities.ActiveUsers.Add(new ActiveUser {UserId = user.UserId, LoginDate = DateTime.Now});
+                    entities.ActiveUsers.Add(new ActiveUsers {UserId = user.UserId, LoginDate = DateTime.Now});
                     entities.SaveChanges();
 
                     return new BaseResponse {Status = RespsonseStatus.Ok, ErrorCode = ResponseError.None};

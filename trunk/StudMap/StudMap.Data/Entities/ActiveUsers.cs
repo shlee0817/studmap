@@ -12,8 +12,9 @@ namespace StudMap.Data.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class ActiveUser
+    public partial class ActiveUsers
     {
+        public int Id { get; set; }
         public int UserId { get; set; }
         public System.DateTime LoginDate { get; set; }
     }
