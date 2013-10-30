@@ -49,6 +49,10 @@
 </div>
 
 <script id="demo-code" type="text/javascript">
+
+var first=true;
+var x1,x2,y1,y2;
+
 var xscale = d3.scale.linear()
                .domain([0,1])
                .range([0,window.innerWidth]),
@@ -86,10 +90,79 @@ d3.json("demo-data.json", function(data) {
 	
 });
 */
+var svgContainer = d3.select("#map").append("svg").attr("height", "100%").attr("width","100%");
 
-d3.select("#map").append("svg")
+/*d3.select("#map").append("svg")
 		.attr("height", "100%").attr("width","100%")
-		.datum(mapdata).call(map);
+		.datum(mapdata).call(map);*/
+		svgContainer.datum(mapdata).call(map);
+		
+		
+	function circle_click(evt) {
+		var circle = evt.target;
+		
+		
+		//alert(circle.cx.animVal.value);
+		if(first)
+		{
+			first = false;
+			x1 = circle.cx.animVal.value;
+			y1 = circle.cy.animVal.value;
+		}
+		else
+		{
+			first = true;
+			x2 = circle.cx.animVal.value;
+			y2 = circle.cy.animVal.value;
+			
+			//zeiche linie;
+			d3.select("#lines").append("line")
+                          .attr("x1", x1)
+                         .attr("y1", y1)
+                         .attr("x2", x2)
+                         .attr("y2", y2)
+						 .attr("stroke-width", 5)
+						 .attr("stroke", "black");
+						 
+		}
+		
+		
+    }
+		
+		
+		d3.select(".map-layers").append("g").attr("id","lines");
+		d3.select(".map-layers").append("g").attr("id","circles");
+		
+		
+		
+		var circle = d3.select("#circles").append("circle")
+                       .attr("cx", 100)
+                       .attr("cy", 50)
+                       .attr("r", 5)
+					   .attr("onclick","circle_click(evt)");
+					   
+					   
+					   var circle2 = d3.select("#circles").append("circle")
+                       .attr("cx", 120)
+                       .attr("cy", 55)
+                       .attr("r", 5)
+					   .attr("onclick","circle_click(evt)");
+					   
+					   d3.select("#circles").append("circle")
+                       .attr("cx", 140)
+                       .attr("cy", 60)
+                       .attr("r", 5)
+					   .attr("onclick","circle_click(evt)");
+					   
+					     d3.select("#circles").append("circle")
+                       .attr("cx", 80)
+                       .attr("cy", 30)
+                       .attr("r", 5)
+					   .attr("onclick","circle_click(evt)");
+					   
+					   
+					//d3.select("#kreis1").onclick = function() { alert('blah'); };   
+		
 </script>
 
 

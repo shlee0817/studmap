@@ -19,15 +19,12 @@
 
     <string name="app_name">StudMap Navigator</string>
 
-    <string-array name="planets_array">
-        <item>Venus</item>
-        <item>POI suchen</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+    <string-array name="menue_item_array">
+        <item>Karte</item>
+        <item>Login</item>
+        <item>Point of Interest</item>
+        <item>Einstellungen</item>
+        <item>Impressum</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>

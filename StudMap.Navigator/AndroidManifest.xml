@@ -30,6 +30,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.whs.studmap.navigator.MainActivity" />
         </activity>
+        <activity
+            android:name="de.whs.studmap.navigator.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" 
+            android:parentActivityName="de.whs.studmap.navigator.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.whs.studmap.navigator.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

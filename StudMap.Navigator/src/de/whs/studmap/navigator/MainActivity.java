@@ -2,6 +2,9 @@ package de.whs.studmap.navigator;
 
 import java.util.Locale;
 
+import de.whs.studmap.data.Drawer_Item;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -29,6 +32,7 @@ import android.widget.Toast;
 //import com.example.android.navigationdrawerexample.MainActivity.DrawerItemClickListener;
 //import com.example.android.navigationdrawerexample.MainActivity.PlanetFragment;
 
+@SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
@@ -37,9 +41,10 @@ public class MainActivity extends Activity {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mPlanetTitles;
-    
-    private final int REQUEST_ID_POIS = 101;
+    private String[] mItemTitles;
+
+    private final int REQUEST_ID_LOGIN = 101;
+    private final int REQUEST_ID_POIS = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mTitle = mDrawerTitle = getTitle();
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mItemTitles = getResources().getStringArray(R.array.menue_item_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer_listView);
         mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
@@ -55,7 +60,7 @@ public class MainActivity extends Activity {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(this,R.layout.simple_list_item, mPlanetTitles));
+        mDrawerListView.setAdapter(new ArrayAdapter<String>(this,R.layout.simple_list_item, mItemTitles));
                
         mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -139,14 +144,15 @@ public class MainActivity extends Activity {
     }
 
     private void selectItem(int position) {
-    	if (position == 1)
-    		startActivityForResult(new Intent(this,POIActivity.class),REQUEST_ID_POIS);
-    	else {
     	
+    	Drawer_Item sel_position = Drawer_Item.values()[position];
+    	
+    	switch (sel_position){
+    	case MAP:
 	        // update the main content by replacing fragments
-	        Fragment fragment = new PlanetFragment();
+	        Fragment fragment = new MainFragment();
 	        Bundle args = new Bundle();
-	        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+	        args.putInt(MainFragment.ARG_MAIN_NUMBER, position);
 	        fragment.setArguments(args);
 	
 	        FragmentManager fragmentManager = getFragmentManager();
@@ -154,8 +160,22 @@ public class MainActivity extends Activity {
 	
 	        // update selected item and title, then close the drawer
 	        mDrawerListView.setItemChecked(position, true);
-	        setTitle(mPlanetTitles[position]);
+	        setTitle(mItemTitles[position]);
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
+    		break;
+    		
+    	case LOGIN:
+    		startActivityForResult(new Intent(this,LoginActivity.class),REQUEST_ID_LOGIN);
+    		break;
+    		
+    	case POI:
+    		startActivityForResult(new Intent(this,POIActivity.class),REQUEST_ID_POIS);
+    		break;
+    		
+    	default:
+    		Toast.makeText(this,"Auswahl nicht gefunden!", Toast.LENGTH_LONG).show();	
+    		break;
+    	
     	}
     }
 
@@ -203,27 +223,27 @@ public class MainActivity extends Activity {
     /**
      * Fragment that appears in the "content_frame", shows a planet
      */
-    public static class PlanetFragment extends Fragment {
-        public static final String ARG_PLANET_NUMBER = "planet_number";
+    public static class MainFragment extends Fragment {
+        public static final String ARG_MAIN_NUMBER = "item_number";
 
-        public PlanetFragment() {
+        public MainFragment() {
             // Empty constructor required for fragment subclasses
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_planet, container, false);
-            int i = getArguments().getInt(ARG_PLANET_NUMBER);
-            String planet = getResources().getStringArray(R.array.planets_array)[i];
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            int i = getArguments().getInt(ARG_MAIN_NUMBER);
+            String planet = getResources().getStringArray(R.array.menue_item_array)[i];
 
             int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
                             "drawable", getActivity().getPackageName());
             
-            WebView webView = (WebView) rootView.findViewById(R.id.webview1);
-            webView.setWebViewClient(new WebViewClient());
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("file:///android_asset/index.html");
+            WebView MapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
+            MapWebView.setWebViewClient(new WebViewClient());
+            MapWebView.getSettings().setJavaScriptEnabled(true);
+            MapWebView.loadUrl("file:///android_asset/index.html");
             
            // ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
            // getActivity().setTitle(planet);
