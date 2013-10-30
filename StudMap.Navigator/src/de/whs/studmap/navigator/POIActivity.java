@@ -87,6 +87,7 @@ public class POIActivity extends Activity {
 	}
 
 	private void getPOIsFromWebService(){
+		//TODO: Daten vom Webservice holen
 		for(int i = 0; i < 3; i++){
 			Node n = new Node(i,"ABC" + i);
 			mPOIs.put(n.getName(),n);	
@@ -104,16 +105,14 @@ public class POIActivity extends Activity {
 		}
 
 		@Override
-		public void afterTextChanged(Editable s) {
-			// TODO Auto-generated method stub
-			
+		public void afterTextChanged(Editable arg0) {
+			//nothing to do
 		}
 
 		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
-			// TODO Auto-generated method stub
-			
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			//nothing to do
 		}
 	}
 	
