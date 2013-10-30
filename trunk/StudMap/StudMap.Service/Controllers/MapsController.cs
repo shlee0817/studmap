@@ -335,11 +335,11 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    var floorToDelete = entities.Floors.Find(floorId);
-                    if (floorToDelete == null)
+                    var floorToClear = entities.Floors.Find(floorId);
+                    if (floorToClear == null)
                         return result;
 
-                    var nodes = floorToDelete.Nodes;
+                    var nodes = floorToClear.Nodes;
                     var nodeIds = nodes.Select(n => n.Id);
                     var edges = from edge in entities.Edges
                                 where nodeIds.Contains(edge.NodeStartId)
@@ -362,17 +362,54 @@ namespace StudMap.Service.Controllers
 
         public GraphResponse GetGraphForFloor(int floorId)
         {
-            //TODO Implement
-            return new GraphResponse
+            var result = new GraphResponse();
+
+            try
+            {
+                using (var entities = new MapsEntities())
                 {
-                    Status = RespsonseStatus.Ok,
-                    ErrorCode = ResponseError.None,
-                    Graph = new Graph
-                        {
-                            Edges = new List<Edge>(),
-                            Nodes = new List<Node>()
-                        }
-                };
+                    var queriedFloor = entities.Floors.Find(floorId);
+                    if (queriedFloor == null)
+                    {
+                        result.SetError(ResponseError.FloorIdDoesNotExist);
+                        return result;
+                    }
+
+                    var nodes = queriedFloor.Nodes;
+                    var nodeIds = nodes.Select(n => n.Id);
+                    var edges = from edge in entities.Edges
+                                where nodeIds.Contains(edge.NodeStartId)
+                                || nodeIds.Contains(edge.NodeEndId)
+                                select edge;
+
+                    var graph = new Graph
+                    {
+                        FloorId = floorId,
+                        Edges = (from edge in edges
+                                select new Edge
+                                {
+                                    StartNodeId = edge.NodeStartId,
+                                    EndNodeId = edge.NodeEndId
+                                }).ToList(),
+                        Nodes = (from node in nodes
+                                select new Node
+                                {
+                                    Id = node.Id,
+                                    X = node.X,
+                                    Y = node.Y
+                                }).ToList()
+                    };
+
+                    result.Graph = graph;
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
         }
 
         #endregion
