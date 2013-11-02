@@ -2,7 +2,7 @@ package de.whs.studmap.navigator;
 
 import java.util.Locale;
 
-import de.whs.studmap.data.Drawer_Item;
+import de.whs.studmap.data.Drawer_Item_Enum;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -145,7 +145,7 @@ public class MainActivity extends Activity {
 
     private void selectItem(int position) {
     	
-    	Drawer_Item sel_position = Drawer_Item.values()[position];
+    	Drawer_Item_Enum sel_position = Drawer_Item_Enum.values()[position];
     	
     	switch (sel_position){
     	case MAP:

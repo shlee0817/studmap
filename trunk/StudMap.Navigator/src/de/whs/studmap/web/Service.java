@@ -22,11 +22,11 @@ import de.whs.studmap.data.Node;
 
 public class Service {
 	
-	private static final String URL = "http://localhost:1229/api/Users/";
+	private static final String URL = "http://10.0.2.2:1129/api/Users/";
 	
 	public static String login(String name, String password){
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("name", name));
+		params.add(new BasicNameValuePair("userName", name));
 		params.add(new BasicNameValuePair("password", password));
 		
 		return httpPost("Login", params);		
@@ -39,6 +39,10 @@ public class Service {
 		//TODO: parse POI string "pois"
 		
 		return nodes;
+	}
+	
+	public static String getActiveUsers(){
+		return httpGet("GetActiveUsers");
 	}
 	
 	
@@ -69,16 +73,25 @@ public class Service {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				return "";
+			} catch(Exception e){
+				return "";
 			}
+			
 	}
 	
 	private static String httpGet(String methodName){
+		return httpGet(methodName, null);
+	}
+	
+	private static String httpGet(String methodName, List<NameValuePair> params){
 		String result = "";
 		
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(URL + methodName);
 		
 		try {
+			//TODO : params iwie einbringen - auf "null" prüfen
+			
 			HttpResponse response = httpClient.execute(httpGet);
 			HttpEntity entity = response.getEntity();
 			
