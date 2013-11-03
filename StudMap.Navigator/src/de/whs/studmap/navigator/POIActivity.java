@@ -21,6 +21,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import de.whs.studmap.data.Node;
 import de.whs.studmap.web.Service;
+import de.whs.studmap.web.WebServiceException;
 
 public class POIActivity extends Activity {
 	
@@ -87,7 +88,7 @@ public class POIActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void getPOIsFromWebService(){
+	private void getPOIsFromWebService() {
 		/*Test
 		for(int i = 0; i < 3; i++){
 			Node n = new Node(i,"ABC" + i);
@@ -98,10 +99,17 @@ public class POIActivity extends Activity {
 			mPOIs.put(n.getName(),n);	
 		}*/
 		
-		List<Node> nodes =Service.getPOIs();
-		for (Node n : nodes){
-			mPOIs.put(n.getName(),n);	
+		List<Node> nodes = null;
+		try {
+			nodes = Service.getPOIs();
+			for (Node n : nodes){
+				mPOIs.put(n.getName(),n);	
+			}
+		} catch (WebServiceException e) {
+			// TODO handle WebServiceException 
+			e.printStackTrace();
 		}
+
 		
 	}
 	

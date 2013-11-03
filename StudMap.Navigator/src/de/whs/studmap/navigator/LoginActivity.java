@@ -1,6 +1,11 @@
 package de.whs.studmap.navigator;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
+import de.whs.studmap.web.WebServiceException;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -15,6 +20,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -37,6 +43,9 @@ public class LoginActivity extends Activity {
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
 	private UserLoginTask mAuthTask = null;
+	
+	//WebService constants
+	private static final String ERROR_CODE = "ErrorCoce";
 
 	// Values for email and password at the time of the login attempt.
 	private String mEmail;
@@ -217,10 +226,30 @@ public class LoginActivity extends Activity {
 				}
 			} */
 			
-//			Service.login(mEmail, mPassword);
-			Service.getActiveUsers();
+			try {
+				return Service.login(mEmail, mPassword);
+			} catch (WebServiceException e) {
+				JSONObject jObject = e.getJsonObject();
+				
+				try {
+					int errorCode = jObject.getInt(ERROR_CODE);
+					switch (errorCode) {
+					case ResponseError.DatabaseError:
+						Toast.makeText(getApplicationContext(), R.string.connection_error, Toast.LENGTH_LONG).show();
+						return false;
+					default:
+						mPasswordView.setError(getString(R.string.error_incorrect_password));
+						mPasswordView.requestFocus();
+						return false;
+					}
+				} catch (JSONException ignore) {
+					return false;
+				}
+				
+			}
+			
 			// TODO: register the new account here.
-			return true;
+			//Geht nicht so.. mit Chris reden bzgl differenzierterer Response bei nicht vorhandenem Benutzer
 		}
 
 		@Override
@@ -228,13 +257,8 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 
-			if (success) {
+			if (success) 
 				finish();
-			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
 		}
 
 		@Override
