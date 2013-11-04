@@ -1,6 +1,6 @@
 \chapter{Webservice}
 Für den Zugriff auf die Daten stellen wir den Webservice \texttt{StudMap.Service} zur Verfügung.
-Der Webservice besteht dabei aus zwei Schnittstellen in Form von sogenannten Controller Klassen, die jeweils von der Klasse \texttt{ApiController} \todo{Kurze Beschreibung von ApiController und Controller Klassen im Allgemeinen} abgeleitet sind:
+Der Webservice besteht dabei aus zwei Schnittstellen in Form von sogenannten Controller Klassen, die jeweils von der Klasse \texttt{ApiController} \footnote{siehe: \href{http://msdn.microsoft.com/en-us/library/system.web.http.apicontroller(v=vs.108).aspx}{MSDN Dokumentation}}  abgeleitet sind:
 \begin{itemize}
 \item \texttt{MapsController}: Verwaltung von Karten- und Routeninformationen
 \item \texttt{UsersController}: Verwaltung von Benutzerinformationen
@@ -9,23 +9,79 @@ Der Webservice besteht dabei aus zwei Schnittstellen in Form von sogenannten Con
 Bevor nun die Funktionen der jeweiligen Controller Klasse erläutert werden, folgt eine Übersicht, über die verschiedenen Rückgabe Werte und ihre Bedeutung.
 
 \section{Rückgabewerte}
-\todo{Erklärung der verschiedenen Response Objekte und deren Serialisierung in JSON}
+
+\subsection{BaseResponse}
+\label{BaseResponse}
+Allgemeine Rückgabe vom Service, die einen Status und ggf. einen Fehler enthält. Die Daten werden im JSON Format zurück gegeben.
+
+\textbf{Beispiel:}
+\begin{verbatim}
+{ "Status":1, "ErrorCode":0 }
+\end{verbatim}
+
+\subsubsection{ResponseStatus}
+Wir unterscheiden zwischen:
+\begin{itemize}
+\item \texttt{None = 0}: Defaultwert
+\item \texttt{Ok = 1}: Funktion erfolgreich ausgeführt
+\item \texttt{Error = 2} Fehler bei Funktionsausführung
+\end{itemize}
+
+\subsubsection{ResponseError}
+Ist beim \texttt{ResponseStatus Error} gesetzt. Es werden folgende Fehlerszenarien unterschieden:
+
+\textbf{Allgemein:}
+\begin{itemize}
+\item \texttt{001 - DatabaseError}:\\
+Fehler bei der Ausführung einer Datenbankabfrage.
+\end{itemize}
+
+\textbf{Registrierung:}
+\begin{itemize}
+\item \texttt{101 - UserNameDuplicate}:\\
+Der Benutzername ist bereits vergeben.
+\item \texttt{102 - UserNameInvalid}:\\
+Der Benutzername ist ungültig.
+\item \texttt{103 - PasswordInvalid}:\\
+Das Passwort ist ungültig.
+\end{itemize}
+
+\textbf{Anmeldung:}
+\begin{itemize}
+\item \texttt{110 - LoginInvalid}:\\
+Die Logindaten (Name oder Passwort) sind ungültig.
+\end{itemize}
+
+\textbf{Maps:}
+\begin{itemize}
+\item \texttt{201 - MapIdDoesNotExist}:\\
+Zur angeforderten MapId existiert keine Map.
+\item \texttt{202 - FloorIdDoesNotExist}:\\
+Zur angeforderten FloorId existiert kein Floor.
+\end{itemize}
+
+\subsection{ObjectResponse}
+\label{ObjectResponse}
+Eine generische Klasse die \nameref{BaseResponse} um ein Feld \texttt{Object} erweitert, indem die Nutzdaten gespeichert werden.
+
+Beispiel:
+\todo{ObjectResponse als JSON String einfügen}
+
+\subsection{ListResponse}
+\label{ListResponse}
+Eine generische Klasse die \nameref{BaseResponse} um eine Liste \texttt{List} erweitert, indem Nutzdaten in Form einer Collection gespeichert werden.
+
+Beispiel:
+\begin{verbatim}
+{"List":[],"Status":1,"ErrorCode":0}
+\end{verbatim}
 
 \section{MapsController}
 \todo{MapsController dokumentieren}
 
 \section{UsersController}
 \label{Webservice_UsersController}
-
 Der \texttt{UsersController} stellt klassische Funktionen zur Benutzerverwaltung zur Verfügung.
-
-\begin{itemize}
-\item Register
-\item Login
-\item Logout
-\item GetActiveUsers
-\end{itemize}
-
 
 \subsection{Register}
 Registriert einen neuen Anwender in der Benutzerrolle \textit{Benutzer}.
@@ -33,25 +89,39 @@ Registriert einen neuen Anwender in der Benutzerrolle \textit{Benutzer}.
 Aufruf über HTTP Post:\\
 \url{http://localhost:1129/api/Users/Register?userName=test&password=geheim}
 
-\todo{Verweis auf entsprechenden Rückgabewert}
+Übergabe Parameter:\\
+userName: Der Benutzername.\\
+password: Passwort im Klartext.
+
+Rückgabewert: \nameref{BaseResponse}
+
 \subsection{Login}
 Meldet einen bereits registrierten Anwender am System an.
 
 Aufruf über HTTP Post:\\
 \url{http://localhost:1129/api/Users/Login?userName=test&password=geheim}
 
-\todo{Verweis auf entsprechenden Rückgabewert}
+Übergabe Parameter:\\
+userName: Der Benutzername.\\
+password: Passwort im Klartext.
+
+Rückgabewert: \nameref{BaseResponse}
+
 \subsection{Logout}
 Meldet einen angemeldeten Anwender vom System ab.
 
 Aufruf über HTTP Get:\\
 \url{http://localhost:1129/api/Users/Logout?userName=test}
 
-\todo{Verweis auf entsprechenden Rückgabewert}
+Übergabe Parameter:\\
+userName: Der Benutzername.\\
+
+Rückgabewert: \nameref{BaseResponse}
+
 \subsection{GetActiveUsers}
 Ermittelt eine Liste der aktuell am System angemeldeten Anwender.
 
 Aufruf über HTTP Get:\\
 \url{http://localhost:1129/api/Users/GetActiveUsers}
 
-\todo{Verweis auf entsprechenden Rückgabewert}
+Rückgabewert: \nameref{ListResponse}
