@@ -54,7 +54,7 @@ namespace StudMap.Admin.Controllers
                 var filename = _serverUploadFolder + "\\Floors\\" + data.FileName;
                 data.SaveAs(filename);
 
-                mapsCtrl.UploadFloorImage(response.Floor.Id, "Images/Floors/" + data.FileName);
+                mapsCtrl.UploadFloorImage(response.Object.Id, "Images/Floors/" + data.FileName);
             }
             var floors = mapsCtrl.GetFloorsForMap(mapId);
             ViewBag.MapId = mapId;
@@ -120,7 +120,7 @@ namespace StudMap.Admin.Controllers
             var result = mapsCtrl.GetGraphForFloor(id);
             if (result.Status == RespsonseStatus.Ok)
             {
-                floorPlanData.Graph = result.Graph;
+                floorPlanData.Graph = result.Object;
             }
 
             return Json(floorPlanData, JsonRequestBehavior.AllowGet);
