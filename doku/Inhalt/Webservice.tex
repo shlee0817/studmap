@@ -1,0 +1,57 @@
+\chapter{Webservice}
+Für den Zugriff auf die Daten stellen wir den Webservice \texttt{StudMap.Service} zur Verfügung.
+Der Webservice besteht dabei aus zwei Schnittstellen in Form von sogenannten Controller Klassen, die jeweils von der Klasse \texttt{ApiController} \todo{Kurze Beschreibung von ApiController und Controller Klassen im Allgemeinen} abgeleitet sind:
+\begin{itemize}
+\item \texttt{MapsController}: Verwaltung von Karten- und Routeninformationen
+\item \texttt{UsersController}: Verwaltung von Benutzerinformationen
+\end{itemize}
+
+Bevor nun die Funktionen der jeweiligen Controller Klasse erläutert werden, folgt eine Übersicht, über die verschiedenen Rückgabe Werte und ihre Bedeutung.
+
+\section{Rückgabewerte}
+\todo{Erklärung der verschiedenen Response Objekte und deren Serialisierung in JSON}
+
+\section{MapsController}
+\todo{MapsController dokumentieren}
+
+\section{UsersController}
+\label{Webservice_UsersController}
+
+Der \texttt{UsersController} stellt klassische Funktionen zur Benutzerverwaltung zur Verfügung.
+
+\begin{itemize}
+\item Register
+\item Login
+\item Logout
+\item GetActiveUsers
+\end{itemize}
+
+
+\subsection{Register}
+Registriert einen neuen Anwender in der Benutzerrolle \textit{Benutzer}.
+
+Aufruf über HTTP Post:\\
+\url{http://localhost:1129/api/Users/Register?userName=test&password=geheim}
+
+\todo{Verweis auf entsprechenden Rückgabewert}
+\subsection{Login}
+Meldet einen bereits registrierten Anwender am System an.
+
+Aufruf über HTTP Post:\\
+\url{http://localhost:1129/api/Users/Login?userName=test&password=geheim}
+
+\todo{Verweis auf entsprechenden Rückgabewert}
+\subsection{Logout}
+Meldet einen angemeldeten Anwender vom System ab.
+
+Aufruf über HTTP Get:\\
+\url{http://localhost:1129/api/Users/Logout?userName=test}
+
+\todo{Verweis auf entsprechenden Rückgabewert}
+\subsection{GetActiveUsers}
+Ermittelt eine Liste der aktuell am System angemeldeten Anwender.
+
+Aufruf über HTTP Get:\\
+\url{http://localhost:1129/api/Users/GetActiveUsers}
+
+\todo{Verweis auf entsprechenden Rückgabewert}
