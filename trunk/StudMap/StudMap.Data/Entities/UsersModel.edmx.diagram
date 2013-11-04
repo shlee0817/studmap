@@ -5,11 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="4ab5b50f2f6e4162aa8ae3b122d187c1" Name="Diagram1">
-        <EntityTypeShape EntityType="StudMapModel.ActiveUsers" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="StudMapModel.UserProfile" Width="1.5" PointX="3" PointY="0.875" />
-        <EntityTypeShape EntityType="StudMapModel.webpages_Membership" Width="1.5" PointX="2.75" PointY="3.75" />
-        <EntityTypeShape EntityType="StudMapModel.webpages_OAuthMembership" Width="1.5" PointX="4.75" PointY="3.75" />
-        <EntityTypeShape EntityType="StudMapModel.webpages_Roles" Width="1.5" PointX="0.75" PointY="0.875" />
+        <EntityTypeShape EntityType="StudMapModel.ActiveUsers" Width="1.5" PointX="7" PointY="0.875" />
+        <EntityTypeShape EntityType="StudMapModel.UserProfile" Width="1.5" PointX="3.375" PointY="0.875" />
+        <EntityTypeShape EntityType="StudMapModel.webpages_Membership" Width="1.875" PointX="0.75" PointY="2.625" />
+        <EntityTypeShape EntityType="StudMapModel.webpages_OAuthMembership" Width="2.25" PointX="3" PointY="2.625" />
+        <EntityTypeShape EntityType="StudMapModel.webpages_Roles" Width="1.875" PointX="0.75" PointY="0.875" />
         <AssociationConnector Association="StudMapModel.webpages_UsersInRoles" />
       </Diagram>
     </edmx:Diagrams>

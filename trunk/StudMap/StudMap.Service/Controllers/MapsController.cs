@@ -14,9 +14,9 @@ namespace StudMap.Service.Controllers
     {
         #region Map
 
-        public MapsResponse CreateMap(string mapName)
+        public ObjectResponse<Map> CreateMap(string mapName)
         {
-            var result = new MapsResponse();
+            var result = new ObjectResponse<Map>();
 
             try
             {
@@ -30,7 +30,7 @@ namespace StudMap.Service.Controllers
                     Maps insertedMap = entities.Maps.Add(newMap);
                     entities.SaveChanges();
 
-                    result.Map = new Map
+                    result.Object = new Map
                         {
                             Id = insertedMap.Id,
                             Name = insertedMap.Name
@@ -101,9 +101,9 @@ namespace StudMap.Service.Controllers
         #region Floor
 
         [HttpPost]
-        public FloorsResponse CreateFloor(int mapId, string name = "")
+        public ObjectResponse<Floor> CreateFloor(int mapId, string name = "")
         {
-            var result = new FloorsResponse();
+            var result = new ObjectResponse<Floor>();
 
             try
             {
@@ -126,7 +126,7 @@ namespace StudMap.Service.Controllers
                     var insertedFloor = entities.Floors.Add(newFloor);
                     entities.SaveChanges();
 
-                    result.Floor = new Floor
+                    result.Object = new Floor
                     {
                         Id = insertedFloor.Id,
                         MapId = insertedFloor.MapId,
@@ -206,9 +206,9 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public FloorsResponse GetFloor(int floorId)
+        public ObjectResponse<Floor> GetFloor(int floorId)
         {
-            var result = new FloorsResponse();
+            var result = new ObjectResponse<Floor>();
             try
             {
                 using (var entities = new MapsEntities())
@@ -217,7 +217,7 @@ namespace StudMap.Service.Controllers
                     if (floor != null)
                     {
                         result.Status = RespsonseStatus.Ok;
-                        result.Floor = new Floor
+                        result.Object = new Floor
                         {
                             Id = floor.Id,
                             ImageUrl = floor.ImageUrl,
@@ -240,9 +240,9 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public FloorImageResponse GetFloorplanImage(int floorId)
+        public ObjectResponse<string> GetFloorplanImage(int floorId)
         {
-            var result = new FloorImageResponse();
+            var result = new ObjectResponse<string>();
 
             try
             {
@@ -251,7 +251,7 @@ namespace StudMap.Service.Controllers
                     var floor = entities.Floors.FirstOrDefault(f => f.Id == floorId);
                     if (floor != null)
                     {
-                        result.ImageUrl = floor.ImageUrl;
+                        result.Object = floor.ImageUrl;
                     }
                     else
                     {
@@ -269,9 +269,9 @@ namespace StudMap.Service.Controllers
         }
 
         [HttpPost]
-        public FloorsResponse UploadFloorImage(int floorId, string filename)
+        public ObjectResponse<Floor> UploadFloorImage(int floorId, string filename)
         {
-            var result = new FloorsResponse();
+            var result = new ObjectResponse<Floor>();
             try
             {
                 using (var entities = new MapsEntities())
@@ -284,7 +284,7 @@ namespace StudMap.Service.Controllers
                         entities.SaveChanges();
 
                         result.Status = RespsonseStatus.Ok;
-                        result.Floor = new Floor
+                        result.Object = new Floor
                             {
                                 Id = floor.Id,
                                 ImageUrl = floor.ImageUrl,
@@ -311,10 +311,9 @@ namespace StudMap.Service.Controllers
         #region Layer: Graph
 
         [HttpPost]
-        public GraphResponse SaveGraphForFloor(int floorId, Graph graph)
+        public ObjectResponse<Graph> SaveGraphForFloor(int floorId, Graph graph)
         {
-            var result = new GraphResponse();
-
+            var result = new ObjectResponse<Graph>();
             try
             {
                 using (var entities = new MapsEntities())
@@ -336,7 +335,7 @@ namespace StudMap.Service.Controllers
                         return result;
                     }
 
-                    Dictionary<int, int> nodeIdMap = new Dictionary<int, int>();
+                    var nodeIdMap = new Dictionary<int, int>();
                     
                     // Nodes in den Floor hinzufügen
                     foreach (Node node in graph.Nodes) 
@@ -415,9 +414,9 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public GraphResponse GetGraphForFloor(int floorId)
+        public ObjectResponse<Graph> GetGraphForFloor(int floorId)
         {
-            var result = new GraphResponse();
+            var result = new ObjectResponse<Graph>();
 
             try
             {
@@ -455,7 +454,7 @@ namespace StudMap.Service.Controllers
                                 }).ToList()
                     };
 
-                    result.Graph = graph;
+                    result.Object = graph;
                 }
             }
             catch (DataException)
