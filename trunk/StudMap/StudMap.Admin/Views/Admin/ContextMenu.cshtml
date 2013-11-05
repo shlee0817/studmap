@@ -1,0 +1,22 @@
+﻿@model ListResponse<Graph>
+
+@{
+    ViewBag.Title = "ContextMenu";
+}
+
+<h2>ContextMenu</h2>
+
+<table border="1">
+    <tr>
+        <th>Knoten ID:</th>
+        <th>@Model.Nodes.ID</th>
+    </tr>
+    <tr>
+        <td>X-Koordinate:</td>
+        <td>@Model.Nodes.X</td>
+    </tr>
+    <tr>
+        <td>Y-Koordinate:</td>
+        <td>@Model.Nodes.Y</td>
+    </tr>
+</table>
