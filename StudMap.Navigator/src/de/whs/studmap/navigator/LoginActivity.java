@@ -48,7 +48,7 @@ public class LoginActivity extends Activity {
 	private static final String ERROR_CODE = "ErrorCoce";
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail;
+	private String mUserName;
 	private String mPassword;
 
 	// UI references.
@@ -65,9 +65,9 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
+		mUserName = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		mEmailView.setText(mUserName);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
@@ -118,7 +118,7 @@ public class LoginActivity extends Activity {
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
+		mUserName = mEmailView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -135,16 +135,12 @@ public class LoginActivity extends Activity {
 			cancel = true;
 		}
 
-		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail)) {
+		// Check for a valid user name.
+		if (TextUtils.isEmpty(mUserName)) {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
-		} else if (!mEmail.contains("@")) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
-			cancel = true;
-		}
+		} 
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
@@ -227,7 +223,7 @@ public class LoginActivity extends Activity {
 			} */
 			
 			try {
-				return Service.login(mEmail, mPassword);
+				return Service.login(mUserName, mPassword);
 			} catch (WebServiceException e) {
 				JSONObject jObject = e.getJsonObject();
 				

@@ -41,18 +41,24 @@ public class Service {
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		params.add(new BasicNameValuePair(REQUEST_PARAM_PASSWORD, password));
 		
-		httpPost("Login", params);
+		JSONObject jObject =  httpPost("Login", params);
 		
-		return true;
+		if (jObject == null)
+			return false;
+		else		
+			return true;
 	}
 	
 	public static boolean logout(String name) throws WebServiceException{
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		
-		httpPost("Logout", params);
+		JSONObject jObject = httpPost("Logout", params);
 		
-		return true;
+		if (jObject == null)
+			return false;
+		else		
+			return true;
 	}
 	
 	public static boolean register(String name, String password) throws WebServiceException{
@@ -60,15 +66,18 @@ public class Service {
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		params.add(new BasicNameValuePair(REQUEST_PARAM_PASSWORD, password));
 		
-		httpPost("Register", params);
+		JSONObject jObject = httpPost("Register", params);
 		
-		return true;
+		if (jObject == null)
+			return false;
+		else		
+			return true;
 	}
 	
 	public static List<Node> getPOIs() throws WebServiceException{
 		List<Node> nodes = new ArrayList<Node>();
 		
-		JSONObject pois = httpGet("GetPOIs");
+		//JSONObject pois = httpGet("GetPOIs");
 		//TODO: parse "pois"
 		
 		return nodes;
