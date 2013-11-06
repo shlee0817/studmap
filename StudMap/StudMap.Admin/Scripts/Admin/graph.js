@@ -13,12 +13,23 @@
     mousedownNode = null,
     mouseupNode = null;
 
+    var zoomScaleFactor = null,
+    zoomX = null,
+    zoomY = null;
+
     function resetMouseVars() {
         mousedownNode = null;
         mouseupNode = null;
     }
 
     function graph(g) {
+
+        d3.select(".map-controls").on("mousedown", function() {
+            mousedownNode = true;
+        }).on("mouseup", function() {
+            mouseupNode = true;
+        });
+
         g.each(function(data) {
             if (!data) return;
 
@@ -26,9 +37,21 @@
 
                 d3.select("svg").classed("active", true);
 
-                if (d3.event.ctrlKey || mousedownNode) return;
+                if (!d3.event.ctrlKey || mousedownNode) return;
+                
+                var bbox = this.getBBox(),
+                    centroid = [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2];
+                zoomScaleFactor = 487 / bbox.width;
+                zoomX = -centroid[0];
+                zoomY = -centroid[1];
 
+
+                console.log("transform", "scale(" + zoomScaleFactor + ")" +
+                            "translate(" + zoomX + "," + zoomY + ")");
+                
                 var mouse = d3.mouse(this);
+
+                console.log(mouse);
 
                 nodes.push({ id: ++nodeCount, fixed: true, x: mouse[0], y: mouse[1] });
                 graph.start();
@@ -37,9 +60,9 @@
                 resetMouseVars();
             });
 
-            var g = d3.select(this);
-            node = g.selectAll(".node");
-            link = g.selectAll(".link");
+            var gEl = d3.select(this);
+            node = gEl.selectAll(".node");
+            link = gEl.selectAll(".link");
 
             var points = data.Nodes;
             for (var i = 0; i < points.length; i++) {
@@ -55,11 +78,11 @@
         });
         graph.start();
     }
-    
-    function getNode(id) {
+
+    function getNode(ident) {
 
         for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].id == id)
+            if (nodes[i].id === ident)
                 return nodes[i];
         }
         return null;
@@ -78,7 +101,7 @@
             .attr("class", function () { return "node"; })
             .attr("cx", function (d) { return d.x; })
             .attr("cy", function (d) { return d.y; })
-            .attr("r", 8)
+            .attr("r", 2)
             .on('mousedown', function (d) {
                 if (d3.event.ctrlKey) return;
 
@@ -97,8 +120,8 @@
                 var target = mouseupNode;
 
                 var l;
-                l = links.filter(function (l) {
-                    return (l.source === source && l.target === target);
+                l = links.filter(function (ilink) {
+                    return (ilink.source === source && ilink.target === target);
                 })[0];
 
                 if (!l) {
@@ -206,7 +229,7 @@ function getGraph() {
         _nodes.push(node);
     }
     return { "Nodes": _nodes, "FloorId": this.floorId, "Edges": edges };
-};
+}
 
 function saveGraph() {
 
@@ -222,11 +245,11 @@ function saveGraph() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         type: "post",
-        success: function (result) {
+        success: function () {
             $("body").removeClass("loading");
-            init(imageUrl);
+            init(window.imageUrl);
         }
     });
-};
+}
 
 init(imageUrl);
