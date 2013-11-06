@@ -40,7 +40,7 @@
     float: left;
     font-weight: bold;
     padding: 6px 22px;
-    background-color: #DFE9EE;
+    background-color: #83C32D;
     cursor: default;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .tab.active {
-    background-color: #a6dbed;
+    background-color: #669922;
 }
 
 
@@ -71,7 +71,7 @@ body.loading .modal {
     height:     100%;
     width:      100%;
     background: rgba( 255, 255, 255, .8 ) 
-                url('http://i.stack.imgur.com/FhHRx.gif') 
+                url('../../Images/ajax-loader.gif') 
                 50% 50% 
                 no-repeat;
 }

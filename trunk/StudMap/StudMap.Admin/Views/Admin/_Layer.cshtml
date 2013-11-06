@@ -1,15 +1,16 @@
-﻿@model StudMap.Core.Maps.FloorsResponse
+﻿@using StudMap.Core.Maps
+@model StudMap.Core.ObjectResponse<Floor>
 
 <script type="text/javascript">
-    var mapId = '@Model.Floor.MapId';
-    var floorId = '@Model.Floor.Id';
-    var imageUrl = '@Model.Floor.ImageUrl';
+    var mapId = '@Model.Object.MapId';
+    var floorId = '@Model.Object.Id';
+    var imageUrl = '@Model.Object.ImageUrl';
 </script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/Admin/graph.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Admin/graph.js")"> </script>
 
-<h3>@Model.Floor.Name</h3>
+<h3>@Model.Object.Name</h3>
 <br />
 
 <div id="floorplan"></div>
 
-<button onclick="saveGraph();">Speichern</button>
+<button onclick=" saveGraph(); ">Speichern</button>
