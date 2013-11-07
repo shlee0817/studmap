@@ -24,13 +24,13 @@
 
     function graph(g) {
 
-        d3.select(".map-controls").on("mousedown", function() {
+        d3.select(".map-controls").on("mousedown", function () {
             mousedownNode = true;
-        }).on("mouseup", function() {
+        }).on("mouseup", function () {
             mouseupNode = true;
         });
 
-        g.each(function(data) {
+        g.each(function (data) {
             if (!data) return;
 
             d3.select("svg").on("mousedown", function () {
@@ -38,22 +38,27 @@
                 d3.select("svg").classed("active", true);
 
                 if (!d3.event.ctrlKey || mousedownNode) return;
-                
-                var bbox = this.getBBox(),
-                    centroid = [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2];
-                zoomScaleFactor = 487 / bbox.width;
-                zoomX = -centroid[0];
-                zoomY = -centroid[1];
+
+                var transformStr = d3.select(".map-layers").attr("transform");
+                if (transformStr === null || transformStr === undefined) {
+                    zoomX = 0;
+                    zoomY = 0;
+                    zoomScaleFactor = 1;
+                } else {
+                    var transform = /translate\(([^,]*),([^)]*)\)scale\(([^)]*)\)/i;
+                    transform.exec(transformStr);
+                    zoomX = RegExp.$1;
+                    zoomY = RegExp.$2;
+                    zoomScaleFactor = RegExp.$3;
+                }
 
 
-                console.log("transform", "scale(" + zoomScaleFactor + ")" +
-                            "translate(" + zoomX + "," + zoomY + ")");
-                
                 var mouse = d3.mouse(this);
 
-                console.log(mouse);
+                var xp = (mouse[0] - zoomX * 1) / zoomScaleFactor;
+                var yp = (mouse[1] - zoomY * 1) / zoomScaleFactor;
 
-                nodes.push({ id: ++nodeCount, fixed: true, x: mouse[0], y: mouse[1] });
+                nodes.push({ id: ++nodeCount, fixed: true, x: xp, y: yp });
                 graph.start();
             }).on("mouseup", function () {
                 d3.select("svg").classed("active", false);
@@ -66,7 +71,7 @@
 
             var points = data.Nodes;
             for (var i = 0; i < points.length; i++) {
-                nodes.push({ id: points[i].Id, fixed: true, x: points[i].X, y: points[i].Y });
+                nodes.push({ id: points[i].Id, fixed: true, x: (points[i].X * width), y: (points[i].Y * height) });
                 if (points[i].Id > nodeCount) {
                     nodeCount = points[i].Id;
                 }
@@ -101,36 +106,51 @@
             .attr("class", function () { return "node"; })
             .attr("cx", function (d) { return d.x; })
             .attr("cy", function (d) { return d.y; })
-            .attr("r", 2)
+            .attr("r", function () { return 8; })
             .on('mousedown', function (d) {
                 if (d3.event.ctrlKey) return;
 
                 mousedownNode = d;
-                if (mousedownNode === selectedNode) selectedNode = null;
-                else selectedNode = mousedownNode;
-            })
-            .on('mouseup', function (d) {
-                if (!mousedownNode) return;
 
-                mouseupNode = d;
-                if (mouseupNode === mousedownNode) { resetMouseVars(); return; }
-
-
-                var source = mousedownNode;
-                var target = mouseupNode;
-
-                var l;
-                l = links.filter(function (ilink) {
-                    return (ilink.source === source && ilink.target === target);
-                })[0];
-
-                if (!l) {
-                    l = { source: source, target: target };
-                    links.push(l);
+                if (selectedNode === null || mousedownNode === selectedNode) {
+                    if (d3.select(this).attr("r") == 12) {
+                        d3.select(this).attr("r", 8);
+                        selectedNode = null;
+                    } else {
+                        d3.select(this).attr("r", 12);
+                        selectedNode = mousedownNode;
+                    }
                 }
+                else {
 
-                selectedNode = null;
-                graph.start();
+                    if (selectedNode == null)
+                        return;
+                    
+                    var source = selectedNode;
+                    var target = mousedownNode;
+
+                    var l;
+                    l = links.filter(function (ilink) {
+                        return (ilink.source === source && ilink.target === target);
+                    })[0];
+
+                    if (!l) {
+                        l = { source: source, target: target };
+                        links.push(l);
+                    }
+
+                    selectedNode = null;
+
+                    d3.selectAll(".node").attr("r", 8);
+                    
+                    graph.start();
+                }
+            }).on('mouseover', function (d) {
+                console.log("Over: " + d);
+            }).on("contextmenu", function (d) {
+                d3.event.preventDefault();
+                console.log("Right Click: " + d.id);
+                $('.NodeInformation').show();
             });
         node.exit().remove();
     };
@@ -168,27 +188,50 @@
     return graph;
 };
 
-var xscale = d3.scale.linear()
-    .domain([0, 50.0])
-    .range([0, 720]),
-    yscale = d3.scale.linear()
-        .domain([0, 33.79])
-        .range([0, 487]),
-    map = d3.floorplan().xScale(xscale).yScale(yscale),
+var imageWidth, imageHeight;
+var width, height;
+var domainStartX = 0, domainEndX = 1;
+var rangeStartX = 0, rangeEndX;
+var domainStartY = 0, domainEndY = 1;
+var rangeStartY = 0, rangeEndY;
+
+var xscale,
+    yscale,
+    map,
     imagelayer = d3.floorplan.imagelayer(),
     pathplot = d3.floorplan.pathplot(),
     mapdata = {},
-    graph = d3.floorplan.graph();
+    graph;
 
 function init(imageUrl) {
+
+    var el = $("<img />").css("visibility", "hidden").attr("src", imageUrl);
+    $('body').append(el);
+    imageWidth = $(el).width();
+    imageHeight = $(el).height();
+    $(el).remove();
+    width = $('#adminContent').width();
+    height = imageHeight / imageWidth * width;
+    rangeEndX = width;
+    rangeEndY = height;
+
+    xscale = d3.scale.linear()
+        .domain([domainStartX, domainEndX])
+        .range([rangeStartX, rangeEndX]);
+    yscale = d3.scale.linear()
+        .domain([domainStartY, domainEndY])
+        .range([rangeStartY, rangeEndY]);
+    map = d3.floorplan().xScale(xscale).yScale(yscale);
+    graph = d3.floorplan.graph();
+
     $('#floorplan').html("");
 
     mapdata[imagelayer.id()] = [{
         url: imageUrl,
         x: 0,
         y: 0,
-        height: 33.79,
-        width: 50.0
+        height: domainEndX,
+        width: domainEndY
     }];
 
     map.addLayer(imagelayer)
@@ -196,12 +239,13 @@ function init(imageUrl) {
         .addLayer(graph);
 
     d3.json(window.basePath + "Admin/GetMapData/" + floorId, function (data) {
-        
+
         mapdata[pathplot.id()] = data.Pathplot;
         mapdata[graph.id()] = data.Graph;
 
         d3.select("#floorplan").append("svg")
-            .attr("height", 487).attr("width", 720)
+            .attr("width", width)
+            .attr("height", height)
             .datum(mapdata).call(map);
     });
 }
@@ -223,8 +267,8 @@ function getGraph() {
     for (i = 0; i < nodes.length; i++) {
         var node = {
             "Id": nodes[i].id,
-            "X": nodes[i].x,
-            "Y": nodes[i].y
+            "X": (nodes[i].x / width),
+            "Y": (nodes[i].y / height)
         };
         _nodes.push(node);
     }
