@@ -338,17 +338,21 @@ namespace StudMap.Service.Controllers
                     var nodeIdMap = new Dictionary<int, int>();
                     
                     // Nodes in den Floor hinzufügen
-                    foreach (Node node in graph.Nodes) 
+                    if (graph.Nodes != null)
                     {
-                        var newNode = new Nodes {
-                            FloorId = floorId,
-                            X = node.X,
-                            Y = node.Y,
-                            CreationTime = DateTime.Now
-                        };
-                        entities.Nodes.Add(newNode);
-                        entities.SaveChanges();
-                        nodeIdMap.Add(node.Id, newNode.Id);
+                        foreach (Node node in graph.Nodes)
+                        {
+                            var newNode = new Nodes
+                            {
+                                FloorId = floorId,
+                                X = node.X,
+                                Y = node.Y,
+                                CreationTime = DateTime.Now
+                            };
+                            entities.Nodes.Add(newNode);
+                            entities.SaveChanges();
+                            nodeIdMap.Add(node.Id, newNode.Id);
+                        }
                     }
                     
                     // Edges im Graph hinzufügen
@@ -358,14 +362,17 @@ namespace StudMap.Service.Controllers
                         CreationTime = DateTime.Now
                     });
 
-                    foreach (Edge edge in graph.Edges)
+                    if (graph.Edges != null)
                     {
-                        newGraph.Edges.Add(new Edges
+                        foreach (Edge edge in graph.Edges)
                         {
-                            NodeStartId = nodeIdMap[edge.StartNodeId],
-                            NodeEndId = nodeIdMap[edge.EndNodeId],
-                            CreationTime = DateTime.Now
-                        });
+                            newGraph.Edges.Add(new Edges
+                            {
+                                NodeStartId = nodeIdMap[edge.StartNodeId],
+                                NodeEndId = nodeIdMap[edge.EndNodeId],
+                                CreationTime = DateTime.Now
+                            });
+                        }
                     }
 
                     entities.SaveChanges();
