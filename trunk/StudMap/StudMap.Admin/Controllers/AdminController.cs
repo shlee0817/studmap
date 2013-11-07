@@ -58,7 +58,7 @@ namespace StudMap.Admin.Controllers
             }
             var floors = mapsCtrl.GetFloorsForMap(mapId);
             ViewBag.MapId = mapId;
-            return response.Status == RespsonseStatus.Error ? View("Error") : View("_Floors", floors);
+            return response.Status == RespsonseStatus.Error ? View("Error") : View("Index");
         }
 
         #region Partial Views
