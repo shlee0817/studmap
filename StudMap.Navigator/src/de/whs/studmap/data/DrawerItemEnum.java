@@ -1,6 +1,6 @@
 package de.whs.studmap.data;
 
-public enum Drawer_Item_Enum {
+public enum DrawerItemEnum {
 	MAP,
 	LOGIN,
 	POI,

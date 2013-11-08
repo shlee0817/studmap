@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +22,17 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.JsonReader;
-
 import de.whs.studmap.data.Node;
 
 public class Service {
 	
-	private static final String RESPONSE_STATUS = "Status";
+	public static final String RESPONSE_STATUS = "Status";
+	public static final String RESPONSE_ERRORCODE = "ErrorCode";
 	private static final String REQUEST_PARAM_USERNAME = "userName";
 	private static final String REQUEST_PARAM_PASSWORD = "password";
 	
 	
-	private static final String URL = "http://10.0.2.2:1129/api/Users/";
+	private static final String URL = "http://10.0.2.2:1120/api/Users/";
 	
 	public static boolean login(String name, String password) throws WebServiceException{
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -93,11 +91,13 @@ public class Service {
 		
 		// Create a new HttpClient and Post Header
 		HttpClient httpClient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(URL + methodName);
- 
+		 
 			try {
 				// Add data
-				httpPost.setEntity(new UrlEncodedFormEntity(params));
+				String entityString = EntityUtils.toString(new UrlEncodedFormEntity(params, "utf-8"));
+
+				entityString = URLEncodedUtils.format(params, "utf-8");
+				HttpPost httpPost = new HttpPost(URL + methodName + "?" + entityString);
  
 				// Execute HTTP Post Request
 				HttpResponse response = httpClient.execute(httpPost);
