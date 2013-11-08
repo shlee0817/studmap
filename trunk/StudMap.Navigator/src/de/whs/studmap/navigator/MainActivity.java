@@ -2,7 +2,8 @@ package de.whs.studmap.navigator;
 
 import java.util.Locale;
 
-import de.whs.studmap.data.Drawer_Item_Enum;
+import de.whs.studmap.data.DrawerItemEnum;
+import de.whs.studmap.snippets.UserInfo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -42,6 +43,9 @@ public class MainActivity extends Activity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mItemTitles;
+    
+    private boolean mLoggedIn = false;
+    private String mUserName = "";
 
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;
@@ -145,7 +149,7 @@ public class MainActivity extends Activity {
 
     private void selectItem(int position) {
     	
-    	Drawer_Item_Enum sel_position = Drawer_Item_Enum.values()[position];
+    	DrawerItemEnum sel_position = DrawerItemEnum.values()[position];
     	
     	switch (sel_position){
     	case MAP:
@@ -165,7 +169,10 @@ public class MainActivity extends Activity {
     		break;
     		
     	case LOGIN:
-    		startActivityForResult(new Intent(this,LoginActivity.class),REQUEST_ID_LOGIN);
+    		if (mLoggedIn)
+    			UserInfo.dialog(this,mUserName,getString(R.string.already_logged_in));
+    		else
+    			startActivityForResult(new Intent(this,LoginActivity.class),REQUEST_ID_LOGIN);
     		break;
     		
     	case POI:
@@ -207,17 +214,22 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	    switch (requestCode) {
+    	    case REQUEST_ID_LOGIN:
+    	    	if (resultCode == RESULT_OK){
+    	    		mUserName = data.getStringExtra(LoginActivity.EXTRA_USERNAME);
+    	    		mLoggedIn = true;
+    	    	}
+    	    	break;
 			case REQUEST_ID_POIS :
 				if (resultCode == RESULT_OK){
 					int nodeID =data.getIntExtra(POIActivity.EXTRA_NODE_ID, -1);
 					//TODO: mittels der KnotenID einen neuen Zielpunkt setzen und die neue Route anzeigen	
 
-					Toast.makeText(getApplicationContext(), String.valueOf(nodeID), Toast.LENGTH_LONG).show();
+					Toast.makeText(this, String.valueOf(nodeID), Toast.LENGTH_LONG).show();
 					
 				}
-			break;
-			}
-    	
+				break;
+			}    	
     }
 
     /**
