@@ -7,6 +7,8 @@ using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Maps;
 using StudMap.Data.Entities;
+using QuickGraph;
+using QuickGraph.Algorithms;
 
 namespace StudMap.Service.Controllers
 {
@@ -471,6 +473,121 @@ namespace StudMap.Service.Controllers
             }
 
             return result;
+        }
+
+        #endregion
+
+        #region Layer: Navigation
+
+        public ListResponse<Node> GetRouteBetween(int mapId, int startNodeId, int endNodeId)
+        {
+            var result = new ListResponse<Node>();
+
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+
+                    var routeNodes = new List<Node>();
+
+                    var nodes = from node in entities.Nodes
+                                where node.Floors.MapId == mapId
+                                select node;
+
+                    var nodesMap = new Dictionary<int, Nodes>();
+                    foreach (var node in nodes)
+                    {
+                        nodesMap.Add(node.Id, node);
+                    }
+
+                    if (!nodesMap.ContainsKey(startNodeId))
+                    {
+                        result.SetError(ResponseError.StartNodeNotFound);
+                        return result;
+                    }
+                    if (!nodesMap.ContainsKey(endNodeId))
+                    {
+                        result.SetError(ResponseError.EndNodeNotFound);
+                        return result;
+                    }
+
+                    var edges = (from edge in entities.Edges
+                                where edge.Graphs.MapId == mapId
+                                select edge).ToList();
+
+                    var graph = new BidirectionalGraph<int, Edge<int>>();
+
+                    foreach (var nodeId in nodesMap.Keys)
+                    {
+                        graph.AddVertex(nodeId);
+                    }
+
+                    foreach (var edge in edges)
+                    {
+                        graph.AddEdge(new Edge<int>(edge.NodeStartId, edge.NodeEndId));
+                    }
+
+                    Func<Edge<int>, double> edgeCost = e => GetEdgeCost(nodesMap, e);
+
+                    var tryGetPath = graph.ShortestPathsDijkstra(edgeCost, startNodeId);
+
+                    IEnumerable<Edge<int>> routeEdges = null;
+                    if (tryGetPath(endNodeId, out routeEdges))
+                    {
+                        Edge<int> lastEdge = null;
+                        foreach (var routeEdge in routeEdges)
+                        {
+                            var dbNode = nodesMap[routeEdge.Source];
+                            routeNodes.Add(NodeFromDb(dbNode));
+                            lastEdge = routeEdge;
+                        }
+
+                        if (lastEdge == null)
+                            routeNodes.Add(NodeFromDb(nodesMap[startNodeId]));
+                        else
+                            routeNodes.Add(NodeFromDb(nodesMap[lastEdge.Target]));
+
+                        result.List = routeNodes;
+                    }
+                    else
+                    {
+                        result.SetError(ResponseError.NoRouteFound);
+                        return result;
+                    }
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
+        }
+
+        private Node NodeFromDb(Nodes dbNode)
+        {
+            return new Node
+            {
+                Id = dbNode.Id,
+                X = dbNode.X,
+                Y = dbNode.Y,
+                FloorId = dbNode.FloorId
+            };
+        }
+
+        private double GetEdgeCost(Dictionary<int, Nodes> nodesMap, Edge<int> e)
+        {
+            var startNode = nodesMap[e.Source];
+            var endNode = nodesMap[e.Target];
+
+            var diffX = endNode.X - startNode.X;
+            var diffY = endNode.Y - startNode.Y;
+            // Unterschiede im Stockwerk beachten
+            // Da Höhe unbekannt einfach irgendwelche Kosten festlegen
+            var diffZ = endNode.FloorId != startNode.FloorId ? 0.2m : 0m;
+
+            return Math.Sqrt((double)(diffX * diffX + diffY * diffY + diffZ * diffZ));
         }
 
         #endregion

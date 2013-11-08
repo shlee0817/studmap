@@ -7,5 +7,7 @@
         public decimal X { get; set; }
 
         public decimal Y { get; set; }
+
+        public int FloorId { get; set; }
     }
 }

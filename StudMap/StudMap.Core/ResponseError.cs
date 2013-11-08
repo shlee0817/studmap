@@ -22,5 +22,11 @@
         MapIdDoesNotExist = 201,
         FloorIdDoesNotExist = 202,
         #endregion
+
+        #region Navigation
+        NoRouteFound = 301,
+        StartNodeNotFound = 302,
+        EndNodeNotFound = 303,
+        #endregion
     }
 }
