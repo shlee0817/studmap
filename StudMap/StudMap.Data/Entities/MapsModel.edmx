@@ -183,6 +183,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="sp_DeleteFloor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FloorId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_DeleteMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MapId" Type="int" Mode="In" />
+        </Function>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -222,6 +228,12 @@
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="NodeInformation" EntitySet="NodeInformation" />
           </AssociationSet>
+          <FunctionImport Name="DeleteFloor">
+            <Parameter Name="FloorId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteMap">
+            <Parameter Name="MapId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Edges">
           <Key>
@@ -449,6 +461,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="DeleteFloor" FunctionName="StudMapModel.Store.sp_DeleteFloor" />
+          <FunctionImportMapping FunctionImportName="DeleteMap" FunctionName="StudMapModel.Store.sp_DeleteMap" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

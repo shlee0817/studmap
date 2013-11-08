@@ -11,11 +11,20 @@ namespace StudMap.Admin.Controllers
     public class AdminController : Controller
     {
         private readonly string _serverUploadFolder = System.Web.HttpContext.Current.Server.MapPath("~/Images");
-
+        
         [Authorize(Roles = "Admins")]
-        public ActionResult Index()
+        public ActionResult Index(string partialViewName, object viewModel)
         {
-            return View();
+            if (string.IsNullOrWhiteSpace(partialViewName))
+            {
+                ViewBag.PartialViewName = "_Maps";
+                var mapsCtrl = new MapsController();
+                viewModel = mapsCtrl.GetMaps();
+                
+            }
+            else
+                ViewBag.PartialViewName = partialViewName;
+            return View("Index", viewModel);
         }
 
         [Authorize(Roles = "Admins")]
@@ -31,7 +40,17 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             var response = mapsCtrl.CreateMap(data.Name);
-            return response.Status == RespsonseStatus.Error ? View("Error") : View("Index");
+            var viewModel = mapsCtrl.GetMaps();
+            return response.Status == RespsonseStatus.Error ? View("Error") : Index("_Maps", viewModel);
+        }
+
+        [Authorize(Roles = "Admins")]
+        public ActionResult DeleteMap(int id)
+        {
+            var mapsCtrl = new MapsController();
+            var response = mapsCtrl.DeleteMap(id);
+            var maps = mapsCtrl.GetMaps();
+            return response.Status == RespsonseStatus.Error ? View("Error") : View("_Maps", maps);
         }
 
         [Authorize(Roles = "Admins")]
@@ -58,7 +77,16 @@ namespace StudMap.Admin.Controllers
             }
             var floors = mapsCtrl.GetFloorsForMap(mapId);
             ViewBag.MapId = mapId;
-            return response.Status == RespsonseStatus.Error ? View("Error") : View("Index");
+            return response.Status == RespsonseStatus.Error ? View("Error") : Index("_Floors", floors);
+        }
+
+        [Authorize(Roles = "Admins")]
+        public ActionResult DeleteFloor(int mapId, int floorId)
+        {
+            var mapsCtrl = new MapsController();
+            var response = mapsCtrl.DeleteFloor(floorId);
+            var floors = mapsCtrl.GetFloorsForMap(mapId);
+            return response.Status == RespsonseStatus.Error ? View("Error") : View("_Floors", floors);
         }
 
         #region Partial Views
@@ -92,6 +120,16 @@ namespace StudMap.Admin.Controllers
             var maps = mapsCtrl.GetMaps();
 
             return PartialView("_Maps", maps);
+        }
+
+        [Authorize(Roles = "Admins")]
+        [HttpGet]
+        public ActionResult GetNodeInformation(int id)
+        {
+            var mapsCtrl = new MapsController();
+            var nodeInformation = mapsCtrl.GetNodeInformationForNode(id);
+
+            return PartialView("_NodeInformation", nodeInformation.Object);
         }
         #endregion
 

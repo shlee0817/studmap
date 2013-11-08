@@ -20,6 +20,12 @@ namespace StudMap.Admin.App_Start
                 url: "{controller}/{action}/{mapId}/{floorId}",
                 defaults: new { controller = "Admin", action = "GetFloorplanImage", mapId = UrlParameter.Optional, floorId = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "DeleteFloor",
+                url: "{controller}/{action}/{mapId}/{floorId}",
+                defaults: new { controller = "Admin", action = "DeleteFloor", mapId = UrlParameter.Optional, floorId = UrlParameter.Optional }
+            );
         }
     }
 }

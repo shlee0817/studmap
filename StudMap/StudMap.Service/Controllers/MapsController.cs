@@ -56,11 +56,7 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    var mapToDelete = entities.Maps.Find(mapId);
-                    if (mapToDelete == null)
-                        return result;
-                    entities.Maps.Remove(mapToDelete);
-                    entities.SaveChanges();
+                    entities.DeleteMap(mapId);
                 }
             }
             catch (DataException)
@@ -156,11 +152,7 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    var floorToDelete = entities.Floors.Find(floorId);
-                    if (floorToDelete == null)
-                        return result;
-                    entities.Floors.Remove(floorToDelete);
-                    entities.SaveChanges();
+                    entities.DeleteFloor(floorId);
                 }
             }
             catch (DataException)
@@ -404,9 +396,10 @@ namespace StudMap.Service.Controllers
 
                     var nodes = floorToClear.Nodes;
                     var nodeIds = nodes.Select(n => n.Id);
+                    var enumerable = nodeIds as int[] ?? nodeIds.ToArray();
                     var edges = from edge in entities.Edges
-                                where nodeIds.Contains(edge.NodeStartId)
-                                || nodeIds.Contains(edge.NodeEndId)
+                                where enumerable.Contains(edge.NodeStartId)
+                                || enumerable.Contains(edge.NodeEndId)
                                 select edge;
                     
                     entities.Edges.RemoveRange(edges);
@@ -440,9 +433,10 @@ namespace StudMap.Service.Controllers
 
                     var nodes = queriedFloor.Nodes;
                     var nodeIds = nodes.Select(n => n.Id);
+                    var enumerable = nodeIds as int[] ?? nodeIds.ToArray();
                     var edges = from edge in entities.Edges
-                                where nodeIds.Contains(edge.NodeStartId)
-                                || nodeIds.Contains(edge.NodeEndId)
+                                where enumerable.Contains(edge.NodeStartId)
+                                || enumerable.Contains(edge.NodeEndId)
                                 select edge;
 
                     var graph = new Graph
@@ -475,6 +469,39 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        public ObjectResponse<Core.Graph.NodeInformation> GetNodeInformationForNode(int nodeId)
+        {
+            var result = new ObjectResponse<Core.Graph.NodeInformation>();
+
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    var queriedNodeInformation = entities.NodeInformation.Find(nodeId);
+                    if (queriedNodeInformation == null)
+                    {
+                        result.Object = new Core.Graph.NodeInformation();
+                        return result;
+                    }
+
+                    var nodeInformation = new Core.Graph.NodeInformation()
+                        {
+                            DisplayName = queriedNodeInformation.DisplayName,
+                            RoomName = queriedNodeInformation.RoomName
+                        };
+
+                    result.Object = nodeInformation;
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+
+            return result;
+        } 
+
         #endregion
 
         #region Layer: Navigation
@@ -494,11 +521,7 @@ namespace StudMap.Service.Controllers
                                 where node.Floors.MapId == mapId
                                 select node;
 
-                    var nodesMap = new Dictionary<int, Nodes>();
-                    foreach (var node in nodes)
-                    {
-                        nodesMap.Add(node.Id, node);
-                    }
+                    var nodesMap = nodes.ToDictionary(node => node.Id);
 
                     if (!nodesMap.ContainsKey(startNodeId))
                     {
@@ -531,7 +554,7 @@ namespace StudMap.Service.Controllers
 
                     var tryGetPath = graph.ShortestPathsDijkstra(edgeCost, startNodeId);
 
-                    IEnumerable<Edge<int>> routeEdges = null;
+                    IEnumerable<Edge<int>> routeEdges;
                     if (tryGetPath(endNodeId, out routeEdges))
                     {
                         Edge<int> lastEdge = null;

@@ -1,5 +1,8 @@
 ﻿@using StudMap.Core.Maps
 @model StudMap.Core.ListResponse<Map>
+@{
+    Layout = null;
+}
 
 @if (Model != null && Model.List.Count > 0)
 {
@@ -7,12 +10,14 @@
         <div class="tableCell Headline">
             <div class="tableRow">MapId</div>
             <div class="tableRow">Name</div>
+            <div class="tableRow"></div>
         </div>
         @foreach (Map map in Model.List)
         {
-            <div class="tableCell" onclick=" Admin.loadFloors(@map.Id) ">
-                <div class="tableRow">@map.Id</div>
-                <div class="tableRow">@map.Name</div>
+            <div class="tableCell">
+                <div class="tableRow" onclick=" Admin.loadFloors(@map.Id) ">@map.Id</div>
+                <div class="tableRow" onclick=" Admin.loadFloors(@map.Id) ">@map.Name</div>
+                <div class="tableRow" onclick="Admin.deleteMap(@map.Id)"><img class="DeleteBin" src="@Url.Content("~/Images/bin.png")" alt="Bin"/></div>
             </div>
         }
     </div>
