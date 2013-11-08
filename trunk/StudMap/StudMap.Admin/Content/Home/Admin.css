@@ -15,6 +15,7 @@
 .tableRow {
     display: table-cell;
     padding: 4px 6px;
+    vertical-align: middle;
 }
 
 /*GraphLayer*/
@@ -75,17 +76,6 @@ body.loading {
     background: rgba( 255, 255, 255, .8 ) url('../../Images/ajax-loader.gif') 50% 50% no-repeat;
 }
 
-.NodeInformation {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: rgba( 255, 255, 255, .8 );
-}
-
 /* map menu controls */
 .ui-active rect {
     fill: #212121;
@@ -101,4 +91,38 @@ body.loading {
 
 .ui-default text {
     fill: #000;
+}
+
+.DeleteBin {
+    cursor: pointer;
+    width: 32px;
+}
+
+
+/* Dialog Klassen */
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.ui-dialog {
+    background-color: #e6e6e6;
+    border: 1px solid rgb(59, 59, 59);
+}
+
+.ui-dialog-titlebar {
+    background-color: darkgray;
+}
+
+.ui-dialog-titlebar .ui-dialog-title {
+    font-weight: bold;
+    margin: 4px 6px;
+}
+
+.ui-dialog-content {
+    margin: 4px 6px;
+}
+
+.ui-dialog-buttonpane {
+    text-align: right;
+    margin: 8px 0;
 }

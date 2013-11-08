@@ -11,7 +11,7 @@
 
     var selectedNode = null,
     mousedownNode = null,
-    mouseupNode = null;
+    mouseupNode;
 
     var zoomScaleFactor = null,
     zoomX = null,
@@ -21,6 +21,47 @@
         mousedownNode = null;
         mouseupNode = null;
     }
+    
+    d3.select("body").on("keydown", function() {
+        
+        //Entfernen löscht den ausgewählten Knoten
+        if (selectedNode !== null && d3.event.keyCode === 46) {
+
+            $('#NodeInformationDialog').html("Soll der Knoten " + selectedNode.id + " gelöscht werden?");
+            $('#NodeInformationDialog').dialog({
+                height: 140,
+                dialogClass: "no-close",
+                modal: true,
+                title: "Knoten löschen",
+                buttons: {
+                    Löschen: function () {
+                        for (var i = 0; i < nodes.length; i++) {
+                            if (nodes[i].id === selectedNode.id) {
+                                nodes.splice(i, 1);
+                                break;
+                            }
+                        }
+                        var linksToBeKept = [];
+                        for (i = 0; i < links.length; i++) {
+                            if (links[i].target.id !== selectedNode.id && links[i].source.id !== selectedNode.id) {
+                                linksToBeKept.push(links[i]);
+                            }
+                        }
+                        links = [].concat(linksToBeKept);
+                        graph.start();
+                        selectedNode = null;
+                        $(this).dialog("close");
+                    },
+                    Abbrechen: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            
+        }
+
+    });
 
     function graph(g) {
 
@@ -112,18 +153,17 @@
 
                 mousedownNode = d;
 
-                if (selectedNode === null || mousedownNode === selectedNode) {
-                    if (d3.select(this).attr("r") == 12) {
-                        d3.select(this).attr("r", 8);
-                        selectedNode = null;
-                    } else {
-                        d3.select(this).attr("r", 12);
-                        selectedNode = mousedownNode;
-                    }
+                if (selectedNode === null) {
+                    d3.select(this).attr("r", 12);
+                    selectedNode = mousedownNode;
+                }
+                else if (mousedownNode === selectedNode) {
+                    d3.select(this).attr("r", 8);
+                    selectedNode = null;
                 }
                 else {
 
-                    if (selectedNode == null)
+                    if (selectedNode === null)
                         return;
                     
                     var source = selectedNode;
@@ -146,11 +186,31 @@
                     graph.start();
                 }
             }).on('mouseover', function (d) {
-                console.log("Over: " + d);
+                
+                
             }).on("contextmenu", function (d) {
                 d3.event.preventDefault();
-                console.log("Right Click: " + d.id);
-                $('.NodeInformation').show();
+                $.ajax({
+                    url: window.basePath + 'Admin/GetNodeInformation/' + d.id,
+                    success: function (result) {
+                        $("#NodeInformationDialog").html(result);
+                        $('#NodeInformationDialog').dialog({
+                            height: 140,
+                            dialogClass: "no-close",
+                            modal: true,
+                            title: "Knoteninformationen (" + d.id + ")",
+                            buttons: {
+                                Speichern: function () {
+                                    $(this).dialog("close");
+                                },
+                                Abbrechen: function () {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
+                    }
+                });
+                
             });
         node.exit().remove();
     };
@@ -188,7 +248,7 @@
     return graph;
 };
 
-var imageWidth, imageHeight;
+var imageWidth = 0, imageHeight = 0;
 var width, height;
 var domainStartX = 0, domainEndX = 1;
 var rangeStartX = 0, rangeEndX;
@@ -207,47 +267,49 @@ function init(imageUrl) {
 
     var el = $("<img />").css("visibility", "hidden").attr("src", imageUrl);
     $('body').append(el);
-    imageWidth = $(el).width();
-    imageHeight = $(el).height();
-    $(el).remove();
-    width = $('#adminContent').width();
-    height = imageHeight / imageWidth * width;
-    rangeEndX = width;
-    rangeEndY = height;
+    window.setTimeout(function() {
+        imageWidth = $(el).width();
+        imageHeight = $(el).height();
+        $(el).remove();
+        width = $('#adminContent').width();
+        height = imageHeight / imageWidth * width;
+        rangeEndX = width;
+        rangeEndY = height;
 
-    xscale = d3.scale.linear()
-        .domain([domainStartX, domainEndX])
-        .range([rangeStartX, rangeEndX]);
-    yscale = d3.scale.linear()
-        .domain([domainStartY, domainEndY])
-        .range([rangeStartY, rangeEndY]);
-    map = d3.floorplan().xScale(xscale).yScale(yscale);
-    graph = d3.floorplan.graph();
+        xscale = d3.scale.linear()
+            .domain([domainStartX, domainEndX])
+            .range([rangeStartX, rangeEndX]);
+        yscale = d3.scale.linear()
+            .domain([domainStartY, domainEndY])
+            .range([rangeStartY, rangeEndY]);
+        map = d3.floorplan().xScale(xscale).yScale(yscale);
+        graph = d3.floorplan.graph();
 
-    $('#floorplan').html("");
+        $('#floorplan').html("");
 
-    mapdata[imagelayer.id()] = [{
-        url: imageUrl,
-        x: 0,
-        y: 0,
-        height: domainEndX,
-        width: domainEndY
-    }];
+        mapdata[imagelayer.id()] = [{
+            url: imageUrl,
+            x: 0,
+            y: 0,
+            height: domainEndX,
+            width: domainEndY
+        }];
 
-    map.addLayer(imagelayer)
-        .addLayer(pathplot)
-        .addLayer(graph);
+        map.addLayer(imagelayer)
+            .addLayer(pathplot)
+            .addLayer(graph);
 
-    d3.json(window.basePath + "Admin/GetMapData/" + floorId, function (data) {
+        d3.json(window.basePath + "Admin/GetMapData/" + floorId, function (data) {
 
-        mapdata[pathplot.id()] = data.Pathplot;
-        mapdata[graph.id()] = data.Graph;
+            mapdata[pathplot.id()] = data.Pathplot;
+            mapdata[graph.id()] = data.Graph;
 
-        d3.select("#floorplan").append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .datum(mapdata).call(map);
-    });
+            d3.select("#floorplan").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .datum(mapdata).call(map);
+        });
+    }, 1000);
 }
 
 function getGraph() {

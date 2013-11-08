@@ -42,6 +42,7 @@
     <Compile Include="Graph\Edge.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\Node.cs" />
+    <Compile Include="Graph\NodeInformation.cs" />
     <Compile Include="ListResponse.cs" />
     <Compile Include="Maps\Floor.cs" />
     <Compile Include="Maps\Map.cs" />

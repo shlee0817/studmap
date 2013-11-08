@@ -1,5 +1,4 @@
-﻿@using StudMap.Core.Maps
-@model List<Map>
+﻿@model Object
 @{
     ViewBag.Title = "Admin";
 }
@@ -8,6 +7,7 @@
 }
 @section scripts
 {
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui-1.10.3.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/d3.floorplan.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/Admin.js")"></script>
@@ -21,12 +21,13 @@
 </div>
 <div id="adminContent">
     @{
-        Html.RenderAction("GetMaps");
+        string viewName = ViewBag.PartialViewName ?? "_Maps";
+        Html.RenderPartial(viewName, Model);
     }
 </div>
 
 <div class="modal"></div>
 
-<div class="NodeInformation">
-    Hallo Marcus
-</div>
+<div id="NodeInformationDialog"></div>
+
+<div id="DeleteDialog"></div>
