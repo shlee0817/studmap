@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace StudMap.Client
+namespace StudMap.Client.App_Start
 {
     public class RouteConfig
     {
@@ -13,10 +9,10 @@ namespace StudMap.Client
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            routes.MapRoute("Default", "{controller}/{action}/{id}", new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute("FloorPlan", "{controller}/{action}/{mapId}/{floorId}", new { controller = "Home", action = "FloorPlan", mapId = UrlParameter.Optional, floorId = UrlParameter.Optional }
             );
         }
     }

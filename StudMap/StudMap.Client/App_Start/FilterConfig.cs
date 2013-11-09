@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace StudMap.Client
+namespace StudMap.Client.App_Start
 {
     public class FilterConfig
     {
