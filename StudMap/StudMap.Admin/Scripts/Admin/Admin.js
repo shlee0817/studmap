@@ -20,7 +20,7 @@
 
     loadFloors: function (mapId) {
 
-        if (mapId == null)
+        if (mapId === null)
             return;
         
         if (typeof mapId === "object") {
@@ -44,7 +44,7 @@
     },
     
     deleteMap: function(mapId) {
-        if (mapId == null)
+        if (mapId === null)
             return;
 
         var id = mapId;
@@ -54,6 +54,7 @@
             dialogClass: "no-close",
             modal: true,
             title: "Map löschen",
+            appendTo: "#body",
             buttons: {
                 Löschen: function () {
                     $("body").addClass("loading");
@@ -114,6 +115,7 @@
             dialogClass: "no-close",
             modal: true,
             title: "Floor löschen",
+            appendTo: "#body",
             buttons: {
                 Löschen: function () {
                     $("body").addClass("loading");

@@ -131,7 +131,6 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AdminModels.cs" />
-    <Compile Include="Models\FloorPlanData.cs" />
     <Compile Include="Models\FloorViewModel.cs" />
     <Compile Include="Models\MapViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

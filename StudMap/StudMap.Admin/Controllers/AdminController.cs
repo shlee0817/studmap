@@ -1,10 +1,9 @@
 ﻿using System.Web;
 using System.Web.Mvc;
-using StudMap.Admin.Models;
 using StudMap.Core;
+using StudMap.Core.Graph;
 using StudMap.Core.Maps;
 using StudMap.Service.Controllers;
-using Graph = StudMap.Core.Graph.Graph;
 
 namespace StudMap.Admin.Controllers
 {
@@ -150,18 +149,13 @@ namespace StudMap.Admin.Controllers
             return Json(floor, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetMapData(int id)
+        public JsonResult GetFloorPlanData(int id)
         {
-            var floorPlanData = new FloorPlanData();
             var mapsCtrl = new MapsController();
             
-            var result = mapsCtrl.GetGraphForFloor(id);
-            if (result.Status == RespsonseStatus.Ok)
-            {
-                floorPlanData.Graph = result.Object;
-            }
+            var result = mapsCtrl.GetFloorPlanData(id);
 
-            return Json(floorPlanData, JsonRequestBehavior.AllowGet);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

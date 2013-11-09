@@ -33,6 +33,7 @@
                 dialogClass: "no-close",
                 modal: true,
                 title: "Knoten löschen",
+                appendTo: "#body",
                 buttons: {
                     Löschen: function () {
                         for (var i = 0; i < nodes.length; i++) {
@@ -198,6 +199,7 @@
                             height: 140,
                             dialogClass: "no-close",
                             modal: true,
+                            appendTo: "#body",
                             title: "Knoteninformationen (" + d.id + ")",
                             buttons: {
                                 Speichern: function () {
@@ -299,10 +301,10 @@ function init(imageUrl) {
             .addLayer(pathplot)
             .addLayer(graph);
 
-        d3.json(window.basePath + "Admin/GetMapData/" + floorId, function (data) {
+        d3.json(window.basePath + "Admin/GetFloorPlanData/" + floorId, function (data) {
 
-            mapdata[pathplot.id()] = data.Pathplot;
-            mapdata[graph.id()] = data.Graph;
+            mapdata[pathplot.id()] = data.Object.Pathplot;
+            mapdata[graph.id()] = data.Object.Graph;
 
             d3.select("#floorplan").append("svg")
                 .attr("width", width)
