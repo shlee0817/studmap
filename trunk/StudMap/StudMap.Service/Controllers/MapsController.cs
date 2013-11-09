@@ -500,7 +500,19 @@ namespace StudMap.Service.Controllers
             }
 
             return result;
-        } 
+        }
+
+        [HttpGet]
+        public ObjectResponse<FloorPlanData> GetFloorPlanData(int floorId)
+        {
+            var floorPlanData = new ObjectResponse<FloorPlanData> {Object = new FloorPlanData()};
+            var result = GetGraphForFloor(floorId);
+            if (result.Status == RespsonseStatus.Ok)
+            {
+                floorPlanData.Object.Graph = result.Object;
+            }
+            return floorPlanData;
+        }
 
         #endregion
 
