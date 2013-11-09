@@ -1,0 +1,15 @@
+﻿@using StudMap.Core.Maps
+@model StudMap.Core.ObjectResponse<Floor>
+@{
+    ViewBag.Title = "FloorPlan";
+}
+
+@section scripts{
+    <script type="text/javascript">
+        var mapId = '@Model.Object.MapId';
+        var floorId = '@Model.Object.Id';
+        var imageUrl = '@Model.Object.ImageUrl';
+    </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.floorplan.min.js")"></script>
+}

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using StudMap.Service.Controllers;
 
 namespace StudMap.Client.Controllers
 {
@@ -10,23 +7,14 @@ namespace StudMap.Client.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
-
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult FloorPlan(int mapId, int floorId)
         {
-            ViewBag.Message = "Your app description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            var mapsCtrl = new MapsController();
+            var result = mapsCtrl.GetFloor(floorId);
+            return View(result);
         }
     }
 }
