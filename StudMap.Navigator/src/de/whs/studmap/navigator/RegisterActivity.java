@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -27,130 +28,146 @@ import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
 import de.whs.studmap.web.WebServiceException;
 
-public class LoginActivity extends Activity {
-	public final int REQUEST_ID_REGISTER = 200;
+/**
+ * Activity which displays a login screen to the user, offering registration as
+ * well.
+ */
+public class RegisterActivity extends Activity {
+	public static final String EXTRA_SUCCESS = "registrationComplete";
 	public static final String EXTRA_USERNAME = "username";
-		
 	
-	private UserLoginTask mAuthTask = null;
+	private UserRegisterTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
-	private String mUserName;
-	private String mPassword;
+	private String mUsername;
+	private String mPassword1;
+	private String mPassword2;
 
 	// UI references.
 	private EditText mUsernameView;
-	private EditText mPasswordView;
-	private View mLoginFormView;
-	private View mLoginStatusView;
-	private TextView mLoginStatusMessageView;
+	private EditText mPasswordView1;
+	private EditText mPasswordView2;
+	private View mRegisterFormView;
+	private View mRegisterStatusView;
+	private TextView mRegisterStatusMessageView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_register);
+		setupActionBar();
 
 		// Set up the login form.
-		mUsernameView = (EditText) findViewById(R.id.userName);
-		mUsernameView.setText(mUserName);
+		mUsernameView = (EditText) findViewById(R.id.register_username);
+		mUsernameView.setText(mUsername);
 
-		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		mPasswordView1 = (EditText) findViewById(R.id.register_password1);
+		mPasswordView2 = (EditText) findViewById(R.id.register_password2);
+		mPasswordView2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
 					public boolean onEditorAction(TextView textView, int id,
 							KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
+						if (id == R.id.register || id == EditorInfo.IME_NULL) {
+							attemptRegister();
 							return true;
 						}
 						return false;
 					}
 				});
 
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+		mRegisterFormView = findViewById(R.id.register_form);
+		mRegisterStatusView = findViewById(R.id.register_status);
+		mRegisterStatusMessageView = (TextView) findViewById(R.id.register_status_message);
 
-		findViewById(R.id.login_button).setOnClickListener(
+		findViewById(R.id.register_button).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						attemptLogin();
+						attemptRegister();
 					}
 				});
 	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_ID_REGISTER){
-			if (resultCode == RESULT_OK){
-				boolean result = data.getBooleanExtra(RegisterActivity.EXTRA_SUCCESS,false);
-				String username = data.getStringExtra(RegisterActivity.EXTRA_USERNAME);
-				if (result){
-					mUsernameView.setText(mUserName);
-					mPasswordView.requestFocus();
-					UserInfo.dialog(this, username, getString(R.string.register_successful));
-				}
-			}
+
+	/**
+	 * Set up the {@link android.app.ActionBar}, if the API is available.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void setupActionBar() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			// Show the Up button in the action bar.
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			// TODO: If Settings has multiple levels, Up should navigate up
+			// that hierarchy.
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.login, menu);
+		getMenuInflater().inflate(R.menu.register, menu);
 		return true;
 	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	
-		switch (item.getItemId()) {
-		case R.id.action_register :
-			startActivityForResult(new Intent(this, RegisterActivity.class),REQUEST_ID_REGISTER);
-			break;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-		return true;
-	}
-	
+
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
-	public void attemptLogin() {
+	public void attemptRegister() {
 		if (mAuthTask != null) {
 			return;
 		}
 
 		// Reset errors.
 		mUsernameView.setError(null);
-		mPasswordView.setError(null);
+		mPasswordView1.setError(null);
+		mPasswordView2.setError(null);
 
 		// Store values at the time of the login attempt.
-		mUserName = mUsernameView.getText().toString();
-		mPassword = mPasswordView.getText().toString();
+		mUsername = mUsernameView.getText().toString();
+		mPassword1 = mPasswordView1.getText().toString();
+		mPassword2 = mPasswordView2.getText().toString();
 
 		boolean cancel = false;
 		View focusView = null;
 
-		// Check for a valid password.
-		if (TextUtils.isEmpty(mPassword)) {
-			mPasswordView.setError(getString(R.string.error_field_required));
-			focusView = mPasswordView;
+		// Check for a valid passwords.
+		if (TextUtils.isEmpty(mPassword1)) {
+			mPasswordView1.setError(getString(R.string.error_field_required));
+			focusView = mPasswordView1;
 			cancel = true;
-		} else if (mPassword.length() < 4) {
-			mPasswordView.setError(getString(R.string.error_invalid_password));
-			focusView = mPasswordView;
+		} else if (mPassword1.length() < 4) {
+			mPasswordView1.setError(getString(R.string.error_invalid_password));
+			focusView = mPasswordView1;
+			cancel = true;
+		}
+		
+		if (!TextUtils.equals(mPassword1, mPassword2)){
+			mPasswordView2.setError(getString(R.string.error_password_match));
+			focusView = mPasswordView2;
 			cancel = true;
 		}
 
-		// Check for a valid user name.
-		if (TextUtils.isEmpty(mUserName)) {
+		// Check for a valid username.
+		if (TextUtils.isEmpty(mUsername)) {
 			mUsernameView.setError(getString(R.string.error_field_required));
 			focusView = mUsernameView;
 			cancel = true;
@@ -163,9 +180,9 @@ public class LoginActivity extends Activity {
 		} else {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
-			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+			mRegisterStatusMessageView.setText(R.string.register_progress_registering);
 			showProgress(true);
-			mAuthTask = new UserLoginTask(this);
+			mAuthTask = new UserRegisterTask(this);
 			mAuthTask.execute((Void) null);
 		}
 	}
@@ -182,31 +199,32 @@ public class LoginActivity extends Activity {
 			int shortAnimTime = getResources().getInteger(
 					android.R.integer.config_shortAnimTime);
 
-			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime)
+			mRegisterStatusView.setVisibility(View.VISIBLE);
+			mRegisterStatusView.animate().setDuration(shortAnimTime)
 					.alpha(show ? 1 : 0)
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							mLoginStatusView.setVisibility(show ? View.VISIBLE
+							mRegisterStatusView.setVisibility(show ? View.VISIBLE
 									: View.GONE);
 						}
 					});
 
-			mLoginFormView.setVisibility(View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime)
+			mRegisterFormView.setVisibility(View.VISIBLE);
+			mRegisterFormView.animate().setDuration(shortAnimTime)
 					.alpha(show ? 0 : 1)
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+							mRegisterFormView.setVisibility(show ? View.GONE
+									: View.VISIBLE);
 						}
 					});
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
-			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+			mRegisterStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
 
@@ -214,12 +232,12 @@ public class LoginActivity extends Activity {
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 		private Context mContext = null;
 		private boolean bShowDialog = false;
-		private boolean bRequestFocus = false;
+		private boolean	bRequestFocus = false;
 		
-		public UserLoginTask(Context ctx){
+		public UserRegisterTask(Context ctx){
 			mContext = ctx;
 		}
 		
@@ -227,7 +245,7 @@ public class LoginActivity extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			
 			try {
-				boolean result = Service.login(mUserName, mPassword); 
+				boolean result = Service.register(mUsername, mPassword1); 
 				if (result)
 					return result;
 				else
@@ -241,8 +259,8 @@ public class LoginActivity extends Activity {
 					switch (errorCode) {
 					case ResponseError.DatabaseError:
 						bShowDialog = true;
-					default:
-						mPasswordView.setError(getString(R.string.error_incorrect_password));
+					case ResponseError.UserNameDuplicate:
+						mUsernameView.setError(getString(R.string.error_username_duplicate));
 						bRequestFocus = true;
 					}
 				} catch (JSONException ignore) {}
@@ -256,18 +274,20 @@ public class LoginActivity extends Activity {
 		protected void onPostExecute(final Boolean success) {
 			mAuthTask = null;
 			showProgress(false);
+
 			if (success) {
 				Intent result = new Intent();
-	            result.putExtra(EXTRA_USERNAME,mUserName);
+	            result.putExtra(EXTRA_USERNAME,mUsername);
+	            result.putExtra(EXTRA_SUCCESS, success);
 	            setResult(Activity.RESULT_OK,result);
 	            finish();
 			}
 			else{
 				if (bRequestFocus)
-					mPasswordView.requestFocus();
+					mUsernameView.requestFocus();
 				if (bShowDialog)
-					UserInfo.dialog(mContext,mUserName, getString(R.string.error_connection));
-			}				
+					UserInfo.dialog(mContext,mUsername, getString(R.string.error_connection));
+			}	
 		}
 
 		@Override

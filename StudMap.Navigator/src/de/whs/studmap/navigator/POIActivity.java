@@ -3,7 +3,6 @@ package de.whs.studmap.navigator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import de.whs.studmap.data.Node;
 import de.whs.studmap.web.Service;

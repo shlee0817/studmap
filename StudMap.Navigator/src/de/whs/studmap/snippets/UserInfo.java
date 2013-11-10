@@ -3,12 +3,16 @@ package de.whs.studmap.snippets;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources.Theme;
-import android.text.AlteredCharSequence;
 import android.widget.Toast;
 
 public class UserInfo{
 
+	/**
+	 * Blendet eine Dialog-/Messagebox ein.
+	 * @param context Context in dem die Benachrichtigung angezeigt werden soll
+	 * @param userName Benutzernamen zur persönlichen Ansprache
+	 * @param message Nachricht, die dem Benutzer angezeigt werden soll
+	 */
 	public static void dialog(Context context,String userName, String message){
 	AlertDialog ad = new AlertDialog.Builder(context,AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();  
 	ad.setCancelable(false); // This blocks the 'BACK' button  
@@ -23,6 +27,12 @@ public class UserInfo{
 	ad.show(); 
 	}
 	
+	/**
+	 * Blendet eine Benachrichtigung am unteren Bildschirmrand ein.
+	 * @param context Context in dem die Benachrichtigung angezeigt werden soll	
+	 * @param message Nachricht, die dem Benutzer angezeigt werden soll
+	 * @param length_short Anzeigedauer. true = kurz | false = lang
+	 */
 	public static void toast(Context context, String message, boolean length_short){
 		int length = length_short ? 0 : 1;
 		Toast.makeText(context, message, length).show();		
