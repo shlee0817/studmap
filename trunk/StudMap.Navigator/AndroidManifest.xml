@@ -7,9 +7,9 @@
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="18" />
-    
-    <uses-permission android:name="android.permission.INTERNET" /> 
-    
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -35,11 +35,20 @@
         <activity
             android:name="de.whs.studmap.navigator.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible" 
-            android:parentActivityName="de.whs.studmap.navigator.MainActivity" >
+            android:parentActivityName="de.whs.studmap.navigator.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.whs.studmap.navigator.MainActivity" />
+        </activity>
+        <activity
+            android:name="de.whs.studmap.navigator.RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:parentActivityName="de.whs.studmap.navigator.LoginActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.whs.studmap.navigator.LoginActivity" />
         </activity>
     </application>
 

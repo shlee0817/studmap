@@ -2,14 +2,10 @@ package de.whs.studmap.navigator;
 
 import java.util.Locale;
 
-import de.whs.studmap.data.DrawerItemEnum;
-import de.whs.studmap.snippets.UserInfo;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -29,6 +25,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+import de.whs.studmap.data.DrawerItemEnum;
+import de.whs.studmap.snippets.UserInfo;
 //import com.example.android.navigationdrawerexample.R;
 //import com.example.android.navigationdrawerexample.MainActivity.DrawerItemClickListener;
 //import com.example.android.navigationdrawerexample.MainActivity.PlanetFragment;
@@ -105,15 +103,6 @@ public class MainActivity extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    /* Called whenever we call invalidateOptionsMenu() */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLeftDrawer);
-        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
          // The action bar home/up action should open or close the drawer.
@@ -123,17 +112,14 @@ public class MainActivity extends Activity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
-        case R.id.action_websearch:
-            // create intent to perform web search for this planet
-            Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-            intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-            // catch event that there's no activity to handle intent
+        /* case R.id.action_websearch:
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
             } else {
                 Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
             }
             return true;
+        */
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -180,7 +166,7 @@ public class MainActivity extends Activity {
     		break;
     		
     	default:
-    		Toast.makeText(this,"Auswahl nicht gefunden!", Toast.LENGTH_LONG).show();	
+    		UserInfo.toast(this,"Auswahl nicht gefunden!", false);
     		break;
     	
     	}

@@ -1,16 +1,16 @@
 <resources>
 
-    <string name="title_activity_login">Login</string>
+    <string name="title_activity_login">Anmelden</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in_register"><b>Sign in</b> or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="action_forgot_password">Recover lost password</string>
-    <string name="login_progress_signing_in">Signing in&#8230;</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="prompt_username">Benutzername</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="action_sign_in">Anmelden</string>
+    <string name="action_register">Registrieren</string>
+    <string name="login_progress_signing_in">Anmelden&#8230;</string>
+    <string name="error_invalid_password">Passwort ist zu kurz</string>
+    <string name="error_incorrect_password">Passwort ist inkorrekt</string>
+    <string name="error_field_required">Dieses Feld ist notwendig</string>
+    <string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
 
 </resources>
