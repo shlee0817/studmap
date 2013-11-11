@@ -4,34 +4,39 @@
 }
 
 <h1>Knoteninformationen</h1>
-    <div class="table">
-        <div class="tableCell Headline">
-            <div class="tableRow"><b>Knoten-ID:</b></div>
-            <div class="tableRow">4711</div>
-        </div>
-
+<div class="table">
+    <div class="tableCell">
+        <div class="tableRow"><b>DisplayName:</b></div>
+        <div class="tableRow">@Model.DisplayName</div>
+    </div>
+    <div class="tableCell">
+        <div class="tableRow"><b>RoomName:</b></div>
+        <div class="tableRow">@Model.RoomName</div>
+    </div>
+</div>
+@if (Model.Node != null)
+{
+    <h1>Knoten</h1>
+    <div class="table" >
         <div class="tableCell">
-            <div class="tableRow"><b>DisplayName:</b></div>
-            <div class="tableRow">@Model.DisplayName</div>
-        </div>
-        <div class="tableCell">
-            <div class="tableRow"><b>RoomName:</b></div>
-            <div class="tableRow">@Model.RoomName</div>
+            <div class="tableRow"><b>Knoten Id:</b></div>
+            <div class="tableRow">@Model.Node.Id</div>
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>X-Koordinate:</b></div>
-            <div class="tableRow">0.000</div>
+            <div class="tableRow">@Model.Node.X</div>
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>Y-Koordinate:</b></div>
-            <div class="tableRow">1.111</div>
+            <div class="tableRow">@Model.Node.Y</div>
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>Knoten liegt in folgender Floor (ID):</b></div>
-            <div class="tableRow">123</div>
+            <div class="tableRow">@Model.Node.FloorId</div>
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>PoI:</b></div>
             <div class="tableRow">Weitere Knoteninformationen werden hier hinein geschrieben.</div>
         </div>
     </div>
+}
