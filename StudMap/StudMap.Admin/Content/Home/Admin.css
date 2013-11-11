@@ -8,9 +8,9 @@
     cursor: pointer;
 }
 
-    .tableCell.Headline {
-        background-color: gainsboro;
-    }
+.tableCell.Headline {
+    background-color: gainsboro;
+}
 
 .tableRow {
     display: table-cell;

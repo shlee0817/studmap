@@ -127,7 +127,7 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             var nodeInformation = mapsCtrl.GetNodeInformationForNode(id);
-
+  
             return PartialView("_NodeInformation", nodeInformation.Object);
         }
         #endregion
