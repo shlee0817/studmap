@@ -477,20 +477,24 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
+                    var node = entities.Nodes.Find(nodeId);
+                    result.Object = new Core.Graph.NodeInformation();
+                    if (node == null)
+                        return result;
+
+                    result.Object.Node = new Node
+                        {
+                            FloorId = node.FloorId,
+                            X = node.X,
+                            Y = node.Y,
+                            Id = node.Id
+                        };
                     var queriedNodeInformation = entities.NodeInformation.Find(nodeId);
                     if (queriedNodeInformation == null)
-                    {
-                        result.Object = new Core.Graph.NodeInformation();
                         return result;
-                    }
 
-                    var nodeInformation = new Core.Graph.NodeInformation()
-                        {
-                            DisplayName = queriedNodeInformation.DisplayName,
-                            RoomName = queriedNodeInformation.RoomName
-                        };
-
-                    result.Object = nodeInformation;
+                    result.Object.DisplayName = queriedNodeInformation.DisplayName;
+                    result.Object.RoomName = queriedNodeInformation.RoomName;
                 }
             }
             catch (DataException)

@@ -196,7 +196,6 @@
                     success: function (result) {
                         $("#NodeInformationDialog").html(result);
                         $('#NodeInformationDialog').dialog({
-                            height: 140,
                             dialogClass: "no-close",
                             modal: true,
                             appendTo: "#body",
