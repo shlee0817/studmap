@@ -7,11 +7,11 @@
 <div class="table">
     <div class="tableCell">
         <div class="tableRow"><b>DisplayName:</b></div>
-        <div class="tableRow">@Model.DisplayName</div>
+        <div class="tableRow"><input type="text" value="@Model.DisplayName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
     </div>
     <div class="tableCell">
         <div class="tableRow"><b>RoomName:</b></div>
-        <div class="tableRow">@Model.RoomName</div>
+        <div class="tableRow"><input type="text" value="@Model.RoomName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
     </div>
 </div>
 @if (Model.Node != null)
@@ -20,23 +20,23 @@
     <div class="table" >
         <div class="tableCell">
             <div class="tableRow"><b>Knoten Id:</b></div>
-            <div class="tableRow">@Model.Node.Id</div>
+            <div class="tableRow"><input type="text" value="@Model.Node.Id" class="contextInputField" readonly=readonly/></div>
         </div>
         <div class="tableCell">
-            <div class="tableRow"><b>X-Koordinate:</b></div>
-            <div class="tableRow">@Model.Node.X</div>
+            <div class="tableRow"><b>X-Koord. (Prozent):</b></div>
+            <div class="tableRow"><input type="text" value="@(Model.Node.X * 100)%" class="contextInputField" readonly=readonly/></div>
         </div>
         <div class="tableCell">
-            <div class="tableRow"><b>Y-Koordinate:</b></div>
-            <div class="tableRow">@Model.Node.Y</div>
+            <div class="tableRow"><b>Y-Koord. (Prozent):</b></div>
+            <div class="tableRow"><input type="text" value="@(Model.Node.Y * 100)%" class="contextInputField" readonly=readonly/></div>
         </div>
         <div class="tableCell">
-            <div class="tableRow"><b>Knoten liegt in folgender Floor (ID):</b></div>
-            <div class="tableRow">@Model.Node.FloorId</div>
+            <div class="tableRow"><b>Floor-ID:</b></div>
+            <div class="tableRow"><input type="text" value="@Model.Node.FloorId" class="contextInputField" readonly=readonly/></div>
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>PoI:</b></div>
-            <div class="tableRow">Weitere Knoteninformationen werden hier hinein geschrieben.</div>
+            <div class="tableRow"><textarea cols="17" rows="4" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "")>Model.PoI</textarea></div>
         </div>
     </div>
 }

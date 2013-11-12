@@ -192,7 +192,7 @@
             }).on("contextmenu", function (d) {
                 d3.event.preventDefault();
                 $.ajax({
-                    url: window.basePath + 'Admin/GetNodeInformation/' + d.id,
+                    url: window.basePath + 'Admin/GetNodeInformation?nodeId=' + d.id + '&readOnly=' + false,
                     success: function (result) {
                         $("#NodeInformationDialog").html(result);
                         $('#NodeInformationDialog').dialog({

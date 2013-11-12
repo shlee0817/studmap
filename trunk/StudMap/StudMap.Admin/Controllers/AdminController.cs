@@ -123,11 +123,13 @@ namespace StudMap.Admin.Controllers
 
         [Authorize(Roles = "Admins")]
         [HttpGet]
-        public ActionResult GetNodeInformation(int id)
+        public ActionResult GetNodeInformation(int nodeId, bool readOnly)
         {
             var mapsCtrl = new MapsController();
-            var nodeInformation = mapsCtrl.GetNodeInformationForNode(id);
-  
+            var nodeInformation = mapsCtrl.GetNodeInformationForNode(nodeId);
+
+            nodeInformation.Object.ReadOnly = readOnly;
+
             return PartialView("_NodeInformation", nodeInformation.Object);
         }
         #endregion
