@@ -14,7 +14,6 @@
   limitations under the License.
   -->
 
-
 <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -49,15 +48,8 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:background="@android:color/white"
-	        android:hint="Search" >
+	        android:hint="@string/search_field">
 	    </EditText>
-        
-        <Button
-            android:id="@+id/button1"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
         
 	    <ListView
 	        android:id="@+id/left_drawer_listView"

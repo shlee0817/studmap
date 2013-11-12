@@ -32,5 +32,6 @@
     <string name="title_activity_poi">POIActivity</string>
     <string name="action_settings">Settings</string>
 	<string name="already_logged_in">Du bist schon eingeloggt!</string>
-
+	<string name="search_field">Suchen</string>
+	
 </resources>

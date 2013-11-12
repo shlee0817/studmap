@@ -27,9 +27,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import de.whs.studmap.data.DrawerItemEnum;
 import de.whs.studmap.snippets.UserInfo;
-//import com.example.android.navigationdrawerexample.R;
-//import com.example.android.navigationdrawerexample.MainActivity.DrawerItemClickListener;
-//import com.example.android.navigationdrawerexample.MainActivity.PlanetFragment;
+import de.whs.studmap.web.Service;
+import de.whs.studmap.web.WebServiceException;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
@@ -123,6 +122,13 @@ public class MainActivity extends Activity {
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+    
+    @Override
+    protected void onDestroy() {
+    	try {
+			Service.logout(mUserName);
+		} catch (WebServiceException ignore){}
     }
 
     /* The click listner for ListView in the navigation drawer */
