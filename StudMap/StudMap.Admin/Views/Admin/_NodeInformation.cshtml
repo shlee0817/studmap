@@ -7,11 +7,11 @@
 <div class="table">
     <div class="tableCell">
         <div class="tableRow"><b>DisplayName:</b></div>
-        <div class="tableRow"><input type="text" value="@Model.DisplayName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+        <div class="tableRow"><input id="inputDisplayName" type="text" value="@Model.DisplayName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
     </div>
     <div class="tableCell">
         <div class="tableRow"><b>RoomName:</b></div>
-        <div class="tableRow"><input type="text" value="@Model.RoomName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+        <div class="tableRow"><input id="inputRoomName" type="text" value="@Model.RoomName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
     </div>
 </div>
 @if (Model.Node != null)
@@ -20,7 +20,7 @@
     <div class="table" >
         <div class="tableCell">
             <div class="tableRow"><b>Knoten Id:</b></div>
-            <div class="tableRow"><input type="text" value="@Model.Node.Id" class="contextInputField" readonly=readonly/></div>
+            <div class="tableRow"><input id="nodeId" type="text" value="@Model.Node.Id" class="contextInputField" readonly=readonly/></div>
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>X-Koord. (Prozent):</b></div>
@@ -36,7 +36,7 @@
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>PoI:</b></div>
-            <div class="tableRow"><textarea cols="17" rows="4" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "")>Model.PoI</textarea></div>
+            <div class="tableRow"><textarea id="inputPoI" cols="17" rows="4" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "")>Model.PoI</textarea></div>
         </div>
     </div>
 }

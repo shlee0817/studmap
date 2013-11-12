@@ -630,5 +630,11 @@ namespace StudMap.Service.Controllers
         }
 
         #endregion
+
+        public object SaveNodeInformation(int nodeID, Core.Graph.NodeInformation nodeInf)
+        {
+            // Todo
+            throw new NotImplementedException();
+        }
     }
 }

@@ -151,6 +151,16 @@ namespace StudMap.Admin.Controllers
             return Json(floor, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admins")]
+        [HttpPost]
+        public JsonResult SaveNodeInformation(int nodeID, NodeInformation nodeInf)
+        {
+            var mapsCtrl = new MapsController();
+            // Todo
+            var tmp = mapsCtrl.SaveNodeInformation(nodeID, nodeInf);
+            return Json(tmp, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult GetFloorPlanData(int id)
         {
             var mapsCtrl = new MapsController();
