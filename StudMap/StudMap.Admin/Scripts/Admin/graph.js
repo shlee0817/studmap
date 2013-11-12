@@ -187,8 +187,21 @@
                     graph.start();
                 }
             }).on('mouseover', function (d) {
-                
-                
+                var x = d3.event.pageX, y = d3.event.pageX;
+                $.ajax({
+                    url: window.basePath + 'Admin/GetNodeInformation?nodeId=' + d.id + '&readOnly=' + true,
+                    success: function (result) {
+                        $("#NodeInformationDialog").html(result);
+                        $('#NodeInformationDialog').dialog({
+                            dialogClass: "hover",
+                            position: [x, y],
+                            modal: false,
+                            appendTo: "#body"
+                        });
+                    }
+                });
+            }).on('mouseout', function (d) {
+                $("#NodeInformationDialog").dialog("close");
             }).on("contextmenu", function (d) {
                 d3.event.preventDefault();
                 $.ajax({

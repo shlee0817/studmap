@@ -126,3 +126,12 @@ body.loading {
     text-align: right;
     margin: 8px 0;
 }
+
+/* Dialog Hover InfoBox*/
+.hover .ui-dialog-titlebar {
+  display: none;
+}
+
+.hover .ui-dialog-titlebar-close {
+  display: none;
+}
