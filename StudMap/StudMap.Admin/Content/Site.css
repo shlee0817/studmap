@@ -343,6 +343,11 @@ input, textarea {
     width: 300px;
 }
 
+.contextInputField {
+    font-size: inherit;
+    width: auto;
+}
+
 textarea {
     font-family: inherit;
     width: 500px;

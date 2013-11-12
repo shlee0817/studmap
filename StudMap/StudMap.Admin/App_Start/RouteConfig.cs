@@ -26,6 +26,12 @@ namespace StudMap.Admin.App_Start
                 url: "{controller}/{action}/{mapId}/{floorId}",
                 defaults: new { controller = "Admin", action = "DeleteFloor", mapId = UrlParameter.Optional, floorId = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "GetNodeInformation",
+                url: "{controller}/{action}/{nodeId}/{readOnly}",
+                defaults: new { controller = "Admin", action = "GetNodeInformation", nodeId = UrlParameter.Optional, readOnly = UrlParameter.Optional }
+            );
         }
     }
 }
