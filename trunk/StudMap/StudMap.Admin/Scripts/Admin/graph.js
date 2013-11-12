@@ -215,6 +215,29 @@
                             title: "Knoteninformationen (" + d.id + ")",
                             buttons: {
                                 Speichern: function () {
+                                    function saveNodeInformation() {
+                                        var _displayName = $(document).find('input[id=inputDisplayName]').val();
+                                        var _roomName = $(document).find('input[id=inputRoomName]').val();
+                                        var _poI = $('textarea#inputPoI').val();
+
+                                        var obj = {
+                                            nodeId: $(document).find('input[id=nodeId]').val(),
+                                            displayName: _displayName,
+                                            roomName: _roomName,
+                                            poI: _poI
+                                        };
+
+                                        $.ajax({
+                                            url: window.basePath + 'Admin/SaveNodeInformation',
+                                            data: JSON.stringify(obj),
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "json",
+                                            type: "post",
+                                            success: function () {
+                                                init(window.imageUrl);
+                                            }
+                                        });
+                                    }
                                     $(this).dialog("close");
                                 },
                                 Abbrechen: function () {
@@ -350,6 +373,7 @@ function getGraph() {
     }
     return { "Nodes": _nodes, "FloorId": this.floorId, "Edges": edges };
 }
+
 
 function saveGraph() {
 
