@@ -1,9 +1,7 @@
 package de.whs.studmap.web;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,42 +32,33 @@ public class Service {
 	
 	private static final String URL = "http://10.0.2.2:1120/api/Users/";
 	
-	public static boolean login(String name, String password) throws WebServiceException{
+	public static boolean login(String name, String password) throws WebServiceException, ConnectException{
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		params.add(new BasicNameValuePair(REQUEST_PARAM_PASSWORD, password));
 		
-		JSONObject jObject =  httpPost("Login", params);
-		
-		if (jObject == null)
-			return false;
-		else		
-			return true;
+		httpPost("Login", params);
+
+		return true;
 	}
 	
-	public static boolean logout(String name) throws WebServiceException{
+	public static boolean logout(String name) throws WebServiceException, ConnectException{
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		
-		JSONObject jObject = httpPost("Logout", params);
+		httpPost("Logout", params);
 		
-		if (jObject == null)
-			return false;
-		else		
-			return true;
+		return true;
 	}
 	
-	public static boolean register(String name, String password) throws WebServiceException{
+	public static boolean register(String name, String password) throws WebServiceException, ConnectException{
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		params.add(new BasicNameValuePair(REQUEST_PARAM_PASSWORD, password));
 		
-		JSONObject jObject = httpPost("Register", params);
+		httpPost("Register", params);
 		
-		if (jObject == null)
-			return false;
-		else		
-			return true;
+		return true;
 	}
 	
 	public static List<Node> getPOIs() throws WebServiceException{
@@ -81,13 +70,13 @@ public class Service {
 		return nodes;
 	}
 	
-	public static String getActiveUsers() throws WebServiceException{
+	public static String getActiveUsers() throws WebServiceException, ConnectException{
 		//Wird eigentlich noch garnicht benötigt, eignet sich aber gut zu Testzwecken
 		String result = httpGet("GetActiveUsers").toString();
 		return result;
 	}
   
-	private static JSONObject httpPost(String methodName, List<NameValuePair> params) throws WebServiceException {
+	private static JSONObject httpPost(String methodName, List<NameValuePair> params) throws WebServiceException, ConnectException {
 		
 		// Create a new HttpClient and Post Header
 		HttpClient httpClient = new DefaultHttpClient();
@@ -104,7 +93,6 @@ public class Service {
 				HttpEntity entity = response.getEntity();
 				
 				if (entity != null){
-					//result = convertStreamToString(entity.getContent());
 					String responseString = EntityUtils.toString(entity); 			  
 					JSONObject jObject = new JSONObject(responseString);
 					
@@ -123,15 +111,15 @@ public class Service {
 				e.printStackTrace();
 			}
 			
-			return null;
+			throw new ConnectException();
 	}
 	
-	private static JSONObject httpGet(String methodName) throws WebServiceException{
+	private static JSONObject httpGet(String methodName) throws WebServiceException, ConnectException{
 		return httpGet(methodName, null);
 	}
 	
 	private static JSONObject httpGet(String methodName, List<NameValuePair> params) 
-			throws WebServiceException {
+			throws WebServiceException, ConnectException {
 				
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(URL + methodName);
@@ -147,7 +135,6 @@ public class Service {
 			HttpEntity entity = response.getEntity();
 			
 			if (entity != null){
-				//result = convertStreamToString(entity.getContent());
 				String responseString = EntityUtils.toString(entity); 			  
 				JSONObject jObject = new JSONObject(responseString);
 				
@@ -166,28 +153,7 @@ public class Service {
 			e.printStackTrace();
 		}
 		
-		return null;
+		throw new ConnectException();
 	}
-	
-	private static String convertStreamToString(InputStream is) {
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	    StringBuilder result = new StringBuilder();
-
-	    String line = null;
-	    try {
-	        while ((line = reader.readLine()) != null) {
-	            result.append(line + "\n");
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    } finally {
-	        try {
-	            is.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	    return result.toString();
-	}
- 
+	 
 }

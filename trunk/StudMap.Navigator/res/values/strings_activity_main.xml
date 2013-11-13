@@ -26,12 +26,17 @@
         <item>Einstellungen</item>
         <item>Impressum</item>
     </string-array>
-
+    
+    <string name="logout">Abmelden</string>
+    
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="title_activity_poi">POIActivity</string>
     <string name="action_settings">Settings</string>
 	<string name="already_logged_in">Du bist schon eingeloggt!</string>
 	<string name="search_field">Suchen</string>
+	
+	<string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
+	<string name="logout_successfull">Erfolgreich abgemeldet!</string>
 	
 </resources>
