@@ -2,7 +2,7 @@ package de.whs.studmap.data;
 
 public enum DrawerItemEnum {
 	MAP,
-	LOGIN,
+	LOG_IN_OUT,
 	POI,
 	SETTINGS,
 	IMPRESSUM

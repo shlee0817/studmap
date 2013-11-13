@@ -26,29 +26,17 @@
         </activity>
         <activity
             android:name="de.whs.studmap.navigator.POIActivity"
-            android:label="@string/title_activity_poi"
-            android:parentActivityName="de.whs.studmap.navigator.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.whs.studmap.navigator.MainActivity" />
+            android:label="@string/title_activity_poi">
         </activity>
         <activity
             android:name="de.whs.studmap.navigator.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName="de.whs.studmap.navigator.MainActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.whs.studmap.navigator.MainActivity" />
         </activity>
         <activity
             android:name="de.whs.studmap.navigator.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName="de.whs.studmap.navigator.LoginActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.whs.studmap.navigator.LoginActivity" />
         </activity>
     </application>
 

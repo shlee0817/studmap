@@ -1,6 +1,9 @@
 package de.whs.studmap.navigator;
 
-import java.util.Locale;
+import java.net.ConnectException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,6 +11,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -24,7 +28,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 import de.whs.studmap.data.DrawerItemEnum;
 import de.whs.studmap.snippets.UserInfo;
 import de.whs.studmap.web.Service;
@@ -39,7 +42,7 @@ public class MainActivity extends Activity {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mItemTitles;
+    private List<String> mItemTitles;
     
     private boolean mLoggedIn = false;
     private String mUserName = "";
@@ -53,7 +56,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mTitle = mDrawerTitle = getTitle();
-        mItemTitles = getResources().getStringArray(R.array.menue_item_array);
+        
+        mItemTitles =new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.menue_item_array)));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer_listView);
         mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
@@ -62,6 +66,7 @@ public class MainActivity extends Activity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
         mDrawerListView.setAdapter(new ArrayAdapter<String>(this,R.layout.simple_list_item_black, mItemTitles));
+        
                
         mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -126,10 +131,21 @@ public class MainActivity extends Activity {
     
     @Override
     protected void onDestroy() {
-    	try {
-			Service.logout(mUserName);
-		} catch (WebServiceException ignore){}
+    	new AsyncTask<Void, Void, Boolean>() {
+     		
+    		@Override
+    		protected Boolean doInBackground(Void... params) {
+    			try {
+    				Service.logout(mUserName);
+    			} catch (WebServiceException ignore){			
+    			} catch (ConnectException ignore) {}
+    			return true;
+    		}
+		}.execute((Void) null);
+    	super.onDestroy();
     }
+    
+    
 
     /* The click listner for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -156,19 +172,30 @@ public class MainActivity extends Activity {
 	
 	        // update selected item and title, then close the drawer
 	        mDrawerListView.setItemChecked(position, true);
-	        setTitle(mItemTitles[position]);
+	        setTitle(mItemTitles.get(position));
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		
-    	case LOGIN:
-    		if (mLoggedIn)
-    			UserInfo.dialog(this,mUserName,getString(R.string.already_logged_in));
+    	case LOG_IN_OUT:
+    		if (mLoggedIn){
+    			try {
+					Service.logout(mUserName);
+					UserInfo.toast(this, getString(R.string.logout_successfull), true);
+				} catch (WebServiceException e) {
+					e.printStackTrace();
+				} catch (ConnectException e) {
+					UserInfo.dialog(this,mUserName,getString(R.string.error_connection));
+				}
+    		}
     		else
     			startActivityForResult(new Intent(this,LoginActivity.class),REQUEST_ID_LOGIN);
+    		
+	        mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		
     	case POI:
     		startActivityForResult(new Intent(this,POIActivity.class),REQUEST_ID_POIS);
+	        mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		
     	default:
@@ -210,6 +237,8 @@ public class MainActivity extends Activity {
     	    	if (resultCode == RESULT_OK){
     	    		mUserName = data.getStringExtra(LoginActivity.EXTRA_USERNAME);
     	    		mLoggedIn = true;
+    	    		mItemTitles.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
+    	    		mItemTitles.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),getString(R.string.logout));
     	    	}
     	    	break;
 			case REQUEST_ID_POIS :
@@ -217,8 +246,7 @@ public class MainActivity extends Activity {
 					int nodeID =data.getIntExtra(POIActivity.EXTRA_NODE_ID, -1);
 					//TODO: mittels der KnotenID einen neuen Zielpunkt setzen und die neue Route anzeigen	
 
-					Toast.makeText(this, String.valueOf(nodeID), Toast.LENGTH_LONG).show();
-					
+					UserInfo.toast(this, String.valueOf(nodeID),false);					
 				}
 				break;
 			}    	
@@ -238,11 +266,13 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            int i = getArguments().getInt(ARG_MAIN_NUMBER);
+            /*
+            int i = getArguments().getInt(ARG_MAIN_NUMBER);            
             String planet = getResources().getStringArray(R.array.menue_item_array)[i];
 
             int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
                             "drawable", getActivity().getPackageName());
+            */
             
             WebView MapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
             MapWebView.setWebViewClient(new WebViewClient());

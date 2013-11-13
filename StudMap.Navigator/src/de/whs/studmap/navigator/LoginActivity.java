@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,11 +110,10 @@ public class LoginActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_register :
 			startActivityForResult(new Intent(this, RegisterActivity.class),REQUEST_ID_REGISTER);
-			break;
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-		return true;
 	}
 	
 	/**
@@ -228,10 +227,7 @@ public class LoginActivity extends Activity {
 			
 			try {
 				boolean result = Service.login(mUserName, mPassword); 
-				if (result)
-					return result;
-				else
-					throw new ConnectException();
+				return result;
 			} catch (WebServiceException e) {
 				JSONObject jObject = e.getJsonObject();
 				

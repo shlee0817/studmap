@@ -11,6 +11,5 @@
     <string name="error_invalid_password">Passwort ist zu kurz</string>
     <string name="error_incorrect_password">Passwort ist inkorrekt</string>
     <string name="error_field_required">Dieses Feld ist notwendig</string>
-    <string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
-
+    
 </resources>
