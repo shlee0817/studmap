@@ -30,9 +30,15 @@ namespace StudMap.Service.Controllers
                     return CreateUserAndAccount(userName, password, entities);
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
-                return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.DatabaseError};
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                return new BaseResponse
+                    {
+                        Status = RespsonseStatus.Error, 
+                        ErrorCode = ResponseError.DatabaseError,
+                        ErrorMessage = ex.StackTrace
+                    };
             }
         }
 
@@ -62,9 +68,15 @@ namespace StudMap.Service.Controllers
                     return new BaseResponse {Status = RespsonseStatus.Ok, ErrorCode = ResponseError.None};
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
-                return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.DatabaseError};
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                return new BaseResponse
+                    {
+                        Status = RespsonseStatus.Error, 
+                        ErrorCode = ResponseError.DatabaseError,
+                        ErrorMessage = ex.StackTrace
+                    };
             }
         }
 
@@ -87,9 +99,16 @@ namespace StudMap.Service.Controllers
                     return new BaseResponse {Status = RespsonseStatus.Ok, ErrorCode = ResponseError.None};
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
-                return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.DatabaseError};
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                return new BaseResponse
+                    {
+                        Status = RespsonseStatus.Error, 
+                        ErrorCode = ResponseError.DatabaseError,
+                        ErrorMessage = ex.StackTrace
+
+                    };
             }
         }
 
@@ -108,9 +127,15 @@ namespace StudMap.Service.Controllers
                     return response;
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
-                return new ListResponse<User> {Status = RespsonseStatus.Error, ErrorCode = ResponseError.DatabaseError};
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                return new ListResponse<User>
+                    {
+                        Status = RespsonseStatus.Error, 
+                        ErrorCode = ResponseError.DatabaseError,
+                        ErrorMessage = ex.StackTrace
+                    };
             }
         }
 

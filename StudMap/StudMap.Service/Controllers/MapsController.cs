@@ -39,10 +39,12 @@ namespace StudMap.Service.Controllers
                         };
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -59,10 +61,12 @@ namespace StudMap.Service.Controllers
                     entities.DeleteMap(mapId);
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -85,10 +89,12 @@ namespace StudMap.Service.Controllers
                     result.List = maps.ToList();
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -134,10 +140,12 @@ namespace StudMap.Service.Controllers
                     };
                 }
             }
-            catch (DataException )
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -155,10 +163,12 @@ namespace StudMap.Service.Controllers
                     entities.DeleteFloor(floorId);
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -191,10 +201,12 @@ namespace StudMap.Service.Controllers
                     result.List = floors.ToList();
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -226,10 +238,12 @@ namespace StudMap.Service.Controllers
                     }
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return result;
         }
@@ -254,10 +268,12 @@ namespace StudMap.Service.Controllers
                     }
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return result;
         }
@@ -292,10 +308,12 @@ namespace StudMap.Service.Controllers
                     }
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
             return result;
         }
@@ -372,10 +390,12 @@ namespace StudMap.Service.Controllers
                     entities.SaveChanges();
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -407,10 +427,12 @@ namespace StudMap.Service.Controllers
                     entities.SaveChanges();
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -460,10 +482,12 @@ namespace StudMap.Service.Controllers
                     result.Object = graph;
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -497,10 +521,12 @@ namespace StudMap.Service.Controllers
                     result.Object.RoomName = queriedNodeInformation.RoomName;
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -595,10 +621,12 @@ namespace StudMap.Service.Controllers
                     }
                 }
             }
-            catch (DataException)
+            catch (DataException ex)
             {
                 result.Status = RespsonseStatus.Error;
                 result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
             }
 
             return result;
@@ -631,7 +659,7 @@ namespace StudMap.Service.Controllers
 
         #endregion
 
-        public object SaveNodeInformation(int nodeID, Core.Graph.NodeInformation nodeInf)
+        public object SaveNodeInformation(int nodeId, Core.Graph.NodeInformation nodeInf)
         {
             // Todo
             throw new NotImplementedException();
