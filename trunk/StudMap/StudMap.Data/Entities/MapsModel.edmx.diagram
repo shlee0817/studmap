@@ -5,19 +5,19 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="1dc31dabc882474bb9d1ad8a2c8024c7" Name="Diagram1">
-        <EntityTypeShape EntityType="StudMapModel.Edges" Width="1.5" PointX="7.5" PointY="2.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="StudMapModel.Floors" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="StudMapModel.Graphs" Width="1.5" PointX="3" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="StudMapModel.Maps" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="StudMapModel.NodeInformation" Width="1.5" PointX="7.5" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="5.25" PointY="2.75" IsExpanded="true" />
-        <AssociationConnector Association="StudMapModel.FK_Edges_EndNodes" ManuallyRouted="false" />
-        <AssociationConnector Association="StudMapModel.FK_Edges_Graphs" ManuallyRouted="false" />
-        <AssociationConnector Association="StudMapModel.FK_Edges_StartNodes" ManuallyRouted="false" />
-        <AssociationConnector Association="StudMapModel.FK_Floors_Maps" ManuallyRouted="false" />
-        <AssociationConnector Association="StudMapModel.FK_Nodes_Floors" ManuallyRouted="false" />
-        <AssociationConnector Association="StudMapModel.FK_Graphs_Maps" ManuallyRouted="false" />
-        <AssociationConnector Association="StudMapModel.FK_NodeInformation_Nodes" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="StudMapModel.Edges" Width="1.5" PointX="7.9534284211478337" PointY="1.50398677657544" />
+        <EntityTypeShape EntityType="StudMapModel.Floors" Width="1.5" PointX="6.4465490628250635" PointY="16.511496879398589" />
+        <EntityTypeShape EntityType="StudMapModel.Graphs" Width="1.5" PointX="5.4112957927450989" PointY="2.9033743752648005" />
+        <EntityTypeShape EntityType="StudMapModel.Maps" Width="1.5" PointX="6.6982999661463785" PointY="19.851038241689576" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformation" Width="1.5" PointX="10.53531943938477" PointY="18.582543053935535" />
+        <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="2.5858768423022127" PointY="27.229942438765402" />
+        <AssociationConnector Association="StudMapModel.FK_Edges_EndNodes" />
+        <AssociationConnector Association="StudMapModel.FK_Edges_Graphs" />
+        <AssociationConnector Association="StudMapModel.FK_Edges_StartNodes" />
+        <AssociationConnector Association="StudMapModel.FK_Floors_Maps" />
+        <AssociationConnector Association="StudMapModel.FK_Nodes_Floors" />
+        <AssociationConnector Association="StudMapModel.FK_Graphs_Maps" />
+        <AssociationConnector Association="StudMapModel.FK_NodeInformation_Nodes" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
