@@ -153,11 +153,11 @@ namespace StudMap.Admin.Controllers
 
         [Authorize(Roles = "Admins")]
         [HttpPost]
-        public JsonResult SaveNodeInformation(int nodeId, NodeInformation nodeInf)
+        public JsonResult SaveNodeInformation(int nodeID, string displayName, string roomName, string poI)
         {
             var mapsCtrl = new MapsController();
-            // Todo
-            var tmp = mapsCtrl.SaveNodeInformation(nodeId, nodeInf);
+            var nodeInf = new NodeInformation(nodeID, displayName, roomName, poI);
+            var tmp = mapsCtrl.SaveNodeInformation(nodeID, nodeInf);
             return Json(tmp, JsonRequestBehavior.AllowGet);
         }
 

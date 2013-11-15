@@ -659,10 +659,30 @@ namespace StudMap.Service.Controllers
 
         #endregion
 
-        public object SaveNodeInformation(int nodeId, Core.Graph.NodeInformation nodeInf)
+        [HttpPost]
+        public ObjectResponse<Core.Graph.NodeInformation> SaveNodeInformation(int nodeID, Core.Graph.NodeInformation nodeInf)
         {
-            // Todo
-            throw new NotImplementedException();
+            var result = new ObjectResponse<StudMap.Core.Graph.NodeInformation>();
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    StudMap.Data.Entities.NodeInformation nodeInformation = entities.NodeInformation.Add(new StudMap.Data.Entities.NodeInformation
+                    {
+                        DisplayName = nodeInf.DisplayName,
+                        RoomName = nodeInf.RoomName,
+                        PoI = nodeInf.PoI,
+                        NodeId = nodeID
+                    });
+                    entities.SaveChanges();
+                }
+            }
+            catch (DataException)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+            }
+            return result;
         }
     }
 }

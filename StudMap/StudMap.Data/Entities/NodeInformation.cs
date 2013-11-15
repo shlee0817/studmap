@@ -14,6 +14,7 @@ namespace StudMap.Data.Entities
     
     public partial class NodeInformation
     {
+        public string PoI { get; set; }
         public int Id { get; set; }
         public int NodeId { get; set; }
         public string DisplayName { get; set; }
