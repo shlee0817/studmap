@@ -513,7 +513,7 @@ namespace StudMap.Service.Controllers
                             Y = node.Y,
                             Id = node.Id
                         };
-                    var queriedNodeInformation = entities.NodeInformation.Find(nodeId);
+                    var queriedNodeInformation = entities.NodeInformation.FirstOrDefault(x => x.NodeId == nodeId);
                     if (queriedNodeInformation == null)
                         return result;
 
@@ -543,7 +543,64 @@ namespace StudMap.Service.Controllers
             }
             return floorPlanData;
         }
+        
+        [HttpPost]
+        public ObjectResponse<Core.Graph.NodeInformation> SaveNodeInformation(int nodeId, Core.Graph.NodeInformation nodeInf)
+        {
+            var result = new ObjectResponse<Core.Graph.NodeInformation>();
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    //Schon vorhandene Nodeinformationen suchen
+                    var nodeInformation = entities.NodeInformation.FirstOrDefault(x => x.NodeId == nodeId);
 
+                    //Wenn es keine Nodeinformations gibt neue anlegen
+                    if (nodeInformation == null)
+                    {
+                        nodeInformation = entities.NodeInformation.Add(new Data.Entities.NodeInformation
+                        {
+                            DisplayName = nodeInf.DisplayName,
+                            RoomName = nodeInf.RoomName,
+                            PoI = nodeInf.PoI,
+                            NodeId = nodeId,
+                            CreationTime = DateTime.Now
+                        });
+                        entities.SaveChanges();
+                    }
+                    else
+                    {
+                        //Aktualisieren
+                        nodeInformation.DisplayName = nodeInf.DisplayName;
+                        nodeInformation.RoomName = nodeInf.RoomName;
+                        entities.SaveChanges();
+                    }
+
+                    //Ergebnis aus der DB in Rückgabe Objekt schreiben
+                    result.Object = new Core.Graph.NodeInformation
+                    {
+                        DisplayName = nodeInformation.DisplayName,
+                        PoI = nodeInformation.PoI,
+                        RoomName = nodeInformation.RoomName,
+                        Node = new Node
+                        {
+                            FloorId = nodeInformation.Nodes.FloorId,
+                            Id = nodeInformation.Nodes.Id,
+                            X = nodeInformation.Nodes.X,
+                            Y = nodeInformation.Nodes.Y
+                        }
+                    };
+                }
+            }
+            catch (DataException ex)
+            {
+                result.Status = RespsonseStatus.Error;
+                result.ErrorCode = ResponseError.DatabaseError;
+                result.ErrorMessage = ex.StackTrace;
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+            }
+            return result;
+        }
         #endregion
 
         #region Layer: Navigation
@@ -659,30 +716,6 @@ namespace StudMap.Service.Controllers
 
         #endregion
 
-        [HttpPost]
-        public ObjectResponse<Core.Graph.NodeInformation> SaveNodeInformation(int nodeID, Core.Graph.NodeInformation nodeInf)
-        {
-            var result = new ObjectResponse<StudMap.Core.Graph.NodeInformation>();
-            try
-            {
-                using (var entities = new MapsEntities())
-                {
-                    StudMap.Data.Entities.NodeInformation nodeInformation = entities.NodeInformation.Add(new StudMap.Data.Entities.NodeInformation
-                    {
-                        DisplayName = nodeInf.DisplayName,
-                        RoomName = nodeInf.RoomName,
-                        PoI = nodeInf.PoI,
-                        NodeId = nodeID
-                    });
-                    entities.SaveChanges();
-                }
-            }
-            catch (DataException)
-            {
-                result.Status = RespsonseStatus.Error;
-                result.ErrorCode = ResponseError.DatabaseError;
-            }
-            return result;
-        }
+       
     }
 }
