@@ -209,6 +209,7 @@
                                             displayName: _displayName,
                                             roomName: _roomName,
                                             poI: _poI
+                                            }
                                         };
 
                                         $.ajax({
@@ -221,9 +222,8 @@
                                                 init(window.imageUrl);
                                             }
                                         });
-                                    }
-                                    $(this).dialog("close");
-                                },
+                                        $(this).dialog("close");
+                                    },
                                 Abbrechen: function () {
                                     $(this).dialog("close");
                                 }
