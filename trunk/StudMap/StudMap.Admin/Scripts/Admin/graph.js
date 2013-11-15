@@ -29,7 +29,7 @@
 
             $('#NodeInformationDialog').html("Soll der Knoten " + selectedNode.id + " gelöscht werden?");
             $('#NodeInformationDialog').dialog({
-                height: 140,
+                autoHeight: true,
                 dialogClass: "no-close",
                 modal: true,
                 title: "Knoten löschen",
@@ -111,6 +111,8 @@
             node = gEl.selectAll(".node");
             link = gEl.selectAll(".link");
 
+            console.log(data);
+
             var points = data.Nodes;
             for (var i = 0; i < points.length; i++) {
                 nodes.push({ id: points[i].Id, fixed: true, x: (points[i].X * width), y: (points[i].Y * height) });
@@ -119,7 +121,7 @@
                 }
             }
             var edges = data.Edges;
-            for (i = 0; i < points.length; i++) {
+            for (i = 0; i < edges.length; i++) {
                 links.push({ source: getNode(edges[i].StartNodeId), target: getNode(edges[i].EndNodeId) });
             }
         });
@@ -196,20 +198,19 @@
                             dialogClass: "no-close",
                             modal: true,
                             appendTo: "#body",
+                            autoHeight: true,
                             title: "Knoteninformationen (" + d.id + ")",
                             buttons: {
                                 Speichern: function () {
-                                    function saveNodeInformation() {
-                                        var _displayName = $(document).find('input[id=inputDisplayName]').val();
-                                        var _roomName = $(document).find('input[id=inputRoomName]').val();
-                                        var _poI = $('textarea#inputPoI').val();
+                                        var displayName = $('input[id=inputDisplayName]').val();
+                                        var roomName = $('input[id=inputRoomName]').val();
+                                        var poI = $('textarea#inputPoI').val();
 
                                         var obj = {
-                                            nodeId: $(document).find('input[id=nodeId]').val(),
-                                            displayName: _displayName,
-                                            roomName: _roomName,
-                                            poI: _poI
-                                            }
+                                            nodeId: $('input[id=nodeId]').val(),
+                                            displayName: displayName,
+                                            roomName: roomName,
+                                            poI: poI
                                         };
 
                                         $.ajax({

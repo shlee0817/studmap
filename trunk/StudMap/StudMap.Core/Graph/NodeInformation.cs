@@ -2,8 +2,6 @@
 {
     public class NodeInformation
     {
-        private int nodeID;
-
         public string DisplayName { get; set; }
         public string RoomName { get; set; }
         public Node Node { get; set; }
@@ -12,27 +10,26 @@
 
         public NodeInformation(Node node, string displayName, string roomName, string poI)
         {
-            this.Node = node;
-            this.DisplayName = displayName;
-            this.RoomName = roomName;
-            this.PoI = poI;
+            Node = node;
+            DisplayName = displayName;
+            RoomName = roomName;
+            PoI = poI;
         }
 
         public NodeInformation()
         {
-            this.DisplayName = "";
-            this.RoomName = "";
-            this.Node = new Node();
-            this.ReadOnly = true;
-            this.PoI = "";
+            DisplayName = "";
+            RoomName = "";
+            Node = new Node();
+            ReadOnly = true;
+            PoI = "";
         }
 
-        public NodeInformation(int nodeID, string displayName, string roomName, string poI)
+        public NodeInformation(string displayName, string roomName, string poI)
         {
-            this.nodeID = nodeID;
-            this.DisplayName = displayName;
-            this.RoomName = roomName;
-            this.PoI = poI;
+            DisplayName = displayName;
+            RoomName = roomName;
+            PoI = poI;
         }
     }
 }

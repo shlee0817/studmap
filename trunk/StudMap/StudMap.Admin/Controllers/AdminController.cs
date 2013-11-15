@@ -156,7 +156,7 @@ namespace StudMap.Admin.Controllers
         public JsonResult SaveNodeInformation(int nodeID, string displayName, string roomName, string poI)
         {
             var mapsCtrl = new MapsController();
-            var nodeInf = new NodeInformation(nodeID, displayName, roomName, poI);
+            var nodeInf = new NodeInformation(displayName, roomName, poI);
             var tmp = mapsCtrl.SaveNodeInformation(nodeID, nodeInf);
             return Json(tmp, JsonRequestBehavior.AllowGet);
         }
