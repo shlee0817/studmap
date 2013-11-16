@@ -13,15 +13,18 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/Admin.js")"></script>
 }
 
+@{
+    string viewName = ViewBag.PartialViewName ?? "_Maps";
+}
+
 <div>
-    <div id="mapsTab" class="tab active">Maps</div>
-    <div id="floorsTab" class="tab">Floors</div>
-    <div id="layerTab" class="tab">Layer</div>
+    <div id="mapsTab" class="tab @(viewName.Equals("_Maps") ? "active" : "")">Maps</div>
+    <div id="floorsTab" class="tab @(viewName.Equals("_Floors") ? "active" : "")">Floors</div>
+    <div id="layerTab" class="tab @(viewName.Equals("_Layer") ? "active" : "")">Layer</div>
     <br style="clear:both"/>
 </div>
 <div id="adminContent">
     @{
-        string viewName = ViewBag.PartialViewName ?? "_Maps";
         Html.RenderPartial(viewName, Model);
     }
 </div>
