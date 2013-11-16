@@ -12,6 +12,7 @@
         <div class="tableCell Headline">
             <div class="tableRow">FloorId</div>
             <div class="tableRow">MapId</div>
+            <div class="tableRow">Name</div>
             <div class="tableRow">FloorImageFile</div>
             <div class="tableRow"></div>
         </div>
@@ -20,6 +21,7 @@
             <div class="tableCell">
                 <div class="tableRow" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">@floor.Id</div>
                 <div class="tableRow" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">@floor.MapId</div>
+                <div class="tableRow" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">@floor.Name</div>
                 <div class="tableRow" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">@floor.ImageUrl</div>
                 <div class="tableRow" onclick="Admin.deleteFloorplan(@floor.MapId, @floor.Id)"><img class="DeleteBin" src="@Url.Content("~/Images/bin.png")" alt="Bin"/></div>
             </div>
