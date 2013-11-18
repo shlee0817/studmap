@@ -277,11 +277,44 @@ public class MainActivity extends Activity {
                             "drawable", getActivity().getPackageName());
             */
             
-            WebView MapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
+            final Context c = rootView.getContext();
+            /*
+            int i = getArguments().getInt(ARG_MAIN_NUMBER);            
+            String planet = getResources().getStringArray(R.array.menue_item_array)[i];
+
+            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
+                            "drawable", getActivity().getPackageName());
+            */
+            
+            final WebView MapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
             MapWebView.setWebViewClient(new WebViewClient());
+            JavaScriptInterface jsInterface = new JavaScriptInterface(c);
             MapWebView.getSettings().setJavaScriptEnabled(true);
+            MapWebView.addJavascriptInterface(jsInterface, "jsinterface");
+           
             MapWebView.loadUrl("file:///android_asset/index.html");
             
+         
+            
+           // MapWebView.loadUrl("javascript:showPath([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}])");
+          //  MapWebView.loadUrl("javascript:alert('Test')");
+            
+            
+            new Thread() {
+                @Override
+                public void run() { 
+                	try {
+						Thread.sleep(4000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                	MapWebView.loadUrl("javascript:" + "showPath([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}])");
+                	MapWebView.loadUrl("javascript:" + "showCircles([{x:100,y:200},{x:120,y:210},{x:130,y:220}])");
+               
+                	 
+                }
+            }.start();
            // ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
            // getActivity().setTitle(planet);
             return rootView;
