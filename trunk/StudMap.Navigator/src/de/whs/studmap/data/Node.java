@@ -2,19 +2,37 @@ package de.whs.studmap.data;
 
 public class Node {
 	private int nodeID;
-	private String name;
+	private String displayName;
+	private String roomName;
+	private int x;
+	private int y;
 	
-	public Node(int nodeID, String name){
+	public Node(int nodeID, String roomName, String displayName, int x, int y){
 		this.nodeID = nodeID;
-		this.name = name;
+		this.roomName = roomName;
+		this.displayName = displayName;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public int getNodeID() {
 		return nodeID;
 	}
 	
-	public String getName() {
-		return name;
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
 	}
 	
 }

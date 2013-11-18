@@ -70,7 +70,7 @@ public class POIActivity extends Activity {
 		try {
 			nodes = Service.getPOIs();
 			for (Node n : nodes){
-				mPOIs.put(n.getName(),n);	
+				mPOIs.put(n.getDisplayName(),n);	
 			}
 		} catch (WebServiceException e) {
 			// TODO handle WebServiceException 
