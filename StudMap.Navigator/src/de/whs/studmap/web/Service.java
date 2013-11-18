@@ -70,6 +70,16 @@ public class Service {
 		return nodes;
 	}
 	
+	public static List<Node> getAllRooms() throws WebServiceException{
+		List<Node> nodes = new ArrayList<Node>();
+		
+		//JsonObject rooms = httpGet("GetAllRooms");
+		//TODO: parse rooms
+		
+		return nodes;
+		
+	}
+	
 	public static String getActiveUsers() throws WebServiceException, ConnectException{
 		//Wird eigentlich noch garnicht benötigt, eignet sich aber gut zu Testzwecken
 		String result = httpGet("GetActiveUsers").toString();
