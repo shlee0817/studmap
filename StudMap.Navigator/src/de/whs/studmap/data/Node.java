@@ -35,4 +35,9 @@ public class Node {
 		return y;
 	}
 	
+	@Override
+	public String toString(){
+		
+		return roomName + " - " + displayName;
+	}
 }
