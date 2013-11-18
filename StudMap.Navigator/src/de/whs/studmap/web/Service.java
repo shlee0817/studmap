@@ -22,44 +22,16 @@ import org.json.JSONObject;
 
 import de.whs.studmap.data.Floor;
 import de.whs.studmap.data.Node;
+import de.whs.studmap.data.Constants;
 
-public class Service {
-	
-	public static final String RESPONSE_STATUS = "Status";
-	public static final String RESPONSE_ERRORCODE = "ErrorCode";
-	private static final String REQUEST_PARAM_USERNAME = "userName";
-	private static final String REQUEST_PARAM_PASSWORD = "password";
-	
-	//Methods
-	private static final String METHOD_LOGIN = "Login";
-	private static final String METHOD_LOGOUT = "Logout";
-	private static final String METHOD_REGISTER = "Register";
-	private static final String METHOD_GETPOIS = "getPois";
-	private static final String METHOD_GETROOMS = "getRooms";
-	private static final String METHOD_GETFLOORS = "getFloors";
-	
-	private static final String RESPONSE_PARAM_LIST = "list";
-	
-	//Node
-	private static final String RESPONSE_PARAM_NODE_ROOMNAME = "roomName";
-	private static final String RESPONSE_PARAM_NODE_DISPLAYNAME = "displayName";
-	private static final String RESPONSE_PARAM_NODE_X = "x";
-	private static final String RESPONSE_PARAM_NODE_Y = "y";
-	private static final String RESPONSE_PARAM_NODE_ID = "id";
-	
-	//Floor
-	private static final String RESPONSE_PARAM_FLOOR_ID = "id";
-	private static final String RESPONSE_PARAM_FLOOR_NAME = "name";
-	private static final String RESPONSE_PARAM_FLOOR_URL = "url";
-	
-	private static final String URL = "http://10.0.2.2:1120/api/Users/";
+public class Service implements Constants {
 	
 	public static boolean login(String name, String password) throws WebServiceException, ConnectException{
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		params.add(new BasicNameValuePair(REQUEST_PARAM_PASSWORD, password));
 		
-		httpPost(METHOD_LOGIN, params);
+		httpPost(URL_USER,METHOD_LOGIN, params);
 
 		return true;
 	}
@@ -68,7 +40,7 @@ public class Service {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		
-		httpPost(METHOD_LOGOUT, params);
+		httpPost(URL_USER, METHOD_LOGOUT, params);
 		
 		return true;
 	}
@@ -78,7 +50,7 @@ public class Service {
 		params.add(new BasicNameValuePair(REQUEST_PARAM_USERNAME, name));
 		params.add(new BasicNameValuePair(REQUEST_PARAM_PASSWORD, password));
 		
-		httpPost(METHOD_REGISTER, params);
+		httpPost(URL_USER, METHOD_REGISTER, params);
 		
 		return true;
 	}
@@ -86,7 +58,7 @@ public class Service {
 	public static List<Node> getPOIs() throws WebServiceException{
 		List<Node> nodes = new ArrayList<Node>();
 		
-		//JSONObject pois = httpGet(METHOD_GETPOIS);
+		//JSONObject pois = httpGet(URL_MAPS, METHOD_GETPOIS);
 		//TODO: parse "pois"
 		
 		return nodes;
@@ -96,7 +68,7 @@ public class Service {
 		List<Node> nodes = new ArrayList<Node>();
 		
 		try {
-			JSONObject rooms = httpGet(METHOD_GETROOMS);
+			JSONObject rooms = httpGet(URL_MAPS,METHOD_GETROOMS);
 			JSONArray roomArray = rooms.getJSONArray(RESPONSE_PARAM_LIST);
 			
 			for (int i = 0; i < roomArray.length(); i++){
@@ -116,7 +88,7 @@ public class Service {
 		List<Floor> floorList = new ArrayList<Floor>();
 		
 		try {
-			JSONObject floors = httpGet(METHOD_GETFLOORS);
+			JSONObject floors = httpGet(URL_MAPS, METHOD_GETFLOORS);
 			JSONArray roomArray = floors.getJSONArray(RESPONSE_PARAM_LIST);
 			
 			for (int i = 0; i < roomArray.length(); i++){
@@ -134,12 +106,12 @@ public class Service {
 	
 	public static String getActiveUsers() throws WebServiceException, ConnectException{
 		//Wird eigentlich noch garnicht benötigt, eignet sich aber gut zu Testzwecken
-		String result = httpGet("GetActiveUsers").toString();
+		String result = httpGet(URL_USER, "GetActiveUsers").toString();
 		//TODO: parse activeUsers
 		return result;
 	}
   
-	private static JSONObject httpPost(String methodName, List<NameValuePair> params) 
+	private static JSONObject httpPost(String url, String methodName, List<NameValuePair> params) 
 			throws WebServiceException, ConnectException {
 		
 		// Create a new HttpClient and Post Header
@@ -148,7 +120,7 @@ public class Service {
 			try {
 				// Add data
 				String entityString = URLEncodedUtils.format(params, "utf-8");
-				HttpPost httpPost = new HttpPost(URL + methodName + "?" + entityString);
+				HttpPost httpPost = new HttpPost(url + methodName + "?" + entityString);
  
 				// Execute HTTP Post Request
 				HttpResponse response = httpClient.execute(httpPost);
@@ -176,21 +148,21 @@ public class Service {
 			throw new ConnectException();
 	}
 	
-	private static JSONObject httpGet(String methodName) throws WebServiceException, ConnectException{
-		return httpGet(methodName, null);
+	private static JSONObject httpGet(String url, String methodName) throws WebServiceException, ConnectException{
+		return httpGet(url, methodName, null);
 	}
 	
-	private static JSONObject httpGet(String methodName, List<NameValuePair> params) 
+	private static JSONObject httpGet(String url, String methodName, List<NameValuePair> params) 
 			throws WebServiceException, ConnectException {
 				
 		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(URL + methodName);
+		HttpGet httpGet = new HttpGet(url + methodName);
 		
 		try {
 			
 			if (params != null) {
 				String paramString = URLEncodedUtils.format(params, "utf-8");
-				httpGet = new HttpGet(URL + methodName + "?" + paramString);
+				httpGet = new HttpGet(url + methodName + "?" + paramString);
 			}
 			
 			HttpResponse response = httpClient.execute(httpGet);
