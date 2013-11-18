@@ -83,6 +83,7 @@ public class Service {
 	public static String getActiveUsers() throws WebServiceException, ConnectException{
 		//Wird eigentlich noch garnicht benötigt, eignet sich aber gut zu Testzwecken
 		String result = httpGet("GetActiveUsers").toString();
+		//TODO: parse activeUsers
 		return result;
 	}
   
@@ -93,9 +94,7 @@ public class Service {
 		 
 			try {
 				// Add data
-				String entityString = EntityUtils.toString(new UrlEncodedFormEntity(params, "utf-8"));
-
-				entityString = URLEncodedUtils.format(params, "utf-8");
+				String entityString = URLEncodedUtils.format(params, "utf-8");
 				HttpPost httpPost = new HttpPost(URL + methodName + "?" + entityString);
  
 				// Execute HTTP Post Request
