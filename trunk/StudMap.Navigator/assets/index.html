@@ -44,21 +44,26 @@
 </style>
 </head>
 <body style="">
-
+<!-- <div id="info" style="width:500px;height:60px;position:absolute">Test</div>-->
 <div id="map">
+<svg id="svgMap" height="100%" width="100%"></svg>
+
 </div>
 
 <script id="demo-code" type="text/javascript">
 
 var first=true;
 var x1,x2,y1,y2;
+var KreisRadius=2;
+var linienDicke=2;
+
 
 var xscale = d3.scale.linear()
-               .domain([0,1])
-               .range([0,window.innerWidth]),
+               .domain([0,1024])
+               .range([0,500]),
     yscale = d3.scale.linear()
-               .domain([0,1])
-               .range([0,window.innerHeight]),
+               .domain([0,900])
+               .range([0,500]),
     map = d3.floorplan().xScale(xscale).yScale(yscale),
     imagelayer = d3.floorplan.imagelayer(),
     heatmap = d3.floorplan.heatmap(),
@@ -71,8 +76,8 @@ mapdata[imagelayer.id()] = [{
     url: 'maps/RN_Ebene_0.png',
     x: 0,
     y: 0,
-    height: 1,
-    width: 1
+    height: 900,
+    width: 1024
      }];
 
 map.addLayer(imagelayer)
@@ -90,8 +95,8 @@ d3.json("demo-data.json", function(data) {
 	
 });
 */
-var svgContainer = d3.select("#map").append("svg").attr("height", "100%").attr("width","100%");
-
+//var svgContainer = d3.select("#map").append("svg").attr("height", "100%").attr("width","100%");
+var svgContainer = d3.select("#svgMap")
 /*d3.select("#map").append("svg")
 		.attr("height", "100%").attr("width","100%")
 		.datum(mapdata).call(map);*/
@@ -99,11 +104,27 @@ var svgContainer = d3.select("#map").append("svg").attr("height", "100%").attr("
 		
 		
 	function circle_click(evt) {
-		var circle = evt.target;
+	var circle = evt.target;
+	if(window.jsinterface){
+  
+   
+   
+      window.jsinterface.punkt();
+	}
+	
+	
+	
+	
+		
+		if(circle.r.animVal.value == 2)
+			circle.setAttribute("r",5);
+		else
+			circle.setAttribute("r",2);
 		
 		
+	
 		//alert(circle.cx.animVal.value);
-		if(first)
+		/*if(first)
 		{
 			first = false;
 			x1 = circle.cx.animVal.value;
@@ -125,7 +146,7 @@ var svgContainer = d3.select("#map").append("svg").attr("height", "100%").attr("
 						 .attr("stroke", "black");
 						 
 		}
-		
+		*/
 		
     }
 		
@@ -134,7 +155,7 @@ var svgContainer = d3.select("#map").append("svg").attr("height", "100%").attr("
 		d3.select(".map-layers").append("g").attr("id","circles");
 		
 		
-		
+		/*
 		var circle = d3.select("#circles").append("circle")
                        .attr("cx", 100)
                        .attr("cy", 50)
@@ -160,8 +181,59 @@ var svgContainer = d3.select("#map").append("svg").attr("height", "100%").attr("
                        .attr("r", 5)
 					   .attr("onclick","circle_click(evt)");
 					   
-					   
+					   */
 					//d3.select("#kreis1").onclick = function() { alert('blah'); };   
+					
+					
+					
+					//showCircles([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}]);
+				
+					function showPath(PathAsArray)
+					{
+					
+					
+					  if(PathAsArray.length < 2)
+					  return;
+					
+					
+						for (var i = 0; i < PathAsArray.length-1; i++) {
+						 // element = PathAsArray[i];
+						 d3.select("#circles").append("circle")
+                       .attr("cx", PathAsArray[i].x)
+                       .attr("cy", PathAsArray[i].y)
+                       .attr("r", KreisRadius);
+					   
+					   d3.select("#lines").append("line")
+                         .attr("x1",  PathAsArray[i].x)
+                         .attr("y1",  PathAsArray[i].y)
+                         .attr("x2",  PathAsArray[i+1].x)
+                         .attr("y2",  PathAsArray[i+1].y)
+						 .attr("stroke-width", linienDicke)
+						 .attr("stroke", "black");
+					   
+						}
+						 d3.select("#circles").append("circle")
+                       .attr("cx", PathAsArray[PathAsArray.length-1].x)
+                       .attr("cy", PathAsArray[PathAsArray.length-1].y)
+                       .attr("r", KreisRadius);
+						
+						
+					
+					}
+					
+					function showCircles(CirclesAsArray)
+					{
+						for (var i = 0; i < CirclesAsArray.length; i++) {
+						
+						 d3.select("#circles").append("circle")
+                        .attr("cx", CirclesAsArray[i].x)
+                        .attr("cy", CirclesAsArray[i].y)
+                        .attr("r", KreisRadius)
+					    .attr("onclick","circle_click(evt)");
+					 
+					   
+						}
+					}
 		
 </script>
 
