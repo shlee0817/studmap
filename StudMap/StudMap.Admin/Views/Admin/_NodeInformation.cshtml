@@ -1,4 +1,4 @@
-﻿@model StudMap.Core.Graph.NodeInformation
+﻿@model StudMap.Core.Information.NodeInformation
 @{
     Layout = null;
 }
@@ -35,7 +35,11 @@
             <div class="tableRow"><input type="text" value="@Model.Node.FloorId" class="contextInputField" readonly=readonly/></div>
         </div>
         <div class="tableCell">
-            <div class="tableRow"><b>PoI:</b></div>
+            <div class="tableRow"><b>PoI Typ:</b></div>
+            <div class="tableRow">@Html.DropDownListFor(n => n.PoI.Type, new SelectList(ViewBag.PoiTypes, "Id", "Name"), new {id="inputPoiTypeId"})</div>
+        </div>            
+        <div class="tableCell">
+            <div class="tableRow"><b>PoI Beschreibung:</b></div>
             <div class="tableRow"><textarea id="inputPoI" cols="17" rows="4" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "")>Model.PoI</textarea></div>
         </div>
     </div>

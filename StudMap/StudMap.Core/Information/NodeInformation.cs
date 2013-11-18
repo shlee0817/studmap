@@ -1,4 +1,6 @@
-﻿namespace StudMap.Core.Graph
+﻿using StudMap.Core.Graph;
+
+namespace StudMap.Core.Information
 {
     public class NodeInformation
     {
@@ -6,9 +8,9 @@
         public string RoomName { get; set; }
         public Node Node { get; set; }
         public bool ReadOnly { get; set; }
-        public string PoI { get; set; }
+        public PoI PoI { get; set; }
 
-        public NodeInformation(Node node, string displayName, string roomName, string poI)
+        public NodeInformation(Node node, string displayName, string roomName, PoI poI)
         {
             Node = node;
             DisplayName = displayName;
@@ -22,10 +24,10 @@
             RoomName = "";
             Node = new Node();
             ReadOnly = true;
-            PoI = "";
+            PoI = new PoI();
         }
 
-        public NodeInformation(string displayName, string roomName, string poI)
+        public NodeInformation(string displayName, string roomName, PoI poI)
         {
             DisplayName = displayName;
             RoomName = roomName;

@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
+using Microsoft.Ajax.Utilities;
+using Microsoft.Data.OData.Query.SemanticAst;
 using StudMap.Core;
 using StudMap.Core.Graph;
+using StudMap.Core.Information;
 using StudMap.Core.Maps;
 using StudMap.Data.Entities;
 using QuickGraph;
 using QuickGraph.Algorithms;
+using NodeInformation = StudMap.Core.Information.NodeInformation;
 
 namespace StudMap.Service.Controllers
 {
@@ -493,16 +498,16 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public ObjectResponse<Core.Graph.NodeInformation> GetNodeInformationForNode(int nodeId)
+        public ObjectResponse<NodeInformation> GetNodeInformationForNode(int nodeId)
         {
-            var result = new ObjectResponse<Core.Graph.NodeInformation>();
+            var result = new ObjectResponse<NodeInformation>();
 
             try
             {
                 using (var entities = new MapsEntities())
                 {
                     var node = entities.Nodes.Find(nodeId);
-                    result.Object = new Core.Graph.NodeInformation();
+                    result.Object = new NodeInformation();
                     if (node == null)
                         return result;
 
@@ -545,15 +550,36 @@ namespace StudMap.Service.Controllers
         }
         
         [HttpPost]
-        public ObjectResponse<Core.Graph.NodeInformation> SaveNodeInformation(int nodeId, Core.Graph.NodeInformation nodeInf)
+        public ObjectResponse<NodeInformation> SaveNodeInformation(int nodeId, NodeInformation nodeInf)
         {
-            var result = new ObjectResponse<Core.Graph.NodeInformation>();
+            var result = new ObjectResponse<NodeInformation>();
             try
             {
                 using (var entities = new MapsEntities())
                 {
                     //Schon vorhandene Nodeinformationen suchen
                     var nodeInformation = entities.NodeInformation.FirstOrDefault(x => x.NodeId == nodeId);
+                    bool poiTypeSelected = nodeInf.PoI.Type.Id != 0;
+                    PoIs poi = null;
+
+                    if (poiTypeSelected)
+                    {
+                        var poiType = entities.PoiTypes.FirstOrDefault(x => x.Id == nodeInf.PoI.Type.Id);
+                        if (poiType == null)
+                        {
+                            result.SetError(ResponseError.PoiTypeIdDoesNotExist);
+                            return result;
+                        }
+                        nodeInf.PoI.Type.Name = poiType.Name;
+
+                        poi = entities.PoIs.Add(new PoIs()
+                        {
+                            TypeId = nodeInf.PoI.Type.Id,
+                            Description = nodeInf.PoI.Description
+                        });
+                        entities.SaveChanges();
+                    }
+                        
 
                     //Wenn es keine Nodeinformations gibt neue anlegen
                     if (nodeInformation == null)
@@ -562,7 +588,7 @@ namespace StudMap.Service.Controllers
                         {
                             DisplayName = nodeInf.DisplayName,
                             RoomName = nodeInf.RoomName,
-                            PoI = nodeInf.PoI,
+                            PoiId = poiTypeSelected ? (int?)poi.Id : null,
                             NodeId = nodeId,
                             CreationTime = DateTime.Now
                         });
@@ -573,14 +599,16 @@ namespace StudMap.Service.Controllers
                         //Aktualisieren
                         nodeInformation.DisplayName = nodeInf.DisplayName;
                         nodeInformation.RoomName = nodeInf.RoomName;
+
+                        nodeInformation.PoiId = poiTypeSelected ? (int?) poi.Id : null;
                         entities.SaveChanges();
                     }
 
                     //Ergebnis aus der DB in Rückgabe Objekt schreiben
-                    result.Object = new Core.Graph.NodeInformation
+                    result.Object = new NodeInformation
                     {
                         DisplayName = nodeInformation.DisplayName,
-                        PoI = nodeInformation.PoI,
+                        PoI = nodeInf.PoI,
                         RoomName = nodeInformation.RoomName,
                         Node = new Node
                         {
@@ -716,6 +744,59 @@ namespace StudMap.Service.Controllers
 
         #endregion
 
-       
+        #region Layer: Information
+
+        public ListResponse<PoiType> GetPoiTypes()
+        {
+            var result = new ListResponse<PoiType>();
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    result.List.Add(new PoiType { Id = 0, Name = "Kein" });
+                    result.List.AddRange((from type in entities.PoiTypes
+                        select new PoiType()
+                        {
+                            Id = type.Id,
+                            Name = type.Name
+                        }));
+                }
+            }
+            catch (DataException)
+            {
+                result.SetError(ResponseError.DatabaseError);
+            }
+            return result;
+        }
+
+        public ListResponse<PoI> GetPoIs()
+        {
+            var result = new ListResponse<PoI>();
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+
+                    result.List = (from poi in entities.PoIs
+                        select new PoI
+                        {
+                            Type = new PoiType()
+                            {
+                                Id = poi.PoiTypes.Id,
+                                Name = poi.PoiTypes.Name
+                            },
+                            Description = poi.Description,
+
+                        }).ToList();
+                }
+            }
+            catch (DataException)
+            {
+                result.SetError(ResponseError.DatabaseError);
+            }
+            return result;
+        }
+
+        #endregion // Layer: Information
     }
 }

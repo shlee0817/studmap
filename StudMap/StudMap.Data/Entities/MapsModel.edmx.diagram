@@ -4,13 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1dc31dabc882474bb9d1ad8a2c8024c7" Name="Diagram1">
-        <EntityTypeShape EntityType="StudMapModel.Edges" Width="1.5" PointX="7.9534284211478337" PointY="1.50398677657544" />
-        <EntityTypeShape EntityType="StudMapModel.Floors" Width="1.5" PointX="6.4465490628250635" PointY="16.511496879398589" />
-        <EntityTypeShape EntityType="StudMapModel.Graphs" Width="1.5" PointX="5.4112957927450989" PointY="2.9033743752648005" />
-        <EntityTypeShape EntityType="StudMapModel.Maps" Width="1.5" PointX="6.6982999661463785" PointY="19.851038241689576" />
-        <EntityTypeShape EntityType="StudMapModel.NodeInformation" Width="1.5" PointX="10.53531943938477" PointY="18.582543053935535" />
-        <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="2.5858768423022127" PointY="27.229942438765402" />
+      <Diagram DiagramId="1dc31dabc882474bb9d1ad8a2c8024c7" Name="Diagram1" ZoomLevel="82">
+        <EntityTypeShape EntityType="StudMapModel.Edges" Width="1.5" PointX="7.5" PointY="5.25" />
+        <EntityTypeShape EntityType="StudMapModel.Floors" Width="1.5" PointX="3" PointY="4" />
+        <EntityTypeShape EntityType="StudMapModel.Graphs" Width="1.5" PointX="3" PointY="7.375" />
+        <EntityTypeShape EntityType="StudMapModel.Maps" Width="1.5" PointX="0.75" PointY="5.625" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformation" Width="1.5" PointX="7.5" PointY="0.75" />
+        <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="5.25" PointY="3.875" />
+        <EntityTypeShape EntityType="StudMapModel.PoIs" Width="1.5" PointX="5.25" PointY="1" />
+        <EntityTypeShape EntityType="StudMapModel.PoiTypes" Width="1.5" PointX="3" PointY="1.25" />
         <AssociationConnector Association="StudMapModel.FK_Edges_EndNodes" />
         <AssociationConnector Association="StudMapModel.FK_Edges_Graphs" />
         <AssociationConnector Association="StudMapModel.FK_Edges_StartNodes" />
@@ -18,6 +20,8 @@
         <AssociationConnector Association="StudMapModel.FK_Nodes_Floors" />
         <AssociationConnector Association="StudMapModel.FK_Graphs_Maps" />
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_Nodes" />
+        <AssociationConnector Association="StudMapModel.FK_NodeInformation_PoIs" />
+        <AssociationConnector Association="StudMapModel.FK_PoIs_PoiTypes" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
