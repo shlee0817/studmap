@@ -204,13 +204,15 @@
                                 Speichern: function () {
                                         var displayName = $('input[id=inputDisplayName]').val();
                                         var roomName = $('input[id=inputRoomName]').val();
-                                        var poI = $('textarea#inputPoI').val();
+                                        var poiTypeId = $('#inputPoiTypeId').val();
+                                        var poiDescription = $('textarea#inputPoI').val();
 
                                         var obj = {
                                             nodeId: $('input[id=nodeId]').val(),
                                             displayName: displayName,
                                             roomName: roomName,
-                                            poI: poI
+                                            poiTypeId: poiTypeId,
+                                            poiDescription: poiDescription
                                         };
 
                                         $.ajax({

@@ -43,7 +43,9 @@
     <Compile Include="Graph\FloorPlanData.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\Node.cs" />
-    <Compile Include="Graph\NodeInformation.cs" />
+    <Compile Include="Information\NodeInformation.cs" />
+    <Compile Include="Information\PoI.cs" />
+    <Compile Include="Information\PoiType.cs" />
     <Compile Include="ListResponse.cs" />
     <Compile Include="Maps\Floor.cs" />
     <Compile Include="Maps\Map.cs" />

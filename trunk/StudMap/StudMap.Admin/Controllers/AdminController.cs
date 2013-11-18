@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using StudMap.Core;
 using StudMap.Core.Graph;
+using StudMap.Core.Information;
 using StudMap.Core.Maps;
 using StudMap.Service.Controllers;
 
@@ -130,6 +131,7 @@ namespace StudMap.Admin.Controllers
 
             nodeInformation.Object.ReadOnly = readOnly;
 
+            ViewBag.PoiTypes = mapsCtrl.GetPoiTypes().List;
             return PartialView("_NodeInformation", nodeInformation.Object);
         }
         #endregion
@@ -153,11 +155,11 @@ namespace StudMap.Admin.Controllers
 
         [Authorize(Roles = "Admins")]
         [HttpPost]
-        public JsonResult SaveNodeInformation(int nodeID, string displayName, string roomName, string poI)
+        public JsonResult SaveNodeInformation(int nodeId, string displayName, string roomName, int poiTypeId, string poiDescription)
         {
             var mapsCtrl = new MapsController();
-            var nodeInf = new NodeInformation(displayName, roomName, poI);
-            var tmp = mapsCtrl.SaveNodeInformation(nodeID, nodeInf);
+            var nodeInf = new NodeInformation(displayName, roomName, new PoI { Description = poiDescription, Type = new PoiType() { Id = poiTypeId } });
+            var tmp = mapsCtrl.SaveNodeInformation(nodeId, nodeInf);
             return Json(tmp, JsonRequestBehavior.AllowGet);
         }
 

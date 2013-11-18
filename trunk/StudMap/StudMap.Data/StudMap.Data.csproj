@@ -100,6 +100,12 @@
     <Compile Include="Entities\Nodes.cs">
       <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\PoIs.cs">
+      <DependentUpon>MapsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\PoiTypes.cs">
+      <DependentUpon>MapsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\UserProfile.cs">
       <DependentUpon>UsersModel.tt</DependentUpon>
     </Compile>

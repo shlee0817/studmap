@@ -12,6 +12,8 @@
           <EntitySet Name="Maps" EntityType="StudMapModel.Store.Maps" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="NodeInformation" EntityType="StudMapModel.Store.NodeInformation" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nodes" EntityType="StudMapModel.Store.Nodes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PoIs" EntityType="StudMapModel.Store.PoIs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PoiTypes" EntityType="StudMapModel.Store.PoiTypes" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.Store.FK_Edges_EndNodes">
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="Edges" EntitySet="Edges" />
@@ -36,9 +38,17 @@
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="NodeInformation" EntitySet="NodeInformation" />
           </AssociationSet>
+          <AssociationSet Name="FK_NodeInformation_PoIs" Association="StudMapModel.Store.FK_NodeInformation_PoIs">
+            <End Role="PoIs" EntitySet="PoIs" />
+            <End Role="NodeInformation" EntitySet="NodeInformation" />
+          </AssociationSet>
           <AssociationSet Name="FK_Nodes_Floors" Association="StudMapModel.Store.FK_Nodes_Floors">
             <End Role="Floors" EntitySet="Floors" />
             <End Role="Nodes" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PoIs_PoiTypes" Association="StudMapModel.Store.FK_PoIs_PoiTypes">
+            <End Role="PoiTypes" EntitySet="PoiTypes" />
+            <End Role="PoIs" EntitySet="PoIs" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Edges">
@@ -87,6 +97,7 @@
           <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
           <Property Name="QRCode" Type="nvarchar" MaxLength="255" />
           <Property Name="NFCTag" Type="nvarchar" MaxLength="50" />
+          <Property Name="PoiId" Type="int" />
           <Property Name="CreationTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Nodes">
@@ -98,6 +109,21 @@
           <Property Name="X" Type="decimal" Nullable="false" Scale="4" />
           <Property Name="Y" Type="decimal" Nullable="false" Scale="4" />
           <Property Name="CreationTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PoIs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="PoiTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <Association Name="FK_Edges_EndNodes">
           <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="1" />
@@ -171,6 +197,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_NodeInformation_PoIs">
+          <End Role="PoIs" Type="StudMapModel.Store.PoIs" Multiplicity="0..1" />
+          <End Role="NodeInformation" Type="StudMapModel.Store.NodeInformation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PoIs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeInformation">
+              <PropertyRef Name="PoiId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Nodes_Floors">
           <End Role="Floors" Type="StudMapModel.Store.Floors" Multiplicity="1" />
           <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="*" />
@@ -180,6 +218,18 @@
             </Principal>
             <Dependent Role="Nodes">
               <PropertyRef Name="FloorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PoIs_PoiTypes">
+          <End Role="PoiTypes" Type="StudMapModel.Store.PoiTypes" Multiplicity="1" />
+          <End Role="PoIs" Type="StudMapModel.Store.PoIs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PoiTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PoIs">
+              <PropertyRef Name="TypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -200,6 +250,8 @@
           <EntitySet Name="Maps" EntityType="StudMapModel.Maps" />
           <EntitySet Name="NodeInformation" EntityType="StudMapModel.NodeInformation" />
           <EntitySet Name="Nodes" EntityType="StudMapModel.Nodes" />
+          <EntitySet Name="PoIs" EntityType="StudMapModel.PoIs" />
+          <EntitySet Name="PoiTypes" EntityType="StudMapModel.PoiTypes" />
           <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.FK_Edges_EndNodes">
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="Edges" EntitySet="Edges" />
@@ -227,6 +279,14 @@
           <AssociationSet Name="FK_NodeInformation_Nodes" Association="StudMapModel.FK_NodeInformation_Nodes">
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="NodeInformation" EntitySet="NodeInformation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NodeInformation_PoIs" Association="StudMapModel.FK_NodeInformation_PoIs">
+            <End Role="PoIs" EntitySet="PoIs" />
+            <End Role="NodeInformation" EntitySet="NodeInformation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PoIs_PoiTypes" Association="StudMapModel.FK_PoIs_PoiTypes">
+            <End Role="PoiTypes" EntitySet="PoiTypes" />
+            <End Role="PoIs" EntitySet="PoIs" />
           </AssociationSet>
           <FunctionImport Name="DeleteFloor">
             <Parameter Name="FloorId" Mode="In" Type="Int32" />
@@ -290,8 +350,10 @@
           <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="QRCode" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="NFCTag" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PoiId" />
           <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="NodeInformation" ToRole="Nodes" />
+          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_NodeInformation_PoIs" FromRole="NodeInformation" ToRole="PoIs" />
         </EntityType>
         <EntityType Name="Nodes">
           <Key>
@@ -306,6 +368,24 @@
           <NavigationProperty Name="Edges1" Relationship="StudMapModel.FK_Edges_StartNodes" FromRole="Nodes" ToRole="Edges" />
           <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Nodes" ToRole="Floors" />
           <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="Nodes" ToRole="NodeInformation" />
+        </EntityType>
+        <EntityType Name="PoIs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="TypeId" Nullable="false" />
+          <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_PoIs" FromRole="PoIs" ToRole="NodeInformation" />
+          <NavigationProperty Name="PoiTypes" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoIs" ToRole="PoiTypes" />
+        </EntityType>
+        <EntityType Name="PoiTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoiTypes" ToRole="PoIs" />
         </EntityType>
         <Association Name="FK_Edges_EndNodes">
           <End Type="StudMapModel.Nodes" Role="Nodes" Multiplicity="1" />
@@ -391,6 +471,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_NodeInformation_PoIs">
+          <End Type="StudMapModel.PoIs" Role="PoIs" Multiplicity="0..1" />
+          <End Type="StudMapModel.NodeInformation" Role="NodeInformation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PoIs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeInformation">
+              <PropertyRef Name="PoiId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PoIs_PoiTypes">
+          <End Type="StudMapModel.PoiTypes" Role="PoiTypes" Multiplicity="1" />
+          <End Type="StudMapModel.PoIs" Role="PoIs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PoiTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PoIs">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -441,6 +545,7 @@
             <EntityTypeMapping TypeName="StudMapModel.NodeInformation">
               <MappingFragment StoreEntitySet="NodeInformation">
                 <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+                <ScalarProperty Name="PoiId" ColumnName="PoiId" />
                 <ScalarProperty Name="NFCTag" ColumnName="NFCTag" />
                 <ScalarProperty Name="QRCode" ColumnName="QRCode" />
                 <ScalarProperty Name="RoomName" ColumnName="RoomName" />
@@ -457,6 +562,23 @@
                 <ScalarProperty Name="Y" ColumnName="Y" />
                 <ScalarProperty Name="X" ColumnName="X" />
                 <ScalarProperty Name="FloorId" ColumnName="FloorId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PoIs">
+            <EntityTypeMapping TypeName="StudMapModel.PoIs">
+              <MappingFragment StoreEntitySet="PoIs">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PoiTypes">
+            <EntityTypeMapping TypeName="StudMapModel.PoiTypes">
+              <MappingFragment StoreEntitySet="PoiTypes">
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

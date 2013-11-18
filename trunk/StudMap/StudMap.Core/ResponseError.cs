@@ -28,5 +28,9 @@
         StartNodeNotFound = 302,
         EndNodeNotFound = 303,
         #endregion
+
+        #region Information
+        PoiTypeIdDoesNotExist = 401,
+        #endregion // Information
     }
 }
