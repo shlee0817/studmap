@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -25,9 +27,12 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import de.whs.studmap.data.DrawerItemEnum;
 import de.whs.studmap.snippets.UserInfo;
 import de.whs.studmap.web.Service;
@@ -39,8 +44,9 @@ public class MainActivity extends Activity {
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
     private LinearLayout mLeftDrawer;
+    private ActionBar mActionBar;
+    private Spinner mLevelSpinner;
 
-    private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private List<String> mItemTitles;
     
@@ -54,13 +60,13 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mTitle = mDrawerTitle = getTitle();
         
         mItemTitles =new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.menue_item_array)));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer_listView);
         mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
+        mActionBar = getActionBar();
+        
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -69,11 +75,7 @@ public class MainActivity extends Activity {
         
                
         mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
+        
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -84,12 +86,12 @@ public class MainActivity extends Activity {
                 R.string.drawer_close  /* "close drawer" description for accessibility */
                 ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
+            	mActionBar.setTitle("");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                getActionBar().setTitle("StudMap");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -98,12 +100,14 @@ public class MainActivity extends Activity {
         if (savedInstanceState == null) {
             selectItem(0);
         }
+        
+        initializeActionBar();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.main_activity_actions, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -172,7 +176,6 @@ public class MainActivity extends Activity {
 	
 	        // update selected item and title, then close the drawer
 	        mDrawerListView.setItemChecked(position, true);
-	        setTitle(mItemTitles.get(position));
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		
@@ -283,5 +286,56 @@ public class MainActivity extends Activity {
            // getActivity().setTitle(planet);
             return rootView;
         }
+    }
+    
+    public void initializeActionBar(){
+        //Example ArrayList for testing
+        String[] s = {"Mensa", "Bibliothek", "Pförtner", "Aquarium", "Daniel's Büro", "A1.1.10", "A1.1.9", "Physik Labor"};
+        ArrayList<String> list1 = new ArrayList<String>(Arrays.asList(s));
+
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setDisplayShowCustomEnabled(true);
+        mActionBar.setHomeButtonEnabled(true);
+        //mActionBar.setIcon(R.drawable.ic_launcher);
+        mActionBar.setTitle("");
+        
+        // implement Layout action_bar.xml as custom Action Bar
+        LayoutInflater inflator = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.action_bar, null);
+        mActionBar.setCustomView(v);
+
+        ArrayAdapter<String> searchAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, list1);
+        AutoCompleteTextView textView = (AutoCompleteTextView) v
+                .findViewById(R.id.actionBarSearch);
+        textView.setAdapter(searchAdapter);
+        textView.setThreshold(1);
+        
+        //Spinner for selecting the Level in the Action Bar
+        mLevelSpinner = (Spinner) findViewById(R.id.levelSpinner);
+        String[] levels = {"Ebene 0", "Ebene 1", "Ebene 2"};
+        ArrayList<String> levelList = new ArrayList<String>(Arrays.asList(levels));
+       
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<String> levelAdapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_black, levelList);
+        // Specify the layout to use when the list of choices appears
+        levelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mLevelSpinner.setAdapter(levelAdapter);
+        
+        final Activity main = this;
+		mLevelSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
+				UserInfo.toast(main, "pos: " + pos + ", ID: " + id, true);
+			}
+			
+			@Override
+			public void onNothingSelected(AdapterView<?> parent){
+				
+			}
+		});
     }
 }
