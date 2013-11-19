@@ -21,6 +21,7 @@ namespace StudMap.Service.Controllers
 
         #region Map
 
+        [HttpPost]
         public ObjectResponse<Map> CreateMap(string mapName)
         {
             var result = new ObjectResponse<Map>();
@@ -55,6 +56,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [HttpPost]
         public BaseResponse DeleteMap(int mapId)
         {
             var result = new BaseResponse();
@@ -77,6 +79,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [HttpGet]
         public ListResponse<Map> GetMaps()
         {
             var result = new ListResponse<Map>();
@@ -444,6 +447,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [HttpGet]
         public ObjectResponse<Graph> GetGraphForFloor(int floorId)
         {
             var result = new ObjectResponse<Graph>();
@@ -498,7 +502,8 @@ namespace StudMap.Service.Controllers
 
             return result;
         }
-
+        
+        [HttpGet]
         public ObjectResponse<NodeInformation> GetNodeInformationForNode(int nodeId)
         {
             var result = new ObjectResponse<NodeInformation>();
@@ -796,16 +801,25 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    result.List = (from poi in entities.PoIs
-                                   select new PoI
-                                       {
-                                           Type = new PoiType
-                                               {
-                                                   Id = poi.PoiTypes.Id,
-                                                   Name = poi.PoiTypes.Name
-                                               },
-                                           Description = poi.Description,
-                                       }).ToList();
+                    foreach (var dbPoI in entities.PoIs)
+                    {
+                        // Prüfen, ob der PoI einem Knoten zugeordnet ist
+                        var nodeInfo = dbPoI.NodeInformation.FirstOrDefault();
+                        if (nodeInfo == null)
+                            continue;
+    
+                        var poi = new PoI 
+                        {
+                            Type = new PoiType
+                            {
+                                Id = dbPoI.PoiTypes.Id,
+                                Name = dbPoI.PoiTypes.Name,
+                            },
+                            Description = dbPoI.Description,
+                            NodeId = nodeInfo.NodeId
+                        };
+                        result.List.Add(poi);
+                    }
                 }
             }
             catch (DataException)
