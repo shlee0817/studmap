@@ -35,7 +35,7 @@ public interface Constants {
 		 //PoI
 		 static final String RESPONSE_PARAM_POI_NAME = "name";
 		 static final String RESPONSE_PARAM_POI_TYPEID = "Id";
-		 static final String RESPONSE_PARAM_POI_NODEID = "Id";
+		 static final String RESPONSE_PARAM_POI_NODEID = "NodeId";
 		 static final String RESPONSE_PARAM_POI_TYPE = "Type";
 		 static final String RESPONSE_PARAM_POI_DESCRIPTION = "Description";
 		 
