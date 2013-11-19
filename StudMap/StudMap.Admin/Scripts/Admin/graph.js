@@ -111,8 +111,6 @@
             node = gEl.selectAll(".node");
             link = gEl.selectAll(".link");
 
-            console.log(data);
-
             var points = data.Nodes;
             for (var i = 0; i < points.length; i++) {
                 nodes.push({ id: points[i].Id, fixed: true, x: (points[i].X * width), y: (points[i].Y * height) });
