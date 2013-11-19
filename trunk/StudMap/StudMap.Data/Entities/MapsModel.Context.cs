@@ -57,5 +57,14 @@ namespace StudMap.Data.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteMap", mapIdParameter);
         }
+    
+        public virtual int DeleteGraphFromFloor(Nullable<int> floorId)
+        {
+            var floorIdParameter = floorId.HasValue ?
+                new ObjectParameter("FloorId", floorId) :
+                new ObjectParameter("FloorId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteGraphFromFloor", floorIdParameter);
+        }
     }
 }
