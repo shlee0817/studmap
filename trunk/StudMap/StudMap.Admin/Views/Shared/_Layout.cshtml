@@ -22,7 +22,7 @@
                     <nav>
                         <ul id="menu">
                             @{
-                                var r = (RolePrincipal)User;
+                                var r = (RolePrincipal) User;
                                 bool isAdmin = false;
                                 try
                                 {
@@ -31,7 +31,6 @@
                                 }
                                 catch
                                 {
-                                    
                                 }
                             }
                             <li>@Html.ActionLink("Übersicht", "Index", "Home")</li>

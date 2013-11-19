@@ -4,13 +4,11 @@
 }
 
 .tableCell {
-    display: table-row;
     cursor: pointer;
+    display: table-row;
 }
 
-.tableCell.Headline {
-    background-color: gainsboro;
-}
+.tableCell.Headline { background-color: gainsboro; }
 
 .tableRow {
     display: table-cell;
@@ -19,79 +17,64 @@
 }
 
 /*GraphLayer*/
+
 .node {
     cursor: pointer;
-    stroke-width: 3;
     fill: #83C32D;
     stroke: #669922;
+    stroke-width: 3;
 }
 
 .link {
+    cursor: default;
     fill: none;
     stroke: #000;
     stroke-width: 4px;
-    cursor: default;
 }
 
-#adminContent {
-    padding: 12px 0;
-}
+#adminContent { padding: 12px 0; }
 
 /*Menü im Adminbereich*/
 
 .tab {
+    background-color: #83C32D;
+    cursor: default;
     float: left;
     font-weight: bold;
     padding: 6px 22px;
-    background-color: #83C32D;
-    cursor: default;
 }
 
-    .tab.selectable {
-        cursor: pointer;
-    }
+.tab.selectable { cursor: pointer; }
 
-    .tab.active {
-        background-color: #669922;
-    }
+.tab.active { background-color: #669922; }
 
 
 /* Ladeanzeige */
-body.loading {
-    overflow: hidden;
-}
 
-    body.loading .modal {
-        display: block;
-    }
+body.loading { overflow: hidden; }
+
+body.loading .modal { display: block; }
 
 .modal {
+    background: rgba(255, 255, 255, .8) url('../../Images/ajax-loader.gif') 50% 50% no-repeat;
     display: none;
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: 0;
     height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
     width: 100%;
-    background: rgba( 255, 255, 255, .8 ) url('../../Images/ajax-loader.gif') 50% 50% no-repeat;
+    z-index: 1000;
 }
 
 /* map menu controls */
-.ui-active rect {
-    fill: #212121;
-}
 
-.ui-active text {
-    fill: #fff;
-}
+.ui-active rect { fill: #212121; }
 
-.ui-default rect {
-    fill: #e6e6e6;
-}
+.ui-active text { fill: #fff; }
 
-.ui-default text {
-    fill: #000;
-}
+.ui-default rect { fill: #e6e6e6; }
+
+.ui-default text { fill: #000; }
 
 .DeleteBin {
     cursor: pointer;
@@ -100,38 +83,30 @@ body.loading {
 
 
 /* Dialog Klassen */
-.no-close .ui-dialog-titlebar-close {
-  display: none;
-}
+
+.no-close .ui-dialog-titlebar-close { display: none; }
 
 .ui-dialog {
     background-color: #e6e6e6;
     border: 1px solid rgb(59, 59, 59);
 }
 
-.ui-dialog-titlebar {
-    background-color: darkgray;
-}
+.ui-dialog-titlebar { background-color: darkgray; }
 
 .ui-dialog-titlebar .ui-dialog-title {
     font-weight: bold;
     margin: 4px 6px;
 }
 
-.ui-dialog-content {
-    margin: 4px 6px;
-}
+.ui-dialog-content { margin: 4px 6px; }
 
 .ui-dialog-buttonpane {
-    text-align: right;
     margin: 8px 0;
+    text-align: right;
 }
 
 /* Dialog Hover InfoBox*/
-.hover .ui-dialog-titlebar {
-  display: none;
-}
 
-.hover .ui-dialog-titlebar-close {
-  display: none;
-}
+.hover .ui-dialog-titlebar { display: none; }
+
+.hover .ui-dialog-titlebar-close { display: none; }

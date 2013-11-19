@@ -23,7 +23,7 @@
     </div>   
     <div class="tableCell">
         <div class="tableRow"><b>PoI Typ:</b></div>
-        <div class="tableRow">@Html.DropDownListFor(n => n.PoI.Type, new SelectList(ViewBag.PoiTypes, "Id", "Name", Model.PoI.Type), new {id = "inputPoiTypeId"})</div>
+        <div class="tableRow">@Html.DropDownListFor(n => n.PoI.Type, new SelectList(ViewBag.PoiTypes, "Id", "Name", Model.PoI.Type.Id), new {id = "inputPoiTypeId"})</div>
     </div>            
     <div class="tableCell">
         <div class="tableRow"><b>PoI Beschreibung:</b></div>

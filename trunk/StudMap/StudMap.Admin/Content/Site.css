@@ -248,9 +248,7 @@ aside ul {
     padding: 0;
 }
 
-aside ul li {
-    padding: 2px 0 2px 20px;
-}
+aside ul li { padding: 2px 0 2px 20px; }
 
 .label { font-weight: 700; }
 
