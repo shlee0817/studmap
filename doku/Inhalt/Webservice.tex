@@ -105,7 +105,218 @@ Beispiel:
 \section{MapsController}
 \todo{MapsController dokumentieren}
 
+\subsection{CreateMap}
+\label{service:CreateMap}
+Erstellt eine neue Karte mit dem vorgegebenen Namen.
 
+POST
+\url{/api/Maps/CreateMap?mapName=WHS}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapName & Sprechender Name der Karte. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Map}
+
+\subsection{DeleteMap}
+\label{service:DeleteMap}
+Löscht eine Karte mit der angegebenen ID.
+
+POST
+\url{/api/Maps/DeleteMap?mapId=2}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID der Map, die gelöscht werden soll. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{BaseResponse}
+
+\subsection{GetMaps}
+\label{service:GetMaps}
+Liefert eine Liste aller Karten zurück.
+
+GET
+\url{/api/Maps/GetMaps}
+
+Rückgabewert: \nameref{ListResponse}, \nameref{object:Map}
+
+\subsection{SaveGraphForFloor}
+\label{service:SaveGraphForFloor}
+Speichert den Graphen zu einem Stockwerk ab.
+
+POST
+\url{/api/Maps/SaveGraphForFloor}
+
+POST Body: \nameref{object:FloorGraph}
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{Graph}
+
+\subsection{DeleteGraphForFloor}
+\label{service:DeleteGraphForFloor}
+Löscht den Teilgraphen auf einem Stockwerk.
+Die Teilgraphen auf anderen Stockwerken werden nicht verändert.
+Kanten die Stockwerke mit diesem Stockwerk verbinden, werden
+ebenfalls entfernt.
+
+POST
+\url{/api/Maps/DeleteGraphForFloor?floorId=2}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline floorId & ID des Stockwerks, dessen Teilgraph gelöscht werden soll. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{BaseResponse}
+
+\subsection{GetGraphForFloor}
+\label{service:GetGraphForFloor}
+Liefert den Teilgraphen für ein Stockwerk.
+
+GET
+\url{/api/Maps/GetGraphForFloor?floorId=2}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline floorId & ID des Stockwerks. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
+
+\subsection{GetNodeInformationForNode}
+\label{service:GetNodeInformationForNode}
+Liefert weitere Informationen zu einem Knoten.
+Diese umfassen Raumnummern, zugeordnete NFC- und QR-Tags, usw.
+
+GET
+\url{/api/Maps/GetNodeInformationForNode?nodeId=12}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
+
+\subsection{GetFloorPlanData}
+\label{service:GetFloorPlanData}
+Liefert die verschiedenen Schichten auf einem Stockwerk.
+
+GET
+\url{/api/Maps/GetFloorPlanData?floorId=2}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline floorId & ID des Stockwerks. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:FloorPlanData}
+
+\subsection{SaveNodeInformation}
+\label{service:SaveNodeInformation}
+Speichert zusätzliche Informationen zu einem Knoten ab.
+
+POST
+\url{/api/Maps/SaveNodeInformation}
+
+POST Body: \nameref{object:NodeInformationWithId}
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:NodeInformation}
+
+\subsection{GetRouteBetween}
+\label{service:GetRouteBetween}
+Liefert die Route zwischen zwei Knoten, wenn diese existiert.
+
+GET
+\url{/api/Maps/GetRouteBetween?mapId=2&startNodeId=12&endNodeId=46}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID des Karte, auf der die Route bestimmt werden soll. \\ 
+\hline startNodeId & ID des Startknotens. \\ 
+\hline endNodeId & ID des Zielknotens. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ListResponse}, \nameref{object:Node}
+
+\subsection{GetPoiTypes}
+\label{service:GetPoiTypes}
+Liefert eine Liste aller Typen von PoIs zurück.
+
+GET
+\url{/api/Maps/GetPoiTypes}
+
+Rückgabewert: \nameref{ListResponse}, \nameref{object:PoiType}
+
+\subsection{GetPoIsForMap}
+\label{service:GetPoIsForMap}
+Liefert eine Liste aller PoIs auf einer Karte zurück.
+
+GET
+\url{/api/Maps/GetPoIsForMap?mapId=2}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID der Karte. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ListResponse}, \nameref{object:PoI}
+
+\subsection{GetRooms}
+\label{service:GetRooms}
+Liefert eine Liste aller Räume auf einer Karte zurück.
+
+GET
+\url{/api/Maps/GetRooms?mapId=2}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID der Karte. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ListResponse}, \nameref{object:Room}
+
+\subsection{GetNodeForNFC}
+\label{service:GetNodeForNFC}
+Sucht auf einer Karte nach einem Knoten mit einem bestimmten NFC-Tag.
+
+GET
+\url{/api/Maps/GetNodeForNFC?mapId=2&nfcTag=46A6CG739ED9}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID der Karte. \\ 
+\hline nfcTag & NFC-Tag, nach dem gesucht werden soll. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
+
+\subsection{GetNodeForQRCode}
+\label{service:GetNodeForQRCode}
+Sucht auf einer Karte nach einem Knoten mit einem bestimmten QR-Code.
+
+GET
+\url{/api/Maps/GetNodeForQRCode?mapId=2&qrCode=46A6CG739ED9}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID der Karte. \\ 
+\hline qrCode & QR-Code, nach dem gesucht werden soll. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
 
 \section{UsersController}
 \label{Webservice_UsersController}
