@@ -189,7 +189,7 @@
             }).on("contextmenu", function(d) {
                 d3.event.preventDefault();
                 $.ajax({
-                    url: window.basePath + 'Admin/GetNodeInformation?nodeId=' + d.id + '&readOnly=' + false,
+                    url: window.basePath + 'Admin/GetNodeInformation?nodeId=' + d.id,
                     success: function(result) {
                         $("#NodeInformationDialog").html(result);
                         $('#NodeInformationDialog').dialog({

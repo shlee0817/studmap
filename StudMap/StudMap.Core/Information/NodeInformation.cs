@@ -7,7 +7,6 @@ namespace StudMap.Core.Information
         public string DisplayName { get; set; }
         public string RoomName { get; set; }
         public Node Node { get; set; }
-        public bool ReadOnly { get; set; }
         public PoI PoI { get; set; }
         public string QRCode { get; set; }
         public string NFCTag { get; set; }
@@ -27,7 +26,6 @@ namespace StudMap.Core.Information
             DisplayName = "";
             RoomName = "";
             Node = new Node();
-            ReadOnly = true;
             PoI = new PoI();
             NFCTag = "";
             QRCode = "";

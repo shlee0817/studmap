@@ -7,19 +7,19 @@
 <div class="table">
     <div class="tableCell">
         <div class="tableRow"><b>DisplayName:</b></div>
-        <div class="tableRow"><input id="inputDisplayName" type="text" value="@Model.DisplayName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+        <div class="tableRow"><input id="inputDisplayName" type="text" value="@Model.DisplayName" class="contextInputField"/></div>
     </div>
     <div class="tableCell">
         <div class="tableRow"><b>RoomName:</b></div>
-        <div class="tableRow"><input id="inputRoomName" type="text" value="@Model.RoomName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+        <div class="tableRow"><input id="inputRoomName" type="text" value="@Model.RoomName" class="contextInputField"/></div>
     </div> 
     <div class="tableCell">
         <div class="tableRow"><b>QR-Code:</b></div>
-        <div class="tableRow"><input type="text" id="inputQRCode" value="@(Model.QRCode)" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+        <div class="tableRow"><input type="text" id="inputQRCode" value="@(Model.QRCode)" class="contextInputField"/></div>
     </div>
     <div class="tableCell">
         <div class="tableRow"><b>NFC Tag:</b></div>
-        <div class="tableRow"><input type="text" id="inputNFCTag" value="@Model.NFCTag" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+        <div class="tableRow"><input type="text" id="inputNFCTag" value="@Model.NFCTag" class="contextInputField"/></div>
     </div>   
     <div class="tableCell">
         <div class="tableRow"><b>PoI Typ:</b></div>
@@ -27,28 +27,35 @@
     </div>            
     <div class="tableCell">
         <div class="tableRow"><b>PoI Beschreibung:</b></div>
-        <div class="tableRow"><textarea id="inputPoI" cols="17" rows="4" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "")>@Model.PoI.Description</textarea></div>
+        <div class="tableRow"><textarea id="inputPoI" cols="17" rows="4" class="contextInputField">@Model.PoI.Description</textarea></div>
     </div>
 </div>
 @if (Model.Node != null)
 {
-    <h1>Knoten</h1>
-    <div class="table" >
-        <div class="tableCell">
-            <div class="tableRow"><b>Knoten Id:</b></div>
-            <div class="tableRow"><input id="nodeId" type="text" value="@Model.Node.Id" class="contextInputField" readonly=readonly/></div>
-        </div>
-        <div class="tableCell">
-            <div class="tableRow"><b>X-Koord. (Prozent):</b></div>
-            <div class="tableRow"><input type="text" value="@(Model.Node.X*100)%" class="contextInputField" readonly=readonly/></div>
-        </div>
-        <div class="tableCell">
-            <div class="tableRow"><b>Y-Koord. (Prozent):</b></div>
-            <div class="tableRow"><input type="text" value="@(Model.Node.Y*100)%" class="contextInputField" readonly=readonly/></div>
-        </div>
-        <div class="tableCell">
-            <div class="tableRow"><b>Floor-ID:</b></div>
-            <div class="tableRow"><input type="text" value="@Model.Node.FloorId" class="contextInputField" readonly=readonly/></div>
+    <div onclick="$('#node').toggle();" align="center" border-style="dashed" border-width="thin">
+        <b>
+        <i style=" border-style: solid; border-color: #999; border-width: medium;">&nbsp;Knoten ansehen&nbsp;</i>
+        </b>
+    </div>
+    <div id="node" style="display:none;">
+        <h1>Knoten</h1>
+        <div class="table" >
+            <div class="tableCell">
+                <div class="tableRow"><b>Knoten Id:</b></div>
+                <div class="tableRow">@Model.Node.Id</div>
+            </div>
+            <div class="tableCell">
+                <div class="tableRow"><b>X-Koord. (Prozent):</b></div>
+                <div class="tableRow">@(Model.Node.X*100)%</div>
+            </div>
+            <div class="tableCell">
+                <div class="tableRow"><b>Y-Koord. (Prozent):</b></div>
+                <div class="tableRow">@(Model.Node.Y*100)%</div>
+            </div>
+            <div class="tableCell">
+                <div class="tableRow"><b>Floor-ID:</b></div>
+                <div class="tableRow">@Model.Node.FloorId</div>
+            </div>
         </div>
     </div>
 }

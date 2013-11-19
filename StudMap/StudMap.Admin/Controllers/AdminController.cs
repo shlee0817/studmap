@@ -171,9 +171,7 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             ObjectResponse<NodeInformation> nodeInformation = mapsCtrl.GetNodeInformationForNode(nodeId);
-
-            nodeInformation.Object.ReadOnly = readOnly;
-
+            
             ViewBag.PoiTypes = mapsCtrl.GetPoiTypes().List;
             return PartialView("_NodeInformation", nodeInformation.Object);
         }
