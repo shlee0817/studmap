@@ -292,7 +292,7 @@ var xscale,
 function init(imageUrl) {
 
     var el = $("<img />").css("visibility", "hidden").attr("src", imageUrl);
-    $('body').append(el);
+    $('#body').append(el);
     window.setTimeout(function() {
         imageWidth = $(el).width();
         imageHeight = $(el).height();
