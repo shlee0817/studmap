@@ -148,18 +148,18 @@
             .attr("class", function() { return "node"; })
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; })
-            .attr("r", function () { return 8; })
+            .attr("r", function () { return 4; })
             .on('mousedown', function(d) {
                 if (d3.event.ctrlKey) return;
 
                 mousedownNode = d;
 
                 if (selectedNode === null) {
-                    d3.select(this).attr("r", 12);
+                    d3.select(this).attr("r", 7);
                     d3.select(this).style("opacity", 1);
                     selectedNode = mousedownNode;
                 } else if (mousedownNode === selectedNode) {
-                    d3.select(this).attr("r", 8);
+                    d3.select(this).attr("r", 4);
                     d3.select(this).style("opacity", 0.6);
                     selectedNode = null;
                 } else {
@@ -182,7 +182,7 @@
 
                     selectedNode = null;
 
-                    d3.selectAll(".node").attr("r", 8);
+                    d3.selectAll(".node").attr("r", 4);
 
                     graph.start();
                 }

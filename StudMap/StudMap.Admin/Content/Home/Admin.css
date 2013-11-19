@@ -23,14 +23,14 @@
     fill: #83C32D;
     stroke: #669922;
     opacity: 0.6;
-    stroke-width: 3;
+    stroke-width: 2;
 }
 
 .link {
     cursor: default;
     fill: none;
     stroke: #000;
-    stroke-width: 4px;
+    stroke-width: 2;
     opacity: 0.6;
 }
 
