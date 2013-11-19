@@ -4,15 +4,11 @@ public class Node {
 	private int nodeID;
 	private String displayName;
 	private String roomName;
-	private int x;
-	private int y;
 	
-	public Node(int nodeID, String roomName, String displayName, int x, int y){
+	public Node(int nodeID, String roomName, String displayName){
 		this.nodeID = nodeID;
 		this.roomName = roomName;
 		this.displayName = displayName;
-		this.x = x;
-		this.y = y;
 	}
 	
 	public int getNodeID() {
@@ -25,14 +21,6 @@ public class Node {
 
 	public String getRoomName() {
 		return roomName;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
 	}
 	
 	@Override
