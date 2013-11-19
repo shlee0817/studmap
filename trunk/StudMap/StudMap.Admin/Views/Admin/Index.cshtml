@@ -7,10 +7,10 @@
 }
 @section scripts
 {
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui-1.10.3.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.floorplan.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/Admin.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui-1.10.3.js")"> </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"> </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.floorplan.min.js")"> </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Admin/Admin.js")"> </script>
 }
 
 @{
@@ -21,7 +21,7 @@
     <div id="mapsTab" class="tab @(viewName.Equals("_Maps") ? "active" : "")">Maps</div>
     <div id="floorsTab" class="tab @(viewName.Equals("_Floors") ? "active" : "")">Floors</div>
     <div id="layerTab" class="tab @(viewName.Equals("_Layer") ? "active" : "")">Layer</div>
-    <br style="clear:both"/>
+    <br style="clear: both"/>
 </div>
 <div id="adminContent">
     @{

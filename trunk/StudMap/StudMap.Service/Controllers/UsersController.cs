@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Helpers;
 using System.Web.Http;
+using Elmah;
 using StudMap.Core;
 using StudMap.Core.Users;
 using StudMap.Data.Entities;
@@ -23,19 +25,19 @@ namespace StudMap.Service.Controllers
                 {
                     if (ExistUserAlready(userName, entities))
                         return new BaseResponse
-                        {
-                            Status = RespsonseStatus.Error,
-                            ErrorCode = ResponseError.UserNameDuplicate
-                        };
+                            {
+                                Status = RespsonseStatus.Error,
+                                ErrorCode = ResponseError.UserNameDuplicate
+                            };
                     return CreateUserAndAccount(userName, password, entities);
                 }
             }
             catch (DataException ex)
             {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return new BaseResponse
                     {
-                        Status = RespsonseStatus.Error, 
+                        Status = RespsonseStatus.Error,
                         ErrorCode = ResponseError.DatabaseError,
                         ErrorMessage = ex.StackTrace
                     };
@@ -49,15 +51,15 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new UserEntities())
                 {
-                    var user = entities.UserProfile.FirstOrDefault(u => u.UserName == userName);
+                    UserProfile user = entities.UserProfile.FirstOrDefault(u => u.UserName == userName);
                     if (user == null)
-                        return new BaseResponse{Status=RespsonseStatus.Error, ErrorCode= ResponseError.LoginInvalid};
+                        return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.LoginInvalid};
 
-                    var membership = entities.webpages_Membership.First(m => m.UserId == user.UserId);
+                    webpages_Membership membership = entities.webpages_Membership.First(m => m.UserId == user.UserId);
                     if (!Crypto.VerifyHashedPassword(membership.Password, password))
-                        return new BaseResponse { Status = RespsonseStatus.Error, ErrorCode = ResponseError.LoginInvalid };
+                        return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.LoginInvalid};
 
-                    var activeUser = entities.ActiveUsers.FirstOrDefault(u => u.UserId == user.UserId);
+                    ActiveUsers activeUser = entities.ActiveUsers.FirstOrDefault(u => u.UserId == user.UserId);
                     if (activeUser != null)
                         activeUser.LoginDate = DateTime.Now;
                     else
@@ -70,10 +72,10 @@ namespace StudMap.Service.Controllers
             }
             catch (DataException ex)
             {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return new BaseResponse
                     {
-                        Status = RespsonseStatus.Error, 
+                        Status = RespsonseStatus.Error,
                         ErrorCode = ResponseError.DatabaseError,
                         ErrorMessage = ex.StackTrace
                     };
@@ -86,11 +88,11 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new UserEntities())
                 {
-                    var user = entities.UserProfile.FirstOrDefault(u => u.UserName == userName);
+                    UserProfile user = entities.UserProfile.FirstOrDefault(u => u.UserName == userName);
                     if (user == null)
                         return new BaseResponse {Status = RespsonseStatus.Error, ErrorCode = ResponseError.LoginInvalid};
 
-                    var activeUser = entities.ActiveUsers.FirstOrDefault(u => u.UserId == user.UserId);
+                    ActiveUsers activeUser = entities.ActiveUsers.FirstOrDefault(u => u.UserId == user.UserId);
                     if (activeUser != null)
                     {
                         entities.ActiveUsers.Remove(activeUser);
@@ -101,13 +103,12 @@ namespace StudMap.Service.Controllers
             }
             catch (DataException ex)
             {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return new BaseResponse
                     {
-                        Status = RespsonseStatus.Error, 
+                        Status = RespsonseStatus.Error,
                         ErrorCode = ResponseError.DatabaseError,
                         ErrorMessage = ex.StackTrace
-
                     };
             }
         }
@@ -118,21 +119,21 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new UserEntities())
                 {
-                    var response = new ListResponse<User> { ErrorCode = ResponseError.None, Status = RespsonseStatus.Ok };
-                    foreach (var activeUser in entities.ActiveUsers)
+                    var response = new ListResponse<User> {ErrorCode = ResponseError.None, Status = RespsonseStatus.Ok};
+                    foreach (ActiveUsers activeUser in entities.ActiveUsers)
                         response.List.Add(new User
-                        {
-                            Name = entities.UserProfile.First(u => u.UserId == activeUser.UserId).UserName
-                        });
+                            {
+                                Name = entities.UserProfile.First(u => u.UserId == activeUser.UserId).UserName
+                            });
                     return response;
                 }
             }
             catch (DataException ex)
             {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return new ListResponse<User>
                     {
-                        Status = RespsonseStatus.Error, 
+                        Status = RespsonseStatus.Error,
                         ErrorCode = ResponseError.DatabaseError,
                         ErrorMessage = ex.StackTrace
                     };
@@ -148,32 +149,33 @@ namespace StudMap.Service.Controllers
 
         private static BaseResponse CreateUserAndAccount(string userName, string password, UserEntities entities)
         {
-            var user = entities.UserProfile.Add(new UserProfile
-            {
-                UserName = userName,
-                webpages_Roles =
-                    new List<webpages_Roles> { entities.webpages_Roles.First(role => role.RoleName == "Users") }
-            });
+            UserProfile user = entities.UserProfile.Add(new UserProfile
+                {
+                    UserName = userName,
+                    webpages_Roles =
+                        new List<webpages_Roles> {entities.webpages_Roles.First(role => role.RoleName == "Users")}
+                });
             entities.SaveChanges();
 
             entities.webpages_Membership.Add(new webpages_Membership
-            {
-                UserId = user.UserId,
-                CreateDate = DateTime.Now,
-                IsConfirmed = true,
-                Password = Crypto.HashPassword(password),
-                PasswordSalt = string.Empty,
-                PasswordChangedDate = DateTime.Now,
-            });
+                {
+                    UserId = user.UserId,
+                    CreateDate = DateTime.Now,
+                    IsConfirmed = true,
+                    Password = Crypto.HashPassword(password),
+                    PasswordSalt = string.Empty,
+                    PasswordChangedDate = DateTime.Now,
+                });
             entities.SaveChanges();
 
-            return new BaseResponse { Status = RespsonseStatus.Ok, ErrorCode = ResponseError.None };
+            return new BaseResponse {Status = RespsonseStatus.Ok, ErrorCode = ResponseError.None};
         }
+
         #region Debugging
 
         private static Exception GetInnerstException(Exception e)
         {
-            var ex = e;
+            Exception ex = e;
             while (ex.InnerException != null)
                 ex = ex.InnerException;
             return ex;
@@ -181,20 +183,21 @@ namespace StudMap.Service.Controllers
 
         private static bool HasValidationErrors(DbContext entities)
         {
-            var hasErrors = false;
-            var errors = entities.GetValidationErrors();
+            bool hasErrors = false;
+            IEnumerable<DbEntityValidationResult> errors = entities.GetValidationErrors();
 
-            foreach (var error in errors)
+            foreach (DbEntityValidationResult error in errors)
             {
                 hasErrors = true;
                 Debug.WriteLine("Entity {0} is not valid! OriginalValues={1}; CurrentValues={2}", error.Entry.Entity,
-                    error.Entry.OriginalValues, error.Entry.CurrentValues);
+                                error.Entry.OriginalValues, error.Entry.CurrentValues);
 
-                foreach (var validationError in error.ValidationErrors)
+                foreach (DbValidationError validationError in error.ValidationErrors)
                     Debug.WriteLine("   {0}: {1}", validationError.PropertyName, validationError.ErrorMessage);
             }
             return hasErrors;
         }
+
         #endregion // Debuggin
 
         #endregion // Private Helpers

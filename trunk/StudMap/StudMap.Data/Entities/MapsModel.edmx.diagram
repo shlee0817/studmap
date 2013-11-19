@@ -22,6 +22,7 @@
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_Nodes" />
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_PoIs" />
         <AssociationConnector Association="StudMapModel.FK_PoIs_PoiTypes" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformationForMap" Width="1.5" PointX="8.9785462883201177" PointY="22.852590213926785" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

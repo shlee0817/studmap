@@ -12,7 +12,7 @@
         public void SetError(ResponseError error)
         {
             Status = RespsonseStatus.Error;
-            ErrorCode = ResponseError.MapIdDoesNotExist;
+            ErrorCode = error;
         }
 
         public void SetError(ResponseError error, string errorMessage)
