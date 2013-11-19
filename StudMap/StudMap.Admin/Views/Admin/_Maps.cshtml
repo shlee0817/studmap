@@ -1,5 +1,5 @@
 ﻿@using StudMap.Core.Maps
-@model StudMap.Core.ListResponse<Map>
+@model StudMap.Core.ListResponse<StudMap.Core.Maps.Map>
 @{
     Layout = null;
 }
@@ -17,7 +17,7 @@
             <div class="tableCell">
                 <div class="tableRow" onclick=" Admin.loadFloors(@map.Id) ">@map.Id</div>
                 <div class="tableRow" onclick=" Admin.loadFloors(@map.Id) ">@map.Name</div>
-                <div class="tableRow" onclick="Admin.deleteMap(@map.Id)"><img class="DeleteBin" src="@Url.Content("~/Images/bin.png")" alt="Bin"/></div>
+                <div class="tableRow" onclick=" Admin.deleteMap(@map.Id) "><img class="DeleteBin" src="@Url.Content("~/Images/bin.png")" alt="Bin"/></div>
             </div>
         }
     </div>

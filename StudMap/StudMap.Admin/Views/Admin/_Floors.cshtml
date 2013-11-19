@@ -1,6 +1,5 @@
-@using StudMap.Core
 @using StudMap.Core.Maps
-@model ListResponse<Floor>
+@model StudMap.Core.ListResponse<StudMap.Core.Maps.Floor>
 
 @{
     Layout = null;
@@ -16,20 +15,20 @@
             <div class="tableRow">FloorImageFile</div>
             <div class="tableRow"></div>
         </div>
-        @foreach (var floor in Model.List)
+        @foreach (Floor floor in Model.List)
         {
             <div class="tableCell">
                 <div class="tableRow" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">@floor.Id</div>
                 <div class="tableRow" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">@floor.MapId</div>
                 <div class="tableRow" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">@floor.Name</div>
                 <div class="tableRow" onclick=" Admin.loadFloorplan(@floor.MapId, @floor.Id) ">@floor.ImageUrl</div>
-                <div class="tableRow" onclick="Admin.deleteFloorplan(@floor.MapId, @floor.Id)"><img class="DeleteBin" src="@Url.Content("~/Images/bin.png")" alt="Bin"/></div>
+                <div class="tableRow" onclick=" Admin.deleteFloorplan(@floor.MapId, @floor.Id) "><img class="DeleteBin" src="@Url.Content("~/Images/bin.png")" alt="Bin"/></div>
             </div>
         }
     </div>
-    <div>@Html.ActionLink("Anlegen", "CreateFloor/", "Admin", new { mapId = ViewBag.MapId }, null)</div>
+    <div>@Html.ActionLink("Anlegen", "CreateFloor/", "Admin", new {mapId = ViewBag.MapId}, null)</div>
 }
 else
 {
-    <div>Es wurden noch kein Stockwerk angelegt. Neues Stockwerk @Html.ActionLink("erstellen", "CreateFloor", "Admin", new { mapId = ViewBag.MapId }, null)?</div>
+    <div>Es wurden noch kein Stockwerk angelegt. Neues Stockwerk @Html.ActionLink("erstellen", "CreateFloor", "Admin", new {mapId = ViewBag.MapId}, null)?</div>
 }

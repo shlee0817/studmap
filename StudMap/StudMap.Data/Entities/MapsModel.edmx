@@ -14,6 +14,14 @@
           <EntitySet Name="Nodes" EntityType="StudMapModel.Store.Nodes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PoIs" EntityType="StudMapModel.Store.PoIs" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PoiTypes" EntityType="StudMapModel.Store.PoiTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.Store.NodeInformationForMap" store:Type="Views" store:Schema="dbo" store:Name="NodeInformationForMap">
+            <DefiningQuery>SELECT 
+      [NodeInformationForMap].[MapId] AS [MapId], 
+      [NodeInformationForMap].[DisplayName] AS [DisplayName], 
+      [NodeInformationForMap].[RoomName] AS [RoomName], 
+      [NodeInformationForMap].[NodeId] AS [NodeId]
+      FROM [dbo].[NodeInformationForMap] AS [NodeInformationForMap]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.Store.FK_Edges_EndNodes">
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="Edges" EntitySet="Edges" />
@@ -124,6 +132,19 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'StudMap.dbo.NodeInformationForMap' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="NodeInformationForMap">
+          <Key>
+            <PropertyRef Name="MapId" />
+            <PropertyRef Name="NodeId" />
+          </Key>
+          <Property Name="MapId" Type="int" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
+          <Property Name="NodeId" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_Edges_EndNodes">
           <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="1" />
@@ -289,11 +310,12 @@
             <End Role="PoIs" EntitySet="PoIs" />
           </AssociationSet>
           <FunctionImport Name="DeleteFloor">
-            <Parameter Name="FloorId" Mode="In" Type="Int32" />
+          <Parameter Name="FloorId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="DeleteMap">
-            <Parameter Name="MapId" Mode="In" Type="Int32" />
+          <Parameter Name="MapId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
         </EntityContainer>
         <EntityType Name="Edges">
           <Key>
@@ -495,6 +517,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="NodeInformationForMap">
+          <Key>
+            <PropertyRef Name="MapId" />
+            <PropertyRef Name="NodeId" />
+          </Key>
+          <Property Type="Int32" Name="MapId" Nullable="false" />
+          <Property Type="String" Name="DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="NodeId" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -585,6 +617,16 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="DeleteFloor" FunctionName="StudMapModel.Store.sp_DeleteFloor" />
           <FunctionImportMapping FunctionImportName="DeleteMap" FunctionName="StudMapModel.Store.sp_DeleteMap" />
+          <EntitySetMapping Name="NodeInformationForMap">
+            <EntityTypeMapping TypeName="StudMapModel.NodeInformationForMap">
+              <MappingFragment StoreEntitySet="NodeInformationForMap">
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="MapId" ColumnName="MapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

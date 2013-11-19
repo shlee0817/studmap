@@ -1,4 +1,4 @@
-﻿d3.floorplan.graph = function () {
+﻿d3.floorplan.graph = function() {
     var x = d3.scale.linear(),
         y = d3.scale.linear(),
         id = "fp-graph-" + new Date().valueOf(),
@@ -10,20 +10,20 @@
         link = null;
 
     var selectedNode = null,
-    mousedownNode = null,
-    mouseupNode;
+        mousedownNode = null,
+        mouseupNode;
 
     var zoomScaleFactor = null,
-    zoomX = null,
-    zoomY = null;
+        zoomX = null,
+        zoomY = null;
 
     function resetMouseVars() {
         mousedownNode = null;
         mouseupNode = null;
     }
-    
+
     d3.select("body").on("keydown", function() {
-        
+
         //Entfernen löscht den ausgewählten Knoten
         if (selectedNode !== null && d3.event.keyCode === 46) {
 
@@ -35,7 +35,7 @@
                 title: "Knoten löschen",
                 appendTo: "#body",
                 buttons: {
-                    Löschen: function () {
+                    Löschen: function() {
                         for (var i = 0; i < nodes.length; i++) {
                             if (nodes[i].id === selectedNode.id) {
                                 nodes.splice(i, 1);
@@ -53,29 +53,29 @@
                         selectedNode = null;
                         $(this).dialog("close");
                     },
-                    Abbrechen: function () {
+                    Abbrechen: function() {
                         $(this).dialog("close");
                     }
                 }
             });
 
-            
+
         }
 
     });
 
     function graph(g) {
 
-        d3.select(".map-controls").on("mousedown", function () {
+        d3.select(".map-controls").on("mousedown", function() {
             mousedownNode = true;
-        }).on("mouseup", function () {
+        }).on("mouseup", function() {
             mouseupNode = true;
         });
 
-        g.each(function (data) {
+        g.each(function(data) {
             if (!data) return;
 
-            d3.select("svg").on("mousedown", function () {
+            d3.select("svg").on("mousedown", function() {
 
                 d3.select("svg").classed("active", true);
 
@@ -102,7 +102,7 @@
 
                 nodes.push({ id: ++nodeCount, fixed: true, x: xp, y: yp });
                 graph.start();
-            }).on("mouseup", function () {
+            }).on("mouseup", function() {
                 d3.select("svg").classed("active", false);
                 resetMouseVars();
             });
@@ -137,21 +137,21 @@
         return null;
     }
 
-    graph.start = function () {
-        link = link.data(links, function (d) { return d.source.id + "-" + d.target.id; });
-        link.enter().insert("path", ".node").attr("class", "link").attr("d", function (d) {
+    graph.start = function() {
+        link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
+        link.enter().insert("path", ".node").attr("class", "link").attr("d", function(d) {
             return "M" + d.target.x + "," + d.target.y + "L" + d.source.x + "," + d.source.y;
         });
         link.exit().remove();
 
-        node = node.data(nodes, function (d) { return d.id; });
+        node = node.data(nodes, function(d) { return d.id; });
         node.enter()
             .append("circle")
-            .attr("class", function () { return "node"; })
-            .attr("cx", function (d) { return d.x; })
-            .attr("cy", function (d) { return d.y; })
-            .attr("r", function () { return 8; })
-            .on('mousedown', function (d) {
+            .attr("class", function() { return "node"; })
+            .attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; })
+            .attr("r", function() { return 8; })
+            .on('mousedown', function(d) {
                 if (d3.event.ctrlKey) return;
 
                 mousedownNode = d;
@@ -159,21 +159,19 @@
                 if (selectedNode === null) {
                     d3.select(this).attr("r", 12);
                     selectedNode = mousedownNode;
-                }
-                else if (mousedownNode === selectedNode) {
+                } else if (mousedownNode === selectedNode) {
                     d3.select(this).attr("r", 8);
                     selectedNode = null;
-                }
-                else {
+                } else {
 
                     if (selectedNode === null)
                         return;
-                    
+
                     var source = selectedNode;
                     var target = mousedownNode;
 
                     var l;
-                    l = links.filter(function (ilink) {
+                    l = links.filter(function(ilink) {
                         return (ilink.source === source && ilink.target === target);
                     })[0];
 
@@ -185,14 +183,14 @@
                     selectedNode = null;
 
                     d3.selectAll(".node").attr("r", 8);
-                    
+
                     graph.start();
                 }
-            }).on("contextmenu", function (d) {
+            }).on("contextmenu", function(d) {
                 d3.event.preventDefault();
                 $.ajax({
                     url: window.basePath + 'Admin/GetNodeInformation?nodeId=' + d.id + '&readOnly=' + false,
-                    success: function (result) {
+                    success: function(result) {
                         $("#NodeInformationDialog").html(result);
                         $('#NodeInformationDialog').dialog({
                             dialogClass: "no-close",
@@ -201,71 +199,75 @@
                             autoHeight: true,
                             title: "Knoteninformationen (" + d.id + ")",
                             buttons: {
-                                Speichern: function () {
-                                        var displayName = $('input[id=inputDisplayName]').val();
-                                        var roomName = $('input[id=inputRoomName]').val();
-                                        var poiTypeId = $('#inputPoiTypeId').val();
-                                        var poiDescription = $('textarea#inputPoI').val();
+                                Speichern: function() {
+                                    var displayName = $('input[id=inputDisplayName]').val();
+                                    var roomName = $('input[id=inputRoomName]').val();
+                                    var poiTypeId = $('#inputPoiTypeId').val();
+                                    var poiDescription = $('textarea#inputPoI').val();
+                                    var qrCode = $('input[id=inputQRCode]').val();
+                                    var nfcTag = $('input[id=inputNFCTag]').val();
 
-                                        var obj = {
-                                            nodeId: $('input[id=nodeId]').val(),
-                                            displayName: displayName,
-                                            roomName: roomName,
-                                            poiTypeId: poiTypeId,
-                                            poiDescription: poiDescription
-                                        };
+                                    var obj = {
+                                        nodeId: $('input[id=nodeId]').val(),
+                                        displayName: displayName,
+                                        roomName: roomName,
+                                        poiTypeId: poiTypeId,
+                                        poiDescription: poiDescription,
+                                        qrCode : qrCode,
+                                        nfcTag : nfcTag
+                                    };
 
-                                        $.ajax({
-                                            url: window.basePath + 'Admin/SaveNodeInformation',
-                                            data: JSON.stringify(obj),
-                                            contentType: "application/json; charset=utf-8",
-                                            dataType: "json",
-                                            type: "post",
-                                            success: function () {
-                                                init(window.imageUrl);
-                                            }
-                                        });
-                                        $(this).dialog("close");
-                                    },
-                                Abbrechen: function () {
+                                    $.ajax({
+                                        url: window.basePath + 'Admin/SaveNodeInformation',
+                                        data: JSON.stringify(obj),
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        type: "post",
+                                        success: function() {
+                                            init(window.imageUrl);
+                                        }
+                                    });
+                                    $(this).dialog("close");
+                                },
+                                Abbrechen: function() {
                                     $(this).dialog("close");
                                 }
                             }
                         });
                     }
                 });
-                
+
             });
         node.exit().remove();
     };
 
-    graph.xScale = function (scale) {
+    graph.xScale = function(scale) {
         if (!arguments.length) return x;
         x = scale;
         return graph;
     };
 
-    graph.yScale = function (scale) {
+    graph.yScale = function(scale) {
         if (!arguments.length) return y;
         y = scale;
         return graph;
     };
 
-    graph.id = function () {
+    graph.id = function() {
         return id;
     };
 
-    graph.title = function (n) {
+    graph.title = function(n) {
         if (!arguments.length) return name;
         name = n;
         return graph;
     };
 
-    graph.getNodes = function () {
+    graph.getNodes = function() {
         return nodes;
     };
 
-    graph.getLinks = function () {
+    graph.getLinks = function() {
         return links;
     };
 
@@ -323,7 +325,7 @@ function init(imageUrl) {
             .addLayer(pathplot)
             .addLayer(graph);
 
-        d3.json(window.basePath + "Admin/GetFloorPlanData/" + floorId, function (data) {
+        d3.json(window.basePath + "Admin/GetFloorPlanData/" + floorId, function(data) {
 
             mapdata[pathplot.id()] = data.Object.Pathplot;
             mapdata[graph.id()] = data.Object.Graph;
@@ -376,7 +378,7 @@ function saveGraph() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         type: "post",
-        success: function () {
+        success: function() {
             $("body").removeClass("loading");
             init(window.imageUrl);
         }

@@ -97,6 +97,9 @@
     <Compile Include="Entities\NodeInformation.cs">
       <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\NodeInformationForMap.cs">
+      <DependentUpon>MapsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Nodes.cs">
       <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>

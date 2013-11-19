@@ -37,6 +37,7 @@ namespace StudMap.Data.Entities
         public DbSet<Nodes> Nodes { get; set; }
         public DbSet<PoIs> PoIs { get; set; }
         public DbSet<PoiTypes> PoiTypes { get; set; }
+        public DbSet<NodeInformationForMap> NodeInformationForMap { get; set; }
     
         public virtual int DeleteFloor(Nullable<int> floorId)
         {

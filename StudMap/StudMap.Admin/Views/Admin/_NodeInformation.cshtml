@@ -12,6 +12,22 @@
     <div class="tableCell">
         <div class="tableRow"><b>RoomName:</b></div>
         <div class="tableRow"><input id="inputRoomName" type="text" value="@Model.RoomName" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+    </div> 
+    <div class="tableCell">
+        <div class="tableRow"><b>QR-Code:</b></div>
+        <div class="tableRow"><input type="text" id="inputQRCode" value="@(Model.QRCode)" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+    </div>
+    <div class="tableCell">
+        <div class="tableRow"><b>NFC Tag:</b></div>
+        <div class="tableRow"><input type="text" id="inputNFCTag" value="@Model.NFCTag" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "") /></div>
+    </div>   
+    <div class="tableCell">
+        <div class="tableRow"><b>PoI Typ:</b></div>
+        <div class="tableRow">@Html.DropDownListFor(n => n.PoI.Type, new SelectList(ViewBag.PoiTypes, "Id", "Name", Model.PoI.Type), new {id = "inputPoiTypeId"})</div>
+    </div>            
+    <div class="tableCell">
+        <div class="tableRow"><b>PoI Beschreibung:</b></div>
+        <div class="tableRow"><textarea id="inputPoI" cols="17" rows="4" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "")>@Model.PoI.Description</textarea></div>
     </div>
 </div>
 @if (Model.Node != null)
@@ -24,23 +40,15 @@
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>X-Koord. (Prozent):</b></div>
-            <div class="tableRow"><input type="text" value="@(Model.Node.X * 100)%" class="contextInputField" readonly=readonly/></div>
+            <div class="tableRow"><input type="text" value="@(Model.Node.X*100)%" class="contextInputField" readonly=readonly/></div>
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>Y-Koord. (Prozent):</b></div>
-            <div class="tableRow"><input type="text" value="@(Model.Node.Y * 100)%" class="contextInputField" readonly=readonly/></div>
+            <div class="tableRow"><input type="text" value="@(Model.Node.Y*100)%" class="contextInputField" readonly=readonly/></div>
         </div>
         <div class="tableCell">
             <div class="tableRow"><b>Floor-ID:</b></div>
             <div class="tableRow"><input type="text" value="@Model.Node.FloorId" class="contextInputField" readonly=readonly/></div>
-        </div>
-        <div class="tableCell">
-            <div class="tableRow"><b>PoI Typ:</b></div>
-            <div class="tableRow">@Html.DropDownListFor(n => n.PoI.Type, new SelectList(ViewBag.PoiTypes, "Id", "Name"), new {id="inputPoiTypeId"})</div>
-        </div>            
-        <div class="tableCell">
-            <div class="tableRow"><b>PoI Beschreibung:</b></div>
-            <div class="tableRow"><textarea id="inputPoI" cols="17" rows="4" class="contextInputField" @(Model.ReadOnly ? "readonly=readonly" : "")>Model.PoI</textarea></div>
         </div>
     </div>
 }
