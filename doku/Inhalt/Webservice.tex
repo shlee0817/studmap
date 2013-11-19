@@ -11,6 +11,29 @@ Bevor nun die Funktionen der jeweiligen Controller Klasse erläutert werden, folg
 \section{Allgemeine Objekte}
 Orientiert an Domänenmodell.
 
+\subsection{Node}
+\label{object:Node}
+Repräsentiert einen Knoten in einem Graphen.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Id & ID des Knotens. \\ 
+\hline X & X-Koordinate auf dem Bild des Stockwerks. Wertebereich: 0.0 - 1.0. 0.0 bedeutet linker Bildrand. 1.0 bedeutet rechter Bildrand. \\ 
+\hline Y & Y-Koordinate auf dem Bild des Stockwerks. Wertebereich: 0.0 - 1.0. 0.0 bedeutet oberer Bildrand. 1.0 bedeutet unterer Bildrand. \\ 
+\hline FloorId & ID des Stockwerks auf dem sich der Knoten befindet. \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Id": 12,
+  "X": 0.45,
+  "Y": 0.76,
+  "FloorId": 2
+}
+\end{lstlisting}
+
 \section{Rückgabewerte}
 
 \subsection{BaseResponse}
