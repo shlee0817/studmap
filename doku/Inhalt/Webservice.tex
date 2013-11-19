@@ -9,7 +9,27 @@ Der Webservice besteht dabei aus zwei Schnittstellen in Form von sogenannten Con
 Bevor nun die Funktionen der jeweiligen Controller Klasse erläutert werden, folgt eine Übersicht, über die verschiedenen Rückgabe Werte und ihre Bedeutung.
 
 \section{Allgemeine Objekte}
-Orientiert an Domänenmodell.
+Im folgenden werden die im Webservice verwendeten Objekte aufgeführt. Für jedes Objekt werden Eigenschaften und die Repräsentation der Daten im JSON-Format aufgelistet.
+
+\subsection{Edge}
+\label{object:Edge}
+Repräsentiert eine Kante in einem Graphen.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline StartNodeId & ID des Start-Knotens der Kante. \\ 
+\hline EndNodeId & ID des End-Knotens der Kante. \\ 
+\hline
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "StartNodeId": 12,
+  "EndNodeId": 6
+}
+\end{lstlisting}
+
 
 \subsection{Node}
 \label{object:Node}
@@ -34,7 +54,263 @@ Beispiel:
 }
 \end{lstlisting}
 
-\section{Rückgabewerte}
+
+\subsection{Graph}
+\label{object:Graph}
+Repräsentiert für ein Stockwerk den entsprechenden Graphen.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline FloorId & ID des Stockwerks, das der entsprechende Graph repräsentiert. \\ 
+\hline Edges & Eine Liste von Kanten (s. \nameref{object:Edge}). \\ 
+\hline Nodes & Eine Liste von Knoten (s. \nameref{object:Node}). \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "FloorId": 12,
+  "Edges": { {...}, {...}, {...} },
+  "Nodes": { {...}, {...}, {...} }
+}
+\end{lstlisting}
+
+
+\subsection{Pathplot}
+\label{object:Pathplot}
+\todo{Bitte noch entsprechend vervollständigen!}
+Repräsentiert für die Darstellung benötigte Daten.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Id & ?? \\ 
+\hline Classes & ?? \\
+\hline Points & Eine Liste von \nameref{object:Node} Objekten. \\
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Id": "flt-1",
+  "Classes": "planned",
+  "Points": { {...}, {...}, {...} }
+}
+\end{lstlisting}
+
+\subsection{FloorPlanData}
+\label{object:FloorPlanData}
+\todo{Bitte noch entsprechend vervollständigen!}
+Repräsentiert Daten die auf einem Bild dargestellt werden können.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Pathplot &  \\ 
+\hline Graph & \\ 
+\hline
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Pathplot": {...},
+  "Graph": {...}
+}
+\end{lstlisting}
+
+
+\subsection{Room}
+\label{object:Room}
+Repräsentiert Daten die für einen Raum relevant sind.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline NodeId & ID des Knotens an dem sich der Raum befindet. \\ 
+\hline DisplayName & Der Anzeigename für den Raum (z.B. Aquarium) \\ 
+\hline RoomName & Der eigentliche Raumname (z.B. A 2.0.11). \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "NodeId": 12,
+  "DisplayName": "Aquarium",
+  "RoomName": "A2.0.11"
+}
+\end{lstlisting}
+
+
+\subsection{PoiType}
+\label{object:PoiType}
+Repräsentiert einen \nameref{object:PoI} Typen, wie beispielsweise Mensa oder Bibliothek.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Id & ID des Poi Typs. \\ 
+\hline Name & Der Name des Poi Tpes (z.B. Mensa). \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Id": 12,
+  "Name": "Mensa"
+}
+\end{lstlisting}
+
+
+\subsection{PoI}
+\label{object:PoI}
+Repräsentiert einen Point Of Interest, wie beispielsweise eine Mensa oder eine Bibliothek.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Type & Typ des PoIs (s. \nameref{object:PoiType}). \\ 
+\hline Description & Beschreibung des PoIs. \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Type": 1,
+  "Description": "In der Mensa kann man essen."
+}
+\end{lstlisting}
+
+
+\subsection{NodeInformation}
+\label{object:NodeInformation}
+Repräsentiert die für einen Knoten relevanten Daten.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline DisplayName & Anzeigename für den Knoten (z.B. Dr. Schulten, Martin). \\ 
+\hline RoomName & Raumname für den Knoten (z.B. B2.0.03). \\ 
+\hline Node & ?? \\ 
+\hline PoI & ?? \\  
+\hline QRCode & Dem Knoten zugeordnetem QR Code. \\ 
+\hline NFCTag & Dem Knoten zugeordnetem NFC Tag. \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "DisplayName": "Dr. Schulten, Martin",
+  "RoomName": "B2.0.03",
+  "Node": {...},
+  "PoI": {...},
+  "QRCode": "",
+  "NFCTag": ""
+}
+\end{lstlisting}
+
+
+\subsection{Floor}
+\label{object:Floor}
+Repräsentiert die für ein Stockwerk relevanten Daten.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Id & ID des Stockwerks. \\ 
+\hline MapId & ID der Karte zu dem das Stockwerk gehört. \\ 
+\hline Name & Name des Stockwerks. \\ 
+\hline ImageUrl & Der Dateipfad auf dem Server zum Bild des Stockwerks. \\  
+\hline CreationTime & Zeitstempel, an dem das Stockwerk erstellt wurde. \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Id": 1011,
+  "MapId": 3,
+  "Name": "Ebene 0",
+  "ImageUrl": "Images/Floors/RN_Ebene_0.png",
+  "CreationTime": "2013-11-18 14:36:24.607"
+}
+\end{lstlisting}
+
+
+\subsection{Map}
+\label{object:Map}
+Repräsentiert die für eine Karte relevanten Daten.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Id & ID der Karte. \\ 
+\hline Name & Name der Karte. \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Id": 3,
+  "Name": "Westfälische Hochschule",
+}
+\end{lstlisting}
+
+
+\subsection{User}
+\label{object:User}
+Repräsentiert die für einen Benutzer relevanten Daten.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Name & Name des Benutzers. \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Name": "Daniel",
+}
+\end{lstlisting}
+
+\subsection{FloorGraph}
+\label{object:FloorGraph}
+Repräsentiert einen Teilgraph für ein Stockwerk.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline floorId & ID des Stockwerks. \\ 
+\hline graph & Der Teilgraph (s. \nameref{object:Graph}) für das Stockwerk. \\ 
+\hline
+\end{tabularx}
+
+Beispiel: 
+\begin{lstlisting}
+{
+  "floorId": 2,
+  "graph": {...}
+}
+\end{lstlisting}
+
+
+\subsection{NodeInformationWithId}
+\label{object:NodeInformationWithId}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des \nameref{object:Node}. \\ 
+\hline nodeInf & Die Knoteninformation die gespeichert werden soll (s. \nameref{object:NodeInformation}). \\ 
+\hline
+\end{tabularx}
+
+Beispiel: 
+\begin{lstlisting}
+{
+  "nodeId": 12,
+  "nodeInf": {...}
+}
+\end{lstlisting}
+
+
+
+\section{Rückgabe Objekte}
 
 \subsection{BaseResponse}
 \label{BaseResponse}
@@ -103,7 +379,6 @@ Beispiel:
 \end{verbatim}
 
 \section{MapsController}
-\todo{MapsController dokumentieren}
 
 \subsection{CreateMap}
 \label{service:CreateMap}
@@ -153,7 +428,7 @@ POST
 
 POST Body: \nameref{object:FloorGraph}
 
-Rückgabewert: \nameref{ObjectResponse}, \nameref{Graph}
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 
 \subsection{DeleteGraphForFloor}
 \label{service:DeleteGraphForFloor}
