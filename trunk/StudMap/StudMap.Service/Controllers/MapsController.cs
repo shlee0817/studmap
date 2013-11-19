@@ -806,25 +806,16 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    foreach (var dbPoI in entities.PoIs)
-                    {
-                        // Prüfen, ob der PoI einem Knoten zugeordnet ist
-                        var nodeInfo = dbPoI.NodeInformation.FirstOrDefault();
-                        if (nodeInfo == null)
-                            continue;
-    
-                        var poi = new PoI 
+                    result.List = entities.PoisForMap.Where(x => x.MapId == mapId).Select(x => new PoI
                         {
                             Type = new PoiType
                             {
-                                Id = dbPoI.PoiTypes.Id,
-                                Name = dbPoI.PoiTypes.Name,
+                                Id = x.PoiTypeId,
+                                Name = x.PoiTypeName,
                             },
-                            Description = dbPoI.Description,
-                            NodeId = nodeInfo.NodeId
-                        };
-                        result.List.Add(poi);
-                    }
+                            Description = x.PoiDescription,
+                            NodeId = x.NodeId
+                        }).ToList();
                 }
             }
             catch (DataException)
@@ -835,7 +826,7 @@ namespace StudMap.Service.Controllers
         }
 
         [HttpGet]
-        public ListResponse<Room> GetRooms(int mapId)
+        public ListResponse<Room> GetRoomsForMap(int mapId)
         {
             var result = new ListResponse<Room>();
             try

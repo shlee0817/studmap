@@ -147,6 +147,7 @@
     <Content Include="Global.asax" />
     <Content Include="Images\ajax-loader.gif" />
     <Content Include="Images\bin.png" />
+    <Content Include="Images\Logo.png" />
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
     <Content Include="Views\Admin\CreateFloor.cshtml" />

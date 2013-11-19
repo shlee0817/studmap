@@ -22,6 +22,16 @@
       [NodeInformationForMap].[NodeId] AS [NodeId]
       FROM [dbo].[NodeInformationForMap] AS [NodeInformationForMap]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="PoisForMap" EntityType="StudMapModel.Store.PoisForMap" store:Type="Views" store:Schema="dbo" store:Name="PoisForMap">
+            <DefiningQuery>SELECT 
+      [PoisForMap].[MapId] AS [MapId], 
+      [PoisForMap].[PoiTypeId] AS [PoiTypeId], 
+      [PoisForMap].[PoiTypeName] AS [PoiTypeName], 
+      [PoisForMap].[PoiId] AS [PoiId], 
+      [PoisForMap].[PoiDescription] AS [PoiDescription], 
+      [PoisForMap].[NodeId] AS [NodeId]
+      FROM [dbo].[PoisForMap] AS [PoisForMap]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.Store.FK_Edges_EndNodes">
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="Edges" EntitySet="Edges" />
@@ -146,6 +156,23 @@
           <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
           <Property Name="NodeId" Type="int" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'StudMap.dbo.PoisForMap' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="PoisForMap">
+          <Key>
+            <PropertyRef Name="MapId" />
+            <PropertyRef Name="PoiTypeId" />
+            <PropertyRef Name="PoiId" />
+            <PropertyRef Name="NodeId" />
+          </Key>
+          <Property Name="MapId" Type="int" Nullable="false" />
+          <Property Name="PoiTypeId" Type="int" Nullable="false" />
+          <Property Name="PoiTypeName" Type="nvarchar" MaxLength="255" />
+          <Property Name="PoiId" Type="int" Nullable="false" />
+          <Property Name="PoiDescription" Type="nvarchar(max)" />
+          <Property Name="NodeId" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Edges_EndNodes">
           <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="1" />
           <End Role="Edges" Type="StudMapModel.Store.Edges" Multiplicity="*" />
@@ -260,11 +287,25 @@
         <Function Name="sp_DeleteMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="MapId" Type="int" Mode="In" />
         </Function>
+        <!--Errors Found During Generation:
+      warning 6013: The table/view 'StudMap.dbo.RoomsForMap' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+      
+      <EntityType Name="RoomsForMap">
+        <Property Name="NodeId" Type="int" />
+        <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
+        <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
+      </EntityType>-->
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="StudMapModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="MapsEntities" p1:LazyLoadingEnabled="true">
+          <FunctionImport Name="DeleteFloor">
+          <Parameter Name="FloorId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteMap">
+          <Parameter Name="MapId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="Edges" EntityType="StudMapModel.Edges" />
           <EntitySet Name="Floors" EntityType="StudMapModel.Floors" />
           <EntitySet Name="Graphs" EntityType="StudMapModel.Graphs" />
@@ -273,6 +314,8 @@
           <EntitySet Name="Nodes" EntityType="StudMapModel.Nodes" />
           <EntitySet Name="PoIs" EntityType="StudMapModel.PoIs" />
           <EntitySet Name="PoiTypes" EntityType="StudMapModel.PoiTypes" />
+          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
+          <EntitySet Name="PoisForMap" EntityType="StudMapModel.PoisForMap" />
           <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.FK_Edges_EndNodes">
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="Edges" EntitySet="Edges" />
@@ -309,13 +352,6 @@
             <End Role="PoiTypes" EntitySet="PoiTypes" />
             <End Role="PoIs" EntitySet="PoIs" />
           </AssociationSet>
-          <FunctionImport Name="DeleteFloor">
-          <Parameter Name="FloorId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="DeleteMap">
-          <Parameter Name="MapId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
         </EntityContainer>
         <EntityType Name="Edges">
           <Key>
@@ -408,6 +444,30 @@
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoiTypes" ToRole="PoIs" />
+        </EntityType>
+        <EntityType Name="NodeInformationForMap">
+          <Key>
+            <PropertyRef Name="MapId" />
+            <PropertyRef Name="NodeId" />
+          </Key>
+          <Property Type="Int32" Name="MapId" Nullable="false" />
+          <Property Type="String" Name="DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="NodeId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PoisForMap">
+          <Key>
+            <PropertyRef Name="MapId" />
+            <PropertyRef Name="PoiTypeId" />
+            <PropertyRef Name="PoiId" />
+            <PropertyRef Name="NodeId" />
+          </Key>
+          <Property Type="Int32" Name="MapId" Nullable="false" />
+          <Property Type="Int32" Name="PoiTypeId" Nullable="false" />
+          <Property Type="String" Name="PoiTypeName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PoiId" Nullable="false" />
+          <Property Type="String" Name="PoiDescription" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="NodeId" Nullable="false" />
         </EntityType>
         <Association Name="FK_Edges_EndNodes">
           <End Type="StudMapModel.Nodes" Role="Nodes" Multiplicity="1" />
@@ -517,22 +577,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="NodeInformationForMap">
-          <Key>
-            <PropertyRef Name="MapId" />
-            <PropertyRef Name="NodeId" />
-          </Key>
-          <Property Type="Int32" Name="MapId" Nullable="false" />
-          <Property Type="String" Name="DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="NodeId" Nullable="false" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="StudMapModelStoreContainer" CdmEntityContainer="MapsEntities">
+          <FunctionImportMapping FunctionImportName="DeleteFloor" FunctionName="StudMapModel.Store.sp_DeleteFloor" />
+          <FunctionImportMapping FunctionImportName="DeleteMap" FunctionName="StudMapModel.Store.sp_DeleteMap" />
           <EntitySetMapping Name="Edges">
             <EntityTypeMapping TypeName="StudMapModel.Edges">
               <MappingFragment StoreEntitySet="Edges">
@@ -615,8 +667,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="DeleteFloor" FunctionName="StudMapModel.Store.sp_DeleteFloor" />
-          <FunctionImportMapping FunctionImportName="DeleteMap" FunctionName="StudMapModel.Store.sp_DeleteMap" />
           <EntitySetMapping Name="NodeInformationForMap">
             <EntityTypeMapping TypeName="StudMapModel.NodeInformationForMap">
               <MappingFragment StoreEntitySet="NodeInformationForMap">
@@ -627,7 +677,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="PoisForMap">
+            <EntityTypeMapping TypeName="StudMapModel.PoisForMap">
+              <MappingFragment StoreEntitySet="PoisForMap">
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="PoiDescription" ColumnName="PoiDescription" />
+                <ScalarProperty Name="PoiId" ColumnName="PoiId" />
+                <ScalarProperty Name="PoiTypeName" ColumnName="PoiTypeName" />
+                <ScalarProperty Name="PoiTypeId" ColumnName="PoiTypeId" />
+                <ScalarProperty Name="MapId" ColumnName="MapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
