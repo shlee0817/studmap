@@ -167,7 +167,7 @@ namespace StudMap.Admin.Controllers
 
         [Authorize(Roles = "Admins")]
         [HttpGet]
-        public ActionResult GetNodeInformation(int nodeId, bool readOnly)
+        public ActionResult GetNodeInformation(int nodeId)
         {
             var mapsCtrl = new MapsController();
             ObjectResponse<NodeInformation> nodeInformation = mapsCtrl.GetNodeInformationForNode(nodeId);
