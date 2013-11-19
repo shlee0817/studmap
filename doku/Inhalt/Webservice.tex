@@ -105,6 +105,8 @@ Beispiel:
 \section{MapsController}
 \todo{MapsController dokumentieren}
 
+
+
 \section{UsersController}
 \label{Webservice_UsersController}
 Der \texttt{UsersController} stellt klassische Funktionen zur Benutzerverwaltung zur Verfügung.
@@ -112,7 +114,8 @@ Der \texttt{UsersController} stellt klassische Funktionen zur Benutzerverwaltung
 \subsection{Register}
 Registriert einen neuen Anwender in der Benutzerrolle Benutzer.
 
-POST \url{/api/Users/Register?userName=test&password=geheim}
+POST
+\url{/api/Users/Register?userName=test&password=geheim}
 
 Parameter:\\
 \begin{tabularx}{\textwidth}{|l|X|}
@@ -126,29 +129,36 @@ Rückgabewert: \nameref{BaseResponse}
 \subsection{Login}
 Meldet einen bereits registrierten Anwender am System an.
 
-Aufruf über HTTP Post:\\
-\url{http://localhost:1129/api/Users/Login?userName=test&password=geheim}
+POST
+\url{/api/Users/Login?userName=test&password=geheim}
 
-userName: Der Benutzername.\\
-password: Passwort im Klartext.
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline userName & Der Benutzername. \\ 
+\hline password & Passwort im Klartext. \\ 
+\hline 
+\end{tabularx}
 
 Rückgabewert: \nameref{BaseResponse}
 
 \subsection{Logout}
 Meldet einen angemeldeten Anwender vom System ab.
 
-Aufruf über HTTP Get:\\
+GET
 \url{http://localhost:1129/api/Users/Logout?userName=test}
 
-Übergabe Parameter:\\
-userName: Der Benutzername.\\
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline userName & Der Benutzername. \\ 
+\hline 
+\end{tabularx}
 
 Rückgabewert: \nameref{BaseResponse}
 
 \subsection{GetActiveUsers}
 Ermittelt eine Liste der aktuell am System angemeldeten Anwender.
 
-Aufruf über HTTP Get:\\
-\url{http://localhost:1129/api/Users/GetActiveUsers}
+GET
+\url{/api/Users/GetActiveUsers}
 
-Rückgabewert: \nameref{ListResponse}
+Rückgabewert: \nameref{ListResponse}, \nameref{User}
