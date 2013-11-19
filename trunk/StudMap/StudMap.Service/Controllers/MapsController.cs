@@ -535,6 +535,9 @@ namespace StudMap.Service.Controllers
                     result.Object.QRCode = queriedNodeInformation.QRCode;
 
                     var poi = queriedNodeInformation.PoIs;
+                    if (poi == null)
+                        return result;
+
                     result.Object.PoI = new PoI
                         {
                             Description = poi.Description,
