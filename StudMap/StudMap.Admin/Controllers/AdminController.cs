@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using StudMap.Core;
 using StudMap.Core.Graph;
@@ -93,6 +94,7 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             ObjectResponse<string> floor = mapsCtrl.GetFloorplanImage(floorId);
+            floor.Object = floor.Object;
             return Json(floor, JsonRequestBehavior.AllowGet);
         }
 

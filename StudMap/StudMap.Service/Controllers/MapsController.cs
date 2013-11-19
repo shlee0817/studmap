@@ -17,6 +17,8 @@ namespace StudMap.Service.Controllers
 {
     public class MapsController : ApiController
     {
+        private const string ServerAdminBasePath = "http://193.175.199.115/StudMapAdmin/";
+
         #region Map
 
         public ObjectResponse<Map> CreateMap(string mapName)
@@ -138,7 +140,7 @@ namespace StudMap.Service.Controllers
                             Id = insertedFloor.Id,
                             MapId = insertedFloor.MapId,
                             Name = insertedFloor.Name,
-                            ImageUrl = insertedFloor.ImageUrl,
+                            ImageUrl = ServerAdminBasePath + insertedFloor.ImageUrl,
                             CreationTime = insertedFloor.CreationTime
                         };
                 }
@@ -198,7 +200,7 @@ namespace StudMap.Service.Controllers
                                                        Id = floor.Id,
                                                        MapId = mapId,
                                                        Name = floor.Name,
-                                                       ImageUrl = floor.ImageUrl,
+                                                       ImageUrl = ServerAdminBasePath + floor.ImageUrl,
                                                        CreationTime = floor.CreationTime
                                                    };
                     result.List = floors.ToList();
@@ -229,7 +231,7 @@ namespace StudMap.Service.Controllers
                         result.Object = new Floor
                             {
                                 Id = floor.Id,
-                                ImageUrl = floor.ImageUrl,
+                                ImageUrl = ServerAdminBasePath + floor.ImageUrl,
                                 Name = floor.Name,
                                 MapId = floor.MapId
                             };
@@ -262,7 +264,7 @@ namespace StudMap.Service.Controllers
                     Floors floor = entities.Floors.FirstOrDefault(f => f.Id == floorId);
                     if (floor != null)
                     {
-                        result.Object = floor.ImageUrl;
+                        result.Object = ServerAdminBasePath + floor.ImageUrl;
                     }
                     else
                     {
