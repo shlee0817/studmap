@@ -661,7 +661,8 @@ namespace StudMap.Service.Controllers
         #endregion
 
         #region Layer: Navigation
-
+        
+        [HttpGet]
         public ListResponse<Node> GetRouteBetween(int mapId, int startNodeId, int endNodeId)
         {
             var result = new ListResponse<Node>();
@@ -797,7 +798,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public ListResponse<PoI> GetPoIs()
+        public ListResponse<PoI> GetPoIsForMap(int mapId)
         {
             var result = new ListResponse<PoI>();
             try
