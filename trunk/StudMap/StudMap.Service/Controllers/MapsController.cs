@@ -798,6 +798,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [HttpGet]
         public ListResponse<PoI> GetPoIsForMap(int mapId)
         {
             var result = new ListResponse<PoI>();
@@ -833,6 +834,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [HttpGet]
         public ListResponse<Room> GetRooms(int mapId)
         {
             var result = new ListResponse<Room>();
@@ -864,7 +866,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public ObjectResponse<Node> GetNodeForNFC(string nfcTag)
+        [HttpGet]
+        public ObjectResponse<Node> GetNodeForNFC(int mapId, string nfcTag)
         {
             var result = new ObjectResponse<Node>();
             try
@@ -898,7 +901,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public ObjectResponse<Node> GetNodeForQRCode(string qrCode)
+        public ObjectResponse<Node> GetNodeForQRCode(int mapId, string qrCode)
         {
             var result = new ObjectResponse<Node>();
             try
