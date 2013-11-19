@@ -148,7 +148,7 @@
             .attr("class", function() { return "node"; })
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; })
-            .attr("r", function() { return 8; })
+            .attr("r", function () { return 8; })
             .on('mousedown', function(d) {
                 if (d3.event.ctrlKey) return;
 
