@@ -20,9 +20,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.whs.studmap.data.Constants;
 import de.whs.studmap.data.Floor;
 import de.whs.studmap.data.Node;
-import de.whs.studmap.data.Constants;
+import de.whs.studmap.data.PoI;
 
 public class Service implements Constants {
 	
@@ -55,17 +56,31 @@ public class Service implements Constants {
 		return true;
 	}
 	
-	public static List<Node> getPOIs() throws WebServiceException{
-		List<Node> nodes = new ArrayList<Node>();
+	public static List<PoI> getPOIs() throws WebServiceException, ConnectException{
+		List<PoI> poiList = new ArrayList<PoI>();
 		
-		//JSONObject pois = httpGet(URL_MAPS, METHOD_GETPOIS);
-		//TODO: parse "pois"
 		
-		return nodes;
+		try {
+			JSONObject pois = httpGet(URL_MAPS, METHOD_GETPOIS);
+			JSONArray poiArray = pois.getJSONArray(RESPONSE_PARAM_LIST);
+			
+			for (int i = 0; i < poiArray.length(); i++){
+				JSONObject o = poiArray.getJSONObject(i);
+				PoI poi = parseJsonToPoI(o);
+				poiList.add(poi);
+			}
+			
+		} catch (JSONException ignore) {
+			ignore.printStackTrace();
+		}	
+		
+		return poiList;
 	}
 	
-	public static List<Node> getAllRooms() throws WebServiceException, ConnectException{
+	public static List<Node> getRooms(int mapId) throws WebServiceException, ConnectException{
 		List<Node> nodes = new ArrayList<Node>();
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
 		
 		try {
 			JSONObject rooms = httpGet(URL_MAPS,METHOD_GETROOMS);
@@ -84,11 +99,13 @@ public class Service implements Constants {
 		return nodes;		
 	}
 	
-	public static List<Floor> getFloors() throws WebServiceException, ConnectException{
+	public static List<Floor> getFloorsForMap(int mapId) throws WebServiceException, ConnectException{
 		List<Floor> floorList = new ArrayList<Floor>();
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
 		
 		try {
-			JSONObject floors = httpGet(URL_MAPS, METHOD_GETFLOORS);
+			JSONObject floors = httpGet(URL_MAPS, METHOD_GETFLOORS, params);
 			JSONArray roomArray = floors.getJSONArray(RESPONSE_PARAM_LIST);
 			
 			for (int i = 0; i < roomArray.length(); i++){
@@ -196,9 +213,7 @@ public class Service implements Constants {
 			int id = o.getInt(RESPONSE_PARAM_NODE_ID);
 			String roomName = o.getString(RESPONSE_PARAM_NODE_ROOMNAME);
 			String displayName = o.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
-			int x = o.getInt(RESPONSE_PARAM_NODE_X);
-			int y = o.getInt(RESPONSE_PARAM_NODE_Y);
-			node = new Node(id,roomName,displayName,x,y);
+			node = new Node(id,roomName,displayName);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -209,13 +224,29 @@ public class Service implements Constants {
 		Floor floor = null;
 		try {			
 			int id = o.getInt(RESPONSE_PARAM_FLOOR_ID);
-			String url = o.getString(RESPONSE_PARAM_FLOOR_URL);
+			int mapId = o.getInt(RESPONSE_PARAM_FLOOT_MAPID);
+			String imageUrl = o.getString(RESPONSE_PARAM_FLOOR_IMAGE_URL);
 			String name = o.getString(RESPONSE_PARAM_FLOOR_NAME);
-			floor = new Floor(id, url, name);
+			floor = new Floor(id, mapId, imageUrl, name);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return floor;
+	}
+	
+	private static PoI parseJsonToPoI(JSONObject o){
+		PoI poi = null;
+		try {			
+			String description = o.getString(RESPONSE_PARAM_POI_DESCRIPTION);
+			int nodeId = o.getInt(RESPONSE_PARAM_POI_NODEID);
+			JSONObject type = o.getJSONObject(RESPONSE_PARAM_POI_TYPE);
+			int typeId = type.getInt(RESPONSE_PARAM_POI_TYPEID);
+			String name = type.getString(RESPONSE_PARAM_POI_NAME);
+			poi = new PoI(name, description, typeId,nodeId);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return poi;
 	}
 	 
 }

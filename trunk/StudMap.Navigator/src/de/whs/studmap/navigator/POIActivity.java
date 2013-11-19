@@ -1,5 +1,6 @@
 package de.whs.studmap.navigator;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import de.whs.studmap.data.Node;
+import de.whs.studmap.data.PoI;
 import de.whs.studmap.web.Service;
 import de.whs.studmap.web.WebServiceException;
 
@@ -26,7 +27,7 @@ public class POIActivity extends Activity {
 	private ListView mListView;
 	private EditText mInputSearch;
 	private ArrayAdapter<String> mListAdapter;
-	private HashMap<String, Node> mPOIs = new HashMap<String, Node>();
+	private HashMap<String, PoI> mPOIs = new HashMap<String, PoI>();
 	
 
 	@Override
@@ -56,25 +57,18 @@ public class POIActivity extends Activity {
 	}
 
 	private void getPOIsFromWebService() {
-		/*Test
-		for(int i = 0; i < 3; i++){
-			Node n = new Node(i,"ABC" + i);
-			mPOIs.put(n.getName(),n);	
-		}
-		for(int i = 0; i < 3; i++){
-			Node n = new Node(i+3,"DEF" + i);
-			mPOIs.put(n.getName(),n);	
-		}*/
 		
-		List<Node> nodes = null;
+		List<PoI> pois = null;
 		try {
-			nodes = Service.getPOIs();
-			for (Node n : nodes){
-				mPOIs.put(n.getDisplayName(),n);	
+			pois = Service.getPOIs();
+			for (PoI n : pois){
+				mPOIs.put(n.toString(),n);	
 			}
 		} catch (WebServiceException e) {
 			// TODO handle WebServiceException 
 			e.printStackTrace();
+		} catch (ConnectException e){
+			
 		}
 
 		
@@ -102,10 +96,10 @@ public class POIActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         	String item = (String) mListView.getItemAtPosition(position);
-        	Node selectedNode = (Node) mPOIs.get(item);
+        	PoI selectedPoI = (PoI) mPOIs.get(item);
         	
             Intent result = new Intent();
-            result.putExtra(EXTRA_NODE_ID,selectedNode.getNodeID());
+            result.putExtra(EXTRA_NODE_ID,selectedPoI.getNodeId());
             setResult(Activity.RESULT_OK,result);
             finish();
         }
