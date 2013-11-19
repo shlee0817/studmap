@@ -22,6 +22,7 @@
     cursor: pointer;
     fill: #83C32D;
     stroke: #669922;
+    opacity: 0.6;
     stroke-width: 3;
 }
 
@@ -30,6 +31,7 @@
     fill: none;
     stroke: #000;
     stroke-width: 4px;
+    opacity: 0.6;
 }
 
 #adminContent { padding: 12px 0; }
