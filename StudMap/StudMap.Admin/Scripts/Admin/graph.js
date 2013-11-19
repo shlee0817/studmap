@@ -156,9 +156,11 @@
 
                 if (selectedNode === null) {
                     d3.select(this).attr("r", 12);
+                    d3.select(this).style("opacity", 1);
                     selectedNode = mousedownNode;
                 } else if (mousedownNode === selectedNode) {
                     d3.select(this).attr("r", 8);
+                    d3.select(this).style("opacity", 0.6);
                     selectedNode = null;
                 } else {
 
