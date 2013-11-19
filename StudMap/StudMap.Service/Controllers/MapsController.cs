@@ -419,21 +419,7 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    Floors floorToClear = entities.Floors.Find(floorId);
-                    if (floorToClear == null)
-                        return result;
-
-                    ICollection<Nodes> nodes = floorToClear.Nodes;
-                    IEnumerable<int> nodeIds = nodes.Select(n => n.Id);
-                    int[] enumerable = nodeIds as int[] ?? nodeIds.ToArray();
-                    IQueryable<Edges> edges = from edge in entities.Edges
-                                              where enumerable.Contains(edge.NodeStartId)
-                                                    || enumerable.Contains(edge.NodeEndId)
-                                              select edge;
-
-                    entities.Edges.RemoveRange(edges);
-                    entities.Nodes.RemoveRange(nodes);
-                    entities.SaveChanges();
+                    entities.DeleteGraphFromFloor(floorId);
                 }
             }
             catch (DataException ex)
