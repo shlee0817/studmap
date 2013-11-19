@@ -13,6 +13,8 @@
         <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="5.25" PointY="3.875" />
         <EntityTypeShape EntityType="StudMapModel.PoIs" Width="1.5" PointX="5.25" PointY="1" />
         <EntityTypeShape EntityType="StudMapModel.PoiTypes" Width="1.5" PointX="3" PointY="1.25" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformationForMap" Width="1.5" PointX="5.75" PointY="9.625" />
+        <EntityTypeShape EntityType="StudMapModel.PoisForMap" Width="1.5" PointX="7.75" PointY="9.625" />
         <AssociationConnector Association="StudMapModel.FK_Edges_EndNodes" />
         <AssociationConnector Association="StudMapModel.FK_Edges_Graphs" />
         <AssociationConnector Association="StudMapModel.FK_Edges_StartNodes" />
@@ -22,7 +24,6 @@
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_Nodes" />
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_PoIs" />
         <AssociationConnector Association="StudMapModel.FK_PoIs_PoiTypes" />
-        <EntityTypeShape EntityType="StudMapModel.NodeInformationForMap" Width="1.5" PointX="8.9785462883201177" PointY="22.852590213926785" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

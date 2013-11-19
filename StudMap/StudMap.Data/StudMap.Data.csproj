@@ -106,6 +106,9 @@
     <Compile Include="Entities\PoIs.cs">
       <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\PoisForMap.cs">
+      <DependentUpon>MapsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\PoiTypes.cs">
       <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
