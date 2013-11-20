@@ -68,7 +68,6 @@ public class MainActivity extends Activity {
 
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;
-    private final int MAP_ID = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
