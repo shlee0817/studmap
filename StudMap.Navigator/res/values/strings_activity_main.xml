@@ -37,5 +37,7 @@
 	
 	<string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
 	<string name="logout_successfull">Erfolgreich abgemeldet!</string>
+	<string name="load_data">Bitte warten...</string>
+	<string name="error_database">Datenbankfehler aufgetreten.</string>
 	
 </resources>

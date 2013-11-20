@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -58,16 +59,18 @@ public class MainActivity extends Activity {
     private LinearLayout mLeftDrawer;
     private ActionBar mActionBar;
     private Spinner mFloorSpinner;
-
+    private AutoCompleteTextView mSearchTextView;
+    
     private CharSequence mTitle;
     private List<String> mItemTitles;
     
     private boolean mLoggedIn = false;
     private String mUserName = "";
-    private static int mFloorID = 0;
+    private static int mSelectedFloorID = 0;
     private List<Floor> mFloorList = new ArrayList<Floor>();
     private List<Node> mRoomList = new ArrayList<Node>();
     private GetInitDataTask mGetTasks = null;
+    private Node mSelectedNode;
 
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;
@@ -136,13 +139,14 @@ public class MainActivity extends Activity {
             return true;
         }
         // Handle action buttons
-        switch(item.getItemId()) {
-        case R.id.action_search:
-        	  UserInfo.dialog(this, mUserName, "Processing Search....");
-        	  return false;
-        default:
-            return super.onOptionsItemSelected(item);
+        if(item.getItemId() == R.id.action_search){
+        	//TODO - Mit diesem Button Scannen oder die ‹bergabe an JavaScript anstoﬂen?
+        	
+        	UserInfo.dialog(this, mUserName, "Suchen oder Scannen?");    	  
+      	  return false;
         }
+        else
+        	return super.onOptionsItemSelected(item);
     }
     
     @Override
@@ -288,8 +292,7 @@ public class MainActivity extends Activity {
             MapWebView.getSettings().setJavaScriptEnabled(true);
             MapWebView.addJavascriptInterface(jsInterface, "jsinterface");
            
-            // TODO Anh‰ngen der floorID als URL Parameter
-            MapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + mFloorID);
+            MapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + mSelectedFloorID);
             MapWebView.requestFocus();
             return rootView;
         }
@@ -298,8 +301,8 @@ public class MainActivity extends Activity {
     /**
      * Initialize the custom Action Bar with an Spinner for selecting the Floor and an Textfield for Searching
      */
-    public void initializeActionBar(){
-
+    public void initializeActionBar(){    	
+    	
         // enable ActionBar app icon to behave as action to toggle nav drawer
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setDisplayShowCustomEnabled(true);
@@ -310,29 +313,35 @@ public class MainActivity extends Activity {
         // implement Layout action_bar.xml as custom Action Bar
         LayoutInflater inflator = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflator.inflate(R.layout.action_bar, null);
-        mActionBar.setCustomView(v);
+        View actionBarView = inflator.inflate(R.layout.action_bar, null);
+        mActionBar.setCustomView(actionBarView);
         
-        ArrayAdapter<Node> searchAdapter = new ArrayAdapter<Node>(this,
-                						android.R.layout.simple_list_item_1, mRoomList);
-        AutoCompleteTextView textView = (AutoCompleteTextView) v
-                .findViewById(R.id.actionBarSearch);
-        textView.setAdapter(searchAdapter);
-        textView.setThreshold(1);
+        //Initialize Search TextView
+        ArrayAdapter<Node> searchAdapter = new ArrayAdapter<Node>(this,android.R.layout.simple_list_item_1, mRoomList);
+        mSearchTextView = (AutoCompleteTextView) findViewById(R.id.actionBarSearch);
+        mSearchTextView.setAdapter(searchAdapter);
+        mSearchTextView.setThreshold(1);				//AutoComplete by the First Letter
         
+        mSearchTextView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+				mSelectedNode = (Node) adapterView.getItemAtPosition(pos);
+				UserInfo.toast(getApplicationContext(), "Suche " + mSelectedNode.toString(), false);
+				
+				//TODO - ‹bergabe der Auswahl an JavaScript hier oder mit Button?????????????????
+			}			
+		});
         
-        //Spinner for selecting the Level in the Action Bar
-        mFloorSpinner = (Spinner) findViewById(R.id.levelSpinner);
-        
-        
-        
+        //Get Spinner for selecting the Level in the Action Bar
+        mFloorSpinner = (Spinner) findViewById(R.id.levelSpinner);        
 		mFloorSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
 				Floor floor = (Floor) mFloorSpinner.getItemAtPosition(pos);
-				mFloorID = floor.getId();
+				mSelectedFloorID = floor.getId();
 				
-				String floorName = mFloorSpinner.getItemAtPosition(pos).toString() + " mit ID: " + mFloorID;
+				String floorName = mFloorSpinner.getItemAtPosition(pos).toString() + " mit ID: " + mSelectedFloorID;
 				UserInfo.toast(getApplicationContext(), floorName, true);
 				new MainFragment();
 			}
@@ -400,7 +409,6 @@ public class MainActivity extends Activity {
     
 	public class GetInitDataTask extends AsyncTask<Void, Void, Boolean> {
 		private Context mContext = null;
-		private boolean bShowDialog = false;
 		
 		public GetInitDataTask(Context ctx){
 			mContext = ctx;
@@ -415,17 +423,16 @@ public class MainActivity extends Activity {
 				return true;
 			} catch (WebServiceException e) {
 				JSONObject jObject = e.getJsonObject();
-				
 				try {
 					int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
 					
 					switch (errorCode) {
 					case ResponseError.DatabaseError:
-						bShowDialog = true;
+						UserInfo.dialog(mContext, mUserName, getString(R.string.error_database));
 					}
 				} catch (JSONException ignore) {}
 			} catch (ConnectException e){
-				bShowDialog = true;
+				UserInfo.dialog(mContext, mUserName, getString(R.string.error_connection));
 			}
 			return false;
 		}
@@ -437,7 +444,7 @@ public class MainActivity extends Activity {
 			if(success){
 				//Fill the Floor Spinner in the Action Bar
 		        ArrayAdapter<Floor> levelAdapter = new ArrayAdapter<Floor>(mContext, 
-		        									R.layout.simple_list_item_no_bg_font_white, mFloorList);
+		        										R.layout.simple_list_item_no_bg_font_white, mFloorList);
 		        levelAdapter.setDropDownViewResource(R.layout.simple_list_item_black);
 		        mFloorSpinner.setAdapter(levelAdapter);	
 		        
