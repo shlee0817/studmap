@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_search"
           android:icon="@drawable/action_search"
-          android:title="Action Search"
-          android:showAsAction="ifRoom"/>
+          android:title="anzeigen"
+          android:showAsAction="always"/>
 </menu>

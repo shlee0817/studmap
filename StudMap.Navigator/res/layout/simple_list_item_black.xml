@@ -23,7 +23,7 @@
     android:paddingRight="3dp"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:textColor="@android:color/white"
-    android:shadowColor="@android:color/holo_green_dark"
+    android:background="@android:color/background_dark"
     android:shadowRadius="1.5"
     android:shadowDx="1"
     android:shadowDy="1" />
