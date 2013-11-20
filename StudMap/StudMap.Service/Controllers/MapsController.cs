@@ -331,21 +331,13 @@ namespace StudMap.Service.Controllers
         #region Layer: Graph
 
         [HttpPost]
-        public ObjectResponse<Graph> SaveGraphForFloor(int floorId, Graph graph)
+        public ObjectResponse<Graph> SaveGraphForFloor(int floorId, Graph newGraph, Graph deletedGraph)
         {
             var result = new ObjectResponse<Graph>();
             try
             {
                 using (var entities = new MapsEntities())
                 {
-                    // Zuerst den alten Graphen löschen
-                    BaseResponse deleteResult = DeleteGraphForFloor(floorId);
-                    if (deleteResult.Status == RespsonseStatus.Error)
-                    {
-                        result.SetError(deleteResult.ErrorCode);
-                        return result;
-                    }
-
                     IQueryable<Floors> foundFloors = from floor in entities.Floors
                                                      where floor.Id == floorId
                                                      select floor;
@@ -355,12 +347,52 @@ namespace StudMap.Service.Controllers
                         return result;
                     }
 
+                    Floors targetFloor = foundFloors.First();
+                    Graphs graph = entities.Graphs.FirstOrDefault(x => x.MapId == targetFloor.MapId);
+                    if (graph == null)
+                    {
+                        entities.Graphs.Add(new Graphs
+                            {
+                                MapId = targetFloor.MapId,
+                                CreationTime = DateTime.Now
+                            });
+                    }
+
+
+                    // Alte Knoten und Kanten löschen
+                    if (deletedGraph.Nodes != null)
+                    {
+                        foreach (
+                            var node in
+                                deletedGraph.Nodes.Select(dNode => entities.Nodes.FirstOrDefault(x => x.Id == dNode.Id))
+                                            .Where(node => node != null))
+                        {
+                            entities.Nodes.Remove(node);
+                        }
+                    }
+
+                    if (deletedGraph.Edges != null)
+                    {
+                        foreach (
+                            var edge in
+                                deletedGraph.Edges.Select(
+                                    dEdge =>
+                                    entities.Edges.FirstOrDefault(
+                                        x => x.NodeStartId == dEdge.StartNodeId && x.NodeEndId == dEdge.EndNodeId))
+                                            .Where(edge => edge != null))
+                        {
+                            entities.Edges.Remove(edge);
+                        }
+                    }
+
+
+
                     var nodeIdMap = new Dictionary<int, int>();
 
                     // Nodes in den Floor hinzufügen
-                    if (graph.Nodes != null)
+                    if (newGraph.Nodes != null)
                     {
-                        foreach (Node node in graph.Nodes)
+                        foreach (Node node in newGraph.Nodes)
                         {
                             var newNode = new Nodes
                                 {
@@ -376,23 +408,35 @@ namespace StudMap.Service.Controllers
                     }
 
                     // Edges im Graph hinzufügen
-                    Floors targetFloor = foundFloors.First();
-                    Graphs newGraph = entities.Graphs.Add(new Graphs
-                        {
-                            MapId = targetFloor.MapId,
-                            CreationTime = DateTime.Now
-                        });
-
-                    if (graph.Edges != null)
+                    if (graph != null && graph.Edges != null)
                     {
-                        foreach (Edge edge in graph.Edges)
+                        foreach (Edge edge in newGraph.Edges)
                         {
-                            newGraph.Edges.Add(new Edges
-                                {
-                                    NodeStartId = nodeIdMap[edge.StartNodeId],
-                                    NodeEndId = nodeIdMap[edge.EndNodeId],
-                                    CreationTime = DateTime.Now
-                                });
+
+                            int nodeIdMapStartNodeId;
+                            if (nodeIdMap.ContainsKey(edge.StartNodeId))
+                                nodeIdMapStartNodeId = nodeIdMap[edge.StartNodeId];
+                            else
+                            {
+                                var startNodeId = entities.Nodes.FirstOrDefault(x => x.Id == edge.StartNodeId);
+                                nodeIdMapStartNodeId = startNodeId == null ? 0 : startNodeId.Id;
+                            }
+
+                            int nodeIdMapEndNodeId;
+                            if (nodeIdMap.ContainsKey(edge.EndNodeId))
+                                nodeIdMapEndNodeId = nodeIdMap[edge.EndNodeId];
+                            else
+                            {
+                                var endNodeId = entities.Nodes.FirstOrDefault(x => x.Id == edge.EndNodeId);
+                                nodeIdMapEndNodeId = endNodeId == null ? 0 : endNodeId.Id;
+                            }
+
+                            graph.Edges.Add(new Edges
+                            {
+                                NodeStartId = nodeIdMapStartNodeId,
+                                NodeEndId = nodeIdMapEndNodeId,
+                                CreationTime = DateTime.Now
+                            });
                         }
                     }
 
@@ -488,7 +532,7 @@ namespace StudMap.Service.Controllers
 
             return result;
         }
-        
+
         [HttpGet]
         public ObjectResponse<NodeInformation> GetNodeInformationForNode(int nodeId)
         {
@@ -548,7 +592,7 @@ namespace StudMap.Service.Controllers
         [HttpGet]
         public ObjectResponse<FloorPlanData> GetFloorPlanData(int floorId)
         {
-            var floorPlanData = new ObjectResponse<FloorPlanData> {Object = new FloorPlanData()};
+            var floorPlanData = new ObjectResponse<FloorPlanData> { Object = new FloorPlanData() };
             ObjectResponse<Graph> result = GetGraphForFloor(floorId);
             if (result.Status == RespsonseStatus.Ok)
             {
@@ -599,7 +643,7 @@ namespace StudMap.Service.Controllers
                                 RoomName = nodeInf.RoomName,
                                 QRCode = nodeInf.QRCode,
                                 NFCTag = nodeInf.NFCTag,
-                                PoiId = poiTypeSelected ? (int?) poi.Id : null,
+                                PoiId = poiTypeSelected ? (int?)poi.Id : null,
                                 NodeId = nodeId,
                                 CreationTime = DateTime.Now
                             });
@@ -613,7 +657,7 @@ namespace StudMap.Service.Controllers
                         nodeInformation.NFCTag = nodeInf.NFCTag;
                         nodeInformation.QRCode = nodeInf.QRCode;
 
-                        nodeInformation.PoiId = poiTypeSelected ? (int?) poi.Id : null;
+                        nodeInformation.PoiId = poiTypeSelected ? (int?)poi.Id : null;
                         entities.SaveChanges();
                     }
 
@@ -692,7 +736,7 @@ namespace StudMap.Service.Controllers
         #endregion
 
         #region Layer: Navigation
-        
+
         [HttpGet]
         public ListResponse<Node> GetRouteBetween(int mapId, int startNodeId, int endNodeId)
         {
@@ -799,7 +843,7 @@ namespace StudMap.Service.Controllers
             // Da Höhe unbekannt einfach irgendwelche Kosten festlegen
             decimal diffZ = endNode.FloorId != startNode.FloorId ? 0.2m : 0m;
 
-            return Math.Sqrt((double) (diffX*diffX + diffY*diffY + diffZ*diffZ));
+            return Math.Sqrt((double)(diffX * diffX + diffY * diffY + diffZ * diffZ));
         }
 
         #endregion
@@ -813,7 +857,7 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    result.List.Add(new PoiType {Id = 0, Name = "Kein"});
+                    result.List.Add(new PoiType { Id = 0, Name = "Kein" });
                     result.List.AddRange((from type in entities.PoiTypes
                                           select new PoiType
                                               {
@@ -876,7 +920,7 @@ namespace StudMap.Service.Controllers
                             RoomName = x.RoomName,
                             DisplayName = x.DisplayName,
                             NodeId = x.NodeId
-                            
+
                         }).ToList();
                 }
             }

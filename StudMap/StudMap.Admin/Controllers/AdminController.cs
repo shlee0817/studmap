@@ -100,10 +100,10 @@ namespace StudMap.Admin.Controllers
 
         [Authorize(Roles = "Admins")]
         [HttpPost]
-        public JsonResult SaveGraphForMap(int floorId, Graph graph)
+        public JsonResult SaveGraphForMap(int floorId, Graph newGraph, Graph deletedGraph)
         {
             var mapsCtrl = new MapsController();
-            ObjectResponse<Graph> floor = mapsCtrl.SaveGraphForFloor(floorId, graph);
+            ObjectResponse<Graph> floor = mapsCtrl.SaveGraphForFloor(floorId, newGraph, deletedGraph);
             return Json(floor, JsonRequestBehavior.AllowGet);
         }
 
