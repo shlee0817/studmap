@@ -237,9 +237,11 @@ public class LoginActivity extends Activity {
 					switch (errorCode) {
 					case ResponseError.DatabaseError:
 						bShowDialog = true;
+						break;
 					default:
 						mPasswordView.setError(getString(R.string.error_incorrect_password));
 						bRequestFocus = true;
+						break;
 					}
 				} catch (JSONException ignore) {}
 			} catch (ConnectException e){
