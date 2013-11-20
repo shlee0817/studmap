@@ -37,7 +37,7 @@ public interface Constants {
 		 static final String RESPONSE_PARAM_FLOOR_IMAGE_URL = "ImageUrl";
 		
 		 //PoI
-		 static final String RESPONSE_PARAM_POI_NAME = "name";
+		 static final String RESPONSE_PARAM_POI_NAME = "Name";
 		 static final String RESPONSE_PARAM_POI_TYPEID = "Id";
 		 static final String RESPONSE_PARAM_POI_NODEID = "NodeId";
 		 static final String RESPONSE_PARAM_POI_TYPE = "Type";
