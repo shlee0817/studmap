@@ -14,7 +14,9 @@
         android:imeOptions="actionSearch"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:paddingLeft="3dp"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black" 
+        android:dropDownHeight="wrap_content"
+        android:dropDownWidth="fill_parent">
     </AutoCompleteTextView>
 
     <Spinner

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif-light"
-            android:text="Startvorgang..."
+            android:text="@string/load_data"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
