@@ -4,6 +4,9 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using StudMap.Service.App_Start;
+using System.Web.Caching;
+using System;
+using StudMap.Service.Controllers;
 
 namespace StudMap.Service
 {
@@ -20,6 +23,26 @@ namespace StudMap.Service
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            AddTask("CheckActiveUsers", 5 * 60);
+        }
+
+        private static CacheItemRemovedCallback OnCacheRemove = null;
+
+        private void AddTask(string name, int seconds)
+        {
+            OnCacheRemove = new CacheItemRemovedCallback(CacheItemRemoved);
+            HttpRuntime.Cache.Insert(name, seconds, null,
+                DateTime.Now.AddSeconds(seconds), Cache.NoSlidingExpiration,
+                CacheItemPriority.NotRemovable, OnCacheRemove);
+        }
+
+        public void CacheItemRemoved(string key, object value, CacheItemRemovedReason reason)
+        {
+            UsersController.CheckActiveUsers();
+
+            // Neuen Task anlegen, damit dieser im nächsten Intervall wieder ausgeführt wird
+            AddTask(key, Convert.ToInt32(value));
         }
     }
 }

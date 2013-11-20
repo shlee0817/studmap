@@ -3,6 +3,8 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using StudMap.Admin.App_Start;
+using System.Web.Caching;
+using System;
 
 namespace StudMap.Admin
 {
