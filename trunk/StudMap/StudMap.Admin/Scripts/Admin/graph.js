@@ -38,17 +38,20 @@
                     Löschen: function() {
                         for (var i = 0; i < nodes.length; i++) {
                             if (nodes[i].id === selectedNode.id) {
-                                nodes.splice(i, 1);
+                                if (nodes[i].type === "new")
+                                    nodes.splice(i, 1);
+                                else
+                                    nodes[i].type = "deleted";
                                 break;
                             }
                         }
-                        var linksToBeKept = [];
+                        //var linksToBeKept = [];
                         for (i = 0; i < links.length; i++) {
-                            if (links[i].target.id !== selectedNode.id && links[i].source.id !== selectedNode.id) {
-                                linksToBeKept.push(links[i]);
+                            if (links[i].target.id === selectedNode.id || links[i].source.id === selectedNode.id) {
+                                links[i].type = "deleted";
                             }
                         }
-                        links = [].concat(linksToBeKept);
+                        //links = [].concat(linksToBeKept);
                         graph.start();
                         selectedNode = null;
                         $(this).dialog("close");
@@ -100,7 +103,7 @@
                 var xp = (mouse[0] - zoomX * 1) / zoomScaleFactor;
                 var yp = (mouse[1] - zoomY * 1) / zoomScaleFactor;
 
-                nodes.push({ id: ++nodeCount, fixed: true, x: xp, y: yp });
+                nodes.push({ id: ++nodeCount, fixed: true, x: xp, y: yp, type: "new" });
                 graph.start();
             }).on("mouseup", function() {
                 d3.select("svg").classed("active", false);
@@ -113,14 +116,14 @@
 
             var points = data.Nodes;
             for (var i = 0; i < points.length; i++) {
-                nodes.push({ id: points[i].Id, fixed: true, x: (points[i].X * width), y: (points[i].Y * height) });
+                nodes.push({ id: points[i].Id, fixed: true, x: (points[i].X * width), y: (points[i].Y * height), type: "server" });
                 if (points[i].Id > nodeCount) {
                     nodeCount = points[i].Id;
                 }
             }
             var edges = data.Edges;
             for (i = 0; i < edges.length; i++) {
-                links.push({ source: getNode(edges[i].StartNodeId), target: getNode(edges[i].EndNodeId) });
+                links.push({ source: getNode(edges[i].StartNodeId), target: getNode(edges[i].EndNodeId), type: "server" });
             }
         });
         graph.start();
@@ -186,14 +189,28 @@
         });
     }
 
-    graph.start = function() {
-        link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
+    graph.start = function () {
+
+        var displayLinks = [], displayNodes = [];
+        for (var i = 0; i < links.length; i++) {
+            if (links[i].type !== "deleted") {
+                displayLinks.push(links[i]);
+            }
+        }
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].type !== "deleted") {
+                displayNodes.push(nodes[i]);
+            }
+        }
+
+
+        link = link.data(displayLinks, function (d) { return d.source.id + "-" + d.target.id; });
         link.enter().insert("path", ".node").attr("class", "link").attr("d", function(d) {
             return "M" + d.target.x + "," + d.target.y + "L" + d.source.x + "," + d.source.y;
         });
         link.exit().remove();
 
-        node = node.data(nodes, function(d) { return d.id; });
+        node = node.data(displayNodes, function (d) { return d.id; });
         node.enter()
             .append("circle")
             .attr("class", function() { return "node"; })
@@ -231,7 +248,7 @@
                     })[0];
 
                     if (!l) {
-                        l = { source: source, target: target };
+                        l = { source: source, target: target, type: "new" };
                         links.push(l);
                     }
 
@@ -393,27 +410,31 @@ function init(imageUrl) {
     }, 1000);
 }
 
-function getGraph() {
+function getGraph(type) {
 
     var edges = [];
     var links = graph.getLinks();
     for (var i = 0; i < links.length; i++) {
-        var edge = {
-            "StartNodeId": links[i].source.id,
-            "EndNodeId": links[i].target.id
-        };
-        edges.push(edge);
+        if (links[i].type === type) {
+            var edge = {
+                "StartNodeId": links[i].source.id,
+                "EndNodeId": links[i].target.id
+            };
+            edges.push(edge);
+        }
     }
 
     var _nodes = [];
     var nodes = graph.getNodes();
     for (i = 0; i < nodes.length; i++) {
-        var node = {
-            "Id": nodes[i].id,
-            "X": (nodes[i].x / width),
-            "Y": (nodes[i].y / height)
-        };
-        _nodes.push(node);
+        if (nodes[i].type === type) {
+            var node = {
+                "Id": nodes[i].id,
+                "X": (nodes[i].x / width),
+                "Y": (nodes[i].y / height)
+            };
+            _nodes.push(node);
+        }
     }
     return { "Nodes": _nodes, "FloorId": this.floorId, "Edges": edges };
 }
@@ -423,7 +444,8 @@ function saveGraph() {
 
     var obj = {
         floorId: floorId,
-        graph: getGraph()
+        newGraph: getGraph("new"),
+        deletedGraph: getGraph("deleted")
     };
 
     $("body").addClass("loading");
