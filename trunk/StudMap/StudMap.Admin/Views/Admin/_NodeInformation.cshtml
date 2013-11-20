@@ -32,11 +32,10 @@
 </div>
 @if (Model.Node != null)
 {
-    <div onclick="$('#node').toggle();" align="center" border-style="dashed" border-width="thin">
-        <b>
-        <i style=" border-style: solid; border-color: #999; border-width: medium;">&nbsp;Knoten ansehen&nbsp;</i>
-        </b>
+    <div align="center">
+    <button type="button" onclick="$('#node').toggle();" style="font-size: xx-small;">Knoten ansehen</button>      
     </div>
+    
     <div id="node" style="display:none;">
         <h1>Knoten</h1>
         <div class="table" >
