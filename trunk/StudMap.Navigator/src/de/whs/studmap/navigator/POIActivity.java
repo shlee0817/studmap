@@ -41,8 +41,8 @@ public class POIActivity extends Activity implements Constants{
 	
 	private ListView mListView;
 	private EditText mInputSearch;
-	private ArrayAdapter<String> mListAdapter;
-	private HashMap<String, PoI> mPOIs = new HashMap<String, PoI>();
+	private ArrayAdapter<PoI> mListAdapter;
+	private List<PoI> mPOIs = new ArrayList<PoI>();
 	private GetDataTask mTask = null;
 	private String mUsername  = "";
 	private View mStatusView;
@@ -64,11 +64,7 @@ public class POIActivity extends Activity implements Constants{
 		
 		mInputSearch = (EditText) findViewById(R.id.POI_inputSearch);		
 		mListView = (ListView) findViewById(R.id.POI_List); 
-		
-		mListAdapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_white,
-				new ArrayList<String>(mPOIs.keySet()));
-		mListView.setAdapter(mListAdapter);
-		
+			
 		getPOIsFromWebService();
 		
 		//Listener
@@ -105,8 +101,7 @@ public class POIActivity extends Activity implements Constants{
     private class ItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        	String item = (String) mListView.getItemAtPosition(position);
-        	PoI selectedPoI = (PoI) mPOIs.get(item);
+        	PoI selectedPoI = (PoI) mListView.getItemAtPosition(position);
         	
             Intent result = new Intent();
             result.putExtra(EXTRA_NODE_ID,selectedPoI.getNodeId());
@@ -181,9 +176,7 @@ public class POIActivity extends Activity implements Constants{
 			
 			try {
 				List<PoI> pois = Service.getPoIsForMap(MAP_ID);
-				for (PoI n : pois){
-					mPOIs.put(n.toString(),n);	
-				}
+				mPOIs.addAll(pois);
 				return true;
 			} catch (WebServiceException e) {
 				JSONObject jObject = e.getJsonObject();
@@ -209,7 +202,11 @@ public class POIActivity extends Activity implements Constants{
 		protected void onPostExecute(final Boolean success) {
 			mTask = null;
 			showProgress(false);
-			if (!success) {
+			if (success) {
+				mListAdapter = new ArrayAdapter<PoI>(mContext, R.layout.simple_list_item_white, mPOIs);
+				mListView.setAdapter(mListAdapter);
+			}
+			else{
 				if (bShowDialog)
 					UserInfo.dialog(mContext, mUsername, getString(R.string.error_connection));
 			}				

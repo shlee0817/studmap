@@ -29,4 +29,10 @@ public class PoI {
 	public int getNodeId() {
 		return nodeId;
 	}
+	
+	@Override
+	public String toString(){
+		
+		return name + " - " + description;
+	}
 }
