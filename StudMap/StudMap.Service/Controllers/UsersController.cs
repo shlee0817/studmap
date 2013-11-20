@@ -140,6 +140,32 @@ namespace StudMap.Service.Controllers
             }
         }
 
+        /// <summary>
+        /// Nach dieser Zeit wird ein aktiver Benutzer als inaktiv erkannt und abgemeldet.
+        /// </summary>
+        private const int ACTIVE_USER_TIMEOUT_SECONDS = 15 * 60;
+
+        static internal void CheckActiveUsers()
+        {
+            try
+            {
+                using (var entities = new UserEntities())
+                {
+                    var timeout = DateTime.Now.AddSeconds(-ACTIVE_USER_TIMEOUT_SECONDS);
+                    var inactiveUsers = from user in entities.ActiveUsers
+                                        where user.LoginDate < timeout
+                                        select user;
+
+                    entities.ActiveUsers.RemoveRange(inactiveUsers);
+                    entities.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+            }
+        }
+
         #region Private Helpers
 
         private static bool ExistUserAlready(string userName, UserEntities entities)
