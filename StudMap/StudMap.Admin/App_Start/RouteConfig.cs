@@ -43,14 +43,13 @@ namespace StudMap.Admin.App_Start
 
             routes.MapRoute(
                 name: "GetNodeInformation",
-                url: "{controller}/{action}/{nodeId}/{readOnly}",
+                url: "{controller}/{action}/{nodeId}",
                 defaults:
                     new
                         {
                             controller = "Admin",
                             action = "GetNodeInformation",
-                            nodeId = UrlParameter.Optional,
-                            readOnly = UrlParameter.Optional
+                            nodeId = UrlParameter.Optional
                         }
                 );
         }
