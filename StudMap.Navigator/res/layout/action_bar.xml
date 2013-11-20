@@ -3,19 +3,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center">
-
-    <Spinner
-        android:id="@+id/levelSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </Spinner>
     
     <AutoCompleteTextView
         android:id="@+id/actionBarSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:ems="10"
+        android:ems="8"
         android:hint="Karte durchsuchen"
         android:imeOptions="actionSearch"
         android:inputType="textAutoComplete|textAutoCorrect"
@@ -23,4 +17,10 @@
         android:textColor="@android:color/black" >
     </AutoCompleteTextView>
 
+    <Spinner
+        android:id="@+id/levelSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </Spinner>
+    
 </LinearLayout>

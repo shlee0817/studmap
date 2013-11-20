@@ -41,8 +41,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import de.whs.studmap.data.Constants;
 import de.whs.studmap.data.DrawerItemEnum;
 import de.whs.studmap.data.Floor;
+import de.whs.studmap.data.Node;
 import de.whs.studmap.snippets.UserInfo;
 import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
@@ -55,7 +57,7 @@ public class MainActivity extends Activity {
     private ActionBarDrawerToggle mDrawerToggle;
     private LinearLayout mLeftDrawer;
     private ActionBar mActionBar;
-    private Spinner mLevelSpinner;
+    private Spinner mFloorSpinner;
 
     private CharSequence mTitle;
     private List<String> mItemTitles;
@@ -64,7 +66,8 @@ public class MainActivity extends Activity {
     private String mUserName = "";
     private static int mFloorID = 0;
     private List<Floor> mFloorList = new ArrayList<Floor>();
-    private GetFloorsTask mGetTasks = null;
+    private List<Node> mRoomList = new ArrayList<Node>();
+    private GetInitDataTask mGetTasks = null;
 
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;
@@ -99,12 +102,12 @@ public class MainActivity extends Activity {
                 R.string.drawer_close  /* "close drawer" description for accessibility */
                 ) {
             public void onDrawerClosed(View view) {
-            	mActionBar.setTitle("");
+            	mActionBar.setDisplayShowCustomEnabled(true);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle("StudMap");
+                mActionBar.setDisplayShowCustomEnabled(false);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -115,6 +118,7 @@ public class MainActivity extends Activity {
         }
         
         initializeActionBar();
+        getDataFromWebService();
     }
 
     @Override
@@ -285,7 +289,8 @@ public class MainActivity extends Activity {
             MapWebView.addJavascriptInterface(jsInterface, "jsinterface");
            
             // TODO Anhängen der floorID als URL Parameter
-            MapWebView.loadUrl("http://193.175.199.115/StudMapClient/");
+            MapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + mFloorID);
+            MapWebView.requestFocus();
             return rootView;
         }
     }
@@ -294,18 +299,6 @@ public class MainActivity extends Activity {
      * Initialize the custom Action Bar with an Spinner for selecting the Floor and an Textfield for Searching
      */
     public void initializeActionBar(){
-        //Example ArrayList for testing
-        String[] s = {"Mensa", "Bibliothek", "Pförtner", "Aquarium", "Daniel's Büro", "A1.1.10", "A1.1.9", "Physik Labor"};
-        ArrayList<String> list1 = new ArrayList<String>(Arrays.asList(s));
-        
-//TODO Holend er Räume aus dem Web        
-/*        try {
-        	List<Node> allRooms = new ArrayList<Node>();
-        	allRooms = Service.getAllRooms();
-		} catch (WebServiceException e) {
-			UserInfo.toast(this, "Fehler beim Laden der Räume.", false);
-			e.printStackTrace();
-		}*/
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -313,15 +306,15 @@ public class MainActivity extends Activity {
         mActionBar.setHomeButtonEnabled(true);
         //mActionBar.setIcon(R.drawable.ic_launcher);
         mActionBar.setTitle("");
-        
+
         // implement Layout action_bar.xml as custom Action Bar
         LayoutInflater inflator = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.action_bar, null);
         mActionBar.setCustomView(v);
-
-        ArrayAdapter<String> searchAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, list1);
+        
+        ArrayAdapter<Node> searchAdapter = new ArrayAdapter<Node>(this,
+                						android.R.layout.simple_list_item_1, mRoomList);
         AutoCompleteTextView textView = (AutoCompleteTextView) v
                 .findViewById(R.id.actionBarSearch);
         textView.setAdapter(searchAdapter);
@@ -329,28 +322,18 @@ public class MainActivity extends Activity {
         
         
         //Spinner for selecting the Level in the Action Bar
-        mLevelSpinner = (Spinner) findViewById(R.id.levelSpinner);
-        mLevelSpinner.requestFocus();
-        //String[] floors = {"Ebene 0", "Ebene 1", "Ebene 2"};
-        //ArrayList<String> floorList = new ArrayList<String>(Arrays.asList(floors));
-//TODO Holen der Floors aus dem Web
-        showProgress(true);
-        mGetTasks = new GetFloorsTask(getApplicationContext());
-        mGetTasks.execute((Void) null);
+        mFloorSpinner = (Spinner) findViewById(R.id.levelSpinner);
         
-
         
-        final Activity main = this;
         
-		mLevelSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+		mFloorSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
-//TODO Aktivieren der Floors
-/*				Floor floor = (Floor) mLevelSpinner.getItemAtPosition(pos);
-				mFloorID = floor.getId();*/
+				Floor floor = (Floor) mFloorSpinner.getItemAtPosition(pos);
+				mFloorID = floor.getId();
 				
-				String floor = (String) mLevelSpinner.getItemAtPosition(pos).toString();
-				UserInfo.toast(main, floor, true);
+				String floorName = mFloorSpinner.getItemAtPosition(pos).toString() + " mit ID: " + mFloorID;
+				UserInfo.toast(getApplicationContext(), floorName, true);
 				new MainFragment();
 			}
 			
@@ -358,6 +341,17 @@ public class MainActivity extends Activity {
 			public void onNothingSelected(AdapterView<?> parent){
 			}
 		});
+    }
+    
+    
+    public void getDataFromWebService(){
+    	if (mGetTasks == null){
+            showProgress(true);
+            mGetTasks = new GetInitDataTask(getApplicationContext());
+            mGetTasks.execute((Void) null);
+    	}
+    	else
+    		return;
     }
     
 	/**
@@ -404,20 +398,21 @@ public class MainActivity extends Activity {
 	}
     
     
-	public class GetFloorsTask extends AsyncTask<Void, Void, List<Floor>> {
+	public class GetInitDataTask extends AsyncTask<Void, Void, Boolean> {
 		private Context mContext = null;
 		private boolean bShowDialog = false;
 		
-		public GetFloorsTask(Context ctx){
+		public GetInitDataTask(Context ctx){
 			mContext = ctx;
 		}
 		
 		@Override
-		protected List<Floor> doInBackground(Void... params) {
+		protected Boolean doInBackground(Void... params) {
 			
 			try {
-				mFloorList.addAll(Service.getFloorsForMap(MAP_ID)); 
-				return null;
+				mFloorList.addAll(Service.getFloorsForMap(Constants.MAP_ID)); 
+				mRoomList.addAll(Service.getRoomsForMap(Constants.MAP_ID));
+				return true;
 			} catch (WebServiceException e) {
 				JSONObject jObject = e.getJsonObject();
 				
@@ -432,20 +427,24 @@ public class MainActivity extends Activity {
 			} catch (ConnectException e){
 				bShowDialog = true;
 			}
-			return null;
+			return false;
 		}
 
 		@Override
-		protected void onPostExecute(final List<Floor> floors) {
+		protected void onPostExecute(final Boolean success) {
 			mGetTasks = null;
 			showProgress(false);
-			
-	        // Create an ArrayAdapter using the string array and a default spinner layout
-	        ArrayAdapter<Floor> levelAdapter = new ArrayAdapter<Floor>(mContext, R.layout.simple_list_item_no_bg_font_white, mFloorList);
-	        // Specify the layout to use when the list of choices appears
-	        levelAdapter.setDropDownViewResource(R.layout.spinner_item_font_black);
-	        // Apply the adapter to the spinner
-	        mLevelSpinner.setAdapter(levelAdapter);	
+			if(success){
+				//Fill the Floor Spinner in the Action Bar
+		        ArrayAdapter<Floor> levelAdapter = new ArrayAdapter<Floor>(mContext, 
+		        									R.layout.simple_list_item_no_bg_font_white, mFloorList);
+		        levelAdapter.setDropDownViewResource(R.layout.simple_list_item_black);
+		        mFloorSpinner.setAdapter(levelAdapter);	
+		        
+			}
+			else
+				UserInfo.dialog(mContext, mUserName, getString(R.string.error_connection));
+	        
 		}
 
 		@Override
