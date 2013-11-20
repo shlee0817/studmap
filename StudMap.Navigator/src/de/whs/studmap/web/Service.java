@@ -56,12 +56,13 @@ public class Service implements Constants {
 		return true;
 	}
 	
-	public static List<PoI> getPOIs() throws WebServiceException, ConnectException{
+	public static List<PoI> getPoIsForMap(int mapId) throws WebServiceException, ConnectException{
 		List<PoI> poiList = new ArrayList<PoI>();
-		
-		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
+				
 		try {
-			JSONObject pois = httpGet(URL_MAPS, METHOD_GETPOIS);
+			JSONObject pois = httpGet(URL_MAPS, METHOD_GETPOIS, params);
 			JSONArray poiArray = pois.getJSONArray(RESPONSE_PARAM_LIST);
 			
 			for (int i = 0; i < poiArray.length(); i++){
@@ -77,7 +78,7 @@ public class Service implements Constants {
 		return poiList;
 	}
 	
-	public static List<Node> getRooms(int mapId) throws WebServiceException, ConnectException{
+	public static List<Node> getRoomsForMap(int mapId) throws WebServiceException, ConnectException{
 		List<Node> nodes = new ArrayList<Node>();
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
