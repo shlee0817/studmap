@@ -154,6 +154,7 @@
     <Content Include="Views\Admin\_Layer.cshtml" />
     <None Include="Properties\PublishProfiles\Live.pubxml" />
     <Content Include="Views\Admin\_NodeInformation.cshtml" />
+    <Content Include="Views\Admin\_ConnectedNodes.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

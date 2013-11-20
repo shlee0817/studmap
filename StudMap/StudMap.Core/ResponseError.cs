@@ -21,6 +21,7 @@
         #region Maps
         MapIdDoesNotExist = 201,
         FloorIdDoesNotExist = 202,
+        NodeIdDoesNotExist = 203,
         #endregion
 
         #region Navigation
