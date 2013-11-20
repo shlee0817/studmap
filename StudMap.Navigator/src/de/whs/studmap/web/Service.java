@@ -83,7 +83,7 @@ public class Service implements Constants {
 		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
 		
 		try {
-			JSONObject rooms = httpGet(URL_MAPS,METHOD_GETROOMS);
+			JSONObject rooms = httpGet(URL_MAPS,METHOD_GETROOMS,params);
 			JSONArray roomArray = rooms.getJSONArray(RESPONSE_PARAM_LIST);
 			
 			for (int i = 0; i < roomArray.length(); i++){
