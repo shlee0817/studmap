@@ -31,31 +31,33 @@ public final class R {
         public static final int search_icon=0x7f020004;
     }
     public static final class id {
-        public static final int POI_List=0x7f09000d;
-        public static final int POI_inputSearch=0x7f09000e;
+        public static final int POI_List=0x7f09000f;
+        public static final int POI_inputSearch=0x7f090010;
         public static final int actionBarSearch=0x7f090001;
-        public static final int action_register=0x7f090018;
-        public static final int action_search=0x7f090019;
-        public static final int content_frame=0x7f09000a;
-        public static final int drawer_layout=0x7f090009;
-        public static final int left_drawer=0x7f09000b;
-        public static final int left_drawer_listView=0x7f09000c;
+        public static final int action_register=0x7f09001a;
+        public static final int action_search=0x7f09001b;
+        public static final int content_frame=0x7f09000c;
+        public static final int drawer_layout=0x7f09000b;
+        public static final int init_status=0x7f090009;
+        public static final int init_status_message=0x7f09000a;
+        public static final int left_drawer=0x7f09000d;
+        public static final int left_drawer_listView=0x7f09000e;
         public static final int levelSpinner=0x7f090000;
         public static final int login=0x7f090007;
         public static final int login_button=0x7f090008;
         public static final int login_form=0x7f090004;
         public static final int login_status=0x7f090002;
         public static final int login_status_message=0x7f090003;
-        public static final int map_web_view=0x7f090017;
+        public static final int map_web_view=0x7f090019;
         public static final int password=0x7f090006;
-        public static final int register=0x7f090015;
-        public static final int register_button=0x7f090016;
-        public static final int register_form=0x7f090011;
-        public static final int register_password1=0x7f090013;
-        public static final int register_password2=0x7f090014;
-        public static final int register_status=0x7f09000f;
-        public static final int register_status_message=0x7f090010;
-        public static final int register_username=0x7f090012;
+        public static final int register=0x7f090017;
+        public static final int register_button=0x7f090018;
+        public static final int register_form=0x7f090013;
+        public static final int register_password1=0x7f090015;
+        public static final int register_password2=0x7f090016;
+        public static final int register_status=0x7f090011;
+        public static final int register_status_message=0x7f090012;
+        public static final int register_username=0x7f090014;
         public static final int userName=0x7f090005;
     }
     public static final class layout {
@@ -66,7 +68,9 @@ public final class R {
         public static final int activity_register=0x7f030004;
         public static final int fragment_main=0x7f030005;
         public static final int simple_list_item_black=0x7f030006;
-        public static final int simple_list_item_white=0x7f030007;
+        public static final int simple_list_item_no_bg_font_white=0x7f030007;
+        public static final int simple_list_item_white=0x7f030008;
+        public static final int spinner_item_font_black=0x7f030009;
     }
     public static final class menu {
         public static final int login=0x7f080000;

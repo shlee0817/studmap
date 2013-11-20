@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -14,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -33,8 +40,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import de.whs.studmap.data.DrawerItemEnum;
+import de.whs.studmap.data.Floor;
 import de.whs.studmap.snippets.UserInfo;
+import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
 import de.whs.studmap.web.WebServiceException;
 
@@ -52,9 +62,13 @@ public class MainActivity extends Activity {
     
     private boolean mLoggedIn = false;
     private String mUserName = "";
+    private static int mFloorID = 0;
+    private List<Floor> mFloorList = new ArrayList<Floor>();
+    private GetFloorsTask mGetTasks = null;
 
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;
+    private final int MAP_ID = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,14 +134,9 @@ public class MainActivity extends Activity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
-        /* case R.id.action_websearch:
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-            }
-            return true;
-        */
+        case R.id.action_search:
+        	  UserInfo.dialog(this, mUserName, "Processing Search....");
+        	  return false;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -256,7 +265,7 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * Fragment that appears in the "content_frame", shows a planet
+     * Fragment that appears in the "MainFragment", shows the Map/Image
      */
     public static class MainFragment extends Fragment {
         public static final String ARG_MAIN_NUMBER = "item_number";
@@ -269,62 +278,35 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            /*
-            int i = getArguments().getInt(ARG_MAIN_NUMBER);            
-            String planet = getResources().getStringArray(R.array.menue_item_array)[i];
-
-            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-                            "drawable", getActivity().getPackageName());
-            */
-            
-            final Context c = rootView.getContext();
-            /*
-            int i = getArguments().getInt(ARG_MAIN_NUMBER);            
-            String planet = getResources().getStringArray(R.array.menue_item_array)[i];
-
-            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-                            "drawable", getActivity().getPackageName());
-            */
             
             final WebView MapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
             MapWebView.setWebViewClient(new WebViewClient());
-            JavaScriptInterface jsInterface = new JavaScriptInterface(c);
+            JavaScriptInterface jsInterface = new JavaScriptInterface(rootView.getContext());
             MapWebView.getSettings().setJavaScriptEnabled(true);
             MapWebView.addJavascriptInterface(jsInterface, "jsinterface");
            
-            MapWebView.loadUrl("file:///android_asset/index.html");
-            
-         
-            
-           // MapWebView.loadUrl("javascript:showPath([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}])");
-          //  MapWebView.loadUrl("javascript:alert('Test')");
-            
-            
-            new Thread() {
-                @Override
-                public void run() { 
-                	try {
-						Thread.sleep(4000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-                	MapWebView.loadUrl("javascript:" + "showPath([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}])");
-                	MapWebView.loadUrl("javascript:" + "showCircles([{x:100,y:200},{x:120,y:210},{x:130,y:220}])");
-               
-                	 
-                }
-            }.start();
-           // ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
-           // getActivity().setTitle(planet);
+            // TODO Anhängen der floorID als URL Parameter
+            MapWebView.loadUrl("http://193.175.199.115/StudMapClient/");
             return rootView;
         }
     }
     
+    /**
+     * Initialize the custom Action Bar with an Spinner for selecting the Floor and an Textfield for Searching
+     */
     public void initializeActionBar(){
         //Example ArrayList for testing
         String[] s = {"Mensa", "Bibliothek", "Pförtner", "Aquarium", "Daniel's Büro", "A1.1.10", "A1.1.9", "Physik Labor"};
         ArrayList<String> list1 = new ArrayList<String>(Arrays.asList(s));
+        
+//TODO Holend er Räume aus dem Web        
+/*        try {
+        	List<Node> allRooms = new ArrayList<Node>();
+        	allRooms = Service.getAllRooms();
+		} catch (WebServiceException e) {
+			UserInfo.toast(this, "Fehler beim Laden der Räume.", false);
+			e.printStackTrace();
+		}*/
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -346,29 +328,131 @@ public class MainActivity extends Activity {
         textView.setAdapter(searchAdapter);
         textView.setThreshold(1);
         
+        
         //Spinner for selecting the Level in the Action Bar
         mLevelSpinner = (Spinner) findViewById(R.id.levelSpinner);
-        String[] levels = {"Ebene 0", "Ebene 1", "Ebene 2"};
-        ArrayList<String> levelList = new ArrayList<String>(Arrays.asList(levels));
-       
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<String> levelAdapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_black, levelList);
-        // Specify the layout to use when the list of choices appears
-        levelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        mLevelSpinner.setAdapter(levelAdapter);
+        mLevelSpinner.requestFocus();
+        //String[] floors = {"Ebene 0", "Ebene 1", "Ebene 2"};
+        //ArrayList<String> floorList = new ArrayList<String>(Arrays.asList(floors));
+//TODO Holen der Floors aus dem Web
+        showProgress(true);
+        mGetTasks = new GetFloorsTask(getApplicationContext());
+        mGetTasks.execute((Void) null);
+        
+
         
         final Activity main = this;
+        
 		mLevelSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
-				UserInfo.toast(main, "pos: " + pos + ", ID: " + id, true);
+//TODO Aktivieren der Floors
+/*				Floor floor = (Floor) mLevelSpinner.getItemAtPosition(pos);
+				mFloorID = floor.getId();*/
+				
+				String floor = (String) mLevelSpinner.getItemAtPosition(pos).toString();
+				UserInfo.toast(main, floor, true);
+				new MainFragment();
 			}
 			
 			@Override
 			public void onNothingSelected(AdapterView<?> parent){
-				
 			}
 		});
     }
+    
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		final View mInitStatusView = (View) findViewById(R.id.init_status);
+		TextView mInitStatusMessageView = (TextView) findViewById(R.id.init_status_message);
+		
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			mInitStatusView.setVisibility(View.VISIBLE);
+			mInitStatusView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mInitStatusView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+
+			mDrawerLayout.setVisibility(View.VISIBLE);
+			mDrawerLayout.animate().setDuration(shortAnimTime)
+					.alpha(show ? 0 : 1)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mDrawerLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mInitStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mDrawerLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+		}
+	}
+    
+    
+	public class GetFloorsTask extends AsyncTask<Void, Void, List<Floor>> {
+		private Context mContext = null;
+		private boolean bShowDialog = false;
+		
+		public GetFloorsTask(Context ctx){
+			mContext = ctx;
+		}
+		
+		@Override
+		protected List<Floor> doInBackground(Void... params) {
+			
+			try {
+				mFloorList.addAll(Service.getFloorsForMap(MAP_ID)); 
+				return null;
+			} catch (WebServiceException e) {
+				JSONObject jObject = e.getJsonObject();
+				
+				try {
+					int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
+					
+					switch (errorCode) {
+					case ResponseError.DatabaseError:
+						bShowDialog = true;
+					}
+				} catch (JSONException ignore) {}
+			} catch (ConnectException e){
+				bShowDialog = true;
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final List<Floor> floors) {
+			mGetTasks = null;
+			showProgress(false);
+			
+	        // Create an ArrayAdapter using the string array and a default spinner layout
+	        ArrayAdapter<Floor> levelAdapter = new ArrayAdapter<Floor>(mContext, R.layout.simple_list_item_no_bg_font_white, mFloorList);
+	        // Specify the layout to use when the list of choices appears
+	        levelAdapter.setDropDownViewResource(R.layout.spinner_item_font_black);
+	        // Apply the adapter to the spinner
+	        mLevelSpinner.setAdapter(levelAdapter);	
+		}
+
+		@Override
+		protected void onCancelled() {
+			mGetTasks = null;
+			showProgress(false);
+		}
+	}
 }
