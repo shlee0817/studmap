@@ -176,6 +176,20 @@ namespace StudMap.Admin.Controllers
             return PartialView("_NodeInformation", nodeInformation.Object);
         }
 
+        [Authorize(Roles = "Admins")]
+        [HttpGet]
+        public ActionResult GetConnectedNodes(int nodeId)
+        {
+            var mapsCtrl = new MapsController();
+            ListResponse<Node> connectedNodes = mapsCtrl.GetConnectedNodes(nodeId);
+
+            ViewBag.StartNodeId = nodeId;
+            if (connectedNodes.Status == RespsonseStatus.Ok)
+                return PartialView("_ConnectedNodes", connectedNodes.List);
+            else
+                return View("Error");
+        }
+
         #endregion
     }
 }

@@ -644,6 +644,51 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        public ListResponse<Node> GetConnectedNodes(int nodeId)
+        {
+            var result = new ListResponse<Node>();
+
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    bool nodeExists = entities.Nodes.Any(n => n.Id == nodeId);
+                    if (!nodeExists)
+                    {
+                        result.SetError(ResponseError.NodeIdDoesNotExist);
+                        return result;
+                    }
+
+                    var edges = from edge in entities.Edges
+                                where edge.NodeStartId == nodeId || edge.NodeEndId == nodeId
+                                select edge;
+
+                    HashSet<int> connectedNodeIds = new HashSet<int>();
+                    foreach (var edge in edges)
+                    {
+                        connectedNodeIds.Add(edge.NodeStartId);
+                        connectedNodeIds.Add(edge.NodeEndId);
+                    }
+                    connectedNodeIds.Remove(nodeId);
+
+                    var connectedNodes = from node in entities.Nodes
+                                         where connectedNodeIds.Contains(node.Id)
+                                         select node;
+
+                    foreach (var node in connectedNodes)
+                        result.List.Add(NodeFromDb(node));
+                }
+            }
+            catch (DataException ex)
+            {
+                result.SetError(ResponseError.DatabaseError);
+                result.ErrorMessage = ex.StackTrace;
+                ErrorSignal.FromCurrentContext().Raise(ex);
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Layer: Navigation

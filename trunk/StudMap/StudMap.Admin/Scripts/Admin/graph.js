@@ -135,6 +135,57 @@
         return null;
     }
 
+    function connectFloorsDialog(nodeId) {
+        $.ajax({
+            url: window.basePath + 'Admin/GetConnectedNodes?nodeId=' + nodeId,
+            success: function (result) {
+                $("#NodeInformationDialog").html(result);
+                $('#NodeInformationDialog').dialog({
+                    dialogClass: "no-close",
+                    modal: true,
+                    appendTo: "#body",
+                    autoHeight: true,
+                    title: "Knoteninformationen (" + nodeId + ")",
+                    buttons: {
+                        Speichern: function () {
+                            var displayName = $('input[id=inputDisplayName]').val();
+                            var roomName = $('input[id=inputRoomName]').val();
+                            var poiTypeId = $('#inputPoiTypeId').val();
+                            var poiDescription = $('textarea#inputPoI').val();
+                            var qrCode = $('input[id=inputQRCode]').val();
+                            var nfcTag = $('input[id=inputNFCTag]').val();
+
+                            var obj = {
+                                nodeId: $('input[id=nodeId]').val(),
+                                displayName: displayName,
+                                roomName: roomName,
+                                poiTypeId: poiTypeId,
+                                poiDescription: poiDescription,
+                                qrCode: qrCode,
+                                nfcTag: nfcTag
+                            };
+
+                            $.ajax({
+                                url: window.basePath + 'Admin/SaveNodeInformation',
+                                data: JSON.stringify(obj),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                type: "post",
+                                success: function () {
+                                    init(window.imageUrl);
+                                }
+                            });
+                            $(this).dialog("close");
+                        },
+                        Abbrechen: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     graph.start = function() {
         link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
         link.enter().insert("path", ".node").attr("class", "link").attr("d", function(d) {
@@ -150,7 +201,11 @@
             .attr("cy", function(d) { return d.y; })
             .attr("r", function () { return 4; })
             .on('mousedown', function(d) {
-                if (d3.event.ctrlKey) return;
+                if (d3.event.shiftKey) {
+                    console.log("Shift-Click pressed");
+                    connectFloorsDialog(d.id);
+                    return;
+                }
 
                 mousedownNode = d;
 
@@ -384,5 +439,18 @@ function saveGraph() {
         }
     });
 }
+
+function deleteEdge(startNodeId, endNodeId) {
+    console.log("deleteEdge(" + startNodeId + ", " + endNodeId + ")");
+    // TODO: Gelöschte Kanten zu einer Liste hinzufügen
+}
+
+function addNewEdge(startNodeId) {
+    var endNodeId = $('#inputNewEdge').val();
+    console.log("addNewEdge(" + startNodeId + ", " + endNodeId + ")");
+    // TODO: Hinzugefügte Kanten zu einer Liste hinzufügen
+}
+
+// TODO: Gelöschte + Hinzugefügte Kanten an WebService weiterleiten
 
 init(imageUrl);
