@@ -5,11 +5,11 @@ namespace StudMap.Core.WLAN
     public class Fingerprint
     {
         public int NodeId { get; set; }
-        public IEnumerable<AccessPoint> AccessPoints { get; set; }
+        public IEnumerable<AccessPointScan> AccessPointScans { get; set; }
 
         public Fingerprint()
         {
-            AccessPoints = new List<AccessPoint>();
+            AccessPointScans = new List<AccessPointScan>();
         }
     }
 }

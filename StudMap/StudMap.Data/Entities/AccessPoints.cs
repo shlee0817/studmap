@@ -16,12 +16,12 @@ namespace StudMap.Data.Entities
     {
         public AccessPoints()
         {
-            this.Fingerprints = new HashSet<Fingerprints>();
+            this.AccessPointScans = new HashSet<AccessPointScans>();
         }
     
         public int Id { get; set; }
         public string MAC { get; set; }
     
-        public virtual ICollection<Fingerprints> Fingerprints { get; set; }
+        public virtual ICollection<AccessPointScans> AccessPointScans { get; set; }
     }
 }
