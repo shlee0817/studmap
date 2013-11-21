@@ -180,6 +180,25 @@ Beispiel:
 }
 \end{lstlisting}
 
+\subsection{RoomAndPoI}
+\label{object:RoomAndPoI}
+Enthält Informationen zu einem Raum und dem zugeordneten PoI.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Room & Rauminformationen (s. \nameref{object:Room}). \\ 
+\hline PoI & PoI-Informationen (s. \nameref{object:PoI}). \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Room": {...},
+  "PoI": {...}
+}
+\end{lstlisting}
+
 
 \subsection{NodeInformation}
 \label{object:NodeInformation}
@@ -544,7 +563,7 @@ Parameter:\\
 \hline 
 \end{tabularx} 
 
-Rückgabewert: \nameref{ListResponse}, \nameref{object:PoI}
+Rückgabewert: \nameref{ListResponse}, \nameref{object:RoomAndPoI}
 
 \subsection{GetRoomsForMap}
 \label{service:GetRoomsForMap}
