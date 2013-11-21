@@ -54,49 +54,89 @@
 
     
 <script id="demo-code" type="text/javascript">
-    var floorID = 1011;
-    var first = true;
-    var x1, x2, y1, y2;
-    var KreisRadius = 2;
-    var linienDicke = 2;
+   
+    var floorID = '@Request.Params["floorID"]';
+    var first=true;
+    var x1,x2,y1,y2;
+    var KreisRadius=2;
+    var linienDicke=2;
 
-
-    var xscale = d3.scale.linear()
-                   .domain([0, 1024])
-                   .range([0, 500]),
-        yscale = d3.scale.linear()
-                   .domain([0, 900])
-                   .range([0, 500]),
-        map = d3.floorplan().xScale(xscale).yScale(yscale),
-        imagelayer = d3.floorplan.imagelayer(),
-        mapdata = {};
+    var domainStartX = 0, domainEndX = 1;
+    var rangeStartX = 0, rangeEndX;
+    var domainStartY = 0, domainEndY = 1;
+    var rangeStartY = 0, rangeEndY;
+	
 
     var svgContainer = d3.select("#svgMap")
 
+		
+    d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanImage/?floorid="+floorID, function(data) {
+	
+        //var newImg = new Image();
+        //newImg.src =  data.Object;
+		
+        var newImg = new Image();
+        newImg.onload = function(){ 
+		
+		
+            /*var height = newImg.height;
+            var width = newImg.width;
+            alert ('The image size is '+width+'*'+height);*/
+	
+            imageWidth = newImg.width;
+            imageHeight = newImg.height;
+     
+            width = window.innerWidth;
+            height =imageHeight / imageWidth * width;
+            rangeEndX = width; //window.innerWidth;
+            rangeEndY = height; //window.innerHeight;
+            //3837 × 3371
+            //4549 × 3216
+            var  xscale = d3.scale.linear()
+                        .domain([domainStartX, domainEndX])
+                        .range([rangeStartX, rangeEndX]),
+                    yscale = d3.scale.linear()
+                        .domain([domainStartY, domainEndY])
+                        .range([rangeStartY, rangeEndY]),
+                map = d3.floorplan().xScale(xscale).yScale(yscale),
+                imagelayer = d3.floorplan.imagelayer(),
+                mapdata = {};
+		
+		
+				
+			
 
-    d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanImage/?floorid=" + floorID, function (data) {
+		
+            mapdata[imagelayer.id()] = [{
+                url: data.Object,
+                x: 0,
+                y: 0,
+                height: domainEndX,
+                width: domainEndY
+            }];
+            map.addLayer(imagelayer);
+            svgContainer.datum(mapdata).call(map);
+		
+            d3.select(".map-layers").append("g").attr("id","lines");
+            d3.select(".map-layers").append("g").attr("id","circles");
+	
+            d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanData/?floorid="+floorID, function(data) {
+		
+                for(var i = 0; i< data.Object.Graph.Nodes.length;i++)
+                {
+                    showCircles([{x:data.Object.Graph.Nodes[i].X*rangeEndX,y:data.Object.Graph.Nodes[i].Y*rangeEndY}]);
+                }
+            });
+		
+        };
+        // handle failure
+        newImg.onerror = function(){
 
-        //alert(data.Object);
-        mapdata[imagelayer.id()] = [{
-            url: data.Object,
-            x: 0,
-            y: 0,
-            height: 900,
-            width: 1024
-        }];
-        map.addLayer(imagelayer);
-        svgContainer.datum(mapdata).call(map);
-
-        d3.select(".map-layers").append("g").attr("id", "lines");
-        d3.select(".map-layers").append("g").attr("id", "circles");
-
-        d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanData/?floorid=" + floorID, function (data) {
-
-            for (var i = 0; i < data.Object.Graph.Nodes.length; i++) {
-                showCircles([{ x: data.Object.Graph.Nodes[i].X * 500, y: data.Object.Graph.Nodes[i].Y * 450 + 25 }]);
-            }
-        });
-
+        };
+        newImg.src = data.Object;
+		
+		
+	 
     });
 
     //showCircles([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}]);
