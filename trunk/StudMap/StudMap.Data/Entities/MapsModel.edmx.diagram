@@ -24,11 +24,13 @@
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_Nodes" />
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_PoIs" />
         <AssociationConnector Association="StudMapModel.FK_PoIs_PoiTypes" />
-        <EntityTypeShape EntityType="StudMapModel.AccessPoints" Width="1.5" PointX="8.25" PointY="1.25" />
-        <EntityTypeShape EntityType="StudMapModel.Fingerprints" Width="1.5" PointX="10.5" PointY="4.875" />
+        <EntityTypeShape EntityType="StudMapModel.AccessPoints" Width="1.5" PointX="8.7773230563743621" PointY="23.668656449610673" />
+        <EntityTypeShape EntityType="StudMapModel.AccessPointScans" Width="1.5" PointX="2.4042998414506669" PointY="10.235884104965201" />
+        <EntityTypeShape EntityType="StudMapModel.Fingerprints" Width="1.5" PointX="2.45720549228471" PointY="22.07451298370702" />
         <AssociationConnector Association="StudMapModel.FK_Fingerprints_AccessPoints" />
+        <AssociationConnector Association="StudMapModel.FK_AccessPointScans_Fingerprints" />
         <AssociationConnector Association="StudMapModel.FK_Fingerprints_Nodes" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

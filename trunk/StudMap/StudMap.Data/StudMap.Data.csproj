@@ -67,6 +67,9 @@
     <Compile Include="Entities\AccessPoints.cs">
       <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\AccessPointScans.cs">
+      <DependentUpon>MapsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\ActiveUsers.cs">
       <DependentUpon>UsersModel.tt</DependentUpon>
     </Compile>
