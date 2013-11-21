@@ -1,0 +1,23 @@
+﻿@using StudMap.Core.Graph
+@model List<Node>
+@{
+    Layout = null;
+}
+
+<h1>Verbundene Knoten</h1>
+
+<div class="table">
+
+@foreach (var node in Model)
+{
+    <div id="node_@node.Id" class="tableColumn">
+        Knoten @node.Id <button onclick="deleteEdge(@ViewBag.StartNodeId, @node.Id);">X</button>
+    </div>
+}
+
+    <div id="node_new" class="tableColumn">
+        <input id="inputNewEdge" value="" class="contextInputField" />
+        <button id="addNewEdge" onclick="addNewEdge(@ViewBag.StartNodeId)">Verbinden</button>
+    </div>
+
+</div>
