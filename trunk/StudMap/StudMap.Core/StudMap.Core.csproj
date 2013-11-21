@@ -47,6 +47,7 @@
     <Compile Include="Information\PoI.cs" />
     <Compile Include="Information\PoiType.cs" />
     <Compile Include="Information\Room.cs" />
+    <Compile Include="Information\RoomAndPoI.cs" />
     <Compile Include="ListResponse.cs" />
     <Compile Include="Maps\Floor.cs" />
     <Compile Include="Maps\Map.cs" />

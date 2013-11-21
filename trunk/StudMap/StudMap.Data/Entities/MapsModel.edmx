@@ -31,7 +31,9 @@
       [PoisForMap].[PoiTypeName] AS [PoiTypeName], 
       [PoisForMap].[PoiId] AS [PoiId], 
       [PoisForMap].[PoiDescription] AS [PoiDescription], 
-      [PoisForMap].[NodeId] AS [NodeId]
+      [PoisForMap].[NodeId] AS [NodeId], 
+      [PoisForMap].[DisplayName] AS [DisplayName], 
+      [PoisForMap].[RoomName] AS [RoomName]
       FROM [dbo].[PoisForMap] AS [PoisForMap]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.Store.FK_Edges_EndNodes">
@@ -198,6 +200,8 @@
           <Property Name="PoiId" Type="int" Nullable="false" />
           <Property Name="PoiDescription" Type="nvarchar(max)" />
           <Property Name="NodeId" Type="int" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <Association Name="FK_Edges_EndNodes">
           <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="1" />
@@ -527,6 +531,8 @@
           <Property Type="Int32" Name="PoiId" Nullable="false" />
           <Property Type="String" Name="PoiDescription" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="NodeId" Nullable="false" />
+          <Property Type="String" Name="DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Edges_EndNodes">
           <End Type="StudMapModel.Nodes" Role="Nodes" Multiplicity="1" />
@@ -782,6 +788,8 @@
           <EntitySetMapping Name="PoisForMap">
             <EntityTypeMapping TypeName="StudMapModel.PoisForMap">
               <MappingFragment StoreEntitySet="PoisForMap">
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
                 <ScalarProperty Name="NodeId" ColumnName="NodeId" />
                 <ScalarProperty Name="PoiDescription" ColumnName="PoiDescription" />
                 <ScalarProperty Name="PoiId" ColumnName="PoiId" />
