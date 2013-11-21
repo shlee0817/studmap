@@ -13,18 +13,18 @@ public class JavaScriptService {
 	//JavaScript Funktionsaufruf: [WebView.loadURL("javaScript:Funktiosnname(param0, param1,...)");]
 	
 	public void sendTarget(int nodeID){
-		//mapView.loadUrl("javascript:");
+		mapView.loadUrl("javascript:highlightPoint(" + nodeID + ", yellow)");
 	}
 	
 	public void sendStart(int nodeID){
-		//mapView.loadUrl("javascript:");
+		mapView.loadUrl("javascript:setStartPunkt(" + nodeID + ")");
 	}
 	
 	public void sendDestination(int nodeID){
-		//mapView.loadUrl("javascript:");
+		mapView.loadUrl("javascript:setEndPunkt(" + nodeID + ")");
 	}
 	
-	public void resetMap(int mapID){
-		//mapView.loadUrl("javascript:");
+	public void resetMap(){
+		mapView.loadUrl("javascript:resetMap()");
 	}
 }
