@@ -689,6 +689,7 @@ namespace StudMap.Service.Controllers
                                     };
                     }
 
+                    var node = entities.Nodes.First(n => n.Id == nodeId);
                     // Ergebnis aus der DB in Rückgabe Objekt schreiben
                     result.Object = new NodeInformation
                         {
@@ -699,10 +700,10 @@ namespace StudMap.Service.Controllers
                             QRCode = nodeInformation.QRCode,
                             Node = new Node
                                 {
-                                    FloorId = nodeInformation.Nodes.FloorId,
-                                    Id = nodeInformation.Nodes.Id,
-                                    X = nodeInformation.Nodes.X,
-                                    Y = nodeInformation.Nodes.Y
+                                    FloorId = node.FloorId,
+                                    Id = node.Id,
+                                    X = node.X,
+                                    Y = node.Y
                                 }
                         };
                 }
