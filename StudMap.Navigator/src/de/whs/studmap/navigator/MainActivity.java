@@ -84,6 +84,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadActivity();
+    }
+    
+    public void loadActivity(){
         setContentView(R.layout.activity_main);
         
         mItemTitles =new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.menue_item_array)));
@@ -121,9 +125,9 @@ public class MainActivity extends Activity {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
+
+        loadMainFragment();
+
         
         initializeActionBar();
         getDataFromWebService();
@@ -170,8 +174,6 @@ public class MainActivity extends Activity {
     	super.onDestroy();
     }
     
-    
-
     /**
      *  The click listener for ListView in the navigation drawer 
      *  */
@@ -186,22 +188,7 @@ public class MainActivity extends Activity {
     	
     	DrawerItemEnum sel_position = DrawerItemEnum.values()[position];
     	
-    	switch (sel_position){
-    	case MAP:
-	        // update the main content by replacing fragments
-	        Fragment fragment = new MainFragment();
-	        Bundle args = new Bundle();
-	        args.putInt(MainFragment.ARG_MAIN_NUMBER, position);
-	        fragment.setArguments(args);
-	
-	        FragmentManager fragmentManager = getFragmentManager();
-	        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-	        
-	        // update selected item and title, then close the drawer
-	        mDrawerListView.setItemChecked(position, true);
-	        mDrawerLayout.closeDrawer(mLeftDrawer);
-    		break;
-    		
+    	switch (sel_position){    		
     	case LOG_IN_OUT:
     		if (mLoggedIn){
     			try {
@@ -224,6 +211,8 @@ public class MainActivity extends Activity {
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		
+    	case RELOAD:
+    		loadActivity();
     	default:
     		UserInfo.toast(this,"Auswahl nicht gefunden!", false);
     		break;
@@ -291,6 +280,18 @@ public class MainActivity extends Activity {
 			} 
 
     }
+    
+    
+    public void loadMainFragment(){
+        // update the main content by replacing fragments
+        Fragment fragment = new MainFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+    }
+
 
     /**
      * Fragment that appears in the "MainFragment", shows the Map/Image
@@ -449,6 +450,8 @@ public class MainActivity extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			
 			try {
+				mFloorList.clear();
+				mRoomList.clear();
 				mFloorList.addAll(Service.getFloorsForMap(Constants.MAP_ID)); 
 				mRoomList.addAll(Service.getRoomsForMap(Constants.MAP_ID));
 				return true;

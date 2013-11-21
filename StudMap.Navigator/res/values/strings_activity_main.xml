@@ -20,10 +20,17 @@
     <string name="app_name">StudMap Navigator</string>
 
     <string-array name="menue_item_array">
-        <item>Karte</item>
         <item>Anmelden</item>
         <item>Point of Interest</item>
         <item>Einstellungen</item>
+        <item>Neu Laden</item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
         <item>Impressum</item>
     </string-array>
     
