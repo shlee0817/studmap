@@ -62,6 +62,7 @@ public class MainActivity extends Activity {
     private ActionBar mActionBar;
     private Spinner mFloorSpinner;
     private AutoCompleteTextView mSearchTextView;
+    private static WebView mMapWebView;
     
     private CharSequence mTitle;
     private List<String> mItemTitles;
@@ -88,6 +89,7 @@ public class MainActivity extends Activity {
         mDrawerListView = (ListView) findViewById(R.id.left_drawer_listView);
         mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
         mActionBar = getActionBar();
+
         
 
         // set a custom shadow that overlays the main content when the drawer opens
@@ -303,17 +305,22 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            
-            final WebView MapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
-            MapWebView.setWebViewClient(new WebViewClient());
+          
+            mMapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
+            mMapWebView.setWebViewClient(new WebViewClient());
             JavaScriptInterface jsInterface = new JavaScriptInterface(rootView.getContext());
-            MapWebView.getSettings().setJavaScriptEnabled(true);
-            MapWebView.addJavascriptInterface(jsInterface, "jsinterface");
-           
-            MapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + mSelectedFloorID);
-            MapWebView.requestFocus();
+            mMapWebView.getSettings().setJavaScriptEnabled(true);
+            mMapWebView.addJavascriptInterface(jsInterface, "jsinterface");
+
+            loadURLtoMapWebView();
+            
             return rootView;
         }
+    }
+    
+    public static void loadURLtoMapWebView(){
+    	mMapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + mSelectedFloorID);
+        mMapWebView.requestFocus();
     }
     
     /**
@@ -359,9 +366,9 @@ public class MainActivity extends Activity {
 				Floor floor = (Floor) mFloorSpinner.getItemAtPosition(pos);
 				mSelectedFloorID = floor.getId();
 				
-				String floorName = mFloorSpinner.getItemAtPosition(pos).toString() + " mit ID: " + mSelectedFloorID;
+				String floorName = floor.toString() + " mit ID: " + mSelectedFloorID;
 				UserInfo.toast(getApplicationContext(), floorName, true);
-				new MainFragment();
+				loadURLtoMapWebView();
 			}
 			
 			@Override
@@ -468,7 +475,8 @@ public class MainActivity extends Activity {
 		        												R.layout.simple_list_item_no_bg_font_white, mFloorList);
 		        levelAdapter.setDropDownViewResource(R.layout.simple_list_item_black);
 		        mFloorSpinner.setAdapter(levelAdapter);	
-		        
+		        mSelectedFloorID = ((Floor) mFloorSpinner.getSelectedItem()).getId();
+	            loadURLtoMapWebView();	        
 			}
 			else
 				mConnError = true;
