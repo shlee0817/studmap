@@ -1,3 +1,179 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "StudMap Client";
 }
+@section scripts{
+    <script type="text/javascript">
+    
+    </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.floorplan.min.js")"></script>
+
+
+    <style type="text/css">
+	
+	
+	body {
+	  font-size: 14px;
+	  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	  /*margin: 50px auto 20px;
+	  width: 720px;*/
+	  background: #fcfcfc;
+	 /* line-height: 1.45em;*/
+	 margin:0;
+	}
+	a {
+	  color: #555;
+	}
+	a:hover {
+	  color: #000;
+	}
+	ul {
+	  margin: 0 ;
+	  padding: 0;
+	}
+	div.code {
+		border: 1px solid #ccc;
+		background: #eee;
+		/*margin: 10px 0 10px 0;
+		padding: 10px;
+		width: 720px;*/
+	}
+	
+	.map-controls
+	{
+	display:none;
+	}
+</style>
+
+
+    <div id="map">
+    <svg id="svgMap" height="100%" width="100%"></svg>
+    </div>
+
+
+
+    
+<script id="demo-code" type="text/javascript">
+    var floorID = 1011;
+    var first = true;
+    var x1, x2, y1, y2;
+    var KreisRadius = 2;
+    var linienDicke = 2;
+
+
+    var xscale = d3.scale.linear()
+                   .domain([0, 1024])
+                   .range([0, 500]),
+        yscale = d3.scale.linear()
+                   .domain([0, 900])
+                   .range([0, 500]),
+        map = d3.floorplan().xScale(xscale).yScale(yscale),
+        imagelayer = d3.floorplan.imagelayer(),
+        mapdata = {};
+
+    var svgContainer = d3.select("#svgMap")
+
+
+    d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanImage/?floorid=" + floorID, function (data) {
+
+        //alert(data.Object);
+        mapdata[imagelayer.id()] = [{
+            url: data.Object,
+            x: 0,
+            y: 0,
+            height: 900,
+            width: 1024
+        }];
+        map.addLayer(imagelayer);
+        svgContainer.datum(mapdata).call(map);
+
+        d3.select(".map-layers").append("g").attr("id", "lines");
+        d3.select(".map-layers").append("g").attr("id", "circles");
+
+        d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanData/?floorid=" + floorID, function (data) {
+
+            for (var i = 0; i < data.Object.Graph.Nodes.length; i++) {
+                showCircles([{ x: data.Object.Graph.Nodes[i].X * 500, y: data.Object.Graph.Nodes[i].Y * 450 + 25 }]);
+            }
+        });
+
+    });
+
+    //showCircles([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}]);
+
+    function clearMap() {
+
+        var div = document.getElementById('circles');
+        while (div.firstChild) {
+            div.removeChild(div.firstChild);
+        }
+        var div = document.getElementById('lines');
+        while (div.firstChild) {
+            div.removeChild(div.firstChild);
+        }
+    }
+
+    function circle_click(evt) {
+        var circle = evt.target;
+        if (window.jsinterface) {
+            window.jsinterface.punkt();
+        }
+
+        //clearMap();
+
+        if (circle.r.animVal.value == 2)
+            circle.setAttribute("r", 5);
+        else
+            circle.setAttribute("r", 2);
+    }
+
+    function showPath(PathAsArray) {
+
+
+        if (PathAsArray.length < 2)
+            return;
+
+
+        for (var i = 0; i < PathAsArray.length - 1; i++) {
+            // element = PathAsArray[i];
+            d3.select("#circles").append("circle")
+          .attr("cx", PathAsArray[i].x)
+          .attr("cy", PathAsArray[i].y)
+          .attr("r", KreisRadius);
+
+            d3.select("#lines").append("line")
+              .attr("x1", PathAsArray[i].x)
+              .attr("y1", PathAsArray[i].y)
+              .attr("x2", PathAsArray[i + 1].x)
+              .attr("y2", PathAsArray[i + 1].y)
+              .attr("stroke-width", linienDicke)
+              .attr("stroke", "black");
+
+        }
+        d3.select("#circles").append("circle")
+      .attr("cx", PathAsArray[PathAsArray.length - 1].x)
+      .attr("cy", PathAsArray[PathAsArray.length - 1].y)
+      .attr("r", KreisRadius);
+
+
+
+    }
+
+    function showCircles(CirclesAsArray) {
+
+        //alert("in showCircle");
+        for (var i = 0; i < CirclesAsArray.length; i++) {
+
+            d3.select("#circles").append("circle")
+           .attr("cx", CirclesAsArray[i].x)
+           .attr("cy", CirclesAsArray[i].y)
+           .attr("r", KreisRadius)
+           .attr("onclick", "circle_click(evt)");
+
+
+        }
+    }
+
+</script>
+
+    }
