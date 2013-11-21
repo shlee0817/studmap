@@ -1,5 +1,6 @@
 package de.whs.studmap.navigator;
 
+import de.whs.studmap.snippets.UserInfo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.webkit.JavascriptInterface;
@@ -13,7 +14,11 @@ public class JavaScriptInterface {
    
     @JavascriptInterface
     public void punkt(){
-   	 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("punkt!!").show();
+   	 UserInfo.positionDialog(context);
    }
+    
+    @JavascriptInterface
+    public void test(){
+    	
+    }
 }

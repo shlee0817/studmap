@@ -35,9 +35,18 @@
 	<string name="already_logged_in">Du bist schon eingeloggt!</string>
 	<string name="search_field">Suchen</string>
 	
-	<string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
 	<string name="logout_successfull">Erfolgreich abgemeldet!</string>
 	<string name="load_data">Bitte warten...</string>
+	
+	<string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
 	<string name="error_database">Datenbankfehler aufgetreten.</string>
+	
+	<string name="navigation">Navigation</string>
+	<string name="navigationTitle">Diesen Punkt setzen als:</string>
+	<string name="navigationDestination">Zielpunkt</string>
+	<string name="navigationStart">Startpunkt</string>
+	
+	<string name="positiveButton">OK</string>
+	<string name="negativeButton">Abbrechen</string>
 	
 </resources>
