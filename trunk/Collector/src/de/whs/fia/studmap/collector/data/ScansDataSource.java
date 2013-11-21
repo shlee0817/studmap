@@ -29,6 +29,10 @@ public class ScansDataSource {
 		dbHelper.close();
 	}
 
+	public void clear(){
+		database.execSQL("delete from " + MySQLiteHelper.TABLE_SCANS);
+	}
+	
 	public Scan createScan(int nodeId) {
 		ContentValues values = new ContentValues();
 		values.put(MySQLiteHelper.SCANS_COLUMN_NODEID, nodeId);

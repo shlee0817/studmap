@@ -28,6 +28,10 @@ public class APsDataSource {
 	public void close() {
 		dbHelper.close();
 	}
+	
+	public void clear() {
+		database.execSQL("delete from " + MySQLiteHelper.TABLE_APS);
+	}
 
 	public AP createAP(String BSSID, int RSS, int ScanId) {
 
