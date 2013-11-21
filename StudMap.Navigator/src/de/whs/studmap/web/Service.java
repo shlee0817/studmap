@@ -20,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import de.whs.studmap.data.Constants;
 import de.whs.studmap.data.Floor;
 import de.whs.studmap.data.Node;
@@ -71,8 +73,9 @@ public class Service implements Constants {
 				poiList.add(poi);
 			}
 			
-		} catch (JSONException ignore) {
-			ignore.printStackTrace();
+		} catch (JSONException e) {
+			Log.e(LOG_TAG_WEBSERVICE, "getPoIsForMap - PoIs konnten nicht geparst werden!");
+			throw new ConnectException();
 		}	
 		
 		return poiList;
@@ -94,7 +97,7 @@ public class Service implements Constants {
 			}
 			
 		} catch (JSONException ignore) {
-			ignore.printStackTrace();
+			Log.e(LOG_TAG_WEBSERVICE, "getRoomsForMap - Rooms konnten nicht geparst werden!");
 		}		
 		
 		return nodes;		
@@ -116,7 +119,7 @@ public class Service implements Constants {
 			}
 			
 		} catch (JSONException ignore) {
-			ignore.printStackTrace();
+			Log.e(LOG_TAG_WEBSERVICE, "getFloorsForMap - Floors konnten nicht geparst werden!");
 		}		
 		
 		return floorList;		
@@ -127,6 +130,12 @@ public class Service implements Constants {
 		String result = httpGet(URL_USER, "GetActiveUsers").toString();
 		//TODO: parse activeUsers
 		return result;
+	}
+	
+	public static Node getNodeInformationForNode(int nodeId) {
+		Node node = null;
+		//TODO: parse NodeInformation
+		return node;
 	}
   
 	private static JSONObject httpPost(String url, String methodName, List<NameValuePair> params) 
@@ -156,11 +165,11 @@ public class Service implements Constants {
 				}				
  
 			} catch (ClientProtocolException e) {
-				e.printStackTrace();
+				Log.d(LOG_TAG_WEBSERVICE, "httpPost - httpClient.execute - ClientProtocolException");
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.d(LOG_TAG_WEBSERVICE, "httpPost - IOException");
 			} catch (JSONException e) {
-				e.printStackTrace();
+				Log.d(LOG_TAG_WEBSERVICE,"httpPost - JSONException");
 			}
 			
 			throw new ConnectException();
@@ -198,56 +207,56 @@ public class Service implements Constants {
 			}
 			
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			Log.d(LOG_TAG_WEBSERVICE, "httpGet - httpClient.execute hat eine ClientProtocolException ausgelöst");
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.d(LOG_TAG_WEBSERVICE, "httpGet - IOException");
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.d(LOG_TAG_WEBSERVICE,"httpGet - JSONException");
 		}
 		
 		throw new ConnectException();
 	}
 	
-	private static Node parseJsonToNode(JSONObject o){
+	private static Node parseJsonToNode(JSONObject o) throws JSONException{
 		Node node = null;		
-		try {
-			int id = o.getInt(RESPONSE_PARAM_NODE_ID);
-			String roomName = o.getString(RESPONSE_PARAM_NODE_ROOMNAME);
-			String displayName = o.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
-			node = new Node(id,roomName,displayName);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+
+		int id = o.getInt(RESPONSE_PARAM_NODE_ID);
+		String roomName = o.getString(RESPONSE_PARAM_NODE_ROOMNAME);
+		String displayName = o.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
+		node = new Node(id,roomName,displayName);
+
 		return node;
 	}
 	
-	private static Floor parseJsonToFloor(JSONObject o){
+	private static Floor parseJsonToFloor(JSONObject o) throws JSONException{
 		Floor floor = null;
-		try {			
-			int id = o.getInt(RESPONSE_PARAM_FLOOR_ID);
-			int mapId = o.getInt(RESPONSE_PARAM_FLOOT_MAPID);
-			String imageUrl = o.getString(RESPONSE_PARAM_FLOOR_IMAGE_URL);
-			String name = o.getString(RESPONSE_PARAM_FLOOR_NAME);
-			floor = new Floor(id, mapId, imageUrl, name);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	
+		int id = o.getInt(RESPONSE_PARAM_FLOOR_ID);
+		int mapId = o.getInt(RESPONSE_PARAM_FLOOT_MAPID);
+		String imageUrl = o.getString(RESPONSE_PARAM_FLOOR_IMAGE_URL);
+		String name = o.getString(RESPONSE_PARAM_FLOOR_NAME);
+		floor = new Floor(id, mapId, imageUrl, name);
+
 		return floor;
 	}
 	
-	private static PoI parseJsonToPoI(JSONObject o){
-		PoI poi = null;
-		try {			
-			String description = o.getString(RESPONSE_PARAM_POI_DESCRIPTION);
-			int nodeId = o.getInt(RESPONSE_PARAM_POI_NODEID);
-			JSONObject type = o.getJSONObject(RESPONSE_PARAM_POI_TYPE);
-			int typeId = type.getInt(RESPONSE_PARAM_POI_TYPEID);
-			String name = type.getString(RESPONSE_PARAM_POI_NAME);
-			poi = new PoI(name, description, typeId,nodeId);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return poi;
+	private static PoI parseJsonToPoI(JSONObject o) throws JSONException{
+		//Room 
+		JSONObject room = o.getJSONObject(RESPONSE_PARAM_POI_ROOM);
+		Node node = parseJsonToNode(room);
+		
+		//PoI
+		JSONObject poi = o.getJSONObject(RESPONSE_PARAM_POI_POI);
+		JSONObject type = poi.getJSONObject(RESPONSE_PARAM_POI_TYPE);
+		int typeId = type.getInt(RESPONSE_PARAM_POI_TYPEID);
+		String name = type.getString(RESPONSE_PARAM_POI_NAME);
+		
+		//Description
+		String description = poi.getString(RESPONSE_PARAM_POI_DESCRIPTION);
+				
+		PoI mPoI = new PoI(name, description, typeId,node);
+
+		return mPoI;
 	}
 	 
 }

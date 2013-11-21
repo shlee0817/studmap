@@ -18,13 +18,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import de.whs.studmap.data.Constants;
 import de.whs.studmap.data.PoI;
 import de.whs.studmap.snippets.UserInfo;
@@ -45,6 +45,7 @@ public class POIActivity extends Activity implements Constants{
 	private String mUsername  = "";
 	private View mStatusView;
 	private View mFormView;
+
 	
 
 	@Override
@@ -79,7 +80,8 @@ public class POIActivity extends Activity implements Constants{
 	private class mTextWatcher implements TextWatcher{
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,int count) {
-			mListAdapter.getFilter().filter(s);
+			String input = s.toString().trim();			
+			mListAdapter.getFilter().filter(input);
 		}
 
 		@Override
@@ -100,7 +102,7 @@ public class POIActivity extends Activity implements Constants{
         	PoI selectedPoI = (PoI) parent.getItemAtPosition(position);
         	
             Intent result = new Intent();
-            result.putExtra(EXTRA_NODE_ID,selectedPoI.getNodeId());
+            result.putExtra(EXTRA_NODE_ID,selectedPoI.getNode().getNodeID());
             setResult(Activity.RESULT_OK,result);
             finish();
         }
@@ -175,6 +177,7 @@ public class POIActivity extends Activity implements Constants{
 				mPOIs.addAll(pois);
 				return true;
 			} catch (WebServiceException e) {
+				Log.d(LOG_TAG_POI__ACTIVITY, "GetDataTask - WebServiceException");
 				JSONObject jObject = e.getJsonObject();
 				
 				try {
@@ -187,8 +190,11 @@ public class POIActivity extends Activity implements Constants{
 					default:
 						break;
 					}
-				} catch (JSONException ignore) {}
+				} catch (JSONException ignore) {
+					Log.d(LOG_TAG_POI__ACTIVITY, "GetDataTask - Parsing the WebServiceException failed!");
+				}
 			} catch (ConnectException e){
+				Log.d(LOG_TAG_POI__ACTIVITY, "GetDataTask - ConnectException");
 				bShowDialog = true;
 			}
 			return false;

@@ -12,6 +12,8 @@ public class JavaScriptService {
 	
 	//JavaScript Funktionsaufruf: [WebView.loadURL("javaScript:Funktiosnname(param0, param1,...)");]
 	
+	//TODO: mapView / webView Änderung dürfen nur im den WebViewThread gemacht werden, sonst Exception
+	
 	public void sendTarget(int nodeID){
 		mapView.loadUrl("javascript:highlightPoint(" + nodeID + ", yellow)");
 	}

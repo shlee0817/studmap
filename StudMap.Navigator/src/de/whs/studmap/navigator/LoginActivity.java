@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,23 +23,22 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import de.whs.studmap.data.Constants;
 import de.whs.studmap.snippets.UserInfo;
 import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
 import de.whs.studmap.web.WebServiceException;
 
 public class LoginActivity extends Activity {
-	public final int REQUEST_ID_REGISTER = 200;
+	public static final int REQUEST_ID_REGISTER = 200;
 	public static final String EXTRA_USERNAME = "username";
 		
-	
 	private UserLoginTask mAuthTask = null;
 
-	// Values for email and password at the time of the login attempt.
 	private String mUserName;
 	private String mPassword;
 
-	// UI references.
+	// UI references
 	private EditText mUsernameView;
 	private EditText mPasswordView;
 	private View mLoginFormView;
@@ -148,7 +148,7 @@ public class LoginActivity extends Activity {
 			cancel = true;
 		}
 
-		// Check for a valid user name.
+		// Check for a valid username.
 		if (TextUtils.isEmpty(mUserName)) {
 			mUsernameView.setError(getString(R.string.error_field_required));
 			focusView = mUsernameView;
@@ -160,7 +160,7 @@ public class LoginActivity extends Activity {
 			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Show a progress spinner, and kick off a background task to
+			// Show a progress spinner, and execute a background task to
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
@@ -229,6 +229,7 @@ public class LoginActivity extends Activity {
 				boolean result = Service.login(mUserName, mPassword); 
 				return result;
 			} catch (WebServiceException e) {
+				Log.d(Constants.LOG_TAG_LOGIN_ACTIVITY, "UserLoginTask - WebServiceException");
 				JSONObject jObject = e.getJsonObject();
 				
 				try {
@@ -243,8 +244,11 @@ public class LoginActivity extends Activity {
 						bRequestFocus = true;
 						break;
 					}
-				} catch (JSONException ignore) {}
+				} catch (JSONException ignore) {
+					Log.d(Constants.LOG_TAG_LOGIN_ACTIVITY, "UserLoginTask - Parsing the WebServiceException failed!");
+				}
 			} catch (ConnectException e){
+				Log.d(Constants.LOG_TAG_LOGIN_ACTIVITY, "UserLoginTask - ConnectException");
 				bShowDialog = true;
 			}
 			return false;
