@@ -46,6 +46,8 @@ import de.whs.studmap.data.Constants;
 import de.whs.studmap.data.DrawerItemEnum;
 import de.whs.studmap.data.Floor;
 import de.whs.studmap.data.Node;
+import de.whs.studmap.scanner.IntentIntegrator;
+import de.whs.studmap.scanner.IntentResult;
 import de.whs.studmap.snippets.UserInfo;
 import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
@@ -71,6 +73,7 @@ public class MainActivity extends Activity {
     private List<Node> mRoomList = new ArrayList<Node>();
     private GetInitDataTask mGetTasks = null;
     private Node mSelectedNode;
+	private String mScanResult = ""; 
 
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;
@@ -140,9 +143,9 @@ public class MainActivity extends Activity {
         }
         // Handle action buttons
         if(item.getItemId() == R.id.action_search){
-        	//TODO - Mit diesem Button Scannen oder die ‹bergabe an JavaScript anstoﬂen?
-        	
-        	UserInfo.dialog(this, mUserName, "Suchen oder Scannen?");    	  
+			//Scan
+        	IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+        	scanIntegrator.initiateScan();  	  
       	  return false;
         }
         else
@@ -167,7 +170,9 @@ public class MainActivity extends Activity {
     
     
 
-    /* The click listner for ListView in the navigation drawer */
+    /**
+     *  The click listener for ListView in the navigation drawer 
+     *  */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -268,7 +273,20 @@ public class MainActivity extends Activity {
 					UserInfo.toast(this, String.valueOf(nodeID),false);					
 				}
 				break;
-			}    	
+			case IntentIntegrator.REQUEST_CODE:
+	    		IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+	    		if(result != null){
+	    			mScanResult = result.getContents();
+	    			if (mScanResult != null){
+		    			//TODO - Senden des Ergebnisses an die WebPage
+		    			UserInfo.toast(this, mScanResult, false);
+		    			break;
+	    			}
+	    		}  			
+	    		UserInfo.toast(getApplicationContext(), "Scan: Es liegt kein Ergebnis vor.", false);				
+	    		break;
+			} 
+
     }
 
     /**
@@ -356,7 +374,7 @@ public class MainActivity extends Activity {
     public void getDataFromWebService(){
     	if (mGetTasks == null){
             showProgress(true);
-            mGetTasks = new GetInitDataTask(getApplicationContext());
+            mGetTasks = new GetInitDataTask(this);
             mGetTasks.execute((Void) null);
     	}
     	else
@@ -409,6 +427,8 @@ public class MainActivity extends Activity {
     
 	public class GetInitDataTask extends AsyncTask<Void, Void, Boolean> {
 		private Context mContext = null;
+		private boolean mDbError = false;
+		private boolean mConnError = false;
 		
 		public GetInitDataTask(Context ctx){
 			mContext = ctx;
@@ -428,11 +448,11 @@ public class MainActivity extends Activity {
 					
 					switch (errorCode) {
 					case ResponseError.DatabaseError:
-						UserInfo.dialog(mContext, mUserName, getString(R.string.error_database));
+						mDbError = true;
 					}
 				} catch (JSONException ignore) {}
 			} catch (ConnectException e){
-				UserInfo.dialog(mContext, mUserName, getString(R.string.error_connection));
+				mConnError = true;
 			}
 			return false;
 		}
@@ -441,17 +461,24 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(final Boolean success) {
 			mGetTasks = null;
 			showProgress(false);
+			
 			if(success){
 				//Fill the Floor Spinner in the Action Bar
 		        ArrayAdapter<Floor> levelAdapter = new ArrayAdapter<Floor>(mContext, 
-		        										R.layout.simple_list_item_no_bg_font_white, mFloorList);
+		        												R.layout.simple_list_item_no_bg_font_white, mFloorList);
 		        levelAdapter.setDropDownViewResource(R.layout.simple_list_item_black);
 		        mFloorSpinner.setAdapter(levelAdapter);	
 		        
 			}
 			else
-				UserInfo.dialog(mContext, mUserName, getString(R.string.error_connection));
+				mConnError = true;
 	        
+			//Fehlerbehandlung aus doInBackground
+			if (mDbError)
+				UserInfo.dialog(mContext, mUserName, getString(R.string.error_database));
+			
+			if (mConnError)
+				UserInfo.dialog(mContext, mUserName, getString(R.string.error_connection));
 		}
 
 		@Override
