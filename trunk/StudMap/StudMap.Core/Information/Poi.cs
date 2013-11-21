@@ -12,5 +12,12 @@
             Description = string.Empty;
             NodeId = 0;
         }
+
+        public PoI(PoiType type, string description = "", int nodeID = 0)
+        {
+            Type = type;
+            Description = description;
+            NodeId = nodeID;
+        }
     }
 }
