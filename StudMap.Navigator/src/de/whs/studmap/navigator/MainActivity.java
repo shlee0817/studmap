@@ -41,7 +41,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import de.whs.studmap.data.Constants;
 import de.whs.studmap.data.DrawerItemEnum;
 import de.whs.studmap.data.Floor;
@@ -207,7 +206,9 @@ public class MainActivity extends Activity {
     		break;
     		
     	case POI:
-    		startActivityForResult(new Intent(this,POIActivity.class),REQUEST_ID_POIS);
+    		Intent intent = new Intent(this, POIActivity.class);
+    		intent.putExtra(POIActivity.EXTRA_USERNAME, mUserName);
+    		startActivityForResult(intent,REQUEST_ID_POIS);
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		
@@ -401,7 +402,6 @@ public class MainActivity extends Activity {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
 		final View mInitStatusView = (View) findViewById(R.id.init_status);
-		TextView mInitStatusMessageView = (TextView) findViewById(R.id.init_status_message);
 		
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
 		// for very easy animations. If available, use these APIs to fade-in

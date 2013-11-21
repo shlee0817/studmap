@@ -2,7 +2,6 @@ package de.whs.studmap.navigator;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONException;
@@ -28,7 +27,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import de.whs.studmap.data.Constants;
 import de.whs.studmap.data.PoI;
-import de.whs.studmap.navigator.LoginActivity.UserLoginTask;
 import de.whs.studmap.snippets.UserInfo;
 import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
@@ -47,7 +45,6 @@ public class POIActivity extends Activity implements Constants{
 	private String mUsername  = "";
 	private View mStatusView;
 	private View mFormView;
-	private TextView mStatusMessageView;
 	
 
 	@Override
@@ -60,7 +57,6 @@ public class POIActivity extends Activity implements Constants{
 		
 		mFormView = findViewById(R.id.getPoI_form);
 		mStatusView = findViewById(R.id.getPoIData_status);
-		mStatusMessageView = (TextView) findViewById(R.id.getPoIData_status_message);
 		
 		mInputSearch = (EditText) findViewById(R.id.POI_inputSearch);		
 		mListView = (ListView) findViewById(R.id.POI_List); 
