@@ -359,7 +359,7 @@ namespace StudMap.Service.Controllers
                     }
 
 
-                    // Alte Knoten und Kanten löschen
+                    // Zu entfernende Knoten und Kanten löschen
                     if (deletedGraph.Nodes != null)
                     {
                         foreach (
@@ -408,7 +408,7 @@ namespace StudMap.Service.Controllers
                     }
 
                     // Edges im Graph hinzufügen
-                    if (graph != null && graph.Edges != null)
+                    if (newGraph != null && newGraph.Edges != null)
                     {
                         foreach (Edge edge in newGraph.Edges)
                         {
