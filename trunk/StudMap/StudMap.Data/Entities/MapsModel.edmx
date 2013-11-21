@@ -6,7 +6,9 @@
     <edmx:StorageModels>
     <Schema Namespace="StudMapModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="StudMapModelStoreContainer">
+          <EntitySet Name="AccessPoints" EntityType="StudMapModel.Store.AccessPoints" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Edges" EntityType="StudMapModel.Store.Edges" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Fingerprints" EntityType="StudMapModel.Store.Fingerprints" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Floors" EntityType="StudMapModel.Store.Floors" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Graphs" EntityType="StudMapModel.Store.Graphs" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Maps" EntityType="StudMapModel.Store.Maps" store:Type="Tables" Schema="dbo" />
@@ -44,6 +46,14 @@
             <End Role="Nodes" EntitySet="Nodes" />
             <End Role="Edges" EntitySet="Edges" />
           </AssociationSet>
+          <AssociationSet Name="FK_Fingerprints_AccessPoints" Association="StudMapModel.Store.FK_Fingerprints_AccessPoints">
+            <End Role="AccessPoints" EntitySet="AccessPoints" />
+            <End Role="Fingerprints" EntitySet="Fingerprints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fingerprints_Nodes" Association="StudMapModel.Store.FK_Fingerprints_Nodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Fingerprints" EntitySet="Fingerprints" />
+          </AssociationSet>
           <AssociationSet Name="FK_Floors_Maps" Association="StudMapModel.Store.FK_Floors_Maps">
             <End Role="Maps" EntitySet="Maps" />
             <End Role="Floors" EntitySet="Floors" />
@@ -69,6 +79,13 @@
             <End Role="PoIs" EntitySet="PoIs" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="AccessPoints">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MAC" Type="char" Nullable="false" MaxLength="12" />
+        </EntityType>
         <EntityType Name="Edges">
           <Key>
             <PropertyRef Name="Id" />
@@ -78,6 +95,15 @@
           <Property Name="NodeStartId" Type="int" Nullable="false" />
           <Property Name="NodeEndId" Type="int" Nullable="false" />
           <Property Name="CreationTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Fingerprints">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="NodeId" Type="int" Nullable="false" />
+          <Property Name="AccessPointId" Type="int" Nullable="false" />
+          <Property Name="RecievedSignalStrength" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Floors">
           <Key>
@@ -206,6 +232,30 @@
             </Principal>
             <Dependent Role="Edges">
               <PropertyRef Name="NodeStartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fingerprints_AccessPoints">
+          <End Role="AccessPoints" Type="StudMapModel.Store.AccessPoints" Multiplicity="1" />
+          <End Role="Fingerprints" Type="StudMapModel.Store.Fingerprints" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccessPoints">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fingerprints">
+              <PropertyRef Name="AccessPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fingerprints_Nodes">
+          <End Role="Nodes" Type="StudMapModel.Store.Nodes" Multiplicity="1" />
+          <End Role="Fingerprints" Type="StudMapModel.Store.Fingerprints" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fingerprints">
+              <PropertyRef Name="NodeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -348,8 +398,18 @@
             <End Role="PoIs" EntitySet="PoIs" />
           </AssociationSet>
           <FunctionImport Name="DeleteGraphFromFloor">
-            <Parameter Name="FloorId" Mode="In" Type="Int32" />
+          <Parameter Name="FloorId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="AccessPoints" EntityType="StudMapModel.AccessPoints" />
+          <EntitySet Name="Fingerprints" EntityType="StudMapModel.Fingerprints" />
+          <AssociationSet Name="FK_Fingerprints_AccessPoints" Association="StudMapModel.FK_Fingerprints_AccessPoints">
+            <End Role="AccessPoints" EntitySet="AccessPoints" />
+            <End Role="Fingerprints" EntitySet="Fingerprints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fingerprints_Nodes" Association="StudMapModel.FK_Fingerprints_Nodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Fingerprints" EntitySet="Fingerprints" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Edges">
           <Key>
@@ -424,6 +484,7 @@
           <NavigationProperty Name="Edges1" Relationship="StudMapModel.FK_Edges_StartNodes" FromRole="Nodes" ToRole="Edges" />
           <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Nodes" ToRole="Floors" />
           <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="Nodes" ToRole="NodeInformation" />
+          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Nodes" ToRole="Fingerprints" />
         </EntityType>
         <EntityType Name="PoIs">
           <Key>
@@ -575,6 +636,49 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="AccessPoints">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="MAC" Nullable="false" MaxLength="12" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_Fingerprints_AccessPoints" FromRole="AccessPoints" ToRole="Fingerprints" />
+        </EntityType>
+        <EntityType Name="Fingerprints">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="NodeId" Nullable="false" />
+          <Property Type="Int32" Name="AccessPointId" Nullable="false" />
+          <Property Type="Int32" Name="RecievedSignalStrength" Nullable="false" />
+          <NavigationProperty Name="AccessPoints" Relationship="StudMapModel.FK_Fingerprints_AccessPoints" FromRole="Fingerprints" ToRole="AccessPoints" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Fingerprints" ToRole="Nodes" />
+        </EntityType>
+        <Association Name="FK_Fingerprints_AccessPoints">
+          <End Type="StudMapModel.AccessPoints" Role="AccessPoints" Multiplicity="1" />
+          <End Type="StudMapModel.Fingerprints" Role="Fingerprints" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccessPoints">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fingerprints">
+              <PropertyRef Name="AccessPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fingerprints_Nodes">
+          <End Type="StudMapModel.Nodes" Role="Nodes" Multiplicity="1" />
+          <End Type="StudMapModel.Fingerprints" Role="Fingerprints" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fingerprints">
+              <PropertyRef Name="NodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -688,6 +792,24 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="DeleteGraphFromFloor" FunctionName="StudMapModel.Store.sp_DeleteGraphFromFloor" />
+          <EntitySetMapping Name="AccessPoints">
+            <EntityTypeMapping TypeName="StudMapModel.AccessPoints">
+              <MappingFragment StoreEntitySet="AccessPoints">
+                <ScalarProperty Name="MAC" ColumnName="MAC" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fingerprints">
+            <EntityTypeMapping TypeName="StudMapModel.Fingerprints">
+              <MappingFragment StoreEntitySet="Fingerprints">
+                <ScalarProperty Name="RecievedSignalStrength" ColumnName="RecievedSignalStrength" />
+                <ScalarProperty Name="AccessPointId" ColumnName="AccessPointId" />
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

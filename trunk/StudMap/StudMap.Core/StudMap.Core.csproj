@@ -56,6 +56,8 @@
     <Compile Include="RespsonseStatus.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="BaseResponse.cs" />
+    <Compile Include="WLAN\AccessPoint.cs" />
+    <Compile Include="WLAN\Fingerprint.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
