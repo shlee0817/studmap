@@ -1,5 +1,6 @@
 package de.whs.fia.studmap.collector.fragments;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,9 @@ import de.whs.fia.studmap.collector.data.APsDataSource;
 import de.whs.fia.studmap.collector.data.ScansDataSource;
 import de.whs.fia.studmap.collector.models.AP;
 import de.whs.fia.studmap.collector.models.Scan;
+import de.whs.studmap.data.AccessPoint;
+import de.whs.studmap.data.Fingerprint;
+import de.whs.studmap.web.WebServiceException;
 
 /**
  * Enthält alle Funktionen, die in der Ansicht benötigt werden um einen
@@ -41,8 +45,6 @@ public class WlanCollectorFragment extends Fragment {
 	private WifiReceiver wifiReceiver;
 	private WifiManager wifiManager;
 	private List<ScanResult> wifiList;
-	
-	private List<Scan> scans = new ArrayList<Scan>();
 
 	private ProgressDialog pDialog;
 	
@@ -100,15 +102,37 @@ public class WlanCollectorFragment extends Fragment {
 
 				scansDatasource.open();
 				apsDatasource.open();
-				for(Scan scan : scans){
+				List<Scan> createdScan = scansDatasource.getScans();
+				
+				for(Scan s : createdScan)
+				{
+					Fingerprint f = new Fingerprint();
+					f.setNodeId(s.getNodeId());
+
+					List<AccessPoint> accessPoints = new ArrayList<AccessPoint>();					
+					for(AP a : apsDatasource.getAPsToScan(s.getId())){
+						AccessPoint accessPoint = new AccessPoint();
+						accessPoint.setId(a.getId());
+						accessPoint.setMAC(a.getBSSID());
+						accessPoint.setReceivedSignalStrength(a.getRSS());
+						accessPoints.add(accessPoint);
+					}
+					f.setAccessPoints(accessPoints);
 					
-					Scan createdScan = scansDatasource.createScan(scan.getNodeId());
-					
-					for(AP ap : scan.getAPs()){
-						
-						apsDatasource.createAP(ap.getBSSID(), ap.getRSS(), createdScan.getId());
+					try {
+						de.whs.studmap.web.Service.SaveFingerprintForNode(s.getNodeId(), f);
+					} catch (ConnectException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (WebServiceException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				}
+				
+				scansDatasource.clear();
+				apsDatasource.clear();
+				
 				scansDatasource.close();
 				apsDatasource.close();
 				
@@ -158,7 +182,16 @@ public class WlanCollectorFragment extends Fragment {
 				s.addAP(ap);
 			}
 			
-			scans.add(s);
+			scansDatasource.open();
+			apsDatasource.open();
+			Scan createdScan = scansDatasource.createScan(s.getNodeId());
+			
+			for(AP ap : s.getAPs()){
+				
+				apsDatasource.createAP(ap.getBSSID(), ap.getRSS(), createdScan.getId());
+			}
+			scansDatasource.close();
+			apsDatasource.close();
 			
 			pDialog.dismiss();
 			
