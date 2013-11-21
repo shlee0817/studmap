@@ -31,7 +31,7 @@ namespace StudMap.Core.Information
             QRCode = "";
         }
 
-        public NodeInformation(string displayName, string roomName, PoI poI, string qrCode, string nfcTag)
+        public NodeInformation(PoI poI, string displayName = "", string roomName = "", string qrCode = "", string nfcTag = "")
         {
             DisplayName = displayName;
             RoomName = roomName;

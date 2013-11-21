@@ -82,7 +82,8 @@
 
                 d3.select("svg").classed("active", true);
 
-                if (!d3.event.ctrlKey || mousedownNode) return;
+                console.log(d3.event);
+                if (!d3.event.ctrlKey || mousedownNode || d3.event.button == 2) return;
 
                 var transformStr = d3.select(".map-layers").attr("transform");
                 if (transformStr === null || transformStr === undefined) {
@@ -211,18 +212,24 @@
         link.exit().remove();
 
         node = node.data(displayNodes, function (d) { return d.id; });
+        // Node create
         node.enter()
             .append("circle")
             .attr("class", function() { return "node"; })
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; })
             .attr("r", function () { return 4; })
-            .on('mousedown', function(d) {
+            .on('mousedown', function (d) {
+
                 if (d3.event.shiftKey) {
                     console.log("Shift-Click pressed");
                     connectFloorsDialog(d.id);
                     return;
                 }
+
+                // Selektierte Knoten verbinden sich nicht mehr via Rechtsklick miteinander
+                if (d3.event.button == 2)
+                    return;
 
                 mousedownNode = d;
 
@@ -254,7 +261,7 @@
 
                     selectedNode = null;
 
-                    d3.selectAll(".node").attr("r", 4);
+                    d3.selectAll(".node").attr("r", 4).style("opacity", 0.6);
 
                     graph.start();
                 }
@@ -280,7 +287,7 @@
                                     var nfcTag = $('input[id=inputNFCTag]').val();
 
                                     var obj = {
-                                        nodeId: $('input[id=nodeId]').val(),
+                                        nodeId: $('div[id=nodeId]').text(),
                                         displayName: displayName,
                                         roomName: roomName,
                                         poiTypeId: poiTypeId,

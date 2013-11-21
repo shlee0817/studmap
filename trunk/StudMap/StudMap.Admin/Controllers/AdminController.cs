@@ -6,6 +6,7 @@ using StudMap.Core.Graph;
 using StudMap.Core.Information;
 using StudMap.Core.Maps;
 using StudMap.Service.Controllers;
+using System.Linq;
 
 namespace StudMap.Admin.Controllers
 {
@@ -113,12 +114,11 @@ namespace StudMap.Admin.Controllers
                                               string poiDescription, string qrCode, string nfcTag)
         {
             var mapsCtrl = new MapsController();
-            var nodeInf = new NodeInformation(displayName, roomName,
-                                              new PoI
+            var nodeInf = new NodeInformation(new PoI
                                                   {
                                                       Description = poiDescription,
                                                       Type = new PoiType {Id = poiTypeId}
-                                                  }, qrCode, nfcTag);
+                                                  }, displayName, roomName, qrCode, nfcTag);
             ObjectResponse<NodeInformation> tmp = mapsCtrl.SaveNodeInformation(nodeId, nodeInf);
             return Json(tmp, JsonRequestBehavior.AllowGet);
         }
@@ -171,8 +171,17 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             ObjectResponse<NodeInformation> nodeInformation = mapsCtrl.GetNodeInformationForNode(nodeId);
-            
-            ViewBag.PoiTypes = mapsCtrl.GetPoiTypes().List;
+
+            int typId = 0;
+            if (nodeInformation.Object.PoI != null && nodeInformation.Object.PoI.Type != null)
+                typId = nodeInformation.Object.PoI.Type.Id;
+
+            ViewBag.PoiTypes = mapsCtrl.GetPoiTypes().List.Select(x => new SelectListItem
+            {
+                Selected = (x.Id == typId),
+                Text = x.Name,
+                Value = x.Id.ToString()
+            });
             return PartialView("_NodeInformation", nodeInformation.Object);
         }
 
