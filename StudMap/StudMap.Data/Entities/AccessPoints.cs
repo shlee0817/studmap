@@ -12,26 +12,16 @@ namespace StudMap.Data.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Nodes
+    public partial class AccessPoints
     {
-        public Nodes()
+        public AccessPoints()
         {
-            this.Edges = new HashSet<Edges>();
-            this.Edges1 = new HashSet<Edges>();
-            this.NodeInformation = new HashSet<NodeInformation>();
             this.Fingerprints = new HashSet<Fingerprints>();
         }
     
         public int Id { get; set; }
-        public int FloorId { get; set; }
-        public decimal X { get; set; }
-        public decimal Y { get; set; }
-        public System.DateTime CreationTime { get; set; }
+        public string MAC { get; set; }
     
-        public virtual ICollection<Edges> Edges { get; set; }
-        public virtual ICollection<Edges> Edges1 { get; set; }
-        public virtual Floors Floors { get; set; }
-        public virtual ICollection<NodeInformation> NodeInformation { get; set; }
         public virtual ICollection<Fingerprints> Fingerprints { get; set; }
     }
 }
