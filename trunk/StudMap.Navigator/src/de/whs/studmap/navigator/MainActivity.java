@@ -272,6 +272,7 @@ public class MainActivity extends Activity {
 		    			//TODO
 	    				mJScriptService.sendTarget(Integer.valueOf(mScanResult));
 		    			UserInfo.toast(this, mScanResult, false);
+	    				loadURLtoMapWebView();
 		    			break;
 	    			}
 	    		}  			
@@ -360,6 +361,7 @@ public class MainActivity extends Activity {
 				
 				//TODO - Übergabe der Auswahl an JavaScript
 				mJScriptService.sendTarget(mSelectedNode.getNodeID());
+				loadURLtoMapWebView();
 			}			
 		});
         
