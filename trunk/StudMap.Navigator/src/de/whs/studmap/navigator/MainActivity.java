@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
     private GetInitDataTask mGetTasks = null;
     private Node mSelectedNode;
 	private String mScanResult = ""; 
-	private static JavaScriptService mJScriptService;
+	public static JavaScriptService mJScriptService;
 
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;

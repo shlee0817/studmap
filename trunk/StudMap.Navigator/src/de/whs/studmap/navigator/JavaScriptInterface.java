@@ -13,8 +13,8 @@ public class JavaScriptInterface {
     }
    
     @JavascriptInterface
-    public void punkt(){
-   	 UserInfo.positionDialog(context);
+    public void punkt(int nodeId){
+   	 UserInfo.positionDialog(context, nodeId);
    }
     
     @JavascriptInterface

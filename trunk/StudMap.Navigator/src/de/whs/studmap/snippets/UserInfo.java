@@ -14,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import de.whs.studmap.navigator.MainActivity;
 import de.whs.studmap.navigator.R;
 
 public class UserInfo{
@@ -50,7 +51,7 @@ public class UserInfo{
 		Toast.makeText(context, message, length).show();		
 	}	
 	
-	public static void positionDialog(final Context context){
+	public static void positionDialog(final Context context, final int nodeId){
 		Builder builder = new AlertDialog.Builder(context,AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);  
 		builder.setCancelable(true); // This blocks the 'BACK' button 
 		
@@ -75,11 +76,11 @@ public class UserInfo{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				switch (position) {
 				case 0:
-					toast(context, "yeah", true);
+					MainActivity.mJScriptService.sendStart(nodeId);
 					break;
 
 				case 1:
-					toast(context, "nope", true);
+					MainActivity.mJScriptService.sendDestination(nodeId);
 					break;
 				}
 			}			
