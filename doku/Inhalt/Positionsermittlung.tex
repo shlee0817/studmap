@@ -1,0 +1,25 @@
+\chapter{Positionsermittlung}
+In diesem Kapitel wird beschrieben, wie die Position eines Anwenders
+auf der Karte bestimmt wird. Dazu werden die im Kapitel
+\nameref{cha:Recherche} beschriebenen Verfahren verwendet.
+
+\section{QR-Tags}
+An den Räumen werden QR-Tags angebracht, die eine Zuordnung 
+zu einem Knoten auf der ermöglicht. Hier ist zu beachten,
+dass die Informationen auf dem QR-Tag auch für andere Anwendungen
+nützlich sein sollen. Deshalb kann hier nicht nur eine Knoten-ID
+hinterlegt werden.
+
+Folgendes JSON-Format ist ein möglicher Kandidat:
+\begin{lstlisting}
+{
+  "General": {
+    "Label": "A2.1.10",
+    "Name": "Aquarium"
+  },
+  "StudMap": {
+    "NodeId": "12",
+    "Url": "https://code.google.com/p/studmap/"
+  }
+}
+\end{lstlisting}
