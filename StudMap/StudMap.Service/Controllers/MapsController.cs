@@ -903,22 +903,30 @@ namespace StudMap.Service.Controllers
         }
 
         [HttpGet]
-        public ListResponse<PoI> GetPoIsForMap(int mapId)
+        public ListResponse<RoomAndPoI> GetPoIsForMap(int mapId)
         {
-            var result = new ListResponse<PoI>();
+            var result = new ListResponse<RoomAndPoI>();
             try
             {
                 using (var entities = new MapsEntities())
                 {
-                    result.List = entities.PoisForMap.Where(x => x.MapId == mapId).Select(x => new PoI
+                    result.List = entities.PoisForMap.Where(x => x.MapId == mapId).Select(x => new RoomAndPoI
                         {
-                            Type = new PoiType
+                            Room = new Room
                             {
-                                Id = x.PoiTypeId,
-                                Name = x.PoiTypeName,
+                                NodeId = x.NodeId,
+                                RoomName = x.RoomName,
+                                DisplayName = x.DisplayName
                             },
-                            Description = x.PoiDescription,
-                            NodeId = x.NodeId
+                            PoI = new PoI
+                            {
+                                Type = new PoiType
+                                {
+                                    Id = x.PoiTypeId,
+                                    Name = x.PoiTypeName,
+                                },
+                                Description = x.PoiDescription,
+                            }
                         }).ToList();
                 }
             }
