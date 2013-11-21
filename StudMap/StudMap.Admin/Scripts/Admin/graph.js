@@ -1,4 +1,7 @@
-﻿d3.floorplan.graph = function() {
+﻿var deletedEdges = [];
+var newEdges = [];
+
+d3.floorplan.graph = function () {
     var x = d3.scale.linear(),
         y = d3.scale.linear(),
         id = "fp-graph-" + new Date().valueOf(),
@@ -140,6 +143,8 @@
     }
 
     function connectFloorsDialog(nodeId) {
+        deletedEdges = [];
+        newEdges = [];
         $.ajax({
             url: window.basePath + 'Admin/GetConnectedNodes?nodeId=' + nodeId,
             success: function (result) {
@@ -149,28 +154,26 @@
                     modal: true,
                     appendTo: "#body",
                     autoHeight: true,
-                    title: "Knoteninformationen (" + nodeId + ")",
+                    title: "Verbundene Knoten (" + nodeId + ")",
                     buttons: {
                         Speichern: function () {
-                            var displayName = $('input[id=inputDisplayName]').val();
-                            var roomName = $('input[id=inputRoomName]').val();
-                            var poiTypeId = $('#inputPoiTypeId').val();
-                            var poiDescription = $('textarea#inputPoI').val();
-                            var qrCode = $('input[id=inputQRCode]').val();
-                            var nfcTag = $('input[id=inputNFCTag]').val();
 
                             var obj = {
-                                nodeId: $('input[id=nodeId]').val(),
-                                displayName: displayName,
-                                roomName: roomName,
-                                poiTypeId: poiTypeId,
-                                poiDescription: poiDescription,
-                                qrCode: qrCode,
-                                nfcTag: nfcTag
-                            };
+                                floorId: floorId,
+                                deletedGraph: { 
+                                    "Nodes": [],
+                                    "FloorId": floorId,
+                                    "Edges": deletedEdges 
+                                },
+                                newGraph: {
+                                    "Nodes": [],
+                                    "FloorId": floorId,
+                                    "Edges": newEdges 
+                                }
+                            }
 
                             $.ajax({
-                                url: window.basePath + 'Admin/SaveNodeInformation',
+                                url: window.basePath + 'Admin/SaveGraphForMap',
                                 data: JSON.stringify(obj),
                                 contentType: "application/json; charset=utf-8",
                                 dataType: "json",
@@ -471,13 +474,37 @@ function saveGraph() {
 
 function deleteEdge(startNodeId, endNodeId) {
     console.log("deleteEdge(" + startNodeId + ", " + endNodeId + ")");
-    // TODO: Gelöschte Kanten zu einer Liste hinzufügen
+    var edge1 = {
+        "StartNodeId": startNodeId,
+        "EndNodeId": endNodeId
+    };
+    var edge2 = {
+        "StartNodeId": endNodeId,
+        "EndNodeId": startNodeId
+    };
+    deletedEdges.push(edge1);
+    deletedEdges.push(edge2);
+
+    $("div#node_" + endNodeId).remove();
 }
 
 function addNewEdge(startNodeId) {
     var endNodeId = $('#inputNewEdge').val();
     console.log("addNewEdge(" + startNodeId + ", " + endNodeId + ")");
-    // TODO: Hinzugefügte Kanten zu einer Liste hinzufügen
+    
+    var edge = {
+        "StartNodeId": startNodeId,
+        "EndNodeId": endNodeId
+    };
+
+    newEdges.push(edge);
+
+    $("div#node_new").prepend(
+        "<div id=\"node_" + endNodeId + "\" class=\"tableColumn\">" +
+        "Knoten " + endNodeId + " " +
+        "<button onclick=\"deleteEdge(" + startNodeId + ", " + endNodeId + ");\">X</button>" +
+        "</div>"
+    );
 }
 
 // TODO: Gelöschte + Hinzugefügte Kanten an WebService weiterleiten
