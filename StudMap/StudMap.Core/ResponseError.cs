@@ -34,6 +34,7 @@
         PoiTypeIdDoesNotExist = 401,
         NFCTagDoesNotExist = 402,
         QRCodeDosNotExist = 403,
+        PoiDoesNotExist = 404,
         #endregion // Information
     }
 }

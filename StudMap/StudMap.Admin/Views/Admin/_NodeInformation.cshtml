@@ -23,7 +23,17 @@
     </div>   
     <div class="tableCell">
         <div class="tableRow"><b>PoI Typ:</b></div>
-        <div class="tableRow">@Html.DropDownListFor(n => n.PoI.Type, new SelectList(ViewBag.PoiTypes, "Id", "Name", Model.PoI.Type.Id), new {id = "inputPoiTypeId"})</div>
+        @{
+            IEnumerable<SelectListItem> selectList = ViewBag.PoiTypes;
+        }
+        <div class="tableRow">
+            <select id="inputPoiTypeId" name="PoI.Type">
+                @foreach(SelectListItem item in selectList)
+                {
+                    <option @(item.Selected ? "selected=selected" : "") value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
     </div>            
     <div class="tableCell">
         <div class="tableRow"><b>PoI Beschreibung:</b></div>
@@ -41,7 +51,7 @@
         <div class="table" >
             <div class="tableCell">
                 <div class="tableRow"><b>Knoten Id:</b></div>
-                <div class="tableRow">@Model.Node.Id</div>
+                <div class="tableRow" id="nodeId">@Model.Node.Id</div>
             </div>
             <div class="tableCell">
                 <div class="tableRow"><b>X-Koord. (Prozent):</b></div>

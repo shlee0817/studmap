@@ -10,5 +10,11 @@
             Id = 0;
             Name = "";
         }
+
+        public PoiType(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
     }
 }

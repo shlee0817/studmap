@@ -25,5 +25,12 @@ namespace StudMap.Data.Entities
     
         public virtual Nodes Nodes { get; set; }
         public virtual PoIs PoIs { get; set; }
+
+        public NodeInformation() {
+            DisplayName = String.Empty;
+            RoomName = String.Empty;
+            QRCode = String.Empty;
+            NFCTag = String.Empty;
+        }
     }
 }

@@ -609,7 +609,7 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    //Schon vorhandene Nodeinformationen suchen
+                    // Schon vorhandene Nodeinformationen suchen
                     Data.Entities.NodeInformation nodeInformation =
                         entities.NodeInformation.FirstOrDefault(x => x.NodeId == nodeId);
                     bool poiTypeSelected = nodeInf.PoI.Type.Id != 0;
@@ -625,16 +625,31 @@ namespace StudMap.Service.Controllers
                         }
                         nodeInf.PoI.Type.Name = poiType.Name;
 
-                        poi = entities.PoIs.Add(new PoIs
+                        // Falls keine PoIs in der Relation PoIs existieren, neuen PoIs erstellen
+                        if (nodeInformation == null || nodeInformation.PoIs == null)
+                        {
+                            poi = entities.PoIs.Add(new PoIs
                             {
                                 TypeId = nodeInf.PoI.Type.Id,
                                 Description = nodeInf.PoI.Description
                             });
+                        }
+                        // Ansonsten vorhandenen PoI updaten
+                        else
+                        {
+                            poi = entities.PoIs.FirstOrDefault(x => x.Id == nodeInformation.PoiId);
+                            if (poi == null)
+                            {
+                                result.SetError(ResponseError.PoiDoesNotExist);
+                                return result;
+                            }
+                            poi.TypeId = nodeInf.PoI.Type.Id;
+                            poi.Description = nodeInf.PoI.Description;
+                        }
                         entities.SaveChanges();
                     }
 
-
-                    //Wenn es keine Nodeinformations gibt neue anlegen
+                    // Wenn es keine Nodeinformations gibt neue anlegen
                     if (nodeInformation == null)
                     {
                         nodeInformation = entities.NodeInformation.Add(new Data.Entities.NodeInformation
@@ -643,7 +658,9 @@ namespace StudMap.Service.Controllers
                                 RoomName = nodeInf.RoomName,
                                 QRCode = nodeInf.QRCode,
                                 NFCTag = nodeInf.NFCTag,
-                                PoiId = poiTypeSelected ? (int?)poi.Id : null,
+
+                                PoiId = poiTypeSelected ? (int?) poi.Id : null, 
+                                // Nur beim erstellen ausführen, NodeId bleibt gleich
                                 NodeId = nodeId,
                                 CreationTime = DateTime.Now
                             });
@@ -651,21 +668,26 @@ namespace StudMap.Service.Controllers
                     }
                     else
                     {
-                        //Aktualisieren
+                        // Aktualisieren
                         nodeInformation.DisplayName = nodeInf.DisplayName;
                         nodeInformation.RoomName = nodeInf.RoomName;
                         nodeInformation.NFCTag = nodeInf.NFCTag;
                         nodeInformation.QRCode = nodeInf.QRCode;
 
-                        nodeInformation.PoiId = poiTypeSelected ? (int?)poi.Id : null;
+                        nodeInformation.PoiId = poiTypeSelected ? (int?) poi.Id : null;                       
                         entities.SaveChanges();
                     }
 
-                    //Ergebnis aus der DB in Rückgabe Objekt schreiben
+                    // Ergebnis aus der DB in Rückgabe Objekt schreiben
                     result.Object = new NodeInformation
                         {
                             DisplayName = nodeInformation.DisplayName,
-                            PoI = nodeInf.PoI,
+                            PoI = new PoI
+                                {
+                                    NodeId = nodeInformation.NodeId,
+                                    Description = poi.Description,
+                                    Type = new PoiType(poi.PoiTypes.Id, poi.PoiTypes.Name)
+                                },
                             RoomName = nodeInformation.RoomName,
                             NFCTag = nodeInformation.NFCTag,
                             QRCode = nodeInformation.QRCode,
