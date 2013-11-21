@@ -49,6 +49,7 @@ import de.whs.studmap.data.Node;
 import de.whs.studmap.scanner.IntentIntegrator;
 import de.whs.studmap.scanner.IntentResult;
 import de.whs.studmap.snippets.UserInfo;
+import de.whs.studmap.web.JavaScriptService;
 import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
 import de.whs.studmap.web.WebServiceException;
@@ -75,6 +76,7 @@ public class MainActivity extends Activity {
     private GetInitDataTask mGetTasks = null;
     private Node mSelectedNode;
 	private String mScanResult = ""; 
+	private static JavaScriptService mJScriptService;
 
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;
@@ -88,9 +90,7 @@ public class MainActivity extends Activity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer_listView);
         mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
-        mActionBar = getActionBar();
-
-        
+        mActionBar = getActionBar();        
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -196,7 +196,7 @@ public class MainActivity extends Activity {
 	
 	        FragmentManager fragmentManager = getFragmentManager();
 	        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-	
+	        
 	        // update selected item and title, then close the drawer
 	        mDrawerListView.setItemChecked(position, true);
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
@@ -280,7 +280,8 @@ public class MainActivity extends Activity {
 	    		if(result != null){
 	    			mScanResult = result.getContents();
 	    			if (mScanResult != null){
-		    			//TODO - Senden des Ergebnisses an die WebPage
+		    			//TODO
+	    				mJScriptService.sendTarget(Integer.valueOf(mScanResult));
 		    			UserInfo.toast(this, mScanResult, false);
 		    			break;
 	    			}
@@ -321,6 +322,8 @@ public class MainActivity extends Activity {
     public static void loadURLtoMapWebView(){
     	mMapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + mSelectedFloorID);
         mMapWebView.requestFocus();
+        
+        mJScriptService = new JavaScriptService(mMapWebView);
     }
     
     /**
@@ -354,7 +357,8 @@ public class MainActivity extends Activity {
 				mSelectedNode = (Node) adapterView.getItemAtPosition(pos);
 				UserInfo.toast(getApplicationContext(), "Suche " + mSelectedNode.toString(), false);
 				
-				//TODO - Übergabe der Auswahl an JavaScript hier oder mit Button?????????????????
+				//TODO - Übergabe der Auswahl an JavaScript
+				mJScriptService.sendTarget(mSelectedNode.getNodeID());
 			}			
 		});
         
@@ -481,7 +485,7 @@ public class MainActivity extends Activity {
 			else
 				mConnError = true;
 	        
-			//Fehlerbehandlung aus doInBackground
+			//Anzeigen der Fehler aus doInBackground
 			if (mDbError)
 				UserInfo.dialog(mContext, mUserName, getString(R.string.error_database));
 			
