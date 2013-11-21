@@ -15,12 +15,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import de.whs.studmap.data.Constants;
 import de.whs.studmap.snippets.UserInfo;
 import de.whs.studmap.web.ResponseError;
 import de.whs.studmap.web.Service;
@@ -41,7 +43,7 @@ public class RegisterActivity extends Activity {
 	private String mPassword1;
 	private String mPassword2;
 
-	// UI references.
+	// UI references
 	private EditText mUsernameView;
 	private EditText mPasswordView1;
 	private EditText mPasswordView2;
@@ -93,11 +95,6 @@ public class RegisterActivity extends Activity {
 		return true;
 	}
 
-	/**
-	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid email, missing fields, etc.), the
-	 * errors are presented and no actual login attempt is made.
-	 */
 	public void attemptRegister() {
 		if (mAuthTask != null) {
 			return;
@@ -145,7 +142,7 @@ public class RegisterActivity extends Activity {
 			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Show a progress spinner, and kick off a background task to
+			// Show a progress spinner, and execute a background task to
 			// perform the user login attempt.
 			mRegisterStatusMessageView.setText(R.string.register_progress_registering);
 			showProgress(true);
@@ -195,10 +192,6 @@ public class RegisterActivity extends Activity {
 		}
 	}
 
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
 	public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 		private Context mContext = null;
 		private boolean bShowDialog = false;
@@ -218,6 +211,7 @@ public class RegisterActivity extends Activity {
 				else
 					throw new ConnectException();
 			} catch (WebServiceException e) {
+				Log.d(Constants.LOG_TAG_REGISTER_ACTIVITY, "UserRegisterTask - WebServiceException");
 				JSONObject jObject = e.getJsonObject();
 				
 				try {
@@ -230,8 +224,11 @@ public class RegisterActivity extends Activity {
 						mUsernameView.setError(getString(R.string.error_username_duplicate));
 						bRequestFocus = true;
 					}
-				} catch (JSONException ignore) {}
+				} catch (JSONException ignore) {
+					Log.d(Constants.LOG_TAG_REGISTER_ACTIVITY, "UserRegisterTask - Parsing the WebServiceException failed!");
+				}
 			} catch (ConnectException e){
+				Log.d(Constants.LOG_TAG_REGISTER_ACTIVITY, "UserRegisterTask - ConnectException");
 				bShowDialog = true;
 			}
 			return false;

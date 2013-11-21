@@ -1,4 +1,4 @@
-package de.whs.studmap.navigator;
+package de.whs.studmap.web;
 
 import android.content.Context;
 import android.webkit.JavascriptInterface;
@@ -15,9 +15,5 @@ public class JavaScriptInterface {
     public void punkt(int nodeId){
    	 UserInfo.positionDialog(context, nodeId);
    }
-    
-    @JavascriptInterface
-    public void test(){
-    	
-    }
+
 }

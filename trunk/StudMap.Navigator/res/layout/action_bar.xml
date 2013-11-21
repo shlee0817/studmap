@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:ems="8"
-        android:hint="Karte durchsuchen"
+        android:hint="@string/searchInMap"
         android:imeOptions="actionSearch"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:paddingLeft="3dp"

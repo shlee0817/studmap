@@ -5,13 +5,13 @@ public class PoI {
 	private String name;
 	private String description;
 	private int typeId;
-	private int nodeId;
+	private Node node;
 	
-	public PoI(String name, String description, int typeId, int nodeId) {
+	public PoI(String name, String description, int typeId, Node node) {
 		this.name = name;
 		this.description = description;
 		this.typeId = typeId;
-		this.nodeId = nodeId;
+		this.node = node;
 	}
 
 	public String getName() {
@@ -26,13 +26,20 @@ public class PoI {
 		return typeId;
 	}
 	
-	public int getNodeId() {
-		return nodeId;
+	public Node getNode() {
+		return node;
 	}
 	
 	@Override
 	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(name);
 		
-		return name + " - " + description;
+		if (!name.equals(node.getDisplayName())){
+			sb.append("-");
+			sb.append(node.getDisplayName());
+		}
+		
+		return sb.toString();
 	}
 }

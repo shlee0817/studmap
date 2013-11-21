@@ -39,12 +39,20 @@ public interface Constants {
 		 //PoI
 		 static final String RESPONSE_PARAM_POI_NAME = "Name";
 		 static final String RESPONSE_PARAM_POI_TYPEID = "Id";
-		 static final String RESPONSE_PARAM_POI_NODEID = "NodeId";
+		 static final String RESPONSE_PARAM_POI_ROOM = "Room";
+		 static final String RESPONSE_PARAM_POI_POI = "PoI";
 		 static final String RESPONSE_PARAM_POI_TYPE = "Type";
 		 static final String RESPONSE_PARAM_POI_DESCRIPTION = "Description";
 		 
 		//Urls
 		 static final String URL_USER = "http://193.175.199.115:80/StudMapService/api/Users/";
 		 static final String URL_MAPS = "http://193.175.199.115:80/StudMapService/api/Maps/";
+		 
+		 //Log tags
+		 static final String LOG_TAG_WEBSERVICE = "WebService";
+		 static final String LOG_TAG_POI__ACTIVITY = "PoI Activity";
+		 static final String LOG_TAG_MAIN_ACTIVITY = "Main Activity";
+		 static final String LOG_TAG_LOGIN_ACTIVITY = "Login Activity";
+		 static final String LOG_TAG_REGISTER_ACTIVITY = "Register Activity";
 		
 }
