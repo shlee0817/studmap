@@ -659,7 +659,7 @@ namespace StudMap.Service.Controllers
                                 QRCode = nodeInf.QRCode,
                                 NFCTag = nodeInf.NFCTag,
 
-                                PoiId = poiTypeSelected ? (int?) poi.Id : null, 
+                                PoiId = poiTypeSelected ? (int?)poi.Id : null,
                                 // Nur beim erstellen ausführen, NodeId bleibt gleich
                                 NodeId = nodeId,
                                 CreationTime = DateTime.Now
@@ -674,20 +674,26 @@ namespace StudMap.Service.Controllers
                         nodeInformation.NFCTag = nodeInf.NFCTag;
                         nodeInformation.QRCode = nodeInf.QRCode;
 
-                        nodeInformation.PoiId = poiTypeSelected ? (int?) poi.Id : null;                       
+                        nodeInformation.PoiId = poiTypeSelected ? (int?)poi.Id : null;
                         entities.SaveChanges();
+                    }
+
+                    PoI returnPoi = new PoI();
+                    if (poi != null)
+                    {
+                        returnPoi = new PoI
+                                    {
+                                        NodeId = nodeInformation.NodeId,
+                                        Description = poi.Description,
+                                        Type = new PoiType(poi.PoiTypes.Id, poi.PoiTypes.Name)
+                                    };
                     }
 
                     // Ergebnis aus der DB in Rückgabe Objekt schreiben
                     result.Object = new NodeInformation
                         {
                             DisplayName = nodeInformation.DisplayName,
-                            PoI = new PoI
-                                {
-                                    NodeId = nodeInformation.NodeId,
-                                    Description = poi.Description,
-                                    Type = new PoiType(poi.PoiTypes.Id, poi.PoiTypes.Name)
-                                },
+                            PoI = returnPoi,
                             RoomName = nodeInformation.RoomName,
                             NFCTag = nodeInformation.NFCTag,
                             QRCode = nodeInformation.QRCode,
