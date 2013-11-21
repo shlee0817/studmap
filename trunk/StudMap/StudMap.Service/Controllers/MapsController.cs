@@ -683,7 +683,6 @@ namespace StudMap.Service.Controllers
                     {
                         returnPoi = new PoI
                                     {
-                                        NodeId = nodeInformation.NodeId,
                                         Description = poi.Description,
                                         Type = new PoiType(poi.PoiTypes.Id, poi.PoiTypes.Name)
                                     };
@@ -925,7 +924,7 @@ namespace StudMap.Service.Controllers
                                     Id = x.PoiTypeId,
                                     Name = x.PoiTypeName,
                                 },
-                                Description = x.PoiDescription,
+                                Description = x.PoiDescription
                             }
                         }).ToList();
                 }
