@@ -1,9 +1,8 @@
 package de.whs.studmap.navigator;
 
-import de.whs.studmap.snippets.UserInfo;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.webkit.JavascriptInterface;
+import de.whs.studmap.snippets.UserInfo;
 
 public class JavaScriptInterface {
     private Context context;
