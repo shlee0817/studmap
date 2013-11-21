@@ -101,7 +101,7 @@ public class POIActivity extends Activity implements Constants{
     private class ItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        	PoI selectedPoI = (PoI) mListView.getItemAtPosition(position);
+        	PoI selectedPoI = (PoI) parent.getItemAtPosition(position);
         	
             Intent result = new Intent();
             result.putExtra(EXTRA_NODE_ID,selectedPoI.getNodeId());
