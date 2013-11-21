@@ -53,6 +53,8 @@ public class UserInfo{
 	
 	public static void positionDialog(final Context context, final int nodeId){
 		Builder builder = new AlertDialog.Builder(context,AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);  
+		AlertDialog ad;
+		
 		builder.setCancelable(true); // This blocks the 'BACK' button 
 		
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
@@ -71,20 +73,28 @@ public class UserInfo{
 		ArrayAdapter<String> mListAdapter = new ArrayAdapter<String>(context,
 				R.layout.simple_list_item_white, items);
 		mListView.setAdapter(mListAdapter);
+		ad = builder.create();
+		positionDialogClickListener(nodeId, ad, mListView);		
+		ad.show();
+	}
+
+	private static void positionDialogClickListener(final int nodeId,
+			final AlertDialog ad, ListView mListView) {
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				switch (position) {
 				case 0:
 					MainActivity.mJScriptService.sendStart(nodeId);
+					ad.dismiss();
 					break;
 
 				case 1:
 					MainActivity.mJScriptService.sendDestination(nodeId);
+					ad.dismiss();
 					break;
 				}
 			}			
-		});		
-		builder.create().show();
+		});
 	}
 }
