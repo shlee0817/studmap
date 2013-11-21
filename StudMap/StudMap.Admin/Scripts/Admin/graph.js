@@ -85,7 +85,6 @@ d3.floorplan.graph = function () {
 
                 d3.select("svg").classed("active", true);
 
-                console.log(d3.event);
                 if (!d3.event.ctrlKey || mousedownNode || d3.event.button == 2) return;
 
                 var transformStr = d3.select(".map-layers").attr("transform");
@@ -472,7 +471,6 @@ function saveGraph() {
 }
 
 function deleteEdge(startNodeId, endNodeId) {
-    console.log("deleteEdge(" + startNodeId + ", " + endNodeId + ")");
     var edge1 = {
         "StartNodeId": startNodeId,
         "EndNodeId": endNodeId
@@ -489,7 +487,6 @@ function deleteEdge(startNodeId, endNodeId) {
 
 function addNewEdge(startNodeId) {
     var endNodeId = $('#inputNewEdge').val();
-    console.log("addNewEdge(" + startNodeId + ", " + endNodeId + ")");
     
     var edge = {
         "StartNodeId": startNodeId,
