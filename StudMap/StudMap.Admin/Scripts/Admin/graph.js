@@ -225,7 +225,6 @@ d3.floorplan.graph = function () {
             .on('mousedown', function (d) {
 
                 if (d3.event.shiftKey) {
-                    console.log("Shift-Click pressed");
                     connectFloorsDialog(d.id);
                     return;
                 }
