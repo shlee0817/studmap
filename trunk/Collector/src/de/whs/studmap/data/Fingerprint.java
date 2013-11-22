@@ -6,11 +6,11 @@ import java.util.List;
 public class Fingerprint {
 
 	private int NodeId;
-	private List<AccessPoint> AccessPoints;
+	private List<AccessPointScan> AccessPointScans;
 	
 	public Fingerprint()
 	{
-		AccessPoints = new ArrayList<AccessPoint>();
+		AccessPointScans = new ArrayList<AccessPointScan>();
 	}
 	
 	public int getNodeId() {
@@ -21,11 +21,11 @@ public class Fingerprint {
 		NodeId = nodeId;
 	}
 
-	public List<AccessPoint> getAccessPoints() {
-		return AccessPoints;
+	public List<AccessPointScan> getAccessPointScans() {
+		return AccessPointScans;
 	}
 
-	public void setAccessPoints(List<AccessPoint> accessPoints) {
-		AccessPoints = accessPoints;
+	public void setAccessPointScans(List<AccessPointScan> accessPointScans) {
+		AccessPointScans = accessPointScans;
 	}
 }

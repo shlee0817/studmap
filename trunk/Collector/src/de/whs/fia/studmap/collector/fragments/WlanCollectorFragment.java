@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,7 +28,9 @@ import de.whs.fia.studmap.collector.data.ScansDataSource;
 import de.whs.fia.studmap.collector.models.AP;
 import de.whs.fia.studmap.collector.models.Scan;
 import de.whs.studmap.data.AccessPoint;
+import de.whs.studmap.data.AccessPointScan;
 import de.whs.studmap.data.Fingerprint;
+import de.whs.studmap.web.Service;
 import de.whs.studmap.web.WebServiceException;
 
 /**
@@ -109,25 +112,19 @@ public class WlanCollectorFragment extends Fragment {
 					Fingerprint f = new Fingerprint();
 					f.setNodeId(s.getNodeId());
 
-					List<AccessPoint> accessPoints = new ArrayList<AccessPoint>();					
+					List<AccessPointScan> accessPointScans = new ArrayList<AccessPointScan>();					
 					for(AP a : apsDatasource.getAPsToScan(s.getId())){
 						AccessPoint accessPoint = new AccessPoint();
 						accessPoint.setId(a.getId());
 						accessPoint.setMAC(a.getBSSID());
-						accessPoint.setReceivedSignalStrength(a.getRSS());
-						accessPoints.add(accessPoint);
+						AccessPointScan accessPointScan = new AccessPointScan();
+						accessPointScan.setAccessPoint(accessPoint);
+						accessPointScan.setReceivedSignalStrength(a.getRSS());
+						accessPointScans.add(accessPointScan);
 					}
-					f.setAccessPoints(accessPoints);
+					f.setAccessPointScans(accessPointScans);
 					
-					try {
-						de.whs.studmap.web.Service.SaveFingerprintForNode(s.getNodeId(), f);
-					} catch (ConnectException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (WebServiceException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					new SaveFingerprintForNodeTask(s.getNodeId(), f).execute((Void)null);
 				}
 				
 				scansDatasource.clear();
@@ -144,7 +141,7 @@ public class WlanCollectorFragment extends Fragment {
 		nodeIdField = (EditText)rootView.findViewById(R.id.wlanCollector_PointId);
 
 		return rootView;
-	}
+	}	
 
 	public void onPause() {
 		getActivity().unregisterReceiver(wifiReceiver);
@@ -177,7 +174,7 @@ public class WlanCollectorFragment extends Fragment {
 			for(ScanResult r : wifiList){
 				
 				AP ap = new AP();
-				ap.setBSSID(r.BSSID);
+				ap.setBSSID(r.BSSID.replaceAll(":", ""));
 				ap.setRSS(r.level);
 				s.addAP(ap);
 			}
@@ -199,6 +196,31 @@ public class WlanCollectorFragment extends Fragment {
 					android.R.layout.simple_list_item_1, s.getAPs());
 
 			ap.setAdapter(adapter);
+		}
+	}
+	
+	public class SaveFingerprintForNodeTask extends AsyncTask<Void, Void, Boolean> {
+		
+		private int nodeId;
+		private Fingerprint fingerprint;
+		
+		public SaveFingerprintForNodeTask(int nodeId, Fingerprint fingerprint){
+			this.nodeId = nodeId;
+			this.fingerprint = fingerprint;
+		}
+		
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			
+			try {
+				boolean result = Service.SaveFingerprintForNode(nodeId, fingerprint); 
+				return result;
+			} catch (WebServiceException e) {
+				e.printStackTrace();
+			} catch (ConnectException e){
+				e.printStackTrace();
+			}
+			return false;
 		}
 	}
 }
