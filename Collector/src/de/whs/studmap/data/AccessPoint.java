@@ -3,7 +3,6 @@ package de.whs.studmap.data;
 public class AccessPoint {
 	private int Id;
 	private String MAC;
-	private int ReceivedSignalStrength;
 	
 	public int getId() {
 		return Id;
@@ -24,13 +23,5 @@ public class AccessPoint {
 	public AccessPoint()
 	{
 		MAC = "";
-	}
-
-	public int getReceivedSignalStrength() {
-		return ReceivedSignalStrength;
-	}
-
-	public void setReceivedSignalStrength(int receivedSignalStrength) {
-		ReceivedSignalStrength = receivedSignalStrength;
 	}
 }

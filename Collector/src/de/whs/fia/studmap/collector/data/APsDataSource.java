@@ -73,9 +73,9 @@ public class APsDataSource {
 	private AP cursorToAP(Cursor cursor) {
 		AP ap = new AP();
 		ap.setId(cursor.getInt(0));
-		ap.setScanId(cursor.getInt(1));
-		ap.setBSSID(cursor.getString(2));
-		ap.setRSS(cursor.getInt(3));
+		ap.setBSSID(cursor.getString(1));
+		ap.setRSS(cursor.getInt(2));
+		ap.setScanId(cursor.getInt(3));
 		return ap;
 	}
 }
