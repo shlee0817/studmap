@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
 using StudMap.Core;
@@ -25,6 +25,7 @@ namespace StudMap.Admin.Controllers
             }
             else
                 ViewBag.PartialViewName = partialViewName;
+
             return View("Index", viewModel);
         }
 
@@ -41,8 +42,7 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             ObjectResponse<Map> response = mapsCtrl.CreateMap(data.Name);
-            ListResponse<Map> viewModel = mapsCtrl.GetMaps();
-            return response.Status == RespsonseStatus.Error ? View("Error") : Index("_Maps", viewModel);
+            return response.Status != RespsonseStatus.Error ? (ActionResult) RedirectToAction("Index") : View("Error");
         }
 
         [Authorize(Roles = "Admins")]
@@ -76,9 +76,8 @@ namespace StudMap.Admin.Controllers
 
                 mapsCtrl.UploadFloorImage(response.Object.Id, "Images/Floors/" + data.FileName);
             }
-            ListResponse<Floor> floors = mapsCtrl.GetFloorsForMap(mapId);
             ViewBag.MapId = mapId;
-            return response.Status == RespsonseStatus.Error ? View("Error") : Index("_Floors", floors);
+            return response.Status != RespsonseStatus.Error ? (ActionResult) RedirectToAction("Index") : View("Error");
         }
 
         [Authorize(Roles = "Admins")]
@@ -180,7 +179,7 @@ namespace StudMap.Admin.Controllers
             {
                 Selected = (x.Id == typId),
                 Text = x.Name,
-                Value = x.Id.ToString()
+                Value = x.Id.ToString(CultureInfo.InvariantCulture)
             });
             return PartialView("_NodeInformation", nodeInformation.Object);
         }
@@ -195,8 +194,7 @@ namespace StudMap.Admin.Controllers
             ViewBag.StartNodeId = nodeId;
             if (connectedNodes.Status == RespsonseStatus.Ok)
                 return PartialView("_ConnectedNodes", connectedNodes.List);
-            else
-                return View("Error");
+            return View("Error");
         }
 
         #endregion

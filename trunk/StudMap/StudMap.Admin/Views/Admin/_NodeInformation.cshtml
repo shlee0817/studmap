@@ -3,7 +3,7 @@
     Layout = null;
 }
 
-<h1>Knoteninformationen</h1>
+<h3>Knoteninformationen</h3>
 <div class="table">
     <div class="tableCell">
         <div class="tableRow"><b>DisplayName:</b></div>
@@ -42,12 +42,8 @@
 </div>
 @if (Model.Node != null)
 {
-    <div align="center">
-    <button type="button" onclick="$('#node').toggle();" style="font-size: xx-small;">Knoten ansehen</button>      
-    </div>
-    
-    <div id="node" style="display:none;">
-        <h1>Knoten</h1>
+    <div id="node">
+        <h3>Knoten</h3>
         <div class="table" >
             <div class="tableCell">
                 <div class="tableRow"><b>Knoten Id:</b></div>

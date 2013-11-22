@@ -4,20 +4,33 @@
     Layout = null;
 }
 
-<h1>Verbundene Knoten</h1>
-
-<div class="table">
-
-@foreach (var node in Model)
+@if (Model.Any())
 {
-    <div id="node_@node.Id" class="tableColumn">
-        Knoten @node.Id <button onclick="deleteEdge(@ViewBag.StartNodeId, @node.Id);">X</button>
+    <h3>Verbundene Knoten</h3>
+    <div class="table ConnectedNodesTable">
+    
+        @foreach (var node in Model)
+        {
+            <div id="node_@node.Id" class="tableCell">
+                <div class="tableRow">
+                    Knoten @(node.Id)
+                </div>
+                <div class="tableRow">
+                    <img onclick=" deleteEdge(@ViewBag.StartNodeId, @node.Id); " class="DeleteBin" src="@Url.Content("~/Images/bin.png")" alt="Bin"/>
+                </div>
+            </div>
+        }
     </div>
+    <br />
 }
-
-    <div id="node_new" class="tableColumn">
-        <input id="inputNewEdge" value="" class="contextInputField" />
-        <button id="addNewEdge" onclick="addNewEdge(@ViewBag.StartNodeId)">Verbinden</button>
+<h3>Mit Knoten verbinden</h3>
+<div class="table ConnectedNodesTable">
+    <div id="node_new" class="tableCell">
+        <div class="tableRow">
+            <input id="inputNewEdge" value="" class="contextInputField" />
+        </div>
+        <div class="tableRow">
+            <button id="addNewEdge" onclick="addNewEdge(@ViewBag.StartNodeId)">Verbinden</button>
+        </div>
     </div>
-
 </div>
