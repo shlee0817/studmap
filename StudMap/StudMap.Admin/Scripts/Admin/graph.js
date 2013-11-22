@@ -159,17 +159,17 @@ d3.floorplan.graph = function () {
 
                             var obj = {
                                 floorId: floorId,
-                                deletedGraph: { 
+                                deletedGraph: {
                                     "Nodes": [],
                                     "FloorId": floorId,
-                                    "Edges": deletedEdges 
+                                    "Edges": deletedEdges
                                 },
                                 newGraph: {
                                     "Nodes": [],
                                     "FloorId": floorId,
-                                    "Edges": newEdges 
+                                    "Edges": newEdges
                                 }
-                            }
+                            };
 
                             $.ajax({
                                 url: window.basePath + 'Admin/SaveGraphForMap',

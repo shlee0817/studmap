@@ -198,6 +198,7 @@ namespace StudMap.Service.Controllers
                     }
 
                     IQueryable<Floor> floors = from floor in entities.Floors
+                                               where floor.MapId == mapId
                                                select new Floor
                                                    {
                                                        Id = floor.Id,
@@ -211,8 +212,7 @@ namespace StudMap.Service.Controllers
             }
             catch (DataException ex)
             {
-                result.Status = RespsonseStatus.Error;
-                result.ErrorCode = ResponseError.DatabaseError;
+                result.SetError(ResponseError.DatabaseError);
                 result.ErrorMessage = ex.StackTrace;
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }

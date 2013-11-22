@@ -10,10 +10,19 @@
 
 .tableCell.Headline { background-color: gainsboro; }
 
+.tableCell.Headline .tableRow {
+    font-weight: bold;
+    cursor: default;
+}
+
 .tableRow {
     display: table-cell;
     padding: 4px 6px;
     vertical-align: middle;
+}
+
+.tableRow:last-child {
+    text-align: right;
 }
 
 /*GraphLayer*/
@@ -48,7 +57,7 @@
 
 .tab.selectable { cursor: pointer; }
 
-.tab.active { background-color: #669922; }
+.tab.active { background-color: #669922;color: #F0F0F0;}
 
 
 /* Ladeanzeige */
@@ -93,22 +102,75 @@ body.loading .modal { display: block; }
     border: 1px solid rgb(59, 59, 59);
 }
 
-.ui-dialog-titlebar { background-color: darkgray; }
+.ui-dialog-titlebar { background-color: darkgray;padding: 6px 4px; }
 
 .ui-dialog-titlebar .ui-dialog-title {
     font-weight: bold;
     margin: 4px 6px;
 }
 
-.ui-dialog-content { margin: 4px 6px; }
+.ui-dialog-content { margin: 12px 6px 2px 6px; }
 
 .ui-dialog-buttonpane {
     margin: 8px 0;
     text-align: right;
 }
 
+
+
 /* Dialog Hover InfoBox*/
 
 .hover .ui-dialog-titlebar { display: none; }
 
 .hover .ui-dialog-titlebar-close { display: none; }
+
+#inputPoiTypeId {
+    width: 100%;
+    color: #333;
+}
+
+h3 {
+    padding: 0 0 6px 4px;
+    color: #333;
+    margin-top: 2px;
+}
+
+h4 {
+    padding: 0 0 6px 4px;
+    color: #333;
+    margin-top: 2px;
+}
+
+#node {
+    overflow: hidden;
+    -moz-transition: height 0.5s ease;
+    -webkit-transition: height 0.5s ease;
+    -o-transition: height 0.5s ease;
+    transition: height 0.5s ease;
+    height: 30px;
+    cursor: default;
+}
+
+#node:hover {
+    height:150px;
+}
+
+.ConnectedNodesTable {
+    margin: 0 4px;
+}
+
+.table.ConnectedNodesTable {
+    width: 98%;
+}
+
+.table.ConnectedNodesTable .tableCell .tableRow {
+    padding: 0;
+}
+
+.table.ConnectedNodesTable .tableCell .tableRow .DeleteBin {
+    width: 24px;
+}
+
+#addNewEdge {
+    margin: 0;
+}
