@@ -36,5 +36,9 @@
         QRCodeDosNotExist = 403,
         PoiDoesNotExist = 404,
         #endregion // Information
+
+        #region Fingerprint
+        FingeprintIsNotDefined = 501,
+        #endregion
     }
 }
