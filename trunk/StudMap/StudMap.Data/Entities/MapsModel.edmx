@@ -98,7 +98,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="ScanId" Type="int" Nullable="false" />
+          <Property Name="FingerprintId" Type="int" Nullable="false" />
           <Property Name="AccessPointId" Type="int" Nullable="false" />
           <Property Name="RecievedSignalStrength" Type="int" Nullable="false" />
         </EntityType>
@@ -223,7 +223,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="AccessPointScans">
-              <PropertyRef Name="ScanId" />
+              <PropertyRef Name="FingerprintId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -429,8 +429,12 @@
           <Parameter Name="FloorId" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="AccessPoints" EntityType="StudMapModel.AccessPoints" />
-          <EntitySet Name="AccessPointScans" EntityType="StudMapModel.AccessPointScans" />
           <EntitySet Name="Fingerprints" EntityType="StudMapModel.Fingerprints" />
+          <AssociationSet Name="FK_Fingerprints_Nodes" Association="StudMapModel.FK_Fingerprints_Nodes">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Fingerprints" EntitySet="Fingerprints" />
+          </AssociationSet>
+          <EntitySet Name="AccessPointScans" EntityType="StudMapModel.AccessPointScans" />
           <AssociationSet Name="FK_Fingerprints_AccessPoints" Association="StudMapModel.FK_Fingerprints_AccessPoints">
             <End Role="AccessPoints" EntitySet="AccessPoints" />
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
@@ -438,10 +442,6 @@
           <AssociationSet Name="FK_AccessPointScans_Fingerprints" Association="StudMapModel.FK_AccessPointScans_Fingerprints">
             <End Role="Fingerprints" EntitySet="Fingerprints" />
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Fingerprints_Nodes" Association="StudMapModel.FK_Fingerprints_Nodes">
-            <End Role="Nodes" EntitySet="Nodes" />
-            <End Role="Fingerprints" EntitySet="Fingerprints" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Edges">
@@ -679,25 +679,37 @@
           <Property Type="String" Name="MAC" Nullable="false" MaxLength="12" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_Fingerprints_AccessPoints" FromRole="AccessPoints" ToRole="AccessPointScans" />
         </EntityType>
-        <EntityType Name="AccessPointScans">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="ScanId" Nullable="false" />
-          <Property Type="Int32" Name="AccessPointId" Nullable="false" />
-          <Property Type="Int32" Name="RecievedSignalStrength" Nullable="false" />
-          <NavigationProperty Name="AccessPoints" Relationship="StudMapModel.FK_Fingerprints_AccessPoints" FromRole="AccessPointScans" ToRole="AccessPoints" />
-          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="AccessPointScans" ToRole="Fingerprints" />
-        </EntityType>
         <EntityType Name="Fingerprints">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="NodeId" Nullable="false" />
-          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="Fingerprints" ToRole="AccessPointScans" />
           <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Fingerprints" ToRole="Nodes" />
+          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="Fingerprints" ToRole="AccessPointScans" />
+        </EntityType>
+        <Association Name="FK_Fingerprints_Nodes">
+          <End Type="StudMapModel.Nodes" Role="Nodes" Multiplicity="1" />
+          <End Type="StudMapModel.Fingerprints" Role="Fingerprints" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fingerprints">
+              <PropertyRef Name="NodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AccessPointScans">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="FingerprintId" Nullable="false" />
+          <Property Type="Int32" Name="AccessPointId" Nullable="false" />
+          <Property Type="Int32" Name="RecievedSignalStrength" Nullable="false" />
+          <NavigationProperty Name="AccessPoints" Relationship="StudMapModel.FK_Fingerprints_AccessPoints" FromRole="AccessPointScans" ToRole="AccessPoints" />
+          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="AccessPointScans" ToRole="Fingerprints" />
         </EntityType>
         <Association Name="FK_Fingerprints_AccessPoints">
           <End Type="StudMapModel.AccessPoints" Role="AccessPoints" Multiplicity="1" />
@@ -719,19 +731,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="AccessPointScans">
-              <PropertyRef Name="ScanId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Fingerprints_Nodes">
-          <End Type="StudMapModel.Nodes" Role="Nodes" Multiplicity="1" />
-          <End Type="StudMapModel.Fingerprints" Role="Fingerprints" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nodes">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Fingerprints">
-              <PropertyRef Name="NodeId" />
+              <PropertyRef Name="FingerprintId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -858,20 +858,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Fingerprints">
+            <EntityTypeMapping TypeName="StudMapModel.Fingerprints">
+              <MappingFragment StoreEntitySet="Fingerprints">
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="AccessPointScans">
             <EntityTypeMapping TypeName="StudMapModel.AccessPointScans">
               <MappingFragment StoreEntitySet="AccessPointScans">
                 <ScalarProperty Name="RecievedSignalStrength" ColumnName="RecievedSignalStrength" />
                 <ScalarProperty Name="AccessPointId" ColumnName="AccessPointId" />
-                <ScalarProperty Name="ScanId" ColumnName="ScanId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Fingerprints">
-            <EntityTypeMapping TypeName="StudMapModel.Fingerprints">
-              <MappingFragment StoreEntitySet="Fingerprints">
-                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="FingerprintId" ColumnName="FingerprintId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

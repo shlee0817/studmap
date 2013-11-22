@@ -12,17 +12,14 @@ namespace StudMap.Data.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Fingerprints
+    public partial class AccessPointScans
     {
-        public Fingerprints()
-        {
-            this.AccessPointScans = new HashSet<AccessPointScans>();
-        }
-    
         public int Id { get; set; }
-        public int NodeId { get; set; }
+        public int FingerprintId { get; set; }
+        public int AccessPointId { get; set; }
+        public int RecievedSignalStrength { get; set; }
     
-        public virtual Nodes Nodes { get; set; }
-        public virtual ICollection<AccessPointScans> AccessPointScans { get; set; }
+        public virtual AccessPoints AccessPoints { get; set; }
+        public virtual Fingerprints Fingerprints { get; set; }
     }
 }
