@@ -25,7 +25,7 @@ namespace StudMap.Admin.Controllers
             }
             else
                 ViewBag.PartialViewName = partialViewName;
-
+            
             return View("Index", viewModel);
         }
 
@@ -42,7 +42,7 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             ObjectResponse<Map> response = mapsCtrl.CreateMap(data.Name);
-            return response.Status != RespsonseStatus.Error ? (ActionResult) RedirectToAction("Index") : View("Error");
+            return response.Status != RespsonseStatus.Error ? RedirectToAction("Index") : RedirectToAction("Error");
         }
 
         [Authorize(Roles = "Admins")]
@@ -51,7 +51,7 @@ namespace StudMap.Admin.Controllers
             var mapsCtrl = new MapsController();
             BaseResponse response = mapsCtrl.DeleteMap(id);
             ListResponse<Map> maps = mapsCtrl.GetMaps();
-            return response.Status == RespsonseStatus.Error ? View("Error") : View("_Maps", maps);
+            return response.Status == RespsonseStatus.Error ? (ActionResult)RedirectToAction("Error") : View("_Maps", maps);
         }
 
         [Authorize(Roles = "Admins")]
@@ -77,7 +77,7 @@ namespace StudMap.Admin.Controllers
                 mapsCtrl.UploadFloorImage(response.Object.Id, "Images/Floors/" + data.FileName);
             }
             ViewBag.MapId = mapId;
-            return response.Status != RespsonseStatus.Error ? (ActionResult) RedirectToAction("Index") : View("Error");
+            return response.Status != RespsonseStatus.Error ? RedirectToAction("Index") : RedirectToAction("Error");
         }
 
         [Authorize(Roles = "Admins")]
@@ -86,7 +86,7 @@ namespace StudMap.Admin.Controllers
             var mapsCtrl = new MapsController();
             BaseResponse response = mapsCtrl.DeleteFloor(floorId);
             ListResponse<Floor> floors = mapsCtrl.GetFloorsForMap(mapId);
-            return response.Status == RespsonseStatus.Error ? View("Error") : View("_Floors", floors);
+            return response.Status == RespsonseStatus.Error ? (ActionResult)RedirectToAction("Error") : View("_Floors", floors);
         }
 
         [Authorize(Roles = "Admins")]
@@ -194,7 +194,7 @@ namespace StudMap.Admin.Controllers
             ViewBag.StartNodeId = nodeId;
             if (connectedNodes.Status == RespsonseStatus.Ok)
                 return PartialView("_ConnectedNodes", connectedNodes.List);
-            return View("Error");
+            return RedirectToAction("Error");
         }
 
         #endregion
