@@ -824,7 +824,7 @@ namespace StudMap.Service.Controllers
                                          where edge.Graphs.MapId == mapId
                                          select edge).ToList();
 
-                    var graph = new BidirectionalGraph<int, Edge<int>>();
+                    var graph = new UndirectedGraph<int, Edge<int>>();
 
                     foreach (int nodeId in nodesMap.Keys)
                     {
@@ -843,18 +843,20 @@ namespace StudMap.Service.Controllers
                     IEnumerable<Edge<int>> routeEdges;
                     if (tryGetPath(endNodeId, out routeEdges))
                     {
-                        Edge<int> lastEdge = null;
+                        // Eine Route existiert und beginnt damit mit dem Startknoten
+                        routeNodes.Add(NodeFromDb(nodesMap[startNodeId]));
+
+                        int lastNodeId = startNodeId;
                         foreach (var routeEdge in routeEdges)
                         {
-                            Nodes dbNode = nodesMap[routeEdge.Source];
+                            // Es handelt sich um eine ungerichtete Kante, d.h. es muss
+                            // geprüft werden, welcher Endknoten der Kante der zuletzt
+                            // besuchte Knoten war
+                            int nextNodeId = routeEdge.GetOtherVertex(lastNodeId);
+                            Nodes dbNode = nodesMap[nextNodeId];
                             routeNodes.Add(NodeFromDb(dbNode));
-                            lastEdge = routeEdge;
+                            lastNodeId = nextNodeId;
                         }
-
-                        if (lastEdge == null)
-                            routeNodes.Add(NodeFromDb(nodesMap[startNodeId]));
-                        else
-                            routeNodes.Add(NodeFromDb(nodesMap[lastEdge.Target]));
 
                         result.List = routeNodes;
                     }
