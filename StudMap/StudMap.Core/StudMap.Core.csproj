@@ -46,6 +46,7 @@
     <Compile Include="Information\NodeInformation.cs" />
     <Compile Include="Information\PoI.cs" />
     <Compile Include="Information\PoiType.cs" />
+    <Compile Include="Information\QRCode.cs" />
     <Compile Include="Information\Room.cs" />
     <Compile Include="Information\RoomAndPoI.cs" />
     <Compile Include="ListResponse.cs" />
