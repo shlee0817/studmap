@@ -53,7 +53,7 @@ public class UserInfo{
 	
 	public static void positionDialog(final Context context, final int nodeId){
 		Builder builder = new AlertDialog.Builder(context,AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);  
-		AlertDialog ad;
+		final AlertDialog ad;
 		
 		builder.setCancelable(true); // This blocks the 'BACK' button 
 		
@@ -74,12 +74,6 @@ public class UserInfo{
 				R.layout.simple_list_item_white, items);
 		mListView.setAdapter(mListAdapter);
 		ad = builder.create();
-		positionDialogClickListener(nodeId, ad, mListView);		
-		ad.show();
-	}
-
-	private static void positionDialogClickListener(final int nodeId,
-			final AlertDialog ad, ListView mListView) {
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -96,5 +90,8 @@ public class UserInfo{
 				}
 			}			
 		});
+		ad.show();
 	}
+
+	
 }
