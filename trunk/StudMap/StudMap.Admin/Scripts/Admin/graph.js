@@ -268,6 +268,11 @@ d3.floorplan.graph = function () {
                 }
             }).on("contextmenu", function(d) {
                 d3.event.preventDefault();
+                
+                //Zu neuen Knoten können noch keine Informationen hinterlegt werden
+                if (d.type == "new")
+                    return;
+
                 $.ajax({
                     url: window.basePath + 'Admin/GetNodeInformation?nodeId=' + d.id,
                     success: function(result) {
