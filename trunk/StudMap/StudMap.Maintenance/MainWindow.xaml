@@ -1,0 +1,13 @@
+﻿<Window x:Class="StudMap.Maintenance.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:tabData="clr-namespace:StudMap.Maintenance"
+        Title="StudMap - Maintenance" Height="350" Width="525">
+    <Grid>
+        <TabControl Margin="10" Height="Auto" VerticalAlignment="Stretch">
+            <TabItem Header="QR Code Export">
+                <tabData:QRCodeExport />
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

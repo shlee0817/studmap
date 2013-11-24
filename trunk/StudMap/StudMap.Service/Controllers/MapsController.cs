@@ -761,6 +761,33 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        public ListResponse<NodeInformation> GetNodeInformation(int mapId, int floorId)
+        {
+            var result = new ListResponse<NodeInformation>();
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    var nodes = entities.NodeInformation.ToList();
+                    if (mapId > 0)
+                    {
+                        nodes = nodes.Where(x => x.Nodes.Floors.MapId == mapId).ToList();
+                    }
+                    if (floorId > 0)
+                    {
+                        nodes = nodes.Where(x => x.Nodes.FloorId == floorId).ToList();
+                    }
+                    foreach (var node in nodes)
+                        result.List.Add(NodeInformationFromDb(node));
+                }
+            }
+            catch (DataException e)
+            {
+                result.SetError(ResponseError.DatabaseError);
+                ErrorSignal.FromCurrentContext().Raise(e);
+            }
+            return result;
+        }
         #endregion
 
         #region Layer: Navigation
@@ -857,6 +884,16 @@ namespace StudMap.Service.Controllers
                     X = dbNode.X,
                     Y = dbNode.Y,
                     FloorId = dbNode.FloorId
+                };
+        }
+
+        private NodeInformation NodeInformationFromDb(Data.Entities.NodeInformation dbNodeInformation)
+        {
+            return new NodeInformation
+                {
+                    DisplayName = dbNodeInformation.DisplayName,
+                    Node = NodeFromDb(dbNodeInformation.Nodes),
+                    RoomName = dbNodeInformation.RoomName
                 };
         }
 
