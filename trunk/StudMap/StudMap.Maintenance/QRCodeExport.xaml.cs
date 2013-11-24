@@ -69,12 +69,12 @@ namespace StudMap.Maintenance
             {
                 var qrCode = new QRCode
                     {
-                        GeneralData = new GeneralData
+                        General = new General
                             {
                                 DisplayName = node.DisplayName,
                                 RoomName = node.RoomName
                             },
-                        StudMapData = new StudMapData
+                        StudMap = new Core.Information.StudMap
                             {
                                 NodeId = node.NodeId
                             }

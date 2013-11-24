@@ -2,23 +2,23 @@
 {
     public class QRCode
     {
-        public GeneralData GeneralData { get; set; }
-        public StudMapData StudMapData { get; set; }
+        public General General { get; set; }
+        public StudMap StudMap { get; set; }
 
         public QRCode()
         {
-            GeneralData = new GeneralData();
-            StudMapData = new StudMapData();
+            General = new General();
+            StudMap = new StudMap();
         }
     }
 
-    public class GeneralData
+    public class General
     {
         public string RoomName { get; set; }
         public string DisplayName { get; set; }
     }
 
-    public class StudMapData
+    public class StudMap
     {
         public int NodeId { get; set; }
         public string Url = "http://code.google.com/p/studmap";
