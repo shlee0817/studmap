@@ -1,32 +1,49 @@
 package de.whs.studmap.web;
 
+import android.app.Activity;
+import android.util.Log;
 import android.webkit.WebView;
 
 public class JavaScriptService {
 
+	private Activity activity;
 	private WebView mapView;
 	
-	public JavaScriptService(WebView webView){
-		this.mapView = webView;
+	public JavaScriptService(Activity activity){
+		this.activity = activity;
+	}
+	
+	public void addWebView(WebView webview){
+		this.mapView = webview;
 	}
 	
 	//JavaScript Funktionsaufruf: [WebView.loadURL("javaScript:Funktiosnname(param0, param1,...)");]
-	
-	//TODO: mapView / webView Änderung dürfen nur im den WebViewThread gemacht werden, sonst Exception
-	
+		
 	public void sendTarget(int nodeID){
-		mapView.loadUrl("javascript:highlightPoint(" + nodeID + ", yellow)");
+		runOnUiThread("javascript:highlightPoint(" + nodeID + ", yellow)");				
 	}
 	
-	public void sendStart(int nodeID){
-		mapView.loadUrl("javascript:setStartPunkt(" + nodeID + ")");
+	public void sendStart(final int nodeID){
+		runOnUiThread("javascript:setStartPunkt(" + nodeID + ")");
 	}
 	
 	public void sendDestination(int nodeID){
-		mapView.loadUrl("javascript:setEndPunkt(" + nodeID + ")");
+		runOnUiThread("javascript:setEndPunkt(" + nodeID + ")");
 	}
 	
 	public void resetMap(){
-		mapView.loadUrl("javascript:resetMap()");
+		runOnUiThread("javascript:resetMap()");
 	}
+	
+	private void runOnUiThread(final String url){
+		activity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Log.d("TEST",  "hierher");
+				mapView.loadUrl(url);						
+			}
+		});
+	}
+
 }

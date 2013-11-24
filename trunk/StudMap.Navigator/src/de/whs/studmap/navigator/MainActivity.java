@@ -57,13 +57,16 @@ import de.whs.studmap.web.WebServiceException;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
+	//UI References
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private LinearLayout mLeftDrawer;
     private ActionBar mActionBar;
     private Spinner mFloorSpinner;           
        
+    //vars
     private boolean mLoggedIn = false;
+    private boolean isDrawerOpen = false;
     private String mUserName = "";
     private List<Floor> mFloorList = new ArrayList<Floor>();
     private List<Node> mRoomList = new ArrayList<Node>();
@@ -75,7 +78,6 @@ public class MainActivity extends Activity {
     private final int REQUEST_ID_POIS = 102;
     
     private static WebView mMapWebView;    
-    private static int mSelectedFloorID = 0;
     
     public static JavaScriptService mJScriptService;
 
@@ -99,6 +101,7 @@ public class MainActivity extends Activity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
+
         // Handle action buttons
         if(item.getItemId() == R.id.action_scan){
         	IntentIntegrator scanIntegrator = new IntentIntegrator(this);
@@ -107,6 +110,14 @@ public class MainActivity extends Activity {
         }
         else
         	return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public void onBackPressed() {
+		if (isDrawerOpen)
+			mDrawerLayout.closeDrawer(mLeftDrawer);
+    	else    		
+    		super.onBackPressed();
     }
     
     @Override
@@ -171,7 +182,8 @@ public class MainActivity extends Activity {
 		    			//TODO:
 	    				mJScriptService.sendTarget(Integer.valueOf(mScanResult));
 		    			UserInfo.toast(this, mScanResult, false);
-	    				loadURLtoMapWebView();
+	    				//TODO: anhand des Scanresults (vermutlich der Knoten!??!) den entsprechenden Floor raussuchen und anzeigen
+		    			//loadFloortoMapWebView();
 		    			break;
 	    			}
 	    		}  			
@@ -208,11 +220,13 @@ public class MainActivity extends Activity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, 
         		R.string.drawer_open, R.string.drawer_close) {
 		            public void onDrawerClosed(View view) {
+		            	isDrawerOpen = false;
 		            	mActionBar.setDisplayShowCustomEnabled(true);
 		                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		            }
 		
 		            public void onDrawerOpened(View drawerView) {
+		            	isDrawerOpen = true;
 		                mActionBar.setDisplayShowCustomEnabled(false);
 		                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		            }
@@ -245,17 +259,20 @@ public class MainActivity extends Activity {
         AutoCompleteTextView mSearchTextView = (AutoCompleteTextView) findViewById(R.id.actionBarSearch);
         mSearchTextView.setAdapter(searchAdapter);
         mSearchTextView.setThreshold(1);				//AutoComplete by the first letter
-        
+          
         mSearchTextView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
 				Node mSelectedNode = (Node) adapterView.getItemAtPosition(pos);
 				UserInfo.toast(getApplicationContext(), "Suche " + mSelectedNode.toString(), false);
+				//TODO: Tastatur schlieﬂen/minimieren & Textfeld leeren
 				
 				//TODO - ‹bergabe der Auswahl an JavaScript
 				mJScriptService.sendTarget(mSelectedNode.getNodeID());
-				loadURLtoMapWebView();
+
+				//TODO: anhand der NodeId den richtigen Floor raussuchen und anzeigen
+				//loadFloortoMapWebView();
 			}			
 		});
         
@@ -266,11 +283,11 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
 				Floor floor = (Floor) mFloorSpinner.getItemAtPosition(pos);
-				mSelectedFloorID = floor.getId();
+				int selectedFloorID = floor.getId();
 				
-				String floorName = floor.toString() + " mit ID: " + mSelectedFloorID;
+				String floorName = floor.toString() + " mit ID: " + selectedFloorID;
 				UserInfo.toast(getApplicationContext(), floorName, true);
-				loadURLtoMapWebView();
+				loadFloortoMapWebView(selectedFloorID);
 			}
 			
 			@Override
@@ -280,6 +297,8 @@ public class MainActivity extends Activity {
     }
     
     private void loadWebViewFragment(){
+    	mJScriptService = new JavaScriptService(this);
+    	
         // update the main content by replacing fragments
         Fragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
@@ -287,6 +306,8 @@ public class MainActivity extends Activity {
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        
+        
     }
 
     /**
@@ -306,19 +327,19 @@ public class MainActivity extends Activity {
             mMapWebView.setWebViewClient(new WebViewClient());
             JavaScriptInterface jsInterface = new JavaScriptInterface(rootView.getContext());
             mMapWebView.getSettings().setJavaScriptEnabled(true);
-            mMapWebView.addJavascriptInterface(jsInterface, "jsinterface");
-
-            loadURLtoMapWebView();
+            mMapWebView.addJavascriptInterface(jsInterface, "jsinterface");      
+            
+            mJScriptService.addWebView(mMapWebView);
+            //loadFloortoMapWebView(); 
+            //TODO: kann weg?
             
             return rootView;
         }
     }
     
-    public static void loadURLtoMapWebView(){
-    	mMapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + mSelectedFloorID);
+    public static void loadFloortoMapWebView(int floorId){
+    	mMapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + floorId);
         mMapWebView.requestFocus();
-        
-        mJScriptService = new JavaScriptService(mMapWebView);
     }
     
     private void onDrawerItemClick(int position) {
@@ -461,8 +482,9 @@ public class MainActivity extends Activity {
 		        												R.layout.simple_list_item_no_bg_font_white, mFloorList);
 		        levelAdapter.setDropDownViewResource(R.layout.simple_list_item_black);
 		        mFloorSpinner.setAdapter(levelAdapter);	
-		        mSelectedFloorID = ((Floor) mFloorSpinner.getSelectedItem()).getId();
-	            loadURLtoMapWebView();	        
+		        
+		        int selectedFloorID = ((Floor) mFloorSpinner.getSelectedItem()).getId();
+	            loadFloortoMapWebView(selectedFloorID);	        
 			}
 			else
 				if (bShowDialog)
