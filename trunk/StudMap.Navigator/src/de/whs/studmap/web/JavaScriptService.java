@@ -24,11 +24,11 @@ public class JavaScriptService {
 	}
 	
 	public void sendStart(final int nodeID){
-		runOnUiThread("javascript:setStartPunkt(" + nodeID + ")");
+		runOnUiThread("javascript:setStartPoint(" + nodeID + ")");
 	}
 	
 	public void sendDestination(int nodeID){
-		runOnUiThread("javascript:setEndPunkt(" + nodeID + ")");
+		runOnUiThread("javascript:setEndPoint(" + nodeID + ")");
 	}
 	
 	public void resetMap(){
