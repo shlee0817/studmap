@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -86,13 +85,6 @@ public class RegisterActivity extends Activity {
 						attemptRegister();
 					}
 				});
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.register, menu);
-		return true;
 	}
 
 	public void attemptRegister() {
@@ -220,9 +212,11 @@ public class RegisterActivity extends Activity {
 					switch (errorCode) {
 					case ResponseError.DatabaseError:
 						bShowDialog = true;
+						break;
 					case ResponseError.UserNameDuplicate:
 						mUsernameView.setError(getString(R.string.error_username_duplicate));
 						bRequestFocus = true;
+						break;
 					}
 				} catch (JSONException ignore) {
 					Log.d(Constants.LOG_TAG_REGISTER_ACTIVITY, "UserRegisterTask - Parsing the WebServiceException failed!");

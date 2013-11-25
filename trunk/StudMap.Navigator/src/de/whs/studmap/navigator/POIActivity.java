@@ -35,7 +35,6 @@ import de.whs.studmap.web.WebServiceException;
 public class POIActivity extends Activity implements Constants{
 	
 	public static final String EXTRA_NODE_ID = "NodeID";
-	public static final String EXTRA_USERNAME = "UserName";
 	
 	private ListView mListView;
 	private EditText mInputSearch;
@@ -53,8 +52,7 @@ public class POIActivity extends Activity implements Constants{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_poi);
 		
-		Intent intent = getIntent();
-		mUsername = intent.getStringExtra(EXTRA_USERNAME);
+		mUsername = MainActivity.mUserName;
 		
 		mFormView = findViewById(R.id.getPoI_form);
 		mStatusView = findViewById(R.id.getPoIData_status);

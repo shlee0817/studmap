@@ -67,7 +67,6 @@ public class MainActivity extends Activity {
     //vars
     private boolean mLoggedIn = false;
     private boolean isDrawerOpen = false;
-    private String mUserName = "";
     private List<Floor> mFloorList = new ArrayList<Floor>();
     private List<Node> mRoomList = new ArrayList<Node>();
     private List<String> mDrawerItems;
@@ -77,8 +76,9 @@ public class MainActivity extends Activity {
     private final int REQUEST_ID_LOGIN = 101;
     private final int REQUEST_ID_POIS = 102;
     
-    private static WebView mMapWebView;    
+    private static WebView mMapWebView; 
     
+    public static String mUserName = "Lieber Benutzer";
     public static JavaScriptService mJScriptService;
 
     @Override
@@ -350,6 +350,7 @@ public class MainActivity extends Activity {
     	case LOG_IN_OUT:
     		if (mLoggedIn){
     			try {
+    				//TODO: Async!! Logout
 					Service.logout(mUserName);
 					UserInfo.toast(this, getString(R.string.logout_successfull), true);
 				} catch (WebServiceException e) {
@@ -367,9 +368,7 @@ public class MainActivity extends Activity {
     		break;
     		
     	case POI:
-    		Intent intent = new Intent(this, POIActivity.class);
-    		intent.putExtra(POIActivity.EXTRA_USERNAME, mUserName);
-    		startActivityForResult(intent,REQUEST_ID_POIS);
+    		startActivityForResult(new Intent(this, POIActivity.class),REQUEST_ID_POIS);
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		

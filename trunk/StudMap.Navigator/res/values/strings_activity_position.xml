@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="title_activity_position">PositionActivity</string>
+    <string name="position_progress">Lade Infos zum gewählten Ort&#8230;</string>
+    <string name="cancel_button">Abbrechen</string>
+    
+    <string name="navigation">Navigation</string>
+	<string name="navigationTitle">setzen als:</string>
+	<string name="navigationDestination">Zielpunkt</string>
+	<string name="navigationStart">Startpunkt</string>
+	
+</resources>
