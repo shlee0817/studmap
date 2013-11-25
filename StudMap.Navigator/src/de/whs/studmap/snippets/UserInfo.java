@@ -1,20 +1,9 @@
 package de.whs.studmap.snippets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
-import de.whs.studmap.navigator.MainActivity;
 import de.whs.studmap.navigator.R;
 
 public class UserInfo{
@@ -50,48 +39,5 @@ public class UserInfo{
 		int length = length_short ? 0 : 1;
 		Toast.makeText(context, message, length).show();		
 	}	
-	
-	public static void positionDialog(final Context context, final int nodeId){
-		Builder builder = new AlertDialog.Builder(context,AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);  
-		final AlertDialog ad;
-		
-		builder.setCancelable(true); // This blocks the 'BACK' button 
-		
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-		View view = inflater.inflate(R.layout.set_position_dialog, null);
-	    builder.setView(view);
-	    builder.setNegativeButton(context.getString(R.string.negativeButton), new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int id) {
-	                   dialog.dismiss();
-	               }
-	           });      
-		List<String> items = new ArrayList<String>();
-		items.add(context.getString(R.string.navigationStart));
-		items.add(context.getString(R.string.navigationDestination));
-		
-		ListView mListView = (ListView) view.findViewById(R.id.positionList);
-		ArrayAdapter<String> mListAdapter = new ArrayAdapter<String>(context,
-				R.layout.simple_list_item_white, items);
-		mListView.setAdapter(mListAdapter);
-		ad = builder.create();
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				switch (position) {
-				case 0:
-					MainActivity.mJScriptService.sendStart(nodeId);
-					ad.dismiss();
-					break;
-
-				case 1:
-					MainActivity.mJScriptService.sendDestination(nodeId);
-					ad.dismiss();
-					break;
-				}
-			}			
-		});
-		ad.show();
-	}
-
 	
 }

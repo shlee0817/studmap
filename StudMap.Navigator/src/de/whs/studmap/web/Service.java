@@ -132,9 +132,10 @@ public class Service implements Constants {
 		return result;
 	}
 	
-	public static Node getNodeInformationForNode(int nodeId) {
+	public static Node getNodeInformationForNode(int nodeId) throws WebServiceException, ConnectException {
 		Node node = null;
 		//TODO: parse NodeInformation
+		node = new Node(123, "abc", "toll");
 		return node;
 	}
   
