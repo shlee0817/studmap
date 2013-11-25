@@ -46,67 +46,70 @@
 </style>
 
 
-    <div id="map">
-    <svg id="svgMap" height="100%" width="100%"></svg>
-    </div>
+<div id="map">
+<svg id="svgMap" height="100%" width="100%"></svg>
+</div>
 
 
 
     
 <script id="demo-code" type="text/javascript">
-   
+
     var floorID = '@Request.Params["floorID"]';
-    var first=true;
-    var x1,x2,y1,y2;
-    var KreisRadius=2;
-    var linienDicke=2;
+    var first = true;
+    var x1, x2, y1, y2;
+    var KreisRadius = 2;
+    var linienDicke = 2;
+
+    var startPoint;
+    var endPoint;
 
     var domainStartX = 0, domainEndX = 1;
     var rangeStartX = 0, rangeEndX;
     var domainStartY = 0, domainEndY = 1;
     var rangeStartY = 0, rangeEndY;
-	
+
 
     var svgContainer = d3.select("#svgMap")
 
-		
-    d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanImage/?floorid="+floorID, function(data) {
-	
+
+    d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanImage/?floorid=" + floorID, function (data) {
+
         //var newImg = new Image();
         //newImg.src =  data.Object;
-		
+
         var newImg = new Image();
-        newImg.onload = function(){ 
-		
-		
+        newImg.onload = function () {
+
+
             /*var height = newImg.height;
             var width = newImg.width;
             alert ('The image size is '+width+'*'+height);*/
-	
+
             imageWidth = newImg.width;
             imageHeight = newImg.height;
-     
+
             width = window.innerWidth;
-            height =imageHeight / imageWidth * width;
+            height = imageHeight / imageWidth * width;
             rangeEndX = width; //window.innerWidth;
             rangeEndY = height; //window.innerHeight;
             //3837 × 3371
             //4549 × 3216
-            var  xscale = d3.scale.linear()
+            var xscale = d3.scale.linear()
                         .domain([domainStartX, domainEndX])
                         .range([rangeStartX, rangeEndX]),
-                    yscale = d3.scale.linear()
+                yscale = d3.scale.linear()
                         .domain([domainStartY, domainEndY])
                         .range([rangeStartY, rangeEndY]),
                 map = d3.floorplan().xScale(xscale).yScale(yscale),
                 imagelayer = d3.floorplan.imagelayer(),
                 mapdata = {};
-		
-		
-				
-			
 
-		
+
+
+
+
+
             mapdata[imagelayer.id()] = [{
                 url: data.Object,
                 x: 0,
@@ -116,30 +119,91 @@
             }];
             map.addLayer(imagelayer);
             svgContainer.datum(mapdata).call(map);
-		
-            d3.select(".map-layers").append("g").attr("id","lines");
-            d3.select(".map-layers").append("g").attr("id","circles");
-	
-            d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanData/?floorid="+floorID, function(data) {
-		
-                for(var i = 0; i< data.Object.Graph.Nodes.length;i++)
-                {
-                    showCircles([{x:data.Object.Graph.Nodes[i].X*rangeEndX,y:data.Object.Graph.Nodes[i].Y*rangeEndY}]);
+
+            //d3.select(".map-layers").append("g").attr("id", "lines");
+            d3.select(".map-layers").append("g").attr("id", "circles");
+            d3.select(".map-layers").append("g").attr("id", "path");
+
+            d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanData/?floorid=" + floorID, function (data) {
+
+                for (var i = 0; i < data.Object.Graph.Nodes.length; i++) {
+                    showCircles([{ x: data.Object.Graph.Nodes[i].X, y: data.Object.Graph.Nodes[i].Y, id: data.Object.Graph.Nodes[i].Id }]);
                 }
             });
-		
+
         };
         // handle failure
-        newImg.onerror = function(){
+        newImg.onerror = function () {
 
         };
         newImg.src = data.Object;
-		
-		
-	 
+
+
+
     });
 
-    //showCircles([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}]);
+
+    function setStartPoint(PID) {
+        if (startPoint) {
+            startPoint.setAttribute("fill", "black");
+            startPoint.setAttribute("r", KreisRadius);
+        }
+        startPoint = document.getElementById(PID);
+
+        startPoint.setAttribute("fill", "green");
+        startPoint.setAttribute("r", 4);
+
+        testPath();
+    }
+    function setEndPoint(PID) {
+        if (endPoint) {
+            endPoint.setAttribute("fill", "black");
+            endPoint.setAttribute("r", KreisRadius);
+        }
+        endPoint = document.getElementById(PID);
+
+        endPoint.setAttribute("fill", "red");
+        endPoint.setAttribute("r", 4);
+
+        testPath();
+    }
+    function testPath() {
+        if (startPoint && endPoint) {
+            showPath(startPoint.id, endPoint.id);
+        }
+    }
+
+    function showPath(startId, endId) {
+
+        d3.json("http://193.175.199.115/StudMapService/api/Maps/GetRouteBetween/?mapId=3&endNodeId=" + startId + "&startNodeId=" + endId, function (data) {
+
+            drawPath(data.List);
+            document.getElementById('path').style.display = 'block';
+            document.getElementById('circles').style.display = 'none';
+
+        });
+    }
+
+    function highlightPoint(PID, color) {
+        document.getElementById(PID).setAttribute("fill", color);
+    }
+    function highlightPointR(PID, color, radius) {
+        document.getElementById(PID).setAttribute("fill", color);
+        document.getElementById(PID).setAttribute("r", radius);
+    }
+
+
+
+
+    function clearPath() {
+
+        var div = document.getElementById('path');
+        while (div.firstChild) {
+            div.removeChild(div.firstChild);
+        }
+
+    }
+
 
     function clearMap() {
 
@@ -147,27 +211,22 @@
         while (div.firstChild) {
             div.removeChild(div.firstChild);
         }
-        var div = document.getElementById('lines');
-        while (div.firstChild) {
-            div.removeChild(div.firstChild);
-        }
+
     }
 
     function circle_click(evt) {
         var circle = evt.target;
+
+
+
         if (window.jsinterface) {
-            window.jsinterface.punkt();
+            window.jsinterface.punkt(circle.id);
         }
 
-        //clearMap();
-
-        if (circle.r.animVal.value == 2)
-            circle.setAttribute("r", 5);
-        else
-            circle.setAttribute("r", 2);
     }
 
-    function showPath(PathAsArray) {
+    function drawPath(PathAsArray) {
+        // {"List":[{"Id":966,"X":0.3787,"Y":0.1263,"FloorId":1012},{"Id":967,"X":0.3689,"Y":0.1059,"FloorId":1012}],"Status":1,"ErrorCode":0,"ErrorMessage":""}
 
 
         if (PathAsArray.length < 2)
@@ -175,25 +234,40 @@
 
 
         for (var i = 0; i < PathAsArray.length - 1; i++) {
-            // element = PathAsArray[i];
-            d3.select("#circles").append("circle")
-          .attr("cx", PathAsArray[i].x)
-          .attr("cy", PathAsArray[i].y)
-          .attr("r", KreisRadius);
 
-            d3.select("#lines").append("line")
-              .attr("x1", PathAsArray[i].x)
-              .attr("y1", PathAsArray[i].y)
-              .attr("x2", PathAsArray[i + 1].x)
-              .attr("y2", PathAsArray[i + 1].y)
-              .attr("stroke-width", linienDicke)
-              .attr("stroke", "black");
+            if (PathAsArray[i].FloorId == floorID) {
+                d3.select("#path").append("line")
+                  .attr("x1", PathAsArray[i].X * rangeEndX)
+                  .attr("y1", PathAsArray[i].Y * rangeEndY)
+                  .attr("x2", PathAsArray[i + 1].X * rangeEndX)
+                  .attr("y2", PathAsArray[i + 1].Y * rangeEndY)
+                  .attr("stroke-width", linienDicke)
+                  .attr("stroke", "black");
+            }
 
         }
-        d3.select("#circles").append("circle")
-      .attr("cx", PathAsArray[PathAsArray.length - 1].x)
-      .attr("cy", PathAsArray[PathAsArray.length - 1].y)
-      .attr("r", KreisRadius);
+
+        for (var i = 0; i < PathAsArray.length - 1; i++) {
+
+            if (PathAsArray[i].FloorId == floorID) {
+                // element = PathAsArray[i];
+
+                var pointInPath = d3.select("#path").append("circle");
+                pointInPath.attr("cx", PathAsArray[i].X * rangeEndX)
+              .attr("cy", PathAsArray[i].Y * rangeEndY)
+              .attr("id", PathAsArray[i].Id)
+              .attr("r", KreisRadius);
+                if (i == 0) { pointInPath.attr("fill", "red").attr("r", 4); }
+            }
+        }
+
+
+        d3.select("#path").append("circle")
+      .attr("cx", PathAsArray[PathAsArray.length - 1].X * rangeEndX)
+      .attr("cy", PathAsArray[PathAsArray.length - 1].Y * rangeEndY)
+      .attr("id", PathAsArray[PathAsArray.length - 1].Id)
+	  .attr("fill", "green").attr("r", 4);
+
 
 
 
@@ -205,13 +279,37 @@
         for (var i = 0; i < CirclesAsArray.length; i++) {
 
             d3.select("#circles").append("circle")
-           .attr("cx", CirclesAsArray[i].x)
-           .attr("cy", CirclesAsArray[i].y)
+           .attr("cx", CirclesAsArray[i].x * rangeEndX)
+           .attr("cy", CirclesAsArray[i].y * rangeEndY)
+           .attr("id", CirclesAsArray[i].id)
            .attr("r", KreisRadius)
            .attr("onclick", "circle_click(evt)");
 
-
         }
+    }
+
+    function resetMap() {
+        var div = document.getElementById('circles');
+        while (div.firstChild) {
+            div.removeChild(div.firstChild);
+        }
+
+        d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanData/?floorid=" + floorID, function (data) {
+            for (var i = 0; i < data.Object.Graph.Nodes.length; i++) {
+                showCircles([{ x: data.Object.Graph.Nodes[i].X, y: data.Object.Graph.Nodes[i].Y, id: data.Object.Graph.Nodes[i].Id }]);
+            }
+        });
+
+        startPoint = null;
+        endPoint = null;
+
+        var div = document.getElementById('path');
+        while (div.firstChild) {
+            div.removeChild(div.firstChild);
+        }
+
+        document.getElementById('path').style.display = 'none';
+        document.getElementById('circles').style.display = 'block';
     }
 
 </script>
