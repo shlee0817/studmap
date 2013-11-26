@@ -37,11 +37,11 @@ namespace StudMap.Data.Entities
         public DbSet<Nodes> Nodes { get; set; }
         public DbSet<PoIs> PoIs { get; set; }
         public DbSet<PoiTypes> PoiTypes { get; set; }
-        public DbSet<NodeInformationForMap> NodeInformationForMap { get; set; }
         public DbSet<PoisForMap> PoisForMap { get; set; }
         public DbSet<AccessPoints> AccessPoints { get; set; }
         public DbSet<Fingerprints> Fingerprints { get; set; }
         public DbSet<AccessPointScans> AccessPointScans { get; set; }
+        public DbSet<NodeInformationForMap> NodeInformationForMap { get; set; }
     
         public virtual int DeleteFloor(Nullable<int> floorId)
         {

@@ -13,7 +13,6 @@
         <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="5.25" PointY="4.5" />
         <EntityTypeShape EntityType="StudMapModel.PoIs" Width="1.5" PointX="5.25" PointY="1" />
         <EntityTypeShape EntityType="StudMapModel.PoiTypes" Width="1.5" PointX="3" PointY="1.25" />
-        <EntityTypeShape EntityType="StudMapModel.NodeInformationForMap" Width="1.5" PointX="7.75" PointY="0.75" />
         <EntityTypeShape EntityType="StudMapModel.PoisForMap" Width="1.5" PointX="9.75" PointY="0.75" />
         <AssociationConnector Association="StudMapModel.FK_Edges_EndNodes" />
         <AssociationConnector Association="StudMapModel.FK_Edges_Graphs" />
@@ -30,6 +29,7 @@
         <EntityTypeShape EntityType="StudMapModel.AccessPointScans" Width="1.5" PointX="9.75" PointY="11.875" />
         <AssociationConnector Association="StudMapModel.FK_Fingerprints_AccessPoints" />
         <AssociationConnector Association="StudMapModel.FK_AccessPointScans_Fingerprints" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformationForMap" Width="1.5" PointX="8.7718855537343234" PointY="29.84965146977904" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -18,5 +18,6 @@ namespace StudMap.Data.Entities
         public string DisplayName { get; set; }
         public string RoomName { get; set; }
         public int NodeId { get; set; }
+        public int FloorId { get; set; }
     }
 }
