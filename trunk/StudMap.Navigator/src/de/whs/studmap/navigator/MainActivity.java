@@ -32,6 +32,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -62,7 +63,8 @@ public class MainActivity extends Activity {
     private ActionBarDrawerToggle mDrawerToggle;
     private LinearLayout mLeftDrawer;
     private ActionBar mActionBar;
-    private Spinner mFloorSpinner;           
+    private Spinner mFloorSpinner;
+    private AutoCompleteTextView mSearchTextView;
        
     //vars
     private boolean mLoggedIn = false;
@@ -177,11 +179,9 @@ public class MainActivity extends Activity {
 	    		if(result != null){
 	    			String mScanResult = result.getContents();
 	    			if (mScanResult != null){
-		    			//TODO:
-	    				mJScriptService.sendTarget(Integer.valueOf(mScanResult));
+		    			mJScriptService.sendTarget(Integer.valueOf(mScanResult));
 		    			UserInfo.toast(this, mScanResult, false);
-	    				//TODO: anhand des Scanresults (vermutlich der Knoten!??!) den entsprechenden Floor raussuchen und anzeigen
-		    			//loadFloortoMapWebView();
+	    				//TODO: anhand des Scanresults/NodeId den entsprechenden Floor raussuchen und anzeigen
 		    			break;
 	    			}
 	    		}  			
@@ -254,7 +254,7 @@ public class MainActivity extends Activity {
         
         //Initialize Search TextView
         ArrayAdapter<Node> searchAdapter = new ArrayAdapter<Node>(this,android.R.layout.simple_list_item_1, mRoomList);
-        AutoCompleteTextView mSearchTextView = (AutoCompleteTextView) findViewById(R.id.actionBarSearch);
+        mSearchTextView = (AutoCompleteTextView) findViewById(R.id.actionBarSearch);
         mSearchTextView.setAdapter(searchAdapter);
         mSearchTextView.setThreshold(1);				//AutoComplete by the first letter
           
@@ -264,13 +264,15 @@ public class MainActivity extends Activity {
 			public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
 				Node mSelectedNode = (Node) adapterView.getItemAtPosition(pos);
 				UserInfo.toast(getApplicationContext(), "Suche " + mSelectedNode.toString(), false);
-				//TODO: Tastatur schlieﬂen/minimieren & Textfeld leeren
 				
-				//TODO - ‹bergabe der Auswahl an JavaScript
+				//Hide soft keyboard & clear textview				
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+				mSearchTextView.setText("");
+				
 				mJScriptService.sendTarget(mSelectedNode.getNodeID());
 
 				//TODO: anhand der NodeId den richtigen Floor raussuchen und anzeigen
-				//loadFloortoMapWebView();
 			}			
 		});
         
@@ -328,8 +330,6 @@ public class MainActivity extends Activity {
             mMapWebView.addJavascriptInterface(jsInterface, "jsinterface");      
             
             mJScriptService.addWebView(mMapWebView);
-            //loadFloortoMapWebView(); 
-            //TODO: kann weg?
             
             return rootView;
         }
