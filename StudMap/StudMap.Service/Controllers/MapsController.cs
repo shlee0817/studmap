@@ -994,8 +994,8 @@ namespace StudMap.Service.Controllers
                         {
                             RoomName = x.RoomName,
                             DisplayName = x.DisplayName,
-                            NodeId = x.NodeId
-
+                            NodeId = x.NodeId,
+                            FloorId = x.FloorId
                         }).ToList();
                 }
             }

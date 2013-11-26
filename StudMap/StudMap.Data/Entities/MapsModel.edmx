@@ -22,7 +22,8 @@
       [NodeInformationForMap].[MapId] AS [MapId], 
       [NodeInformationForMap].[DisplayName] AS [DisplayName], 
       [NodeInformationForMap].[RoomName] AS [RoomName], 
-      [NodeInformationForMap].[NodeId] AS [NodeId]
+      [NodeInformationForMap].[NodeId] AS [NodeId], 
+      [NodeInformationForMap].[FloorId] AS [FloorId]
       FROM [dbo].[NodeInformationForMap] AS [NodeInformationForMap]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PoisForMap" EntityType="StudMapModel.Store.PoisForMap" store:Type="Views" store:Schema="dbo" store:Name="PoisForMap">
@@ -190,11 +191,13 @@
           <Key>
             <PropertyRef Name="MapId" />
             <PropertyRef Name="NodeId" />
+            <PropertyRef Name="FloorId" />
           </Key>
           <Property Name="MapId" Type="int" Nullable="false" />
           <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
           <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
           <Property Name="NodeId" Type="int" Nullable="false" />
+          <Property Name="FloorId" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'StudMap.dbo.PoisForMap' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -387,7 +390,6 @@
           <EntitySet Name="Nodes" EntityType="StudMapModel.Nodes" />
           <EntitySet Name="PoIs" EntityType="StudMapModel.PoIs" />
           <EntitySet Name="PoiTypes" EntityType="StudMapModel.PoiTypes" />
-          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
           <EntitySet Name="PoisForMap" EntityType="StudMapModel.PoisForMap" />
           <AssociationSet Name="FK_Edges_EndNodes" Association="StudMapModel.FK_Edges_EndNodes">
             <End Role="Nodes" EntitySet="Nodes" />
@@ -443,6 +445,7 @@
             <End Role="Fingerprints" EntitySet="Fingerprints" />
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
           </AssociationSet>
+          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
           </EntityContainer>
         <EntityType Name="Edges">
           <Key>
@@ -536,16 +539,6 @@
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoiTypes" ToRole="PoIs" />
-        </EntityType>
-        <EntityType Name="NodeInformationForMap">
-          <Key>
-            <PropertyRef Name="MapId" />
-            <PropertyRef Name="NodeId" />
-          </Key>
-          <Property Type="Int32" Name="MapId" Nullable="false" />
-          <Property Type="String" Name="DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="NodeId" Nullable="false" />
         </EntityType>
         <EntityType Name="PoisForMap">
           <Key>
@@ -735,6 +728,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="NodeInformationForMap">
+          <Key>
+            <PropertyRef Name="MapId" />
+            <PropertyRef Name="NodeId" />
+            <PropertyRef Name="FloorId" />
+          </Key>
+          <Property Type="Int32" Name="MapId" Nullable="false" />
+          <Property Type="String" Name="DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="NodeId" Nullable="false" />
+          <Property Type="Int32" Name="FloorId" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -825,16 +830,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="NodeInformationForMap">
-            <EntityTypeMapping TypeName="StudMapModel.NodeInformationForMap">
-              <MappingFragment StoreEntitySet="NodeInformationForMap">
-                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
-                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
-                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
-                <ScalarProperty Name="MapId" ColumnName="MapId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PoisForMap">
             <EntityTypeMapping TypeName="StudMapModel.PoisForMap">
               <MappingFragment StoreEntitySet="PoisForMap">
@@ -873,6 +868,17 @@
                 <ScalarProperty Name="AccessPointId" ColumnName="AccessPointId" />
                 <ScalarProperty Name="FingerprintId" ColumnName="FingerprintId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NodeInformationForMap">
+            <EntityTypeMapping TypeName="StudMapModel.NodeInformationForMap">
+              <MappingFragment StoreEntitySet="NodeInformationForMap">
+                <ScalarProperty Name="FloorId" ColumnName="FloorId" />
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="MapId" ColumnName="MapId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
