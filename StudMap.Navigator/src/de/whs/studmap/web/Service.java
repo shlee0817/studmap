@@ -133,10 +133,21 @@ public class Service implements Constants {
 	}
 	
 	public static Node getNodeInformationForNode(int nodeId) throws WebServiceException, ConnectException {
-		Node node = null;
-		//TODO: parse NodeInformation
-		node = new Node(123, "abc", "toll");
-		return node;
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_NODEID, String.valueOf(nodeId)));
+		
+		try {
+			JSONObject nodeInfo = httpGet(URL_MAPS, METHOD_GETNODEINFOFORNODE, params);
+			String displayName = nodeInfo.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
+			String roomName = nodeInfo.getString(RESPONSE_PARAM_NODE_ROOMNAME);
+			
+			Node node = new Node(nodeId, roomName, displayName);
+			return node;
+			
+		} catch (JSONException ignore) {
+			Log.e(LOG_TAG_WEBSERVICE, "getNodeInformationForNode - NodeInfo konnte nicht geparst werden!");
+		}
+		return null;
 	}
   
 	private static JSONObject httpPost(String url, String methodName, List<NameValuePair> params) 
