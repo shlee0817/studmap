@@ -365,6 +365,11 @@ public class MainActivity extends Activity {
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		
+    	case RESET_NAV:
+    		mJScriptService.resetMap();
+    		mDrawerLayout.closeDrawer(mLeftDrawer);
+    		break;
+    		
     	case POI:
     		startActivityForResult(new Intent(this, POIActivity.class),REQUEST_ID_POIS);
 	        mDrawerLayout.closeDrawer(mLeftDrawer);
@@ -372,6 +377,7 @@ public class MainActivity extends Activity {
     		
     	case RELOAD:
     		loadActivity();
+    		mDrawerLayout.closeDrawer(mLeftDrawer);
     		break;
     		
     	default:
