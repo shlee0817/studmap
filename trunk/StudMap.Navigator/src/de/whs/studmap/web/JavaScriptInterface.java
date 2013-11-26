@@ -13,7 +13,7 @@ public class JavaScriptInterface {
     }
    
     @JavascriptInterface
-    public void punkt(int nodeId){
+    public void punkt(String nodeId){
     	Intent intent = new Intent(context,PositionActivity.class);
     	intent.putExtra(PositionActivity.EXTRA_NODEID, nodeId);
 		context.startActivity(intent);

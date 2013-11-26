@@ -17,6 +17,7 @@ public interface Constants {
 		 static final String METHOD_GETPOIS = "GetPoIsForMap";
 		 static final String METHOD_GETROOMS = "GetRoomsForMap";
 		 static final String METHOD_GETFLOORS = "GetFloorsForMap";
+		 static final String METHOD_GETNODEINFOFORNODE = "getNodeInformationForNode";
 			
 		//UserController
 		 static final String REQUEST_PARAM_USERNAME = "userName";
@@ -24,6 +25,7 @@ public interface Constants {
 		 
 		 //MapController
 		 static final String REQUEST_PARAM_MAPID = "mapId";
+		 static final String REQUEST_PARAM_NODEID = "nodeId";
 		
 		//Node
 		 static final String RESPONSE_PARAM_NODE_ROOMNAME = "RoomName";

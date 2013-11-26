@@ -169,9 +169,7 @@ public class MainActivity extends Activity {
 			case REQUEST_ID_POIS :
 				if (resultCode == RESULT_OK){
 					int nodeID =data.getIntExtra(POIActivity.EXTRA_NODE_ID, -1);
-					//TODO: mittels der KnotenID einen neuen Zielpunkt setzen und die neue Route anzeigen	
-
-					UserInfo.toast(this, String.valueOf(nodeID),false);					
+					mJScriptService.sendTarget(nodeID);				
 				}
 				break;
 			case IntentIntegrator.REQUEST_CODE:
@@ -374,6 +372,8 @@ public class MainActivity extends Activity {
     		
     	case RELOAD:
     		loadActivity();
+    		break;
+    		
     	default:
     		UserInfo.toast(this,"Auswahl nicht gefunden!", false);
     		break;

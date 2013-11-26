@@ -57,7 +57,7 @@ public class PositionActivity extends Activity {
 		mUsername = MainActivity.mUserName;
 		
 		Intent intent = getIntent();
-		nodeId = intent.getIntExtra(EXTRA_NODEID, 0);
+		nodeId = Integer.parseInt(intent.getStringExtra(EXTRA_NODEID));
 		
 		//UI References
 		mPositionFormView = findViewById(R.id.position_form);
