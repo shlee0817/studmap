@@ -3,6 +3,7 @@ package de.whs.studmap.data;
 //TODO: Empty Slot Idee war gut, aber geht nicht vernünftig, weil damit ein Scrollbalken im Drawer erscheint
 public enum DrawerItemEnum {
 	LOG_IN_OUT,
+	RESET_NAV,
 	POI,
 	SETTINGS,
 	RELOAD,
@@ -12,6 +13,5 @@ public enum DrawerItemEnum {
 	EMPTYSLOT4,
 	EMPTYSLOT5,
 	EMPTYSLOT6,
-	EMPTYSLOT7,
 	IMPRESSUM
 }

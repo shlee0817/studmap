@@ -1,7 +1,6 @@
 package de.whs.studmap.web;
 
 import android.app.Activity;
-import android.util.Log;
 import android.webkit.WebView;
 
 public class JavaScriptService {
@@ -17,10 +16,10 @@ public class JavaScriptService {
 		this.mapView = webview;
 	}
 	
-	//JavaScript Funktionsaufruf: [WebView.loadURL("javaScript:Funktiosnname(param0, param1,...)");]
+	//JavaScript Funktionsaufruf: [WebView.loadURL("javaScript:Funktiosnname("param0", "param1",...)");]
 		
 	public void sendTarget(Integer nodeID){
-		runOnUiThread("javascript:highlightPoint(\"" + nodeID + "\", \"yellow\")");				
+		runOnUiThread("javascript:highlightPoint(\"" + nodeID + "\", \"orange\")");				
 	}
 	
 	public void sendStart(Integer nodeID){
@@ -40,7 +39,6 @@ public class JavaScriptService {
 			
 			@Override
 			public void run() {
-				Log.d("TEST",  "hierher");
 				mapView.loadUrl(url);						
 			}
 		});

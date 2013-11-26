@@ -21,10 +21,10 @@
 
     <string-array name="menue_item_array">
         <item>Anmelden</item>
+        <item>Navigation zurücksetzen</item>
         <item>Point of Interest</item>
         <item>Einstellungen</item>
         <item>Neu Laden</item>
-        <item ></item>
         <item ></item>
         <item ></item>
         <item ></item>
