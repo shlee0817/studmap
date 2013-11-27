@@ -138,8 +138,9 @@ public class Service implements Constants {
 		
 		try {
 			JSONObject nodeInfo = httpGet(URL_MAPS, METHOD_GETNODEINFOFORNODE, params);
-			String displayName = nodeInfo.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
-			String roomName = nodeInfo.getString(RESPONSE_PARAM_NODE_ROOMNAME);
+			JSONObject object = nodeInfo.getJSONObject(RESPONSE_PARAM_OBJECT);
+			String displayName = object.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
+			String roomName = object.getString(RESPONSE_PARAM_NODE_ROOMNAME);
 			
 			Node node = new Node(nodeId, roomName, displayName);
 			return node;
@@ -235,7 +236,8 @@ public class Service implements Constants {
 		int id = o.getInt(RESPONSE_PARAM_NODE_ID);
 		String roomName = o.getString(RESPONSE_PARAM_NODE_ROOMNAME);
 		String displayName = o.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
-		node = new Node(id,roomName,displayName);
+		int floorId = o.getInt(RESPONSE_PARAM_NODE_FLOOR_ID);
+		node = new Node(id,roomName,displayName, floorId);
 
 		return node;
 	}
