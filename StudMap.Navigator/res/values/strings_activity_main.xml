@@ -24,14 +24,9 @@
         <item>Navigation zurücksetzen</item>
         <item>Point of Interest</item>
         <item>Einstellungen</item>
-        <item>Neu Laden</item>
-        <item ></item>
-        <item ></item>
-        <item ></item>
-        <item ></item>
-        <item ></item>
-        <item ></item>
         <item>Impressum</item>
+        <item></item>
+        <item>Neu Laden</item>
     </string-array>
     
     <string name="logout">Abmelden</string>

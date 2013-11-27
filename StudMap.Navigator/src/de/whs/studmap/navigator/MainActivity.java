@@ -193,7 +193,6 @@ public class MainActivity extends Activity {
 					"Scan: Es liegt kein Ergebnis vor.", false);
 			break;
 		}
-
 	}
 
 	private void loadActivity() {
@@ -213,9 +212,6 @@ public class MainActivity extends Activity {
 		// set up the drawer's list view with items and click listener
 		mDrawerListView.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.simple_list_item_black, mDrawerItems));
-		// TODO: Das Padden mit den emptySlots funktioniert nicht vernünftig..
-		// das hängt von der Bildschirmgröße ab..
-		// -----> Ich habe eine Scrollbar im Drawer -> KACKE
 
 		mDrawerListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -244,8 +240,6 @@ public class MainActivity extends Activity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-
 
 		loadWebViewFragment();
 		initializeActionBar();
@@ -292,6 +286,7 @@ public class MainActivity extends Activity {
 				mSearchTextView.setText("");
 
 				changeFloorIfRequired();
+					
 			}
 		});
 
@@ -541,12 +536,17 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void changeFloorIfRequired(){
-		for (int i = 0; i < mFloorList.size(); i++) {
-			Floor tmpFloor = (Floor) mFloorSpinner.getItemAtPosition(i);
-			if (mSelectedNode.getFloorID() == tmpFloor.getId()) {
-				mFloorSpinner.setSelection(i);
-				break;
+	public void changeFloorIfRequired(){		
+		Floor currentFloor = (Floor) mFloorSpinner.getSelectedItem();
+		if(mSelectedNode.getFloorID() == currentFloor.getId())
+			mJScriptService.sendTarget(mSelectedNode.getNodeID());
+		else{			
+			for (int i = 0; i < mFloorList.size(); i++) {
+				Floor tmpFloor = (Floor) mFloorSpinner.getItemAtPosition(i);
+				if (mSelectedNode.getFloorID() == tmpFloor.getId()) {
+					mFloorSpinner.setSelection(i);
+					return;
+				}
 			}
 		}
 	}
