@@ -186,11 +186,7 @@ public class MainActivity extends Activity {
 						showProgress(true);
 						mGetNodeForQrCodeTask = new GetNodeForQrCodeTask(this);
 						mGetNodeForQrCodeTask.execute(scanResult);
-					}
-					
-					UserInfo.toast(this, scanResult, false);
-					// TODO: anhand des Scanresults/NodeId den entsprechenden
-					// Floor raussuchen und anzeigen
+					}					
 					break;
 				}
 			}
