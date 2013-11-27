@@ -74,13 +74,14 @@ public class MainActivity extends Activity {
 	private List<String> mDrawerItems;
 	private GetDataTask mGetTasks = null;
 	private GetNodeForQrCodeTask mGetNodeForQrCodeTask = null;
+	private LogoutTask mLogoutTask = null;
 
 	private final int REQUEST_ID_LOGIN = 101;
 	private final int REQUEST_ID_POIS = 102;
 
 	private static WebView mMapWebView;
 
-	public static String mUserName = "Lieber Benutzer";
+	public static String mUserName = "";
 	public static JavaScriptService mJScriptService;
 	public static Node mSelectedNode = null;
 
@@ -199,6 +200,8 @@ public class MainActivity extends Activity {
 	private void loadActivity() {
 		setContentView(R.layout.activity_main);
 
+		mUserName = getString(R.string.username);
+		
 		mDrawerItems = new ArrayList<String>(Arrays.asList(getResources()
 				.getStringArray(R.array.menue_item_array)));
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -368,22 +371,14 @@ public class MainActivity extends Activity {
 		switch (sel_position) {
 		case LOG_IN_OUT:
 			if (mLoggedIn) {
-				try {
-					// TODO: Async!! Logout
-					Service.logout(mUserName);
-					UserInfo.toast(this,
-							getString(R.string.logout_successfull), true);
-				} catch (WebServiceException e) {
-					Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-							"onDrawerItemClick - Log out failed - WebServiceException");
-					UserInfo.dialog(this, mUserName,
-							getString(R.string.error_connection));
-				} catch (ConnectException e) {
-					Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-							"onDrawerItemClick - Log out failed - WebServiceException");
-					UserInfo.dialog(this, mUserName,
-							getString(R.string.error_connection));
+				if (mLogoutTask == null){
+					showProgress(true);
+					mLogoutTask = new LogoutTask(this);
+					mLogoutTask.execute((Void) null);
 				}
+				else 
+					UserInfo.dialog(this, mUserName,getString(R.string.error_logout));
+					
 			} else
 				startActivityForResult(new Intent(this, LoginActivity.class),
 						REQUEST_ID_LOGIN);
@@ -610,6 +605,66 @@ public class MainActivity extends Activity {
 			showProgress(false);
 		}
 	}
-	
+
+	public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
+		private Context mContext = null;
+		private boolean bShowDialog = false;
+
+		public LogoutTask(Context ctx) {
+			mContext = ctx;
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+
+			try {
+				boolean success = Service.logout(mUserName);
+				return success;
+			} catch (WebServiceException e) {
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"LogoutTask - WebServiceException");
+
+				JSONObject jObject = e.getJsonObject();
+				try {
+					int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
+
+					switch (errorCode) {
+					case ResponseError.DatabaseError:
+						bShowDialog = true;
+					}
+				} catch (JSONException ignore) {
+					Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+							"LogoutTask - Parsing the WebServiceException failed!");
+				}
+			} catch (ConnectException e) {
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"LogoutTask - ConnectException");
+				bShowDialog = true;
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mLogoutTask = null;
+			showProgress(false);
+
+			if (success) {
+				mLoggedIn = false;
+				mDrawerItems = Arrays.asList(getResources().getStringArray(R.array.menue_item_array));
+				mUserName = getString(R.string.username);
+				UserInfo.toast(mContext,getString(R.string.logout_successfull), true);
+			} else if (bShowDialog)
+				// Present the error from doInBackground to the user
+				UserInfo.dialog(mContext, mUserName,
+						getString(R.string.error_connection));
+		}
+
+		@Override
+		protected void onCancelled() {
+			mLogoutTask = null;
+			showProgress(false);
+		}
+	}
 	
 }

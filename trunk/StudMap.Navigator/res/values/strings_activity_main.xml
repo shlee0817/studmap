@@ -30,6 +30,7 @@
     </string-array>
     
     <string name="logout">Abmelden</string>
+    <string name="username">Lieber Benutzer</string>
     
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -42,6 +43,7 @@
 	<string name="load_data">Bitte warten&#8230;</string>
 	
 	<string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
+	<string name="error_logout">Beim Logout Versuch ist ein Fehler aufgetreten. Versuche es in einigen Minuten erneut.</string>
 	
 	<string name="positiveButton">OK</string>
 	<string name="negativeButton">Abbrechen</string>
