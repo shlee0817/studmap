@@ -954,7 +954,8 @@ namespace StudMap.Service.Controllers
                             {
                                 NodeId = x.NodeId,
                                 RoomName = x.RoomName,
-                                DisplayName = x.DisplayName
+                                DisplayName = x.DisplayName,
+                                FloorId = x.FloorId
                             },
                             PoI = new PoI
                             {
