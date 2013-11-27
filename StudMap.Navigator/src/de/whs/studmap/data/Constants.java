@@ -9,6 +9,7 @@ public interface Constants {
 		 static final String RESPONSE_ERRORCODE = "ErrorCode";
 
 		 static final String RESPONSE_PARAM_LIST = "List";
+		 static final String RESPONSE_PARAM_OBJECT = "Object";
 		
 		//Methods
 		 static final String METHOD_LOGIN = "Login";
@@ -31,6 +32,7 @@ public interface Constants {
 		 static final String RESPONSE_PARAM_NODE_ROOMNAME = "RoomName";
 		 static final String RESPONSE_PARAM_NODE_DISPLAYNAME = "DisplayName";
 		 static final String RESPONSE_PARAM_NODE_ID = "NodeId";
+		 static final String RESPONSE_PARAM_NODE_FLOOR_ID = "FloorId";
 		
 		//Floor
 		 static final String RESPONSE_PARAM_FLOOR_ID = "Id";
