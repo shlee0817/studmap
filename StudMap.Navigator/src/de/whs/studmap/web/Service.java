@@ -64,7 +64,7 @@ public class Service implements Constants {
 		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
 				
 		try {
-			JSONObject pois = httpGet(URL_MAPS, METHOD_GETPOIS, params);
+			JSONObject pois = httpGet(URL_MAPS, METHOD_GET_POIS, params);
 			JSONArray poiArray = pois.getJSONArray(RESPONSE_PARAM_LIST);
 			
 			for (int i = 0; i < poiArray.length(); i++){
@@ -87,7 +87,7 @@ public class Service implements Constants {
 		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
 		
 		try {
-			JSONObject rooms = httpGet(URL_MAPS,METHOD_GETROOMS,params);
+			JSONObject rooms = httpGet(URL_MAPS,METHOD_GET_ROOMS,params);
 			JSONArray roomArray = rooms.getJSONArray(RESPONSE_PARAM_LIST);
 			
 			for (int i = 0; i < roomArray.length(); i++){
@@ -109,7 +109,7 @@ public class Service implements Constants {
 		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
 		
 		try {
-			JSONObject floors = httpGet(URL_MAPS, METHOD_GETFLOORS, params);
+			JSONObject floors = httpGet(URL_MAPS, METHOD_GET_FLOORS, params);
 			JSONArray roomArray = floors.getJSONArray(RESPONSE_PARAM_LIST);
 			
 			for (int i = 0; i < roomArray.length(); i++){
@@ -137,7 +137,7 @@ public class Service implements Constants {
 		params.add(new BasicNameValuePair(REQUEST_PARAM_NODEID, String.valueOf(nodeId)));
 		
 		try {
-			JSONObject nodeInfo = httpGet(URL_MAPS, METHOD_GETNODEINFOFORNODE, params);
+			JSONObject nodeInfo = httpGet(URL_MAPS, METHOD_GET_NODE_INFO_FOR_NODE, params);
 			JSONObject object = nodeInfo.getJSONObject(RESPONSE_PARAM_OBJECT);
 			String displayName = object.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
 			String roomName = object.getString(RESPONSE_PARAM_NODE_ROOMNAME);
@@ -148,6 +148,26 @@ public class Service implements Constants {
 			
 		} catch (JSONException ignore) {
 			Log.e(LOG_TAG_WEBSERVICE, "getNodeInformationForNode - NodeInfo konnte nicht geparst werden!");
+		}
+		return null;
+	}
+	
+	public static Node getNodeForQRCode(int mapId, String qrCode) throws WebServiceException, ConnectException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String.valueOf(mapId)));
+		params.add(new BasicNameValuePair(REQUEST_PARAM_QR_CODE, qrCode));
+		
+		try {
+			JSONObject nodeInfo = httpGet(URL_MAPS, METHOD_GET_NODE_FOR_QR_CODE, params);
+			JSONObject object = nodeInfo.getJSONObject(RESPONSE_PARAM_OBJECT);
+			int nodeId = object.getInt(RESPONSE_PARAM_NODE_ID);
+			int floorId = object.getInt(RESPONSE_PARAM_NODE_FLOOR_ID);
+			
+			Node node = new Node(nodeId, "", "", floorId);
+			return node;
+			
+		} catch (JSONException ignore) {
+			Log.e(LOG_TAG_WEBSERVICE, "getNodeForQrCode - NodeInfo konnte nicht geparst werden!");
 		}
 		return null;
 	}
