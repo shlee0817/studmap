@@ -19,7 +19,8 @@ public class JavaScriptService {
 	//JavaScript Funktionsaufruf: [WebView.loadURL("javaScript:Funktiosnname("param0", "param1",...)");]
 		
 	public void sendTarget(Integer nodeID){
-		runOnUiThread("javascript:highlightPoint(\"" + nodeID + "\", \"orange\")");				
+		runOnUiThread("javascript:zoomOut()");
+		runOnUiThread("javascript:highlightPointR(\"" + nodeID + "\", \"purple\", \"4\")");				
 	}
 	
 	public void sendStart(Integer nodeID){
