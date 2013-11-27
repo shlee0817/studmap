@@ -114,6 +114,14 @@
       [PoisForMap].[FloorId] AS [FloorId]
       FROM [dbo].[PoisForMap] AS [PoisForMap]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="RSSDistribution" EntityType="StudMapModel.Store.RSSDistribution" store:Type="Views" store:Schema="dbo" store:Name="RSSDistribution">
+            <DefiningQuery>SELECT 
+      [RSSDistribution].[NodeId] AS [NodeId], 
+      [RSSDistribution].[AccessPointId] AS [AccessPointId], 
+      [RSSDistribution].[AvgRSS] AS [AvgRSS], 
+      [RSSDistribution].[StDevRSS] AS [StDevRSS]
+      FROM [dbo].[RSSDistribution] AS [RSSDistribution]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'StudMap.dbo.AccessPoints' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -304,6 +312,18 @@
           <Property Name="NodeId" Type="int" Nullable="false" />
           <Property Name="FloorId" Type="int" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'StudMap.dbo.RSSDistribution' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="RSSDistribution">
+          <Key>
+            <PropertyRef Name="AccessPointId" />
+          </Key>
+          <Property Name="NodeId" Type="int" />
+          <Property Name="AccessPointId" Type="int" Nullable="false" />
+          <Property Name="AvgRSS" Type="int" />
+          <Property Name="StDevRSS" Type="float" />
+        </EntityType>
         <Function Name="sp_DeleteFloor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FloorId" Type="int" Mode="In" />
         </Function>
@@ -388,6 +408,7 @@
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
           </AssociationSet>
           <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
+          <EntitySet Name="RSSDistribution" EntityType="StudMapModel.RSSDistribution" />
           </EntityContainer>
         <EntityType Name="Edges">
           <Key>
@@ -684,6 +705,15 @@
           <Property Type="Int32" Name="NodeId" Nullable="false" />
           <Property Type="Int32" Name="FloorId" Nullable="false" />
         </EntityType>
+        <EntityType Name="RSSDistribution">
+          <Key>
+            <PropertyRef Name="AccessPointId" />
+          </Key>
+          <Property Type="Int32" Name="NodeId" />
+          <Property Type="Int32" Name="AccessPointId" Nullable="false" />
+          <Property Type="Int32" Name="AvgRSS" />
+          <Property Type="Double" Name="StDevRSS" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -824,6 +854,16 @@
                 <ScalarProperty Name="RoomName" ColumnName="RoomName" />
                 <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
                 <ScalarProperty Name="MapId" ColumnName="MapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RSSDistribution">
+            <EntityTypeMapping TypeName="StudMapModel.RSSDistribution">
+              <MappingFragment StoreEntitySet="RSSDistribution">
+                <ScalarProperty Name="StDevRSS" ColumnName="StDevRSS" />
+                <ScalarProperty Name="AvgRSS" ColumnName="AvgRSS" />
+                <ScalarProperty Name="AccessPointId" ColumnName="AccessPointId" />
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

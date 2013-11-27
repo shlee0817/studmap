@@ -5,6 +5,8 @@ using StudMap.Core.Graph;
 using StudMap.Core.WLAN;
 using StudMap.Data.Entities;
 using System.Linq;
+using MathNet.Numerics.Distributions;
+using System.Collections.Generic;
 
 namespace StudMap.Service.Controllers
 {
@@ -77,6 +79,132 @@ namespace StudMap.Service.Controllers
         public ObjectResponse<Node> GetNodeForFingerprint(Fingerprint fingerprint, double factor)
         {
             return new ObjectResponse<Node>();
+        }
+
+        [HttpPost]
+        public ListResponse<NodeProbability> GetNodeProbabiltyForScan(LocationRequest request)
+        {
+            var response = new ListResponse<NodeProbability>();
+
+            using (var entities = new MapsEntities())
+            {
+                // Gesammelte WLAN-Fingerprints aus DB auswerten und Verteilung bestimmen
+                var nodeDistributions = new Dictionary<int, Dictionary<int, Normal>>();
+                foreach (var dist in entities.RSSDistribution)
+                {
+                    int nodeId = dist.NodeId ?? 0;
+                    if (!nodeDistributions.ContainsKey(nodeId))
+                        nodeDistributions.Add(nodeId, new Dictionary<int, Normal>());
+
+                    nodeDistributions[nodeId].Add(dist.AccessPointId,
+                        Normal.WithMeanStdDev(dist.AvgRSS ?? 0, dist.StDevRSS ?? 0.0));
+                }
+
+                // AccessPoint-Messung nach APs aufteilen
+                var MACtoApId = new Dictionary<string, int>();
+                foreach (var ap in entities.AccessPoints)
+                    MACtoApId.Add(ap.MAC, ap.Id);
+
+                var apScans = new Dictionary<int, int>();
+                foreach (var scan in request.Scans)
+                {
+                    int apId = 0;
+                    if (MACtoApId.TryGetValue(scan.MAC, out apId))
+                        apScans.Add(apId, scan.RSS); 
+                }
+
+                // W'keit bestimmen, dass RSS-Werte an Knoten gemessen werden
+                var nodeProbs = new List<NodeProbability>();
+                foreach (var nodeId in nodeDistributions.Keys)
+                {
+                    var apDistributions = nodeDistributions[nodeId];
+                    double prob = 1.0;
+                    int relevantApCount = 0;
+                    foreach (var apId in apDistributions.Keys)
+                    {
+                        int scannedValue = 0;
+                        // Befindet sich der in der DB hinterlegte AP im aktuellen Fingerprint?
+                        if (apScans.TryGetValue(apId, out scannedValue))
+                        {
+                            // Wenn ja, dann kann die W'keit für den gemessenen
+                            // Wert aus der Normalverteilung bestimmt werden
+                            var dist = apDistributions[apId];
+                            double before = dist.CumulativeDistribution(scannedValue - 0.5);
+                            double after = dist.CumulativeDistribution(scannedValue + 0.5);
+
+                            // Wie wahrscheinlich ist es, am aktuellen Knoten & AP, den gemessenen RSS-Wert vorzufinden?
+                            double apProb = after - before;
+
+                            // In die Gesamtw'keit für den Fingeprint einrechnen
+                            prob *= apProb;
+                            relevantApCount += 1;
+                        }
+                    }
+
+                    // Wenn keine übereinstimmende APs gefunden wurden, dann wird
+                    // der Knoten ignoriert
+                    if (relevantApCount == 0)
+                        continue;
+                    
+                    // Gesamtw'keit berechnen, am aktuellen Knoten, die gemessenen RSS-Werte
+                    // für alle AccessPoints vorzufinden
+                    // Mathematisch: Geometrisches Mittel über die Einzelw'keiten
+                    prob = Math.Pow(prob, 1.0 / relevantApCount);
+
+                    // Die hier berechnete bedingte W'keit ist noch "verkehrt herum".
+                    // Wir haben berechnet:
+                    //  p(RSS/n):
+                    //  W'keit, dass die RSS Werte gemessen werden, wenn die Messung
+                    //  an dem Knoten n durchgeführt wurde
+                    //
+                    // Wir suchen:
+                    //  p(n/RSS):
+                    //  W'keit, dass wir uns an dem Knoten n befinden, wenn die
+                    //  Messung die angegebenen RSS-Werte lieferte
+                    //
+                    // Umrechung:
+                    //             p(RSS/n) * p(n)
+                    //  p(n/RSS) = ---------------
+                    //                 p(RSS)
+                    // Wobei:
+                    //  p(n): W'keit, sich an einem Knoten zu befinden, unabhängig von RSS-Werten
+                    //    Hier macht initial so etwas wie 1/(Anzahl Knoten) Sinn (Gleichverteilung)
+                    //    Später können "nahe" Knoten zur vorherigen Position höhere W'keiten
+                    //    bekommen und so den Algorithmus verbessern
+                    //
+                    //  p(RSS): W'keit, dass die angegebenen RSS-Werte gemessen werden, 
+                    //    unabhängig von irgendwelchen Knoten/Positionen
+                    //  TODO: Prüfen, ob es Sinn macht, hier AVG + STDEV über alle Datensätze
+                    //        zu verwenden und für jeden AP eine Normalverteilung zu verwenden
+                    // 
+                    // ACHTUNG: Die oben beschriebene Korrektur ist ohne positionsabhängige p(n)
+                    //  nur aus mathematischen Gründen notwendig. Wenn p(n) = const, dann können
+                    //  diese Werte ignoriert werden, da sie einen konstanten Korrekturfaktor
+                    //  bilden, der die Größenrelation der W'keiten untereinander nicht ändert!
+                    //
+                    //   Wenn p(n) = const, dann p(n/RSS) = p(RSS/n) * const
+                    //
+                    //  Die errechneten W'keiten können somit nur zum Vergleich untereinander
+                    //  für eine Messung verwendet werden. Um zu bestimmen, welche Knoten am
+                    //  wahrscheinlichsten sind, reicht dies aus.
+
+                    // TODO: Wenn p(n) positionsabhängig wird, dann hier verwenden
+                    // double nodeProb = 1.0 / nodeDistributions.Count; // Konstant => ignorieren
+                    double correctedProb = prob;
+
+                    var nodeProb = new NodeProbability { NodeId = nodeId, Probabilty = correctedProb };
+                    nodeProbs.Add(nodeProb);
+                }
+
+                // Absteigend nach W'keit sortieren
+                nodeProbs.Sort((m, n) => m.Probabilty.CompareTo(n.Probabilty));
+
+                // Maximal die angeforderte Anzahl an Knoten zurückliefern
+                int count = Math.Min(request.NodeCount, nodeProbs.Count);
+                response.List = nodeProbs.GetRange(0, count);
+            }
+
+            return response;
         }
     }
 }
