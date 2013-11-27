@@ -15,10 +15,11 @@ public interface Constants {
 		 static final String METHOD_LOGIN = "Login";
 		 static final String METHOD_LOGOUT = "Logout";
 		 static final String METHOD_REGISTER = "Register";
-		 static final String METHOD_GETPOIS = "GetPoIsForMap";
-		 static final String METHOD_GETROOMS = "GetRoomsForMap";
-		 static final String METHOD_GETFLOORS = "GetFloorsForMap";
-		 static final String METHOD_GETNODEINFOFORNODE = "getNodeInformationForNode";
+		 static final String METHOD_GET_POIS = "GetPoIsForMap";
+		 static final String METHOD_GET_ROOMS = "GetRoomsForMap";
+		 static final String METHOD_GET_FLOORS = "GetFloorsForMap";
+		 static final String METHOD_GET_NODE_INFO_FOR_NODE = "GetNodeInformationForNode";
+		 static final String METHOD_GET_NODE_FOR_QR_CODE = "GetNodeForQRCode";
 			
 		//UserController
 		 static final String REQUEST_PARAM_USERNAME = "userName";
@@ -27,6 +28,7 @@ public interface Constants {
 		 //MapController
 		 static final String REQUEST_PARAM_MAPID = "mapId";
 		 static final String REQUEST_PARAM_NODEID = "nodeId";
+		 static final String REQUEST_PARAM_QR_CODE = "qrCode";
 		
 		//Node
 		 static final String RESPONSE_PARAM_NODE_NODE = "Node";

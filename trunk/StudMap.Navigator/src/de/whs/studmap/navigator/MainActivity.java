@@ -73,6 +73,7 @@ public class MainActivity extends Activity {
 	private List<Node> mRoomList = new ArrayList<Node>();
 	private List<String> mDrawerItems;
 	private GetDataTask mGetTasks = null;
+	private GetNodeForQrCodeTask mGetNodeForQrCodeTask = null;
 
 	private final int REQUEST_ID_LOGIN = 101;
 	private final int REQUEST_ID_POIS = 102;
@@ -181,10 +182,15 @@ public class MainActivity extends Activity {
 			if (result != null) {
 				String scanResult = result.getContents();
 				if (scanResult != null) {
-					// TODO - Web-Service - GetNodeFromQRCode(..)	
+					if (mGetNodeForQrCodeTask == null){
+						showProgress(true);
+						mGetNodeForQrCodeTask = new GetNodeForQrCodeTask(this);
+						mGetNodeForQrCodeTask.execute(scanResult);
+					}
 					
 					UserInfo.toast(this, scanResult, false);
-					changeFloorIfRequired();
+					// TODO: anhand des Scanresults/NodeId den entsprechenden
+					// Floor raussuchen und anzeigen
 					break;
 				}
 			}
@@ -420,6 +426,21 @@ public class MainActivity extends Activity {
 		mGetTasks = new GetDataTask(this);
 		mGetTasks.execute((Void) null);
 	}
+	
+	private void changeFloorIfRequired(){		
+		Floor currentFloor = (Floor) mFloorSpinner.getSelectedItem();
+		if(mSelectedNode.getFloorID() == currentFloor.getId())
+			mJScriptService.sendTarget(mSelectedNode.getNodeID());
+		else{			
+			for (int i = 0; i < mFloorList.size(); i++) {
+				Floor tmpFloor = (Floor) mFloorSpinner.getItemAtPosition(i);
+				if (mSelectedNode.getFloorID() == tmpFloor.getId()) {
+					mFloorSpinner.setSelection(i);
+					return;
+				}
+			}
+		}
+	}
 
 	/**
 	 * Shows the progress UI and hides the login form.
@@ -535,18 +556,64 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void changeFloorIfRequired(){		
-		Floor currentFloor = (Floor) mFloorSpinner.getSelectedItem();
-		if(mSelectedNode.getFloorID() == currentFloor.getId())
-			mJScriptService.sendTarget(mSelectedNode.getNodeID());
-		else{			
-			for (int i = 0; i < mFloorList.size(); i++) {
-				Floor tmpFloor = (Floor) mFloorSpinner.getItemAtPosition(i);
-				if (mSelectedNode.getFloorID() == tmpFloor.getId()) {
-					mFloorSpinner.setSelection(i);
-					return;
+	public class GetNodeForQrCodeTask extends AsyncTask<String, Void, Node> {
+		private Context mContext = null;
+		private boolean bShowDialog = false;
+
+		public GetNodeForQrCodeTask(Context ctx) {
+			mContext = ctx;
+		}
+
+		@Override
+		protected Node doInBackground(String... params) {
+
+			try {
+				Node node = Service.getNodeForQRCode(Constants.MAP_ID, params[0]);
+				return node;
+			} catch (WebServiceException e) {
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"GetNodeForQrCodeTask - WebServiceException");
+
+				JSONObject jObject = e.getJsonObject();
+				try {
+					int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
+
+					switch (errorCode) {
+					case ResponseError.DatabaseError:
+						bShowDialog = true;
+					}
+				} catch (JSONException ignore) {
+					Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+							"GetNodeForQrCodeTask - Parsing the WebServiceException failed!");
 				}
+			} catch (ConnectException e) {
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"GetDataTask - ConnectException");
+				bShowDialog = true;
 			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final Node node) {
+			mGetNodeForQrCodeTask = null;
+			showProgress(false);
+
+			if (node != null) {
+				mSelectedNode = node;
+				changeFloorIfRequired();
+			} else if (bShowDialog)
+				// Present the error from doInBackground to the user
+				UserInfo.dialog(mContext, mUserName,
+						getString(R.string.error_connection));
+		}
+
+		@Override
+		protected void onCancelled() {
+			mGetNodeForQrCodeTask = null;
+			showProgress(false);
 		}
 	}
+	
+	
 }
