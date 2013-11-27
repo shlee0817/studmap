@@ -3,6 +3,7 @@ package de.whs.studmap.web;
 import android.content.Context;
 import android.content.Intent;
 import android.webkit.JavascriptInterface;
+import de.whs.studmap.navigator.MainActivity;
 import de.whs.studmap.navigator.PositionActivity;
 
 public class JavaScriptInterface {
@@ -18,5 +19,12 @@ public class JavaScriptInterface {
     	intent.putExtra(PositionActivity.EXTRA_NODEID, nodeId);
 		context.startActivity(intent);
    }
-
+    
+   @JavascriptInterface
+   public void onFinish(){
+	   if(MainActivity.mSelectedNode != null){
+		   MainActivity.mJScriptService.sendTarget(MainActivity.mSelectedNode.getNodeID());
+		   MainActivity.mSelectedNode = null;		   
+	   }
+   }
 }
