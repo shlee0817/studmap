@@ -238,6 +238,7 @@ public class MainActivity extends Activity {
 
 			public void onDrawerOpened(View drawerView) {
 				isDrawerOpen = true;
+				closeKeyboard(drawerView);
 				mActionBar.setDisplayShowCustomEnabled(false);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
@@ -283,12 +284,11 @@ public class MainActivity extends Activity {
 				UserInfo.toast(getApplicationContext(), "Suche "
 						+ mSelectedNode.toString(), false);
 
-				// Hide soft keyboard & clear textview
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(view.getWindowToken(),
-						InputMethodManager.HIDE_NOT_ALWAYS);
+				// clear textview & hide soft keyboard
 				mSearchTextView.setText("");
-
+				mMapWebView.requestFocus();
+				closeKeyboard(view);
+				
 				changeFloorIfRequired();
 					
 			}
@@ -402,6 +402,9 @@ public class MainActivity extends Activity {
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
 
+		case IMPRESSUM:
+			startActivity(new Intent(this, ImpressumActivity.class));
+			break;
 		default:
 			UserInfo.toast(this, "Auswahl nicht gefunden!", false);
 			break;
@@ -409,6 +412,13 @@ public class MainActivity extends Activity {
 		}
 	}
 
+
+	public void closeKeyboard(View view){
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(),
+				InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+	
 	private void getDataFromWebService() {
 		if (mGetTasks != null)
 			return;
