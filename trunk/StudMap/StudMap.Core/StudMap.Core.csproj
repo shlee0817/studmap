@@ -61,6 +61,8 @@
     <Compile Include="WLAN\AccessPoint.cs" />
     <Compile Include="WLAN\AccessPointScan.cs" />
     <Compile Include="WLAN\Fingerprint.cs" />
+    <Compile Include="WLAN\LocationRequest.cs" />
+    <Compile Include="WLAN\NodeProbability.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

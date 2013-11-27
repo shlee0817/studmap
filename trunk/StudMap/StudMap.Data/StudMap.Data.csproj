@@ -121,6 +121,9 @@
     <Compile Include="Entities\PoiTypes.cs">
       <DependentUpon>MapsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\RSSDistribution.cs">
+      <DependentUpon>MapsModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\UserProfile.cs">
       <DependentUpon>UsersModel.tt</DependentUpon>
     </Compile>

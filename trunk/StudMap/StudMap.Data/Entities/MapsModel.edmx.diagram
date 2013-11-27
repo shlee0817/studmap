@@ -29,7 +29,8 @@
         <EntityTypeShape EntityType="StudMapModel.AccessPointScans" Width="1.5" PointX="9.75" PointY="11.875" />
         <AssociationConnector Association="StudMapModel.FK_Fingerprints_AccessPoints" />
         <AssociationConnector Association="StudMapModel.FK_AccessPointScans_Fingerprints" />
-        <EntityTypeShape EntityType="StudMapModel.NodeInformationForMap" Width="1.5" PointX="8.7718855537343234" PointY="29.84965146977904" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformationForMap" Width="1.5" PointX="13" PointY="9.125" />
+        <EntityTypeShape EntityType="StudMapModel.RSSDistribution" Width="1.5" PointX="1.2149797646398564" PointY="18.752248102218029" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
