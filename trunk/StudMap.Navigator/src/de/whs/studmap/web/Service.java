@@ -141,8 +141,9 @@ public class Service implements Constants {
 			JSONObject object = nodeInfo.getJSONObject(RESPONSE_PARAM_OBJECT);
 			String displayName = object.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
 			String roomName = object.getString(RESPONSE_PARAM_NODE_ROOMNAME);
+			int floorId = object.getJSONObject(RESPONSE_PARAM_NODE_NODE).getInt(RESPONSE_PARAM_NODE_FLOOR_ID);
 			
-			Node node = new Node(nodeId, roomName, displayName);
+			Node node = new Node(nodeId, roomName, displayName, floorId);
 			return node;
 			
 		} catch (JSONException ignore) {
