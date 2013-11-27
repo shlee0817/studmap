@@ -5,14 +5,7 @@ public class Node {
 	private String displayName;
 	private String roomName;
 	private int floorID;
-	
-	public Node(int nodeID, String roomName, String displayName){
-		this.nodeID = nodeID;
-		this.roomName = roomName;
-		this.displayName = displayName;
-		this.floorID = 0;
-	}
-	
+		
 	public Node(int nodeID, String roomName, String displayName, int floorID){
 		this.nodeID = nodeID;
 		this.roomName = roomName;
