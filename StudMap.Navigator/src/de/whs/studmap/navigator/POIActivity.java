@@ -34,7 +34,7 @@ import de.whs.studmap.web.WebServiceException;
 
 public class POIActivity extends Activity implements Constants{
 	
-	public static final String EXTRA_NODE_ID = "NodeID";
+	public static final String EXTRA_NODE = "NodeID";
 	
 	private ListView mListView;
 	private EditText mInputSearch;
@@ -100,7 +100,7 @@ public class POIActivity extends Activity implements Constants{
         	PoI selectedPoI = (PoI) parent.getItemAtPosition(position);
         	
             Intent result = new Intent();
-            result.putExtra(EXTRA_NODE_ID,selectedPoI.getNode().getNodeID());
+            result.putExtra(EXTRA_NODE, selectedPoI.getNode());
             setResult(Activity.RESULT_OK,result);
             finish();
         }
