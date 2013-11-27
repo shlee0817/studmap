@@ -171,9 +171,8 @@ public class MainActivity extends Activity {
 			break;
 		case REQUEST_ID_POIS:
 			if (resultCode == RESULT_OK) {
-				int nodeID = data.getIntExtra(POIActivity.EXTRA_NODE_ID, -1);
-				
-				
+				mSelectedNode = data.getParcelableExtra(POIActivity.EXTRA_NODE);
+				changeFloorIfRequired();
 			}
 			break;
 		case IntentIntegrator.REQUEST_CODE: //Return from QR-Scanner
