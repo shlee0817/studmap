@@ -184,8 +184,7 @@ public class MainActivity extends Activity {
 					// TODO - Web-Service - GetNodeFromQRCode(..)	
 					
 					UserInfo.toast(this, scanResult, false);
-					// TODO: anhand des Scanresults/NodeId den entsprechenden
-					// Floor raussuchen und anzeigen
+					changeFloorIfRequired();
 					break;
 				}
 			}
