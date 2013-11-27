@@ -17,8 +17,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="de.whs.studmap.navigator.MainActivity"
-            android:label="@string/app_name" 
-            android:screenOrientation="portrait">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,31 +28,35 @@
         <activity
             android:name="de.whs.studmap.navigator.POIActivity"
             android:label="@string/title_activity_poi"
-            android:windowSoftInputMode="stateHidden" 
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="de.whs.studmap.navigator.LoginActivity"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.Dialog"
-            android:windowSoftInputMode="adjustResize|stateVisible"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name="de.whs.studmap.navigator.RegisterActivity"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_register"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.Dialog"
-            android:windowSoftInputMode="adjustResize|stateVisible" 
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name="de.whs.studmap.navigator.PositionActivity"
             android:label="@string/title_activity_position"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.Dialog"
-            android:windowSoftInputMode="stateHidden" 
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="de.whs.studmap.navigator.ImpressumActivity"
+            android:label="@string/title_activity_impressum" >
         </activity>
     </application>
 
