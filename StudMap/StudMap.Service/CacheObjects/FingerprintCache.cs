@@ -7,13 +7,15 @@ using StudMap.Data.Entities;
 
 namespace StudMap.Service.CacheObjects
 {
-    public class NodeDistributionCache : CacheObject
+    public class FingerprintCache : CacheObject
     {
         private const int TIMEOUT = 24 * 60;
 
         public Dictionary<int, Dictionary<int, Normal>> NodeDistributions { get; set; }
 
-        public NodeDistributionCache()
+        public Dictionary<string, int> MACtoAP { get; set; }
+
+        public FingerprintCache()
         {
             TimeoutInMinutes = TIMEOUT;
             using (var entities = new MapsEntities())
@@ -24,16 +26,28 @@ namespace StudMap.Service.CacheObjects
 
         public void Update(MapsEntities entities)
         {
+            NodeDistributions = CalculateNodeDist(entities);
+            MACtoAP = CreateMACtoAPLookup(entities);
+        }
+
+        private static Dictionary<int, Dictionary<int, Normal>> CalculateNodeDist(MapsEntities entities)
+        {
             var nodeDistributions = new Dictionary<int, Dictionary<int, Normal>>();
             foreach (var dist in entities.RSSDistribution)
             {
                 if (!nodeDistributions.ContainsKey(dist.NodeId))
                     nodeDistributions.Add(dist.NodeId, new Dictionary<int, Normal>());
 
+                // Standardabweichung auf einen beliebigen Wert setzen, wenn 
                 nodeDistributions[dist.NodeId].Add(dist.AccessPointId,
-                    Normal.WithMeanStdDev(dist.AvgRSS ?? 0, dist.StDevRSS ?? 0.0));
+                    Normal.WithMeanStdDev(dist.AvgRSS ?? 0, dist.StDevRSS ?? 1.0));
             }
-            NodeDistributions = nodeDistributions;
+            return nodeDistributions;
+        }
+
+        private static Dictionary<string, int> CreateMACtoAPLookup(MapsEntities entities)
+        {
+            return entities.AccessPoints.ToDictionary(ap => ap.MAC, ap => ap.Id);
         }
     }
 }
