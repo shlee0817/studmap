@@ -29,6 +29,9 @@ namespace StudMap.Data.Entities
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<NodeInformationForMap> NodeInformationForMap { get; set; }
+        public DbSet<PoisForMap> PoisForMap { get; set; }
+        public DbSet<RSSDistribution> RSSDistribution { get; set; }
         public DbSet<AccessPoints> AccessPoints { get; set; }
         public DbSet<AccessPointScans> AccessPointScans { get; set; }
         public DbSet<Edges> Edges { get; set; }
@@ -40,9 +43,6 @@ namespace StudMap.Data.Entities
         public DbSet<Nodes> Nodes { get; set; }
         public DbSet<PoIs> PoIs { get; set; }
         public DbSet<PoiTypes> PoiTypes { get; set; }
-        public DbSet<NodeInformationForMap> NodeInformationForMap { get; set; }
-        public DbSet<PoisForMap> PoisForMap { get; set; }
-        public DbSet<RSSDistribution> RSSDistribution { get; set; }
     
         public virtual int DeleteFloor(Nullable<int> floorId)
         {
