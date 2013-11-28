@@ -35,6 +35,8 @@
         NFCTagDoesNotExist = 402,
         QRCodeDosNotExist = 403,
         PoiDoesNotExist = 404,
+        QRCodeIsNullOrEmpty = 405,
+        NFCTagIsNullOrEmpty = 406,
         #endregion // Information
 
         #region Fingerprint

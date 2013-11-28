@@ -100,7 +100,7 @@ namespace StudMap.Maintenance
                 }
                 finally
                 {
-                    mapsCtrl.SaveQRCodeToNode(node.NodeId, qrCodeStr);
+                    mapsCtrl.SaveQRCodeForNode(node.NodeId, qrCodeStr);
                 }
             }
 

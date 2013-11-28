@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Web;
 using System.Web.Http;
-using System.Web.Mvc;
 using Elmah;
 using QuickGraph;
-using QuickGraph.Algorithms;
+using QuickGraph.Algorithms.ShortestPath;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Information;
 using StudMap.Core.Maps;
 using StudMap.Data.Entities;
-using NodeInformation = StudMap.Core.Information.NodeInformation;
-using StudMap.Service.CacheObjects;
-using System.Web;
 using StudMap.Service.App_Start;
+using StudMap.Service.CacheObjects;
+using NodeInformation = StudMap.Core.Information.NodeInformation;
 
 namespace StudMap.Service.Controllers
 {
@@ -25,7 +24,7 @@ namespace StudMap.Service.Controllers
 
         #region Map
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ObjectResponse<Map> CreateMap(string mapName)
         {
             var result = new ObjectResponse<Map>();
@@ -60,7 +59,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public BaseResponse DeleteMap(int mapId)
         {
             var result = new BaseResponse();
@@ -83,8 +82,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpGet]
-        [OutputCache(CacheProfile = "Cache1Hour")]
+        [HttpGet]
         public ListResponse<Map> GetMaps()
         {
             var result = new ListResponse<Map>();
@@ -117,7 +115,7 @@ namespace StudMap.Service.Controllers
 
         #region Floor
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ObjectResponse<Floor> CreateFloor(int mapId, string name = "")
         {
             var result = new ObjectResponse<Floor>();
@@ -164,7 +162,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public BaseResponse DeleteFloor(int floorId)
         {
             var result = new BaseResponse();
@@ -187,7 +185,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+
         public ListResponse<Floor> GetFloorsForMap(int mapId)
         {
             var result = new ListResponse<Floor>();
@@ -227,7 +225,6 @@ namespace StudMap.Service.Controllers
         }
 
 
-        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ObjectResponse<Floor> GetFloor(int floorId)
         {
             var result = new ObjectResponse<Floor>();
@@ -264,7 +261,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+
         public ObjectResponse<string> GetFloorplanImage(int floorId)
         {
             var result = new ObjectResponse<string>();
@@ -295,7 +292,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ObjectResponse<Floor> UploadFloorImage(int floorId, string filename)
         {
             var result = new ObjectResponse<Floor>();
@@ -339,7 +336,7 @@ namespace StudMap.Service.Controllers
 
         #region Layer: Graph
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ObjectResponse<Graph> SaveGraphForFloor(int floorId, Graph newGraph, Graph deletedGraph)
         {
             var result = new ObjectResponse<Graph>();
@@ -372,7 +369,7 @@ namespace StudMap.Service.Controllers
                     if (deletedGraph.Nodes != null)
                     {
                         foreach (
-                            var node in
+                            Nodes node in
                                 deletedGraph.Nodes.Select(dNode => entities.Nodes.FirstOrDefault(x => x.Id == dNode.Id))
                                             .Where(node => node != null))
                         {
@@ -383,7 +380,7 @@ namespace StudMap.Service.Controllers
                     if (deletedGraph.Edges != null)
                     {
                         foreach (
-                            var edge in
+                            Edges edge in
                                 deletedGraph.Edges.Select(
                                     dEdge =>
                                     entities.Edges.FirstOrDefault(
@@ -393,7 +390,6 @@ namespace StudMap.Service.Controllers
                             entities.Edges.Remove(edge);
                         }
                     }
-
 
 
                     var nodeIdMap = new Dictionary<int, int>();
@@ -421,13 +417,12 @@ namespace StudMap.Service.Controllers
                     {
                         foreach (Edge edge in newGraph.Edges)
                         {
-
                             int nodeIdMapStartNodeId;
                             if (nodeIdMap.ContainsKey(edge.StartNodeId))
                                 nodeIdMapStartNodeId = nodeIdMap[edge.StartNodeId];
                             else
                             {
-                                var startNodeId = entities.Nodes.FirstOrDefault(x => x.Id == edge.StartNodeId);
+                                Nodes startNodeId = entities.Nodes.FirstOrDefault(x => x.Id == edge.StartNodeId);
                                 nodeIdMapStartNodeId = startNodeId == null ? 0 : startNodeId.Id;
                             }
 
@@ -436,7 +431,7 @@ namespace StudMap.Service.Controllers
                                 nodeIdMapEndNodeId = nodeIdMap[edge.EndNodeId];
                             else
                             {
-                                var endNodeId = entities.Nodes.FirstOrDefault(x => x.Id == edge.EndNodeId);
+                                Nodes endNodeId = entities.Nodes.FirstOrDefault(x => x.Id == edge.EndNodeId);
                                 nodeIdMapEndNodeId = endNodeId == null ? 0 : endNodeId.Id;
                             }
 
@@ -464,7 +459,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public BaseResponse DeleteGraphForFloor(int floorId)
         {
             var result = new BaseResponse();
@@ -487,8 +482,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpGet]
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+        [HttpGet]
         public ObjectResponse<Graph> GetGraphForFloor(int floorId)
         {
             var result = new ObjectResponse<Graph>();
@@ -544,8 +538,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpGet]
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+        [HttpGet]
         public ObjectResponse<NodeInformation> GetNodeInformationForNode(int nodeId)
         {
             var result = new ObjectResponse<NodeInformation>();
@@ -576,7 +569,7 @@ namespace StudMap.Service.Controllers
                     result.Object.NFCTag = queriedNodeInformation.NFCTag;
                     result.Object.QRCode = queriedNodeInformation.QRCode;
 
-                    var poi = queriedNodeInformation.PoIs;
+                    PoIs poi = queriedNodeInformation.PoIs;
                     if (poi == null)
                         return result;
 
@@ -601,8 +594,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpGet]
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+        [HttpGet]
         public ObjectResponse<FloorPlanData> GetFloorPlanData(int floorId)
         {
             var floorPlanData = new ObjectResponse<FloorPlanData> { Object = new FloorPlanData() };
@@ -614,7 +606,7 @@ namespace StudMap.Service.Controllers
             return floorPlanData;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ObjectResponse<NodeInformation> SaveNodeInformation(int nodeId, NodeInformation nodeInf)
         {
             var result = new ObjectResponse<NodeInformation>();
@@ -642,10 +634,10 @@ namespace StudMap.Service.Controllers
                         if (nodeInformation == null || nodeInformation.PoIs == null)
                         {
                             poi = entities.PoIs.Add(new PoIs
-                            {
-                                TypeId = nodeInf.PoI.Type.Id,
-                                Description = nodeInf.PoI.Description
-                            });
+                                {
+                                    TypeId = nodeInf.PoI.Type.Id,
+                                    Description = nodeInf.PoI.Description
+                                });
                         }
                         // Ansonsten vorhandenen PoI updaten
                         else
@@ -671,7 +663,6 @@ namespace StudMap.Service.Controllers
                                 RoomName = nodeInf.RoomName,
                                 QRCode = nodeInf.QRCode,
                                 NFCTag = nodeInf.NFCTag,
-
                                 PoiId = poiTypeSelected ? (int?)poi.Id : null,
                                 // Nur beim erstellen ausführen, NodeId bleibt gleich
                                 NodeId = nodeId,
@@ -691,17 +682,17 @@ namespace StudMap.Service.Controllers
                         entities.SaveChanges();
                     }
 
-                    PoI returnPoi = new PoI();
+                    var returnPoi = new PoI();
                     if (poi != null)
                     {
                         returnPoi = new PoI
-                                    {
-                                        Description = poi.Description,
-                                        Type = new PoiType(poi.PoiTypes.Id, poi.PoiTypes.Name)
-                                    };
+                            {
+                                Description = poi.Description,
+                                Type = new PoiType(poi.PoiTypes.Id, poi.PoiTypes.Name)
+                            };
                     }
 
-                    var node = entities.Nodes.First(n => n.Id == nodeId);
+                    Nodes node = entities.Nodes.First(n => n.Id == nodeId);
                     // Ergebnis aus der DB in Rückgabe Objekt schreiben
                     result.Object = new NodeInformation
                         {
@@ -729,7 +720,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+
         public ListResponse<Node> GetConnectedNodes(int nodeId)
         {
             var result = new ListResponse<Node>();
@@ -745,23 +736,23 @@ namespace StudMap.Service.Controllers
                         return result;
                     }
 
-                    var edges = from edge in entities.Edges
-                                where edge.NodeStartId == nodeId || edge.NodeEndId == nodeId
-                                select edge;
+                    IQueryable<Edges> edges = from edge in entities.Edges
+                                              where edge.NodeStartId == nodeId || edge.NodeEndId == nodeId
+                                              select edge;
 
-                    HashSet<int> connectedNodeIds = new HashSet<int>();
-                    foreach (var edge in edges)
+                    var connectedNodeIds = new HashSet<int>();
+                    foreach (Edges edge in edges)
                     {
                         connectedNodeIds.Add(edge.NodeStartId);
                         connectedNodeIds.Add(edge.NodeEndId);
                     }
                     connectedNodeIds.Remove(nodeId);
 
-                    var connectedNodes = from node in entities.Nodes
-                                         where connectedNodeIds.Contains(node.Id)
-                                         select node;
+                    IQueryable<Nodes> connectedNodes = from node in entities.Nodes
+                                                       where connectedNodeIds.Contains(node.Id)
+                                                       select node;
 
-                    foreach (var node in connectedNodes)
+                    foreach (Nodes node in connectedNodes)
                         result.List.Add(NodeFromDb(node));
                 }
             }
@@ -775,7 +766,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+
         public ListResponse<NodeInformation> GetNodeInformation(int mapId, int floorId)
         {
             var result = new ListResponse<NodeInformation>();
@@ -783,7 +774,7 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    var nodes = entities.NodeInformation.ToList();
+                    List<Data.Entities.NodeInformation> nodes = entities.NodeInformation.ToList();
                     if (mapId > 0)
                     {
                         nodes = nodes.Where(x => x.Nodes.Floors.MapId == mapId).ToList();
@@ -792,7 +783,7 @@ namespace StudMap.Service.Controllers
                     {
                         nodes = nodes.Where(x => x.Nodes.FloorId == floorId).ToList();
                     }
-                    foreach (var node in nodes)
+                    foreach (Data.Entities.NodeInformation node in nodes)
                         result.List.Add(NodeInformationFromDb(node));
                 }
             }
@@ -803,12 +794,12 @@ namespace StudMap.Service.Controllers
             }
             return result;
         }
+
         #endregion
 
         #region Layer: Navigation
 
-        [System.Web.Http.HttpGet]
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+        [HttpGet]
         public ListResponse<Node> GetRouteBetween(int mapId, int startNodeId, int endNodeId)
         {
             var result = new ListResponse<Node>();
@@ -834,7 +825,7 @@ namespace StudMap.Service.Controllers
                     return result;
                 }
 
-                var tryGetPath = cache.PathFinder;
+                FloydWarshallAllShortestPathAlgorithm<int, UndirectedEdge<int>> tryGetPath = cache.PathFinder;
 
                 IEnumerable<UndirectedEdge<int>> routeEdges;
                 if (cache.PathFinder.TryGetPath(startNodeId, endNodeId, out routeEdges))
@@ -911,7 +902,6 @@ namespace StudMap.Service.Controllers
 
         #region Layer: Information
 
-        [OutputCache(CacheProfile = "Cache1Hour")]
         public ListResponse<PoiType> GetPoiTypes()
         {
             var result = new ListResponse<PoiType>();
@@ -935,8 +925,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpGet]
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+        [HttpGet]
         public ListResponse<RoomAndPoI> GetPoIsForMap(int mapId)
         {
             var result = new ListResponse<RoomAndPoI>();
@@ -947,21 +936,21 @@ namespace StudMap.Service.Controllers
                     result.List = entities.PoisForMap.Where(x => x.MapId == mapId).Select(x => new RoomAndPoI
                         {
                             Room = new Room
-                            {
-                                NodeId = x.NodeId,
-                                RoomName = x.RoomName,
-                                DisplayName = x.DisplayName,
-                                FloorId = x.FloorId
-                            },
-                            PoI = new PoI
-                            {
-                                Type = new PoiType
                                 {
-                                    Id = x.PoiTypeId,
-                                    Name = x.PoiTypeName,
+                                    NodeId = x.NodeId,
+                                    RoomName = x.RoomName,
+                                    DisplayName = x.DisplayName,
+                                    FloorId = x.FloorId
                                 },
-                                Description = x.PoiDescription
-                            }
+                            PoI = new PoI
+                                {
+                                    Type = new PoiType
+                                        {
+                                            Id = x.PoiTypeId,
+                                            Name = x.PoiTypeName,
+                                        },
+                                    Description = x.PoiDescription
+                                }
                         }).ToList();
                 }
             }
@@ -972,8 +961,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpGet]
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+        [HttpGet]
         public ListResponse<Room> GetRoomsForMap(int mapId)
         {
             var result = new ListResponse<Room>();
@@ -981,7 +969,7 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    var map = entities.Maps.FirstOrDefault(x => x.Id == mapId);
+                    Maps map = entities.Maps.FirstOrDefault(x => x.Id == mapId);
                     if (map == null)
                     {
                         result.SetError(ResponseError.MapIdDoesNotExist);
@@ -1005,8 +993,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [System.Web.Http.HttpGet]
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+        [HttpGet]
         public ObjectResponse<Node> GetNodeForNFC(int mapId, string nfcTag)
         {
             var result = new ObjectResponse<Node>();
@@ -1014,7 +1001,7 @@ namespace StudMap.Service.Controllers
             {
                 using (var entities = new MapsEntities())
                 {
-                    var nodeInformation =
+                    Data.Entities.NodeInformation nodeInformation =
                         entities.NodeInformation.FirstOrDefault(x => x.NFCTag == nfcTag);
                     if (nodeInformation == null)
                     {
@@ -1022,7 +1009,7 @@ namespace StudMap.Service.Controllers
                         return result;
                     }
 
-                    var node = nodeInformation.Nodes;
+                    Nodes node = nodeInformation.Nodes;
 
                     result.Object = new Node
                         {
@@ -1041,7 +1028,42 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [OutputCache(CacheProfile = "Cache1HourParam")]
+        public BaseResponse SaveNFCForNode(int nodeId, string nfcTag)
+        {
+
+            var result = new BaseResponse();
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    Data.Entities.NodeInformation nodeInformation =
+                        entities.NodeInformation.FirstOrDefault(x => x.Nodes.Id == nodeId);
+
+                    if (nodeInformation == null)
+                    {
+                        result.SetError(ResponseError.NodeIdDoesNotExist);
+                        return result;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(nfcTag))
+                    {
+                        result.SetError(ResponseError.NFCTagIsNullOrEmpty);
+                        return result;
+                    }
+
+                    nodeInformation.NFCTag = nfcTag;
+
+                    entities.SaveChanges();
+                }
+            }
+            catch (DataException e)
+            {
+                result.SetError(ResponseError.DatabaseError);
+                ErrorSignal.FromCurrentContext().Raise(e);
+            }
+            return result;
+        }
+
         public ObjectResponse<Node> GetNodeForQRCode(int mapId, string qrCode)
         {
             var result = new ObjectResponse<Node>();
@@ -1076,14 +1098,15 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        public BaseResponse SaveQRCodeToNode(int nodeId, string qrCode)
+        public BaseResponse SaveQRCodeForNode(int nodeId, string qrCode)
         {
             var result = new BaseResponse();
             try
             {
                 using (var entities = new MapsEntities())
                 {
-                    var nodeInformation = entities.NodeInformation.FirstOrDefault(x => x.Nodes.Id == nodeId);
+                    var nodeInformation =
+                        entities.NodeInformation.FirstOrDefault(x => x.Nodes.Id == nodeId);
 
                     if (nodeInformation == null)
                     {
@@ -1093,7 +1116,7 @@ namespace StudMap.Service.Controllers
 
                     if (String.IsNullOrWhiteSpace(qrCode))
                     {
-                        result.SetError(ResponseError.DatabaseError);
+                        result.SetError(ResponseError.QRCodeIsNullOrEmpty);
                         return result;
                     }
 
