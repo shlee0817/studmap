@@ -186,6 +186,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="CacheObjects\CacheObject.cs" />
     <Compile Include="CacheObjects\FingerprintCache.cs" />
+    <Compile Include="CacheObjects\MapCache.cs" />
     <Compile Include="Controllers\FingerprintController.cs" />
     <Compile Include="Controllers\MapsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
