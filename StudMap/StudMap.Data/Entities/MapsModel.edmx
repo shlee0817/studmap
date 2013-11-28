@@ -317,9 +317,10 @@
       -->
         <EntityType Name="RSSDistribution">
           <Key>
+            
             <PropertyRef Name="AccessPointId" />
           </Key>
-          <Property Name="NodeId" Type="int" />
+          <Property Name="NodeId" Type="int" Nullable="false" />
           <Property Name="AccessPointId" Type="int" Nullable="false" />
           <Property Name="AvgRSS" Type="int" />
           <Property Name="StDevRSS" Type="float" />
@@ -709,7 +710,7 @@
           <Key>
             <PropertyRef Name="AccessPointId" />
           </Key>
-          <Property Type="Int32" Name="NodeId" />
+          <Property Type="Int32" Name="NodeId" Nullable="false" />
           <Property Type="Int32" Name="AccessPointId" Nullable="false" />
           <Property Type="Int32" Name="AvgRSS" />
           <Property Type="Double" Name="StDevRSS" />

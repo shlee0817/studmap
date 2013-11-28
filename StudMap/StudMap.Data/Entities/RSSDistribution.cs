@@ -14,7 +14,7 @@ namespace StudMap.Data.Entities
     
     public partial class RSSDistribution
     {
-        public Nullable<int> NodeId { get; set; }
+        public int NodeId { get; set; }
         public int AccessPointId { get; set; }
         public Nullable<int> AvgRSS { get; set; }
         public Nullable<double> StDevRSS { get; set; }
