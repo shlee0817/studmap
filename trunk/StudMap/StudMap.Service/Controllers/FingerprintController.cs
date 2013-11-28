@@ -101,14 +101,12 @@ namespace StudMap.Service.Controllers
                 }
 
                 // AccessPoint-Messung nach APs aufteilen
-                var MACtoApId = new Dictionary<string, int>();
-                foreach (var ap in entities.AccessPoints)
-                    MACtoApId.Add(ap.MAC, ap.Id);
+                var MACtoApId = entities.AccessPoints.ToDictionary(ap => ap.MAC, ap => ap.Id);
 
                 var apScans = new Dictionary<int, int>();
                 foreach (var scan in request.Scans)
                 {
-                    int apId = 0;
+                    int apId;
                     if (MACtoApId.TryGetValue(scan.MAC, out apId))
                         apScans.Add(apId, scan.RSS); 
                 }
@@ -122,7 +120,7 @@ namespace StudMap.Service.Controllers
                     int relevantApCount = 0;
                     foreach (var apId in apDistributions.Keys)
                     {
-                        int scannedValue = 0;
+                        int scannedValue;
                         // Befindet sich der in der DB hinterlegte AP im aktuellen Fingerprint?
                         if (apScans.TryGetValue(apId, out scannedValue))
                         {
