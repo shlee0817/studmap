@@ -7,11 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Data.Entity.Core.Objects;
+
 namespace StudMap.Data.Entities
 {
     using System;
     using System.Data.Entity;
-    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Objects.DataClasses;
     using System.Linq;
@@ -28,7 +29,10 @@ namespace StudMap.Data.Entities
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<AccessPoints> AccessPoints { get; set; }
+        public DbSet<AccessPointScans> AccessPointScans { get; set; }
         public DbSet<Edges> Edges { get; set; }
+        public DbSet<Fingerprints> Fingerprints { get; set; }
         public DbSet<Floors> Floors { get; set; }
         public DbSet<Graphs> Graphs { get; set; }
         public DbSet<Maps> Maps { get; set; }
@@ -36,11 +40,8 @@ namespace StudMap.Data.Entities
         public DbSet<Nodes> Nodes { get; set; }
         public DbSet<PoIs> PoIs { get; set; }
         public DbSet<PoiTypes> PoiTypes { get; set; }
-        public DbSet<PoisForMap> PoisForMap { get; set; }
-        public DbSet<AccessPoints> AccessPoints { get; set; }
-        public DbSet<Fingerprints> Fingerprints { get; set; }
-        public DbSet<AccessPointScans> AccessPointScans { get; set; }
         public DbSet<NodeInformationForMap> NodeInformationForMap { get; set; }
+        public DbSet<PoisForMap> PoisForMap { get; set; }
         public DbSet<RSSDistribution> RSSDistribution { get; set; }
     
         public virtual int DeleteFloor(Nullable<int> floorId)

@@ -19,9 +19,9 @@ namespace StudMap.Data.Entities
         public string PoiTypeName { get; set; }
         public int PoiId { get; set; }
         public string PoiDescription { get; set; }
-        public int NodeId { get; set; }
         public string DisplayName { get; set; }
         public string RoomName { get; set; }
+        public int NodeId { get; set; }
         public int FloorId { get; set; }
     }
 }

@@ -20,8 +20,8 @@ namespace StudMap.Data.Entities
         public int NodeEndId { get; set; }
         public System.DateTime CreationTime { get; set; }
     
-        public virtual Nodes Nodes { get; set; }
         public virtual Graphs Graphs { get; set; }
+        public virtual Nodes Nodes { get; set; }
         public virtual Nodes Nodes1 { get; set; }
     }
 }

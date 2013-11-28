@@ -18,8 +18,8 @@ namespace StudMap.Data.Entities
         {
             this.Edges = new HashSet<Edges>();
             this.Edges1 = new HashSet<Edges>();
-            this.NodeInformation = new HashSet<NodeInformation>();
             this.Fingerprints = new HashSet<Fingerprints>();
+            this.NodeInformation = new HashSet<NodeInformation>();
         }
     
         public int Id { get; set; }
@@ -30,8 +30,8 @@ namespace StudMap.Data.Entities
     
         public virtual ICollection<Edges> Edges { get; set; }
         public virtual ICollection<Edges> Edges1 { get; set; }
+        public virtual ICollection<Fingerprints> Fingerprints { get; set; }
         public virtual Floors Floors { get; set; }
         public virtual ICollection<NodeInformation> NodeInformation { get; set; }
-        public virtual ICollection<Fingerprints> Fingerprints { get; set; }
     }
 }
