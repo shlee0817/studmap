@@ -91,29 +91,26 @@ namespace StudMap.Service.Controllers
         {
             var response = new ListResponse<NodeProbability>();
 
-            using (var entities = new MapsEntities())
-            {
-                // Gesammelte WLAN-Fingerprints aus DB auswerten und Verteilung bestimmen
-                // Jetzt: gecachet!
-                var nodeDistributionCache = (NodeDistributionCache)HttpRuntime.Cache.Get(CacheConfig.NODE_DISTRIBUTION_CACHE);
-                if (nodeDistributionCache == null)
-                    nodeDistributionCache = CacheConfig.RegisterNodeDistribution();
+            // Gesammelte WLAN-Fingerprints aus DB auswerten und Verteilung bestimmen
+            // Jetzt: gecachet!
+            var cache = (FingerprintCache)HttpRuntime.Cache.Get(CacheConfig.NODE_DISTRIBUTION_CACHE);
+            if (cache == null)
+                cache = CacheConfig.RegisterNodeDistribution();
 
-                var nodeDistributions = nodeDistributionCache.NodeDistributions;
+            var nodeDistributions = cache.NodeDistributions;
 
-                // AccessPoint-Messung nach APs aufteilen
-                var apScans = AnalyseInputScan(request, entities);
+            // AccessPoint-Messung nach APs aufteilen
+            var apScans = AnalyseInputScan(request, cache);
 
-                // W'keit bestimmen, dass RSS-Werte an Knoten gemessen werden
-                var nodeProbs = CalculateNodeProbabilities(nodeDistributions, apScans);
+            // W'keit bestimmen, dass RSS-Werte an Knoten gemessen werden
+            var nodeProbs = CalculateNodeProbabilities(nodeDistributions, apScans);
 
-                // Absteigend nach W'keit sortieren
-                nodeProbs.Sort((m, n) => m.Probabilty.CompareTo(n.Probabilty));
+            // Absteigend nach W'keit sortieren
+            nodeProbs.Sort((m, n) => m.Probabilty.CompareTo(n.Probabilty));
 
-                // Maximal die angeforderte Anzahl an Knoten zurückliefern
-                int count = Math.Min(request.NodeCount, nodeProbs.Count);
-                response.List = nodeProbs.GetRange(0, count);
-            }
+            // Maximal die angeforderte Anzahl an Knoten zurückliefern
+            int count = Math.Min(request.NodeCount, nodeProbs.Count);
+            response.List = nodeProbs.GetRange(0, count);
 
             return response;
         }
@@ -204,15 +201,13 @@ namespace StudMap.Service.Controllers
             return nodeProbs;
         }
 
-        private static Dictionary<int, int> AnalyseInputScan(LocationRequest request, MapsEntities entities)
+        private static Dictionary<int, int> AnalyseInputScan(LocationRequest request, FingerprintCache cache)
         {
-            var MACtoApId = entities.AccessPoints.ToDictionary(ap => ap.MAC, ap => ap.Id);
-
             var apScans = new Dictionary<int, int>();
             foreach (var scan in request.Scans)
             {
                 int apId;
-                if (MACtoApId.TryGetValue(scan.MAC, out apId))
+                if (cache.MACtoAP.TryGetValue(scan.MAC, out apId))
                     apScans.Add(apId, scan.RSS);
             }
             return apScans;

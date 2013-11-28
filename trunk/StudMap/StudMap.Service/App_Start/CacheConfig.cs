@@ -20,12 +20,12 @@ namespace StudMap.Service.App_Start
             RegisterNodeDistribution();     
         }
 
-        public static NodeDistributionCache RegisterNodeDistribution() 
+        public static FingerprintCache RegisterNodeDistribution() 
         {
             var cacheObject = RegisterObject(NODE_DISTRIBUTION_CACHE, 
-                () => new NodeDistributionCache());
+                () => new FingerprintCache());
 
-            return (NodeDistributionCache)cacheObject;
+            return (FingerprintCache)cacheObject;
         }
 
         public static void RemoveNodeDistribution()
