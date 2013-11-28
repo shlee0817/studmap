@@ -356,7 +356,7 @@ public class Service implements Constants {
 	private static Node parseJsonToNode(JSONObject o) throws JSONException {
 		Node node = null;
 
-		int id = o.getInt(RESPONSE_PARAM_NODE_ID);
+		int id = o.getInt(RESPONSE_PARAM_NODE_NODE_ID);
 		String roomName = o.getString(RESPONSE_PARAM_NODE_ROOMNAME);
 		String displayName = o.getString(RESPONSE_PARAM_NODE_DISPLAYNAME);
 		int floorId = o.getInt(RESPONSE_PARAM_NODE_FLOOR_ID);
