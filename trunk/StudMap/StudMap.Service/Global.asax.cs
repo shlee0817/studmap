@@ -23,6 +23,7 @@ namespace StudMap.Service
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            CacheConfig.RegisterCacheObjects();
 
             AddTask("CheckActiveUsers", 5 * 60);
         }
