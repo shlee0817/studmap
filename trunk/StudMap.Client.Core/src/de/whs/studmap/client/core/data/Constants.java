@@ -20,6 +20,8 @@ public interface Constants {
 		 static final String METHOD_GET_FLOORS = "GetFloorsForMap";
 		 static final String METHOD_GET_NODE_INFO_FOR_NODE = "GetNodeInformationForNode";
 		 static final String METHOD_GET_NODE_FOR_QR_CODE = "GetNodeForQRCode";
+		 static final String METHOD_SAVEFINGERPRINTFORNODE = "SaveFingerprintForNode";
+		 static final String METHOD_GETNODEFORFINGERPRINT = "GetNodeForFingerprint";
 			
 		//UserController
 		 static final String REQUEST_PARAM_USERNAME = "userName";
@@ -29,6 +31,9 @@ public interface Constants {
 		 static final String REQUEST_PARAM_MAPID = "mapId";
 		 static final String REQUEST_PARAM_NODEID = "nodeId";
 		 static final String REQUEST_PARAM_QR_CODE = "qrCode";
+		 
+		 //FingerprintController
+		 static final String REQUEST_PARAM_FACTOR = "factor";
 		
 		//Node
 		 static final String RESPONSE_PARAM_NODE_NODE = "Node";
@@ -53,7 +58,8 @@ public interface Constants {
 		 
 		//Urls
 		 static final String URL_USER = "http://193.175.199.115:80/StudMapService/api/Users/";
-		 static final String URL_MAPS = "http://193.175.199.115:80/StudMapService/api/Maps/";
+		 static final String URL_MAPS = "http://193.175.199.115:80/StudMapService/api/Maps/"; 
+		 static final String URL_FINGERPRINT = "http://193.175.199.115:80/StudMapService/api/Fingerprint/";
 		 
 		 //Log tags
 		 static final String LOG_TAG_WEBSERVICE = "WebService";
