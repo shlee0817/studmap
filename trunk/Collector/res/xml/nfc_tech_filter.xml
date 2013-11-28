@@ -4,6 +4,10 @@
         <tech>android.nfc.tech.Ndef</tech>
         <!-- class name -->
     </tech-list>
+    <tech-list>
+        <tech>android.nfc.tech.NfcA</tech>
+        <!-- class name -->
+    </tech-list>
 </resources>
 <!--
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">

@@ -308,6 +308,20 @@ public class Service implements Constants {
 				new Gson().toJson(fingerprint));
 	}
 
+	public static boolean SaveNFCTagForNode(int nodeId,
+			String nfcTag) throws WebServiceException,
+			ConnectException {
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_NODEID, String
+				.valueOf(nodeId)));
+		params.add(new BasicNameValuePair(REQUEST_PARAM_NFC_TAG, nfcTag));
+
+		httpPost(URL_MAPS, METHOD_SAVE_NFCTAG_FOR_NODE, params);
+
+		return true;
+	}
+	
 	private static JSONObject httpGet(String url, String methodName)
 			throws WebServiceException, ConnectException {
 		return httpGet(url, methodName, null);

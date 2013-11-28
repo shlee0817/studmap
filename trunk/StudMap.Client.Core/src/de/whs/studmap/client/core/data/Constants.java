@@ -22,6 +22,7 @@ public interface Constants {
 		 static final String METHOD_GET_NODE_FOR_QR_CODE = "GetNodeForQRCode";
 		 static final String METHOD_SAVEFINGERPRINTFORNODE = "SaveFingerprintForNode";
 		 static final String METHOD_GETNODEFORFINGERPRINT = "GetNodeProbabiltyForScan";
+		 static final String METHOD_SAVE_NFCTAG_FOR_NODE = "SaveNFCForNode";
 			
 		//UserController
 		 static final String REQUEST_PARAM_USERNAME = "userName";
@@ -31,6 +32,7 @@ public interface Constants {
 		 static final String REQUEST_PARAM_MAPID = "mapId";
 		 static final String REQUEST_PARAM_NODEID = "nodeId";
 		 static final String REQUEST_PARAM_QR_CODE = "qrCode";
+		 static final String REQUEST_PARAM_NFC_TAG = "nfcTag";
 		 
 		 //FingerprintController
 		 static final String REQUEST_PARAM_FACTOR = "factor";
