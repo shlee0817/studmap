@@ -43,18 +43,18 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import de.whs.studmap.client.core.data.Constants;
-import de.whs.studmap.client.core.data.Floor;
-import de.whs.studmap.client.core.data.Node;
-import de.whs.studmap.client.core.web.JavaScriptInterface;
-import de.whs.studmap.client.core.web.JavaScriptService;
-import de.whs.studmap.client.core.web.ResponseError;
-import de.whs.studmap.client.core.web.Service;
-import de.whs.studmap.client.core.web.WebServiceException;
+import de.whs.studmap.data.Constants;
+import de.whs.studmap.data.DrawerItemEnum;
+import de.whs.studmap.data.Floor;
+import de.whs.studmap.data.Node;
 import de.whs.studmap.scanner.IntentIntegrator;
 import de.whs.studmap.scanner.IntentResult;
 import de.whs.studmap.snippets.UserInfo;
-import de.whs.studmap.web.JavaScriptInterfaceImpl;
+import de.whs.studmap.web.JavaScriptInterface;
+import de.whs.studmap.web.JavaScriptService;
+import de.whs.studmap.web.ResponseError;
+import de.whs.studmap.web.Service;
+import de.whs.studmap.web.WebServiceException;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
@@ -342,12 +342,11 @@ public class MainActivity extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
+			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 			mMapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
 			mMapWebView.setWebViewClient(new WebViewClient());
-			JavaScriptInterface jsInterface = new JavaScriptInterfaceImpl(
+			JavaScriptInterface jsInterface = new JavaScriptInterface(
 					rootView.getContext());
 			mMapWebView.getSettings().setJavaScriptEnabled(true);
 			mMapWebView.addJavascriptInterface(jsInterface, "jsinterface");
@@ -404,6 +403,7 @@ public class MainActivity extends Activity {
 
 		case IMPRESSUM:
 			startActivity(new Intent(this, ImpressumActivity.class));
+			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
 		default:
 			UserInfo.toast(this, "Auswahl nicht gefunden!", false);
