@@ -93,7 +93,7 @@ namespace StudMap.Service.Controllers
 
             // Gesammelte WLAN-Fingerprints aus DB auswerten und Verteilung bestimmen
             // Jetzt: gecachet!
-            var cache = (FingerprintCache)HttpRuntime.Cache.Get(CacheConfig.NODE_DISTRIBUTION_CACHE);
+            var cache = (FingerprintCache)HttpRuntime.Cache.Get(CacheConfig.FINGERPRINT_CACHE);
             if (cache == null)
                 cache = CacheConfig.RegisterNodeDistribution();
 

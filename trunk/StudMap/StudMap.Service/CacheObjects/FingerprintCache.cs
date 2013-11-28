@@ -9,7 +9,7 @@ namespace StudMap.Service.CacheObjects
 {
     public class FingerprintCache : CacheObject
     {
-        private const int TIMEOUT = 24 * 60;
+        private const int TIMEOUT = 60;
 
         public Dictionary<int, Dictionary<int, Normal>> NodeDistributions { get; set; }
 

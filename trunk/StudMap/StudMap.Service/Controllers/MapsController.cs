@@ -13,6 +13,9 @@ using StudMap.Core.Information;
 using StudMap.Core.Maps;
 using StudMap.Data.Entities;
 using NodeInformation = StudMap.Core.Information.NodeInformation;
+using StudMap.Service.CacheObjects;
+using System.Web;
+using StudMap.Service.App_Start;
 
 namespace StudMap.Service.Controllers
 {
@@ -812,72 +815,50 @@ namespace StudMap.Service.Controllers
 
             try
             {
-                using (var entities = new MapsEntities())
+                var routeNodes = new List<Node>();
+
+                var cache = (MapCache)HttpRuntime.Cache.Get(CacheConfig.MAP_CACHE + mapId);
+                if (cache == null)
+                    cache = CacheConfig.RegisterMapCache(mapId);
+
+                Dictionary<int, Node> nodesMap = cache.Nodes;
+
+                if (!nodesMap.ContainsKey(startNodeId))
                 {
-                    var routeNodes = new List<Node>();
+                    result.SetError(ResponseError.StartNodeNotFound);
+                    return result;
+                }
+                if (!nodesMap.ContainsKey(endNodeId))
+                {
+                    result.SetError(ResponseError.EndNodeNotFound);
+                    return result;
+                }
 
-                    IQueryable<Nodes> nodes = from node in entities.Nodes
-                                              where node.Floors.MapId == mapId
-                                              select node;
+                var tryGetPath = cache.PathFinder;
 
-                    Dictionary<int, Nodes> nodesMap = nodes.ToDictionary(node => node.Id);
+                IEnumerable<UndirectedEdge<int>> routeEdges;
+                if (cache.PathFinder.TryGetPath(startNodeId, endNodeId, out routeEdges))
+                {
+                    // Eine Route existiert und beginnt damit mit dem Startknoten
+                    routeNodes.Add(nodesMap[startNodeId]);
 
-                    if (!nodesMap.ContainsKey(startNodeId))
+                    int lastNodeId = startNodeId;
+                    foreach (var routeEdge in routeEdges)
                     {
-                        result.SetError(ResponseError.StartNodeNotFound);
-                        return result;
-                    }
-                    if (!nodesMap.ContainsKey(endNodeId))
-                    {
-                        result.SetError(ResponseError.EndNodeNotFound);
-                        return result;
-                    }
-
-                    List<Edges> edges = (from edge in entities.Edges
-                                         where edge.Graphs.MapId == mapId
-                                         select edge).ToList();
-
-                    var graph = new UndirectedGraph<int, Edge<int>>();
-
-                    foreach (int nodeId in nodesMap.Keys)
-                    {
-                        graph.AddVertex(nodeId);
+                        // Es handelt sich um eine ungerichtete Kante, d.h. es muss
+                        // geprüft werden, welcher Endknoten der Kante der zuletzt
+                        // besuchte Knoten war
+                        int nextNodeId = routeEdge.GetOtherVertex(lastNodeId);
+                        routeNodes.Add(nodesMap[nextNodeId]);
+                        lastNodeId = nextNodeId;
                     }
 
-                    foreach (Edges edge in edges)
-                    {
-                        graph.AddEdge(new Edge<int>(edge.NodeStartId, edge.NodeEndId));
-                    }
-
-                    Func<Edge<int>, double> edgeCost = e => GetEdgeCost(nodesMap, e);
-
-                    TryFunc<int, IEnumerable<Edge<int>>> tryGetPath = graph.ShortestPathsDijkstra(edgeCost, startNodeId);
-
-                    IEnumerable<Edge<int>> routeEdges;
-                    if (tryGetPath(endNodeId, out routeEdges))
-                    {
-                        // Eine Route existiert und beginnt damit mit dem Startknoten
-                        routeNodes.Add(NodeFromDb(nodesMap[startNodeId]));
-
-                        int lastNodeId = startNodeId;
-                        foreach (var routeEdge in routeEdges)
-                        {
-                            // Es handelt sich um eine ungerichtete Kante, d.h. es muss
-                            // geprüft werden, welcher Endknoten der Kante der zuletzt
-                            // besuchte Knoten war
-                            int nextNodeId = routeEdge.GetOtherVertex(lastNodeId);
-                            Nodes dbNode = nodesMap[nextNodeId];
-                            routeNodes.Add(NodeFromDb(dbNode));
-                            lastNodeId = nextNodeId;
-                        }
-
-                        result.List = routeNodes;
-                    }
-                    else
-                    {
-                        result.SetError(ResponseError.NoRouteFound);
-                        return result;
-                    }
+                    result.List = routeNodes;
+                }
+                else
+                {
+                    result.SetError(ResponseError.NoRouteFound);
+                    return result;
                 }
             }
             catch (DataException ex)
@@ -912,10 +893,10 @@ namespace StudMap.Service.Controllers
                 };
         }
 
-        private double GetEdgeCost(Dictionary<int, Nodes> nodesMap, Edge<int> e)
+        private double GetEdgeCost(Dictionary<int, Node> nodesMap, Edge<int> e)
         {
-            Nodes startNode = nodesMap[e.Source];
-            Nodes endNode = nodesMap[e.Target];
+            Node startNode = nodesMap[e.Source];
+            Node endNode = nodesMap[e.Target];
 
             decimal diffX = endNode.X - startNode.X;
             decimal diffY = endNode.Y - startNode.Y;
