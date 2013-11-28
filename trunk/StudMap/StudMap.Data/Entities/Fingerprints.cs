@@ -22,7 +22,7 @@ namespace StudMap.Data.Entities
         public int Id { get; set; }
         public int NodeId { get; set; }
     
-        public virtual Nodes Nodes { get; set; }
         public virtual ICollection<AccessPointScans> AccessPointScans { get; set; }
+        public virtual Nodes Nodes { get; set; }
     }
 }
