@@ -13,15 +13,21 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
 import android.util.Log;
 import de.whs.studmap.client.core.data.Constants;
+import de.whs.studmap.client.core.data.Fingerprint;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.data.PoI;
@@ -207,6 +213,75 @@ public class Service implements Constants {
 			}
 			
 			throw new ConnectException();
+	}
+	
+	private static JSONObject httpPost(String url, String methodName,
+			List<NameValuePair> params, String jsonData)
+			throws WebServiceException, ConnectException {
+
+		// Create a new HttpClient and Post Header
+		HttpClient httpClient = new DefaultHttpClient();
+
+		try {
+			// Add data
+			String entityString = URLEncodedUtils.format(params, "utf-8");
+			HttpPost httpPost = new HttpPost(url + methodName + "?"
+					+ entityString);
+			
+			StringEntity se = new StringEntity(jsonData.toString());  
+            se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+			httpPost.setEntity(se);
+
+			// Execute HTTP Post Request
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity entity = response.getEntity();
+
+			if (entity != null) {
+				String responseString = EntityUtils.toString(entity);
+				JSONObject jObject = new JSONObject(responseString);
+
+				int status = jObject.getInt(RESPONSE_STATUS);
+				if (status == ResponseStatus.Ok)
+					return jObject;
+				else
+					throw new WebServiceException(jObject);
+			}
+
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		throw new ConnectException();
+	}
+	
+	public static boolean SaveFingerprintForNode(int nodeId,
+			Fingerprint fingerprint) throws WebServiceException,
+			ConnectException {
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_NODEID, String
+				.valueOf(nodeId)));
+
+		httpPost(URL_FINGERPRINT, METHOD_SAVEFINGERPRINTFORNODE, params,
+				new Gson().toJson(fingerprint));
+
+		return true;
+	}
+
+	public static boolean GetNodeForFingerprint(Fingerprint fingerprint,
+			double factor) throws WebServiceException, ConnectException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_FACTOR, String
+				.valueOf(factor)));
+
+		httpPost(URL_FINGERPRINT, METHOD_GETNODEFORFINGERPRINT, params,
+				new Gson().toJson(fingerprint));
+
+		return true;
 	}
 	
 	private static JSONObject httpGet(String url, String methodName) throws WebServiceException, ConnectException{
