@@ -21,7 +21,7 @@ public interface Constants {
 		 static final String METHOD_GET_NODE_INFO_FOR_NODE = "GetNodeInformationForNode";
 		 static final String METHOD_GET_NODE_FOR_QR_CODE = "GetNodeForQRCode";
 		 static final String METHOD_SAVEFINGERPRINTFORNODE = "SaveFingerprintForNode";
-		 static final String METHOD_GETNODEFORFINGERPRINT = "GetNodeForFingerprint";
+		 static final String METHOD_GETNODEFORFINGERPRINT = "GetNodeProbabiltyForScan";
 			
 		//UserController
 		 static final String REQUEST_PARAM_USERNAME = "userName";
