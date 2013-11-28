@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Mvc;
 using Elmah;
 using QuickGraph;
 using QuickGraph.Algorithms;
@@ -21,7 +22,7 @@ namespace StudMap.Service.Controllers
 
         #region Map
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public ObjectResponse<Map> CreateMap(string mapName)
         {
             var result = new ObjectResponse<Map>();
@@ -56,7 +57,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public BaseResponse DeleteMap(int mapId)
         {
             var result = new BaseResponse();
@@ -79,7 +80,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [OutputCache(CacheProfile = "Cache1Hour")]
         public ListResponse<Map> GetMaps()
         {
             var result = new ListResponse<Map>();
@@ -112,7 +114,7 @@ namespace StudMap.Service.Controllers
 
         #region Floor
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public ObjectResponse<Floor> CreateFloor(int mapId, string name = "")
         {
             var result = new ObjectResponse<Floor>();
@@ -159,7 +161,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public BaseResponse DeleteFloor(int floorId)
         {
             var result = new BaseResponse();
@@ -182,6 +184,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ListResponse<Floor> GetFloorsForMap(int mapId)
         {
             var result = new ListResponse<Floor>();
@@ -220,6 +223,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ObjectResponse<Floor> GetFloor(int floorId)
         {
             var result = new ObjectResponse<Floor>();
@@ -256,6 +261,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ObjectResponse<string> GetFloorplanImage(int floorId)
         {
             var result = new ObjectResponse<string>();
@@ -286,7 +292,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public ObjectResponse<Floor> UploadFloorImage(int floorId, string filename)
         {
             var result = new ObjectResponse<Floor>();
@@ -330,7 +336,7 @@ namespace StudMap.Service.Controllers
 
         #region Layer: Graph
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public ObjectResponse<Graph> SaveGraphForFloor(int floorId, Graph newGraph, Graph deletedGraph)
         {
             var result = new ObjectResponse<Graph>();
@@ -454,7 +460,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public BaseResponse DeleteGraphForFloor(int floorId)
         {
             var result = new BaseResponse();
@@ -477,7 +483,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ObjectResponse<Graph> GetGraphForFloor(int floorId)
         {
             var result = new ObjectResponse<Graph>();
@@ -533,7 +540,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ObjectResponse<NodeInformation> GetNodeInformationForNode(int nodeId)
         {
             var result = new ObjectResponse<NodeInformation>();
@@ -589,7 +597,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ObjectResponse<FloorPlanData> GetFloorPlanData(int floorId)
         {
             var floorPlanData = new ObjectResponse<FloorPlanData> { Object = new FloorPlanData() };
@@ -601,7 +610,7 @@ namespace StudMap.Service.Controllers
             return floorPlanData;
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public ObjectResponse<NodeInformation> SaveNodeInformation(int nodeId, NodeInformation nodeInf)
         {
             var result = new ObjectResponse<NodeInformation>();
@@ -716,6 +725,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ListResponse<Node> GetConnectedNodes(int nodeId)
         {
             var result = new ListResponse<Node>();
@@ -761,6 +771,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ListResponse<NodeInformation> GetNodeInformation(int mapId, int floorId)
         {
             var result = new ListResponse<NodeInformation>();
@@ -792,7 +803,8 @@ namespace StudMap.Service.Controllers
 
         #region Layer: Navigation
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ListResponse<Node> GetRouteBetween(int mapId, int startNodeId, int endNodeId)
         {
             var result = new ListResponse<Node>();
@@ -917,6 +929,7 @@ namespace StudMap.Service.Controllers
 
         #region Layer: Information
 
+        [OutputCache(CacheProfile = "Cache1Hour")]
         public ListResponse<PoiType> GetPoiTypes()
         {
             var result = new ListResponse<PoiType>();
@@ -940,7 +953,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ListResponse<RoomAndPoI> GetPoIsForMap(int mapId)
         {
             var result = new ListResponse<RoomAndPoI>();
@@ -976,7 +990,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ListResponse<Room> GetRoomsForMap(int mapId)
         {
             var result = new ListResponse<Room>();
@@ -1008,7 +1023,8 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ObjectResponse<Node> GetNodeForNFC(int mapId, string nfcTag)
         {
             var result = new ObjectResponse<Node>();
@@ -1043,6 +1059,7 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [OutputCache(CacheProfile = "Cache1HourParam")]
         public ObjectResponse<Node> GetNodeForQRCode(int mapId, string qrCode)
         {
             var result = new ObjectResponse<Node>();
