@@ -92,11 +92,10 @@ namespace StudMap.Service.Controllers
                 var nodeDistributions = new Dictionary<int, Dictionary<int, Normal>>();
                 foreach (var dist in entities.RSSDistribution)
                 {
-                    int nodeId = dist.NodeId ?? 0;
-                    if (!nodeDistributions.ContainsKey(nodeId))
-                        nodeDistributions.Add(nodeId, new Dictionary<int, Normal>());
+                    if (!nodeDistributions.ContainsKey(dist.NodeId))
+                        nodeDistributions.Add(dist.NodeId, new Dictionary<int, Normal>());
 
-                    nodeDistributions[nodeId].Add(dist.AccessPointId,
+                    nodeDistributions[dist.NodeId].Add(dist.AccessPointId,
                         Normal.WithMeanStdDev(dist.AvgRSS ?? 0, dist.StDevRSS ?? 0.0));
                 }
 
