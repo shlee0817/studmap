@@ -100,14 +100,14 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="MAC" Type="char" Nullable="false" MaxLength="12" />
         </EntityType>
         <EntityType Name="AccessPointScans">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="FingerprintId" Type="int" Nullable="false" />
           <Property Name="AccessPointId" Type="int" Nullable="false" />
           <Property Name="RecievedSignalStrength" Type="int" Nullable="false" />
@@ -116,7 +116,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="GraphId" Type="int" Nullable="false" />
           <Property Name="NodeStartId" Type="int" Nullable="false" />
           <Property Name="NodeEndId" Type="int" Nullable="false" />
@@ -126,14 +126,14 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="NodeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Floors">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="MapId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="ImageUrl" Type="nvarchar(max)" Nullable="false" />
@@ -143,7 +143,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="MapId" Type="int" Nullable="false" />
           <Property Name="CreationTime" Type="datetime" Nullable="false" />
         </EntityType>
@@ -151,7 +151,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
           <Property Name="CreationTime" Type="datetime" Nullable="false" />
         </EntityType>
@@ -159,7 +159,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="NodeId" Type="int" Nullable="false" />
           <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
           <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
@@ -172,7 +172,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="FloorId" Type="int" Nullable="false" />
           <Property Name="X" Type="decimal" Nullable="false" Scale="4" />
           <Property Name="Y" Type="decimal" Nullable="false" Scale="4" />
@@ -182,7 +182,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="TypeId" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
@@ -190,7 +190,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -395,15 +395,6 @@
         <Function Name="sp_DeleteMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="MapId" Type="int" Mode="In" />
         </Function>
-        <!--Errors Found During Generation:
-      warning 6013: The table/view 'StudMap.dbo.RoomsForMap' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-      
-      <EntityType Name="RoomsForMap">
-        <Property Name="NodeId" Type="int" />
-        <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
-        <Property Name="RoomName" Type="nvarchar" MaxLength="255" />
-        <Property Name="FloorId" Type="int" />
-      </EntityType>-->
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -418,6 +409,9 @@
           <FunctionImport Name="DeleteGraphFromFloor">
           <Parameter Name="FloorId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
+          <EntitySet Name="PoisForMap" EntityType="StudMapModel.PoisForMap" />
+          <EntitySet Name="RSSDistribution" EntityType="StudMapModel.RSSDistribution" />
           <EntitySet Name="AccessPoints" EntityType="StudMapModel.AccessPoints" />
           <EntitySet Name="AccessPointScans" EntityType="StudMapModel.AccessPointScans" />
           <EntitySet Name="Edges" EntityType="StudMapModel.Edges" />
@@ -429,9 +423,6 @@
           <EntitySet Name="Nodes" EntityType="StudMapModel.Nodes" />
           <EntitySet Name="PoIs" EntityType="StudMapModel.PoIs" />
           <EntitySet Name="PoiTypes" EntityType="StudMapModel.PoiTypes" />
-          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
-          <EntitySet Name="PoisForMap" EntityType="StudMapModel.PoisForMap" />
-          <EntitySet Name="RSSDistribution" EntityType="StudMapModel.RSSDistribution" />
           <AssociationSet Name="FK_AccessPointScans_AccessPoints" Association="StudMapModel.FK_AccessPointScans_AccessPoints">
             <End Role="AccessPoints" EntitySet="AccessPoints" />
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
@@ -481,127 +472,6 @@
             <End Role="PoIs" EntitySet="PoIs" />
           </AssociationSet>
           </EntityContainer>
-        <EntityType Name="AccessPoints">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="String" Name="MAC" Nullable="false" MaxLength="12" FixedLength="true" Unicode="false" />
-          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_AccessPoints" FromRole="AccessPoints" ToRole="AccessPointScans" />
-        </EntityType>
-        <EntityType Name="AccessPointScans">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="FingerprintId" Nullable="false" />
-          <Property Type="Int32" Name="AccessPointId" Nullable="false" />
-          <Property Type="Int32" Name="RecievedSignalStrength" Nullable="false" />
-          <NavigationProperty Name="AccessPoints" Relationship="StudMapModel.FK_AccessPointScans_AccessPoints" FromRole="AccessPointScans" ToRole="AccessPoints" />
-          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="AccessPointScans" ToRole="Fingerprints" />
-        </EntityType>
-        <EntityType Name="Edges">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="GraphId" Nullable="false" />
-          <Property Type="Int32" Name="NodeStartId" Nullable="false" />
-          <Property Type="Int32" Name="NodeEndId" Nullable="false" />
-          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Graphs" Relationship="StudMapModel.FK_Edges_Graphs" FromRole="Edges" ToRole="Graphs" />
-          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Edges_Nodes" FromRole="Edges" ToRole="Nodes" />
-          <NavigationProperty Name="Nodes1" Relationship="StudMapModel.FK_Edges_Nodes1" FromRole="Edges" ToRole="Nodes" />
-        </EntityType>
-        <EntityType Name="Fingerprints">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="NodeId" Nullable="false" />
-          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="Fingerprints" ToRole="AccessPointScans" />
-          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Fingerprints" ToRole="Nodes" />
-        </EntityType>
-        <EntityType Name="Floors">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="MapId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ImageUrl" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Maps" Relationship="StudMapModel.FK_Floors_Maps" FromRole="Floors" ToRole="Maps" />
-          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Floors" ToRole="Nodes" />
-        </EntityType>
-        <EntityType Name="Graphs">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="MapId" Nullable="false" />
-          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Edges" Relationship="StudMapModel.FK_Edges_Graphs" FromRole="Graphs" ToRole="Edges" />
-          <NavigationProperty Name="Maps" Relationship="StudMapModel.FK_Graphs_Maps" FromRole="Graphs" ToRole="Maps" />
-        </EntityType>
-        <EntityType Name="Maps">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Floors_Maps" FromRole="Maps" ToRole="Floors" />
-          <NavigationProperty Name="Graphs" Relationship="StudMapModel.FK_Graphs_Maps" FromRole="Maps" ToRole="Graphs" />
-        </EntityType>
-        <EntityType Name="NodeInformation">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="NodeId" Nullable="false" />
-          <Property Type="String" Name="DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="QRCode" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="NFCTag" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="PoiId" />
-          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="NodeInformation" ToRole="Nodes" />
-          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_NodeInformation_PoIs" FromRole="NodeInformation" ToRole="PoIs" />
-        </EntityType>
-        <EntityType Name="Nodes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="FloorId" Nullable="false" />
-          <Property Type="Decimal" Name="X" Nullable="false" Precision="18" Scale="4" />
-          <Property Type="Decimal" Name="Y" Nullable="false" Precision="18" Scale="4" />
-          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Edges" Relationship="StudMapModel.FK_Edges_Nodes" FromRole="Nodes" ToRole="Edges" />
-          <NavigationProperty Name="Edges1" Relationship="StudMapModel.FK_Edges_Nodes1" FromRole="Nodes" ToRole="Edges" />
-          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Nodes" ToRole="Fingerprints" />
-          <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Nodes" ToRole="Floors" />
-          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="Nodes" ToRole="NodeInformation" />
-        </EntityType>
-        <EntityType Name="PoIs">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="TypeId" Nullable="false" />
-          <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_PoIs" FromRole="PoIs" ToRole="NodeInformation" />
-          <NavigationProperty Name="PoiTypes" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoIs" ToRole="PoiTypes" />
-        </EntityType>
-        <EntityType Name="PoiTypes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoiTypes" ToRole="PoIs" />
-        </EntityType>
         <EntityType Name="NodeInformationForMap">
           <Key>
             <PropertyRef Name="MapId" />
@@ -641,6 +511,127 @@
           <Property Type="Int32" Name="AccessPointId" Nullable="false" />
           <Property Type="Int32" Name="AvgRSS" />
           <Property Type="Double" Name="StDevRSS" />
+        </EntityType>
+        <EntityType Name="AccessPoints">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="MAC" Nullable="false" MaxLength="12" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_AccessPoints" FromRole="AccessPoints" ToRole="AccessPointScans" />
+        </EntityType>
+        <EntityType Name="AccessPointScans">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="FingerprintId" Nullable="false" />
+          <Property Type="Int32" Name="AccessPointId" Nullable="false" />
+          <Property Type="Int32" Name="RecievedSignalStrength" Nullable="false" />
+          <NavigationProperty Name="AccessPoints" Relationship="StudMapModel.FK_AccessPointScans_AccessPoints" FromRole="AccessPointScans" ToRole="AccessPoints" />
+          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="AccessPointScans" ToRole="Fingerprints" />
+        </EntityType>
+        <EntityType Name="Edges">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="GraphId" Nullable="false" />
+          <Property Type="Int32" Name="NodeStartId" Nullable="false" />
+          <Property Type="Int32" Name="NodeEndId" Nullable="false" />
+          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Graphs" Relationship="StudMapModel.FK_Edges_Graphs" FromRole="Edges" ToRole="Graphs" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Edges_Nodes" FromRole="Edges" ToRole="Nodes" />
+          <NavigationProperty Name="Nodes1" Relationship="StudMapModel.FK_Edges_Nodes1" FromRole="Edges" ToRole="Nodes" />
+        </EntityType>
+        <EntityType Name="Fingerprints">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="NodeId" Nullable="false" />
+          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="Fingerprints" ToRole="AccessPointScans" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Fingerprints" ToRole="Nodes" />
+        </EntityType>
+        <EntityType Name="Floors">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="MapId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ImageUrl" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Maps" Relationship="StudMapModel.FK_Floors_Maps" FromRole="Floors" ToRole="Maps" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Floors" ToRole="Nodes" />
+        </EntityType>
+        <EntityType Name="Graphs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="MapId" Nullable="false" />
+          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Edges" Relationship="StudMapModel.FK_Edges_Graphs" FromRole="Graphs" ToRole="Edges" />
+          <NavigationProperty Name="Maps" Relationship="StudMapModel.FK_Graphs_Maps" FromRole="Graphs" ToRole="Maps" />
+        </EntityType>
+        <EntityType Name="Maps">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Floors_Maps" FromRole="Maps" ToRole="Floors" />
+          <NavigationProperty Name="Graphs" Relationship="StudMapModel.FK_Graphs_Maps" FromRole="Maps" ToRole="Graphs" />
+        </EntityType>
+        <EntityType Name="NodeInformation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="NodeId" Nullable="false" />
+          <Property Type="String" Name="DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RoomName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="QRCode" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="NFCTag" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PoiId" />
+          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="NodeInformation" ToRole="Nodes" />
+          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_NodeInformation_PoIs" FromRole="NodeInformation" ToRole="PoIs" />
+        </EntityType>
+        <EntityType Name="Nodes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="FloorId" Nullable="false" />
+          <Property Type="Decimal" Name="X" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="Y" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Edges" Relationship="StudMapModel.FK_Edges_Nodes" FromRole="Nodes" ToRole="Edges" />
+          <NavigationProperty Name="Edges1" Relationship="StudMapModel.FK_Edges_Nodes1" FromRole="Nodes" ToRole="Edges" />
+          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Nodes" ToRole="Fingerprints" />
+          <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Nodes" ToRole="Floors" />
+          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="Nodes" ToRole="NodeInformation" />
+        </EntityType>
+        <EntityType Name="PoIs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="TypeId" Nullable="false" />
+          <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_PoIs" FromRole="PoIs" ToRole="NodeInformation" />
+          <NavigationProperty Name="PoiTypes" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoIs" ToRole="PoiTypes" />
+        </EntityType>
+        <EntityType Name="PoiTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoiTypes" ToRole="PoIs" />
         </EntityType>
         <Association Name="FK_AccessPointScans_AccessPoints">
           <End Type="StudMapModel.AccessPoints" Role="AccessPoints" Multiplicity="1" />
@@ -795,6 +786,42 @@
           <FunctionImportMapping FunctionImportName="DeleteFloor" FunctionName="StudMapModel.Store.sp_DeleteFloor" />
           <FunctionImportMapping FunctionImportName="DeleteMap" FunctionName="StudMapModel.Store.sp_DeleteMap" />
           <FunctionImportMapping FunctionImportName="DeleteGraphFromFloor" FunctionName="StudMapModel.Store.sp_DeleteGraphFromFloor" />
+          <EntitySetMapping Name="NodeInformationForMap">
+            <EntityTypeMapping TypeName="StudMapModel.NodeInformationForMap">
+              <MappingFragment StoreEntitySet="NodeInformationForMap">
+                <ScalarProperty Name="FloorId" ColumnName="FloorId" />
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="MapId" ColumnName="MapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PoisForMap">
+            <EntityTypeMapping TypeName="StudMapModel.PoisForMap">
+              <MappingFragment StoreEntitySet="PoisForMap">
+                <ScalarProperty Name="FloorId" ColumnName="FloorId" />
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="PoiDescription" ColumnName="PoiDescription" />
+                <ScalarProperty Name="PoiId" ColumnName="PoiId" />
+                <ScalarProperty Name="PoiTypeName" ColumnName="PoiTypeName" />
+                <ScalarProperty Name="PoiTypeId" ColumnName="PoiTypeId" />
+                <ScalarProperty Name="MapId" ColumnName="MapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RSSDistribution">
+            <EntityTypeMapping TypeName="StudMapModel.RSSDistribution">
+              <MappingFragment StoreEntitySet="RSSDistribution">
+                <ScalarProperty Name="StDevRSS" ColumnName="StDevRSS" />
+                <ScalarProperty Name="AvgRSS" ColumnName="AvgRSS" />
+                <ScalarProperty Name="AccessPointId" ColumnName="AccessPointId" />
+                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="AccessPoints">
             <EntityTypeMapping TypeName="StudMapModel.AccessPoints">
               <MappingFragment StoreEntitySet="AccessPoints">
@@ -900,42 +927,6 @@
               <MappingFragment StoreEntitySet="PoiTypes">
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="NodeInformationForMap">
-            <EntityTypeMapping TypeName="StudMapModel.NodeInformationForMap">
-              <MappingFragment StoreEntitySet="NodeInformationForMap">
-                <ScalarProperty Name="FloorId" ColumnName="FloorId" />
-                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
-                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
-                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
-                <ScalarProperty Name="MapId" ColumnName="MapId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PoisForMap">
-            <EntityTypeMapping TypeName="StudMapModel.PoisForMap">
-              <MappingFragment StoreEntitySet="PoisForMap">
-                <ScalarProperty Name="FloorId" ColumnName="FloorId" />
-                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
-                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
-                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
-                <ScalarProperty Name="PoiDescription" ColumnName="PoiDescription" />
-                <ScalarProperty Name="PoiId" ColumnName="PoiId" />
-                <ScalarProperty Name="PoiTypeName" ColumnName="PoiTypeName" />
-                <ScalarProperty Name="PoiTypeId" ColumnName="PoiTypeId" />
-                <ScalarProperty Name="MapId" ColumnName="MapId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RSSDistribution">
-            <EntityTypeMapping TypeName="StudMapModel.RSSDistribution">
-              <MappingFragment StoreEntitySet="RSSDistribution">
-                <ScalarProperty Name="StDevRSS" ColumnName="StDevRSS" />
-                <ScalarProperty Name="AvgRSS" ColumnName="AvgRSS" />
-                <ScalarProperty Name="AccessPointId" ColumnName="AccessPointId" />
-                <ScalarProperty Name="NodeId" ColumnName="NodeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

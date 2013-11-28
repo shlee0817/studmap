@@ -5,20 +5,20 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="1dc31dabc882474bb9d1ad8a2c8024c7" Name="Diagram1" ZoomLevel="82">
-        <EntityTypeShape EntityType="StudMapModel.AccessPoints" Width="1.5" PointX="7.5" PointY="14.625" />
-        <EntityTypeShape EntityType="StudMapModel.AccessPointScans" Width="1.5" PointX="9.75" PointY="11.375" />
-        <EntityTypeShape EntityType="StudMapModel.Edges" Width="1.5" PointX="7.5" PointY="3.125" />
-        <EntityTypeShape EntityType="StudMapModel.Fingerprints" Width="1.5" PointX="7.5" PointY="11.5" />
-        <EntityTypeShape EntityType="StudMapModel.Floors" Width="1.5" PointX="3" PointY="7.5" />
-        <EntityTypeShape EntityType="StudMapModel.Graphs" Width="1.5" PointX="3" PointY="4.5" />
-        <EntityTypeShape EntityType="StudMapModel.Maps" Width="1.5" PointX="0.75" PointY="6.375" />
-        <EntityTypeShape EntityType="StudMapModel.NodeInformation" Width="1.5" PointX="7.5" PointY="7.25" />
-        <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="5.25" PointY="7.25" />
-        <EntityTypeShape EntityType="StudMapModel.PoIs" Width="1.5" PointX="5.25" PointY="11.75" />
-        <EntityTypeShape EntityType="StudMapModel.PoiTypes" Width="1.5" PointX="3" PointY="12" />
         <EntityTypeShape EntityType="StudMapModel.NodeInformationForMap" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="StudMapModel.PoisForMap" Width="1.5" PointX="2.75" PointY="0.75" />
-        <EntityTypeShape EntityType="StudMapModel.RSSDistribution" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="StudMapModel.RSSDistribution" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="StudMapModel.AccessPoints" Width="1.5" PointX="7.5" PointY="11.5" />
+        <EntityTypeShape EntityType="StudMapModel.AccessPointScans" Width="1.5" PointX="9.75" PointY="8.25" />
+        <EntityTypeShape EntityType="StudMapModel.Edges" Width="1.5" PointX="7.5" PointY="5.125" />
+        <EntityTypeShape EntityType="StudMapModel.Fingerprints" Width="1.5" PointX="7.5" PointY="8.375" />
+        <EntityTypeShape EntityType="StudMapModel.Floors" Width="1.5" PointX="3" PointY="4.875" />
+        <EntityTypeShape EntityType="StudMapModel.Graphs" Width="1.5" PointX="3" PointY="8.25" />
+        <EntityTypeShape EntityType="StudMapModel.Maps" Width="1.5" PointX="0.75" PointY="6.375" />
+        <EntityTypeShape EntityType="StudMapModel.NodeInformation" Width="1.5" PointX="10.5" PointY="4.5" />
+        <EntityTypeShape EntityType="StudMapModel.Nodes" Width="1.5" PointX="5.25" PointY="4.5" />
+        <EntityTypeShape EntityType="StudMapModel.PoIs" Width="1.5" PointX="8.25" PointY="1" />
+        <EntityTypeShape EntityType="StudMapModel.PoiTypes" Width="1.5" PointX="6" PointY="1.25" />
         <AssociationConnector Association="StudMapModel.FK_AccessPointScans_AccessPoints" />
         <AssociationConnector Association="StudMapModel.FK_AccessPointScans_Fingerprints" />
         <AssociationConnector Association="StudMapModel.FK_Edges_Graphs" />
@@ -31,7 +31,7 @@
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_Nodes" />
         <AssociationConnector Association="StudMapModel.FK_NodeInformation_PoIs" />
         <AssociationConnector Association="StudMapModel.FK_PoIs_PoiTypes" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

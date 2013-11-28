@@ -376,9 +376,7 @@ var xscale,
 
 function init(imageUrl) {
 
-    var el = $("<img />").css("visibility", "hidden").attr("src", imageUrl);
-    $('#body').append(el);
-    window.setTimeout(function() {
+    var el = $("<img />").css("visibility", "hidden").attr("src", imageUrl).on("load", function() {
         imageWidth = $(el).width();
         imageHeight = $(el).height();
         $(el).remove();
@@ -410,7 +408,7 @@ function init(imageUrl) {
             .addLayer(pathplot)
             .addLayer(graph);
 
-        d3.json(window.basePath + "Admin/GetFloorPlanData/" + floorId, function(data) {
+        d3.json(window.basePath + "Admin/GetFloorPlanData/" + floorId, function (data) {
 
             mapdata[pathplot.id()] = data.Object.Pathplot;
             mapdata[graph.id()] = data.Object.Graph;
@@ -420,7 +418,8 @@ function init(imageUrl) {
                 .attr("height", height)
                 .datum(mapdata).call(map);
         });
-    }, 1000);
+    });
+    $('#body').append(el);
 }
 
 function getGraph(type) {
