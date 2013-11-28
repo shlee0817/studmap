@@ -5,19 +5,6 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/wlanPositioningScan"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/wlanCollector_ScanTxt" />
-
-    <ListView
-        android:id="@+id/wlanPositioningWifiList"
-        android:layout_width="match_parent"
-        android:layout_height="257dp" >
-    </ListView>
-
-    <Button
         android:id="@+id/wlanPositioningFindMe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
