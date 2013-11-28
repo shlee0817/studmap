@@ -1076,6 +1076,40 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        public BaseResponse SaveQRCodeToNode(int nodeId, string qrCode)
+        {
+            var result = new BaseResponse();
+            try
+            {
+                using (var entities = new MapsEntities())
+                {
+                    var nodeInformation = entities.NodeInformation.FirstOrDefault(x => x.Nodes.Id == nodeId);
+
+                    if (nodeInformation == null)
+                    {
+                        result.SetError(ResponseError.NodeIdDoesNotExist);
+                        return result;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(qrCode))
+                    {
+                        result.SetError(ResponseError.DatabaseError);
+                        return result;
+                    }
+
+                    nodeInformation.QRCode = qrCode;
+
+                    entities.SaveChanges();
+                }
+            }
+            catch (DataException e)
+            {
+                result.SetError(ResponseError.DatabaseError);
+                ErrorSignal.FromCurrentContext().Raise(e);
+            }
+            return result;
+        }
+
         #endregion // Layer: Information
     }
 }

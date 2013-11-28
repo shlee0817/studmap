@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -56,11 +55,11 @@ namespace StudMap.Maintenance
         private void btnGenerate_Click(object sender, RoutedEventArgs e)
         {
             var enc = new QrEncoder(ErrorCorrectionLevel.M);
+            var mapsCtrl = new MapsController();
 
             var folder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "StudMap",
-                DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture));
+                "StudMap");
 
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
@@ -80,18 +79,29 @@ namespace StudMap.Maintenance
                             }
                     };
                 var qrCodeStr = JsonConvert.SerializeObject(qrCode);
-                QrCode bmp;
-                enc.TryEncode(qrCodeStr, out bmp);
-                var path = Path.Combine(folder, node.DisplayName + node.RoomName + ".png");
+                try
+                {
+                    QrCode bmp;
+                    enc.TryEncode(qrCodeStr, out bmp);
+                    var path = Path.Combine(folder, node.DisplayName + "_" + node.RoomName + ".png");
 
-                var gRenderer = new GraphicsRenderer(
-                    new FixedModuleSize(2, QuietZoneModules.Two),
-                    Brushes.Black, Brushes.White);
+                    var gRenderer = new GraphicsRenderer(
+                        new FixedModuleSize(2, QuietZoneModules.Two),
+                        Brushes.Black, Brushes.White);
 
-                var ms = new MemoryStream();
-                gRenderer.WriteToStream(bmp.Matrix, ImageFormat.Png, ms);
-                var output = new Bitmap(ms);
-                output.Save(path, ImageFormat.Png);
+                    var ms = new MemoryStream();
+                    gRenderer.WriteToStream(bmp.Matrix, ImageFormat.Png, ms);
+                    var output = new Bitmap(ms);
+                    output.Save(path, ImageFormat.Png);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    mapsCtrl.SaveQRCodeToNode(node.NodeId, qrCodeStr);
+                }
             }
 
             Process.Start(folder);
@@ -109,8 +119,9 @@ namespace StudMap.Maintenance
             {
                 floorId = Int32.Parse(txtFloor.Text);
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
             if (floorId > 0)
             {

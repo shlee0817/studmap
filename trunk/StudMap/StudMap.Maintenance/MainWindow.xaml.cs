@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace StudMap.Maintenance
+﻿namespace StudMap.Maintenance
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
