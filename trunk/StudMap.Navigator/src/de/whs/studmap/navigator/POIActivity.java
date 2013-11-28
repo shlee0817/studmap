@@ -25,12 +25,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import de.whs.studmap.data.Constants;
-import de.whs.studmap.data.PoI;
+import de.whs.studmap.client.core.data.Constants;
+import de.whs.studmap.client.core.data.PoI;
+import de.whs.studmap.client.core.web.ResponseError;
+import de.whs.studmap.client.core.web.Service;
+import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.snippets.UserInfo;
-import de.whs.studmap.web.ResponseError;
-import de.whs.studmap.web.Service;
-import de.whs.studmap.web.WebServiceException;
 
 public class POIActivity extends Activity implements Constants{
 	

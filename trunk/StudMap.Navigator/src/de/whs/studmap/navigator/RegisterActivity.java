@@ -21,11 +21,11 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import de.whs.studmap.data.Constants;
+import de.whs.studmap.client.core.data.Constants;
+import de.whs.studmap.client.core.web.ResponseError;
+import de.whs.studmap.client.core.web.Service;
+import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.snippets.UserInfo;
-import de.whs.studmap.web.ResponseError;
-import de.whs.studmap.web.Service;
-import de.whs.studmap.web.WebServiceException;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
