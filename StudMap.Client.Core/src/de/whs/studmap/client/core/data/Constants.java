@@ -39,8 +39,10 @@ public interface Constants {
 		 static final String RESPONSE_PARAM_NODE_NODE = "Node";
 		 static final String RESPONSE_PARAM_NODE_ROOMNAME = "RoomName";
 		 static final String RESPONSE_PARAM_NODE_DISPLAYNAME = "DisplayName";
-		 static final String RESPONSE_PARAM_NODE_ID = "NodeId";
+		 static final String RESPONSE_PARAM_NODE_NODE_ID = "NodeId";
 		 static final String RESPONSE_PARAM_NODE_FLOOR_ID = "FloorId";
+		 static final String RESPONSE_PARAM_NODE_ID = "Id";
+		 
 		
 		//Floor
 		 static final String RESPONSE_PARAM_FLOOR_ID = "Id";
