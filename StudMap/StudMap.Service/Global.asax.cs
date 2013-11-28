@@ -27,14 +27,14 @@ namespace StudMap.Service
             AddTask("CheckActiveUsers", 5 * 60);
         }
 
-        private static CacheItemRemovedCallback OnCacheRemove = null;
+        private static CacheItemRemovedCallback _onCacheRemove;
 
         private void AddTask(string name, int seconds)
         {
-            OnCacheRemove = new CacheItemRemovedCallback(CacheItemRemoved);
+            _onCacheRemove = CacheItemRemoved;
             HttpRuntime.Cache.Insert(name, seconds, null,
                 DateTime.Now.AddSeconds(seconds), Cache.NoSlidingExpiration,
-                CacheItemPriority.NotRemovable, OnCacheRemove);
+                CacheItemPriority.NotRemovable, _onCacheRemove);
         }
 
         public void CacheItemRemoved(string key, object value, CacheItemRemovedReason reason)

@@ -414,7 +414,7 @@ namespace StudMap.Service.Controllers
                     }
 
                     // Edges im Graph hinzufügen
-                    if (newGraph != null && newGraph.Edges != null)
+                    if (newGraph.Edges != null)
                     {
                         foreach (Edge edge in newGraph.Edges)
                         {
@@ -437,12 +437,13 @@ namespace StudMap.Service.Controllers
                                 nodeIdMapEndNodeId = endNodeId == null ? 0 : endNodeId.Id;
                             }
 
-                            graph.Edges.Add(new Edges
-                            {
-                                NodeStartId = nodeIdMapStartNodeId,
-                                NodeEndId = nodeIdMapEndNodeId,
-                                CreationTime = DateTime.Now
-                            });
+                            if (graph != null)
+                                graph.Edges.Add(new Edges
+                                    {
+                                        NodeStartId = nodeIdMapStartNodeId,
+                                        NodeEndId = nodeIdMapEndNodeId,
+                                        CreationTime = DateTime.Now
+                                    });
                         }
                     }
 
