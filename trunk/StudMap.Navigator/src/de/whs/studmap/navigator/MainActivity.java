@@ -43,18 +43,18 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import de.whs.studmap.data.Constants;
-import de.whs.studmap.data.DrawerItemEnum;
-import de.whs.studmap.data.Floor;
-import de.whs.studmap.data.Node;
+import de.whs.studmap.client.core.data.Constants;
+import de.whs.studmap.client.core.data.Floor;
+import de.whs.studmap.client.core.data.Node;
+import de.whs.studmap.client.core.web.JavaScriptInterface;
+import de.whs.studmap.client.core.web.JavaScriptService;
+import de.whs.studmap.client.core.web.ResponseError;
+import de.whs.studmap.client.core.web.Service;
+import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.scanner.IntentIntegrator;
 import de.whs.studmap.scanner.IntentResult;
 import de.whs.studmap.snippets.UserInfo;
-import de.whs.studmap.web.JavaScriptInterface;
-import de.whs.studmap.web.JavaScriptService;
-import de.whs.studmap.web.ResponseError;
-import de.whs.studmap.web.Service;
-import de.whs.studmap.web.WebServiceException;
+import de.whs.studmap.web.JavaScriptInterfaceImpl;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MainActivity extends Activity {
@@ -346,7 +346,7 @@ public class MainActivity extends Activity {
 
 			mMapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
 			mMapWebView.setWebViewClient(new WebViewClient());
-			JavaScriptInterface jsInterface = new JavaScriptInterface(
+			JavaScriptInterface jsInterface = new JavaScriptInterfaceImpl(
 					rootView.getContext());
 			mMapWebView.getSettings().setJavaScriptEnabled(true);
 			mMapWebView.addJavascriptInterface(jsInterface, "jsinterface");
