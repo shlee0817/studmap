@@ -29,7 +29,8 @@
             android:name="de.whs.studmap.navigator.POIActivity"
             android:label="@string/title_activity_poi"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden" 
+            android:theme="@android:style/Theme.Holo.Light.Dialog.MinWidth">
         </activity>
         <activity
             android:name="de.whs.studmap.navigator.LoginActivity"
@@ -56,6 +57,8 @@
         </activity>
         <activity
             android:name="de.whs.studmap.navigator.ImpressumActivity"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_impressum" >
         </activity>
     </application>
