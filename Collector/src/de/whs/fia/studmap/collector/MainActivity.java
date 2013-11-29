@@ -8,6 +8,7 @@ import de.whs.fia.studmap.collector.fragments.WlanPositioningFragment;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.data.Map;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
@@ -32,6 +33,8 @@ public class MainActivity extends FragmentActivity implements
 	private String[][] techListsArray;
 
 	private FloorplanFragment mFloorplanFragment;
+	
+	private ProgressDialog pDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,9 @@ public class MainActivity extends FragmentActivity implements
 			
 		}
 
+		pDialog = new ProgressDialog(this);
+		pDialog.setCancelable(false);
+		
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
 		setupForegroundDispatchSystem();
@@ -146,6 +152,16 @@ public class MainActivity extends FragmentActivity implements
 		loadFragment(mFloorplanFragment);
 	}
 
+	public void openProgressDialog(String text){
+		
+		pDialog.setMessage(text);
+		pDialog.show();
+	}
+	
+	public void closeProgressDialog(){
+		pDialog.dismiss();
+	}
+	
 	private void loadFragment(Fragment fragment) {
 
 		FragmentTransaction transaction = getSupportFragmentManager()

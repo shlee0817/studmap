@@ -1,12 +1,13 @@
 package de.whs.fia.studmap.collector.fragments;
 
+import java.util.concurrent.ExecutionException;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import de.whs.fia.studmap.collector.MainActivity;
 import de.whs.fia.studmap.collector.R;
 import de.whs.fia.studmap.collector.dialogs.ChoicesDialogFragment;
-import de.whs.fia.studmap.collector.dialogs.NFCReaderDialogFragment;
+import de.whs.fia.studmap.collector.tasks.GetNodeForNFCTagTask;
+import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.snippets.NFC;
 import de.whs.studmap.client.core.web.JavaScriptInterface;
 import de.whs.studmap.client.core.web.JavaScriptService;
@@ -49,14 +52,15 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 		rootView = (View) inflater.inflate(R.layout.fragment_flooplan,
 				container, false);
 
+		((MainActivity)getActivity()).openProgressDialog("Lade");
+		
 		this.mapId = getArguments().getInt("mapId");
 		this.floorId = getArguments().getInt("floorId");
 
-		Toast.makeText(rootView.getContext(), "Lädt Stockwerk: " + floorId,
-				Toast.LENGTH_SHORT).show();
-
 		initializeWebView();
 
+		((MainActivity)getActivity()).closeProgressDialog();
+		
 		return rootView;
 	}
 
@@ -79,8 +83,7 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 		jsService = new JavaScriptService(getActivity());
 		jsService.addWebView(webView);
 
-		webView.loadUrl("http://193.175.199.115/StudMapClient/Home/FloorPlan?mapId="
-				+ mapId + "&floorID=" + floorId);
+		webView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + floorId);
 		webView.requestFocus();
 	}
 
@@ -98,12 +101,30 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 
 			} else {
 
-				Bundle bundle = new Bundle();
-				bundle.putString("TagUID", nfcTag);
+				GetNodeForNFCTagTask mTask = new GetNodeForNFCTagTask(mapId, nfcTag);
+				mTask.execute((Void)null);
+				try {
+					Node n = mTask.get();
+					if(n != null){
+						if(n.getFloorID() == floorId){
 
-				NFCReaderDialogFragment nfc = new NFCReaderDialogFragment();
-				nfc.setArguments(bundle);
-				nfc.show(getFragmentManager(), "NFC Dialog");
+							jsService.sendTarget(n.getNodeID());
+						}else{
+							Toast.makeText(rootView.getContext(), "NFC Tag ist im System aber nicht auf dieser Ebene.",
+									Toast.LENGTH_SHORT).show();
+						}
+					}else{
+
+						Toast.makeText(rootView.getContext(), "NFC Tag ist nicht im System.",
+								Toast.LENGTH_SHORT).show();
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -111,9 +132,6 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 	@Override
 	@JavascriptInterface
 	public void punkt(String nodeId) {
-
-		Toast.makeText(getActivity(), "Punkt berührt: " + nodeId,
-				Toast.LENGTH_SHORT).show();
 
 		Bundle args = new Bundle();
 		args.putString("NodeId", nodeId);
@@ -128,7 +146,6 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 	@Override
 	@JavascriptInterface
 	public void onFinish() {
-
-		Log.e("", "JavaScriptInterface onFinish");
+		
 	}
 }

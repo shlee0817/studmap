@@ -55,7 +55,7 @@ public class NFCReaderDialogFragment extends DialogFragment {
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 		if (mNfcAdapter == null) {
 			// we definitely need NFC
-			Toast.makeText(getActivity(), "This device doesn't support NFC.",
+			Toast.makeText(getActivity(), "Das Gerät unterstützt kein NFC.",
 					Toast.LENGTH_LONG).show();
 			return builder.create();
 		}
@@ -76,15 +76,14 @@ public class NFCReaderDialogFragment extends DialogFragment {
 	private void setTextView() {
 
 		if (!mNfcAdapter.isEnabled()) {
-			mLogTextView.setText("NFC is disabled.");
+			mLogTextView.setText("NFC ist deaktiviert.");
 		} else {
 			if (mNfcTag == null)
 				mLogTextView
-						.setText("NFC is enabled. Waiting for discovering a nfc tag.");
+						.setText("Warten auf NFC Tag.");
 			else {
 
-				String s = "Tag discovered!\n\n";
-				s += "UID: " + mNfcTag + "\n";
+				String s = "UID: " + mNfcTag;
 
 				mLogTextView.setText(s);
 			}
@@ -103,7 +102,13 @@ public class NFCReaderDialogFragment extends DialogFragment {
 	}
 
 	public void setNFCTag(String nfcTag){
+
 		mNfcTag = nfcTag;
 		setTextView();
+	}
+	
+	public void reset(){
+		
+		mNfcTag = null;
 	}
 }
