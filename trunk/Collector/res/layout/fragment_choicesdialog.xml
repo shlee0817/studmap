@@ -22,6 +22,8 @@
             android:id="@+id/choicesdialog_nfcBtn"
             android:layout_width="144dp"
             android:layout_height="204dp"
+            android:layout_margin="@dimen/choicesdialog_imageMargin"
+            android:layout_marginLeft="@dimen/mapsfloorselector_margin"
             android:background="@drawable/logo_nfc"
             android:contentDescription="@string/choicesdialog_nfclogo_desc" />
 
@@ -29,8 +31,11 @@
             android:id="@+id/choicesdialog_wifiBtn"
             android:layout_width="171dp"
             android:layout_height="248dp"
+            android:layout_margin="@dimen/choicesdialog_imageMargin"
+            android:layout_marginRight="@dimen/mapsfloorselector_margin"
             android:background="@drawable/logo_wifi"
             android:contentDescription="@string/choicesdialog_wifilogo_desc" />
+
     </LinearLayout>
 
 </LinearLayout>
