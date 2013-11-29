@@ -1,9 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+    <item android:id="@+id/action_positioning" android:titleCondensed="@string/menu_WLANPositioning_short" android:title="@string/menu_WLANPositioning" android:orderInCategory="10" android:showAsAction="never"></item>
+    <item android:titleCondensed="@string/menu_WLANConfiguration_short" android:title="@string/menu_WLANConfiguration" android:showAsAction="never" android:orderInCategory="20" android:id="@+id/menu_configuration"></item>
 
 </menu>

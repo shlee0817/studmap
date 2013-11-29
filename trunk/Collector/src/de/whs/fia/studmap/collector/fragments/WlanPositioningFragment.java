@@ -1,4 +1,4 @@
-package de.whs.fia.studmap.collector.dialogs;
+package de.whs.fia.studmap.collector.fragments;
 
 import java.net.ConnectException;
 import java.util.List;

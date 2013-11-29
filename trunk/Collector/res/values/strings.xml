@@ -16,5 +16,9 @@
 	<string name="mapFloorSelector_Map_txt">Map auswählen zu der die Daten gesammelt werden sollen:</string>
 	<string name="mapFloorSelector_Floor_txt">Floor auswählen zu dem Daten gesammelt werden sollen:</string>
 	<string name="mapFloorSelector_LoadBtn_txt">Laden</string>
+	<string name="menu_WLANPositioning">WLAN Positionierung starten</string>
+	<string name="menu_WLANPositioning_short">Positionierung</string>
+	<string name="menu_WLANConfiguration">WLAN Configuration starten</string>
+	<string name="menu_WLANConfiguration_short">Konfiguration</string>
     
 </resources>
