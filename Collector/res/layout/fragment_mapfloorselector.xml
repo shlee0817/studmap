@@ -9,18 +9,23 @@
         android:id="@+id/mapFloorSelector_Map_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/mapFloorSelector_Map_txt" />
+        android:layout_margin="@dimen/mapsfloorselector_margin"
+        android:text="@string/mapFloorSelector_Map_txt"
+        android:textSize="@dimen/mapfloorselector_textSize" />
 
     <Spinner
         android:id="@+id/mapFloorSelector_mapSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/mapfloorselector_spinnerMarginBottom" />
 
     <TextView
         android:id="@+id/mapFloorSelector_Floor_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/mapFloorSelector_Floor_txt" />
+        android:layout_margin="@dimen/mapsfloorselector_margin"
+        android:text="@string/mapFloorSelector_Floor_txt"
+        android:textSize="@dimen/mapfloorselector_textSize" />
 
     <Spinner
         android:id="@+id/mapFloorSelector_floorSpinner"
