@@ -18,6 +18,7 @@ public interface Constants {
 		 static final String METHOD_GET_POIS = "GetPoIsForMap";
 		 static final String METHOD_GET_ROOMS = "GetRoomsForMap";
 		 static final String METHOD_GET_FLOORS = "GetFloorsForMap";
+		 static final String METHOD_GET_MAPS = "GetMaps";
 		 static final String METHOD_GET_NODE_INFO_FOR_NODE = "GetNodeInformationForNode";
 		 static final String METHOD_GET_NODE_FOR_QR_CODE = "GetNodeForQRCode";
 		 static final String METHOD_SAVEFINGERPRINTFORNODE = "SaveFingerprintForNode";
@@ -45,6 +46,9 @@ public interface Constants {
 		 static final String RESPONSE_PARAM_NODE_FLOOR_ID = "FloorId";
 		 static final String RESPONSE_PARAM_NODE_ID = "Id";
 		 
+		 //Map
+		 static final String RESPONSE_PARAM_MAP_ID = "Id";
+		 static final String RESPONSE_PARAM_MAP_NAME = "Name";
 		
 		//Floor
 		 static final String RESPONSE_PARAM_FLOOR_ID = "Id";

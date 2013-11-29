@@ -23,13 +23,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
-import android.util.Log;
 import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Fingerprint;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.data.LocationRequest;
+import de.whs.studmap.client.core.data.Map;
 import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.data.PoI;
 
@@ -141,6 +143,29 @@ public class Service implements Constants {
 		}
 
 		return floorList;
+	}
+	
+	public static List<Map> getMaps()
+			throws WebServiceException, ConnectException {
+		List<Map> mapList = new ArrayList<Map>();
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		try {
+			JSONObject floors = httpGet(URL_MAPS, METHOD_GET_MAPS, params);
+			JSONArray mapArray = floors.getJSONArray(RESPONSE_PARAM_LIST);
+
+			for (int i = 0; i < mapArray.length(); i++) {
+				JSONObject o = mapArray.getJSONObject(i);
+				Map map = parseJsonToMap(o);
+				mapList.add(map);
+			}
+
+		} catch (JSONException ignore) {
+			Log.e(LOG_TAG_WEBSERVICE,
+					"getMaps - Maps konnten nicht geparst werden!");
+		}
+
+		return mapList;
 	}
 
 	public static String getActiveUsers() throws WebServiceException,
@@ -377,6 +402,16 @@ public class Service implements Constants {
 		node = new Node(id, roomName, displayName, floorId);
 
 		return node;
+	}
+	
+	private static Map parseJsonToMap(JSONObject o) throws JSONException {
+		Map map = null;
+
+		int id = o.getInt(RESPONSE_PARAM_MAP_ID);
+		String name = o.getString(RESPONSE_PARAM_MAP_NAME);
+		map = new Map(id, name);
+
+		return map;
 	}
 
 	private static Floor parseJsonToFloor(JSONObject o) throws JSONException {
