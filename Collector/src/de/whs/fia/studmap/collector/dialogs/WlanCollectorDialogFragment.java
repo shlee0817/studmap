@@ -136,6 +136,10 @@ public class WlanCollectorDialogFragment extends DialogFragment {
 		
 		nodeIdField = (EditText)rootView.findViewById(R.id.wlanCollector_PointId);
 
+		if(getArguments().containsKey("NodeId")){
+			nodeIdField.setText(getArguments().getString("NodeId"));
+		}
+		
 		return builder.create();
 	}	
 
