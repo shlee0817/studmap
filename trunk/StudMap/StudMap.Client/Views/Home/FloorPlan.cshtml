@@ -1,15 +1,33 @@
-﻿@using StudMap.Core.Maps
-@model StudMap.Core.ObjectResponse<Floor>
+﻿@using StudMap.Core
+@using StudMap.Core.Maps
+@model ObjectResponse<Floor>
 @{
     ViewBag.Title = "FloorPlan";
 }
 
 @section scripts{
-    <script type="text/javascript">
-        var mapId = '@Model.Object.MapId';
-        var floorId = '@Model.Object.Id';
-        var imageUrl = '@Model.Object.ImageUrl';
-    </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-2.0.3.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.floorplan.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/floorplan.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/imagelayer.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Client.js")"></script>
+    <script type="text/javascript">
+        var client = new StudMapClient('@Model.Object.MapId', '@Model.Object.Id', '@Model.Object.ImageUrl');
+        client.init();
+    </script>
+}
+    
+@section styles{
+    <link href="@Url.Content("~/Content/Client.css")" rel="stylesheet" />
+}
+    
+@if (Model.Status == RespsonseStatus.Error)
+{
+    <div>Es ist ein Fehler beim Laden aufgetreten.</div>
+}
+else
+{
+    <div id="map">
+        <svg id="svgMap" height="100%" width="100%"></svg>
+    </div>    
 }
