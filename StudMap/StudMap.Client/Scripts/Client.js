@@ -177,7 +177,7 @@ StudMapClient.prototype.showCircles = function (circlesAsArray) {
         var circle = circlesAsArray[i];
         this.drawCircle("#circles", circle.x, circle.y, circle.id, this.radius, null);
 
-        $('#' + circle.id).on("click", {
+        $('#' + circle.id).on("touchstart", {
             nodeId: circlesAsArray[i].id
         }, this.circle_click);
     }
@@ -189,6 +189,8 @@ StudMapClient.prototype.drawCircle = function(el, x, y, id, r, fill) {
         .attr("cx", x * this.rangeEndX)
         .attr("cy", y * this.rangeEndY)
         .attr("id", id)
+        .attr("stroke", "transparent")
+        .attr("stroke-width", 5)
         .attr("r", r);
     if (fill)
         circle.attr("fill", fill);
