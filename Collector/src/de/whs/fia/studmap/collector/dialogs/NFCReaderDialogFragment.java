@@ -2,43 +2,58 @@ package de.whs.fia.studmap.collector.dialogs;
 
 import java.net.ConnectException;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.whs.fia.studmap.collector.R;
+import de.whs.studmap.client.core.snippets.NFC;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 
-public class NFCReaderFragment extends Fragment {
+public class NFCReaderDialogFragment extends DialogFragment {
 
 	private NfcAdapter mNfcAdapter;
 	private TextView mLogTextView;
 	private EditText mNodeIdEditText;
 	private String mNfcTag = null;
 
-	public NFCReaderFragment() {
-
-	}
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.fragment_nfc_reader,
-				container, false);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View rootView = inflater.inflate(R.layout.fragment_nfc_reader, null);
 
-		mLogTextView = (TextView) rootView.findViewById(R.id.NfcReader_TextView);
+		builder.setView(rootView).setPositiveButton(
+				R.string.NfcReader_SaveButton,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+
+						String node = mNodeIdEditText.getText().toString();
+						SaveNFCTagForNodeTask task = new SaveNFCTagForNodeTask(
+								Integer.parseInt(node), mNfcTag);
+						task.execute((Void) null);
+
+						mNfcTag = null;
+						setTextView();
+						mNodeIdEditText.setText("");
+					}
+				});
+
+		mLogTextView = (TextView) rootView
+				.findViewById(R.id.NfcReader_TextView);
 		mNodeIdEditText = (EditText) rootView.findViewById(R.id.NfcReader_Node);
 
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
@@ -46,28 +61,20 @@ public class NFCReaderFragment extends Fragment {
 			// we definitely need NFC
 			Toast.makeText(getActivity(), "This device doesn't support NFC.",
 					Toast.LENGTH_LONG).show();
-			return rootView;
+			return builder.create();
+		}
+
+		if(getArguments().containsKey("TagUID")){
+			mNfcTag = getArguments().getString("TagUID");
+		}
+		
+		if(getArguments().containsKey("NodeId")){
+			mNodeIdEditText.setText(getArguments().getString("NodeId"));
 		}
 		
 		setTextView();
 
-		Button save = (Button) rootView.findViewById(R.id.NfcReader_Save);
-		save.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				String node = mNodeIdEditText.getText().toString();
-				SaveNFCTagForNodeTask task = new SaveNFCTagForNodeTask(Integer
-						.parseInt(node), mNfcTag);
-				task.execute((Void) null);
-				
-				mNfcTag = null;
-				setTextView();
-				mNodeIdEditText.setText("");
-			}
-		});
-
-		return rootView;
+		return builder.create();
 	}
 
 	private void setTextView() {
@@ -87,30 +94,14 @@ public class NFCReaderFragment extends Fragment {
 			}
 		}
 	}
-
-	private String bytesToHexString(byte[] src) {
-		StringBuilder stringBuilder = new StringBuilder();
-		if (src == null || src.length <= 0) {
-			return null;
-		}
-
-		char[] buffer = new char[2];
-		for (int i = 0; i < src.length; i++) {
-			buffer[0] = Character.forDigit((src[i] >>> 4) & 0x0F, 16);
-			buffer[1] = Character.forDigit(src[i] & 0x0F, 16);
-			stringBuilder.append(buffer);
-		}
-
-		return stringBuilder.toString();
-	}
-
+	
 	public void handleIntent(Intent intent) {
 		String action = intent.getAction();
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)
 				|| NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
 
 			Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-			mNfcTag = bytesToHexString(tag.getId());
+			mNfcTag = NFC.BytesToHexString(tag.getId());
 			setTextView();
 		}
 	}
