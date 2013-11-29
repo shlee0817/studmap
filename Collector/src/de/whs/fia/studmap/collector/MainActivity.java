@@ -12,6 +12,7 @@ import android.content.IntentFilter.MalformedMimeTypeException;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
@@ -25,13 +26,15 @@ public class MainActivity extends FragmentActivity implements
 	private IntentFilter[] intentFiltersArray;
 	private String[][] techListsArray;
 
+	private FloorplanFragment mFloorplanFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		MapFloorSelectorFragment mMapFloorSelectorFragment = new MapFloorSelectorFragment();
+		MapFloorSelectorFragment mMapFloorSelectorFragment = new MapFloorSelectorFragment(this);
 
 		getSupportFragmentManager().beginTransaction()
 				.add(R.id.collectorContentWrapper, mMapFloorSelectorFragment)
@@ -84,21 +87,17 @@ public class MainActivity extends FragmentActivity implements
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)
 				|| NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
 
-			// Todo: NFC Discovered
-			// mViewPager.setCurrentItem(3, true);
-			//
-			// NFCReaderFragment nfcFrag = (NFCReaderFragment)
-			// mSectionsPagerAdapter
-			// .getItem(3);
-			// nfcFrag.handleIntent(intent);
-
+			Fragment loadedFragment = getSupportFragmentManager().findFragmentById(R.id.collectorContentWrapper);
+			if(loadedFragment.getClass() == FloorplanFragment.class && mFloorplanFragment != null){
+				mFloorplanFragment.handleIntent(intent);
+			}
 		}
 	}
 
 	@Override
 	public void onMapFloorSelected(Map map, Floor floor) {
 
-		FloorplanFragment newFragment = new FloorplanFragment();
+		mFloorplanFragment = new FloorplanFragment(floor.getId());
 
 		FragmentTransaction transaction = getSupportFragmentManager()
 				.beginTransaction();
@@ -107,7 +106,7 @@ public class MainActivity extends FragmentActivity implements
 		// fragment,
 		// and add the transaction to the back stack so the user can navigate
 		// back
-		transaction.replace(R.id.mapsFloorSelector, newFragment);
+		transaction.replace(R.id.collectorContentWrapper, mFloorplanFragment);
 		transaction.addToBackStack(null);
 
 		// Commit the transaction
