@@ -139,7 +139,11 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onMapFloorSelected(Map map, Floor floor) {
 
-		mFloorplanFragment = new FloorplanFragment(floor.getId());
+		Bundle args = new Bundle();
+		args.putInt("floorId", floor.getId());
+		
+		mFloorplanFragment = new FloorplanFragment();
+		mFloorplanFragment.setArguments(args);
 
 		loadFragment(mFloorplanFragment);
 	}
