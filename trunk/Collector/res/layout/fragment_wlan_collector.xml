@@ -26,11 +26,4 @@
         android:layout_height="322dp" >
     </ListView>
 
-    <Button
-        android:id="@+id/wlanCollector_Save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.88"
-        android:text="@string/wlanCollector_SaveTxt" />
-
 </LinearLayout>
