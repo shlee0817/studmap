@@ -32,6 +32,11 @@ public class MapFloorSelectorFragment extends Fragment {
 	protected Floor mSelectedFloor;
 
 	OnMapFloorSelectedListener mCallback;
+	
+	public MapFloorSelectorFragment(OnMapFloorSelectedListener callback){
+		
+		this.mCallback = callback;
+	}
 
 	public interface OnMapFloorSelectedListener {
 
@@ -111,6 +116,13 @@ public class MapFloorSelectorFragment extends Fragment {
 				if (mSelectedMap == null) {
 					Toast.makeText(getActivity(),
 							"Es wird eine Map für Messungen benötigt!",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+				if (mSelectedFloor == null) {
+					Toast.makeText(getActivity(),
+							"Es wird ein Floor für Messungen benötigt!",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
