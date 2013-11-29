@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import de.whs.fia.studmap.collector.MainActivity;
 import de.whs.fia.studmap.collector.R;
 import de.whs.fia.studmap.collector.data.APsDataSource;
 import de.whs.fia.studmap.collector.data.ScansDataSource;
@@ -47,8 +47,6 @@ public class WlanCollectorDialogFragment extends DialogFragment {
 	private WifiReceiver wifiReceiver;
 	private WifiManager wifiManager;
 	private List<ScanResult> wifiList;
-
-	private ProgressDialog pDialog;
 	
 	private ScansDataSource scansDatasource;
 	private APsDataSource apsDatasource;
@@ -114,11 +112,6 @@ public class WlanCollectorDialogFragment extends DialogFragment {
 		wifiReceiver = new WifiReceiver();
 		getActivity().registerReceiver(wifiReceiver,
 				new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-
-		
-		pDialog = new ProgressDialog(getActivity());
-		pDialog.setMessage("Scanning...");
-		pDialog.setCancelable(false);
 		
 		
 		Button scan = (Button) rootView.findViewById(R.id.wlanCollector_Scan);
@@ -127,7 +120,7 @@ public class WlanCollectorDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(View v) {
 
-				pDialog.show();
+				((MainActivity)getActivity()).openProgressDialog("Scanning");
 				wifiManager.startScan();
 			}
 		});
@@ -189,8 +182,8 @@ public class WlanCollectorDialogFragment extends DialogFragment {
 			}
 			scansDatasource.close();
 			apsDatasource.close();
-			
-			pDialog.dismiss();
+
+			((MainActivity)getActivity()).closeProgressDialog();
 			
 			final ArrayAdapter<AP> adapter = new ArrayAdapter<AP>(getActivity(),
 					android.R.layout.simple_list_item_1, s.getAPs());

@@ -7,5 +7,6 @@
     <dimen name="mapfloorselector_spinnerMarginBottom">20dp</dimen>
     <dimen name="mapfloorselector_textSize">18dp</dimen>
     <dimen name="choicesdialog_imageMargin">4dp</dimen>
+    <dimen name="mapfloorselector_spinner_padding">18dp</dimen>
 
 </resources>

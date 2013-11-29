@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
+import de.whs.fia.studmap.collector.MainActivity;
 import de.whs.fia.studmap.collector.R;
 import de.whs.fia.studmap.collector.tasks.GetFloorsTask;
 import de.whs.fia.studmap.collector.tasks.GetMapsTask;
@@ -52,11 +53,15 @@ public class MapFloorSelectorFragment extends Fragment {
 		View rootView = (View) inflater.inflate(
 				R.layout.fragment_mapfloorselector, container, false);
 
+		((MainActivity)getActivity()).openProgressDialog("Lade");
+		
 		initializeSpinner(rootView);
 
 		initializeButton(rootView);
 
 		fillMapSpinner();
+		
+		((MainActivity)getActivity()).closeProgressDialog();
 
 		return rootView;
 	}
@@ -169,7 +174,7 @@ public class MapFloorSelectorFragment extends Fragment {
 
 		mFloorsAdapter = new ArrayAdapter<Floor>(rootView.getContext(),
 				android.R.layout.simple_spinner_item);
-		mMapsAdapter
+		mFloorsAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		mFloorSpinner = (Spinner) rootView

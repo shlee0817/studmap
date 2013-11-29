@@ -39,6 +39,7 @@ public class ChoicesDialogFragment extends DialogFragment {
 					nfcDialog = new NFCReaderDialogFragment();
 				nfcDialog.setArguments(getArguments());
 				nfcDialog.show(getFragmentManager(), "NFC Dialog");
+				nfcDialog.reset();
 				dismiss();
 			}
 		});

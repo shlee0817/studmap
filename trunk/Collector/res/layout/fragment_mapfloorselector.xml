@@ -31,6 +31,7 @@
         android:id="@+id/mapFloorSelector_floorSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/mapfloorselector_spinnerMarginBottom"
         android:clickable="false" />
 
     <Button

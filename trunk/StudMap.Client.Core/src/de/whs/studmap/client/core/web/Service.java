@@ -226,6 +226,30 @@ public class Service implements Constants {
 		}
 		return null;
 	}
+	
+	public static Node getNodeForNFCTag(int mapId, String nfcTag)
+			throws WebServiceException, ConnectException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(REQUEST_PARAM_MAPID, String
+				.valueOf(mapId)));
+		params.add(new BasicNameValuePair(REQUEST_PARAM_NFC_TAG, nfcTag));
+
+		try {
+			JSONObject nodeInfo = httpGet(URL_MAPS,
+					METHOD_GET_NODE_FOR_NFC_TAG, params);
+			JSONObject object = nodeInfo.getJSONObject(RESPONSE_PARAM_OBJECT);
+			int nodeId = object.getInt(RESPONSE_PARAM_NODE_ID);
+			int floorId = object.getInt(RESPONSE_PARAM_NODE_FLOOR_ID);
+
+			Node node = new Node(nodeId, "", "", floorId);
+			return node;
+
+		} catch (JSONException ignore) {
+			Log.e(LOG_TAG_WEBSERVICE,
+					"getNodeForNFCTag - NodeInfo konnte nicht geparst werden!");
+		}
+		return null;
+	}
 
 	private static JSONObject httpPost(String url, String methodName,
 			List<NameValuePair> params) throws WebServiceException,
