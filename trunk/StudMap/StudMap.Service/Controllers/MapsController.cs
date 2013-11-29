@@ -1045,6 +1045,12 @@ namespace StudMap.Service.Controllers
                         return result;
                     }
 
+                    if (entities.NodeInformation.Any(x => x.NFCTag == nfcTag))
+                    {
+                        result.SetError(ResponseError.NFCTagAllreadyAssigned);
+                        return result;
+                    }
+
                     if (String.IsNullOrWhiteSpace(nfcTag))
                     {
                         result.SetError(ResponseError.NFCTagIsNullOrEmpty);
