@@ -10,6 +10,7 @@
         android:id="@+id/NfcReader_TextView"
         android:layout_width="match_parent"
         android:layout_height="352dp"
+        android:layout_margin="@dimen/mapsfloorselector_margin"
         android:layout_weight="0.86"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
