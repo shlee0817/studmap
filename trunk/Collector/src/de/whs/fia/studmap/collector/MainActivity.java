@@ -39,12 +39,14 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		MapFloorSelectorFragment mMapFloorSelectorFragment = new MapFloorSelectorFragment(
-				this);
-
-		getSupportFragmentManager().beginTransaction()
-				.add(R.id.collectorContentWrapper, mMapFloorSelectorFragment)
-				.commit();
+		if(savedInstanceState == null){
+			
+			getSupportFragmentManager()
+			.beginTransaction()
+			.add(R.id.collectorContentWrapper,
+					MapFloorSelectorFragment.newInstance()).commit();
+			
+		}
 
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -106,12 +108,12 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	private void loadWLANConfigurationFragment() {
-		
+
 		loadFragment(new WlanConfigFragment());
 	}
 
 	private void loadWLANPositioningFragment() {
-		
+
 		loadFragment(new WlanPositioningFragment());
 	}
 
@@ -134,22 +136,18 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 	}
-	
 
 	@Override
 	public void onMapFloorSelected(Map map, Floor floor) {
 
-		Bundle args = new Bundle();
-		args.putInt("floorId", floor.getId());
-		
-		mFloorplanFragment = new FloorplanFragment();
-		mFloorplanFragment.setArguments(args);
+		mFloorplanFragment = FloorplanFragment.newInstance(map.getId(),
+				floor.getId());
 
 		loadFragment(mFloorplanFragment);
 	}
 
 	private void loadFragment(Fragment fragment) {
-		
+
 		FragmentTransaction transaction = getSupportFragmentManager()
 				.beginTransaction();
 

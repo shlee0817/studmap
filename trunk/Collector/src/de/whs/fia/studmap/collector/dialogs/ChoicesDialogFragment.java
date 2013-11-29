@@ -12,6 +12,8 @@ import de.whs.fia.studmap.collector.R;
 
 public class ChoicesDialogFragment extends DialogFragment {
 	
+	private NFCReaderDialogFragment nfcDialog;
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -33,10 +35,10 @@ public class ChoicesDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(View v) {
 				
-				NFCReaderDialogFragment dialog = new NFCReaderDialogFragment();
-				dialog.setArguments(getArguments());
-				dialog.show(getFragmentManager(), "NFC Dialog");
-				
+				if(nfcDialog == null)
+					nfcDialog = new NFCReaderDialogFragment();
+				nfcDialog.setArguments(getArguments());
+				nfcDialog.show(getFragmentManager(), "NFC Dialog");
 				dismiss();
 			}
 		});
@@ -55,5 +57,21 @@ public class ChoicesDialogFragment extends DialogFragment {
 				dismiss();
 			}
 		});
+	}
+	
+	public void setNFCTagInDialog(String tag){
+		
+		if(nfcDialog != null){
+			nfcDialog.setNFCTag(tag);
+		}
+	}
+	
+	public boolean nfcDialogIsOpen(){
+		
+		if(nfcDialog == null)
+			return false;
+		
+		boolean isOpen = nfcDialog.isAdded();
+		return isOpen;
 	}
 }

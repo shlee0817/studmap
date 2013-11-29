@@ -1,14 +1,11 @@
 package de.whs.fia.studmap.collector.dialogs;
 
-import java.net.ConnectException;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -17,12 +14,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.whs.fia.studmap.collector.R;
+import de.whs.fia.studmap.collector.tasks.SaveNFCTagForNodeTask;
 import de.whs.studmap.client.core.snippets.NFC;
-import de.whs.studmap.client.core.web.Service;
-import de.whs.studmap.client.core.web.WebServiceException;
 
 public class NFCReaderDialogFragment extends DialogFragment {
-
+	
 	private NfcAdapter mNfcAdapter;
 	private TextView mLogTextView;
 	private EditText mNodeIdEditText;
@@ -106,29 +102,8 @@ public class NFCReaderDialogFragment extends DialogFragment {
 		}
 	}
 
-	class SaveNFCTagForNodeTask extends AsyncTask<Void, Void, Boolean> {
-
-		private int nodeId;
-		private String nfcTag;
-
-		public SaveNFCTagForNodeTask(int nodeId, String nfcTag) {
-			this.nodeId = nodeId;
-			this.nfcTag = nfcTag;
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... params) {
-
-			try {
-				boolean result = Service.SaveNFCTagForNode(nodeId, nfcTag);
-				return result;
-			} catch (WebServiceException e) {
-				e.printStackTrace();
-			} catch (ConnectException e) {
-				e.printStackTrace();
-			}
-			return false;
-		}
+	public void setNFCTag(String nfcTag){
+		mNfcTag = nfcTag;
+		setTextView();
 	}
-
 }
