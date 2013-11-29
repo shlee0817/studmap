@@ -13,5 +13,8 @@
     <string name="wlanConfig_ConfigurateTxt">Konfigurieren</string>
 	<string name="NfcReader_EditText">hier Knoten angeben</string>
 	<string name="NfcReader_SaveButton">Tag UID zu dem Knoten speichern</string>
+	<string name="mapFloorSelector_Map_txt">Map auswählen zu der die Daten gesammelt werden sollen:</string>
+	<string name="mapFloorSelector_Floor_txt">Floor auswählen zu dem Daten gesammelt werden sollen:</string>
+	<string name="mapFloorSelector_LoadBtn_txt">Laden</string>
     
 </resources>
