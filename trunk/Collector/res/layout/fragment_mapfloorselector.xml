@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mapsFloorSelector"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/mapFloorSelector_Map_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mapFloorSelector_Map_txt" />
+
+    <Spinner
+        android:id="@+id/mapFloorSelector_mapSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/mapFloorSelector_Floor_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mapFloorSelector_Floor_txt" />
+
+    <Spinner
+        android:id="@+id/mapFloorSelector_floorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false" />
+
+    <Button
+        android:id="@+id/mapFloorSelector_LoadBtn_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/mapFloorSelector_LoadBtn_txt" />
+
+</LinearLayout>
