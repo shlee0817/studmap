@@ -9,6 +9,6 @@ namespace StudMap.Core
             List = new List<Content>();           
         }
 
-        public List<Content> List { get; set; }
+        public IEnumerable<Content> List { get; set; }
     }
 }
