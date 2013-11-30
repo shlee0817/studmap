@@ -60,9 +60,12 @@
     var x1, x2, y1, y2;
     var KreisRadius = 2;
     var linienDicke = 2;
+    var pointColor = "#83C32D";
+    var pathColor = "#83C32D";
 
     var startPoint;
     var endPoint;
+    var selectedPoint;
 
     var domainStartX = 0, domainEndX = 1;
     var rangeStartX = 0, rangeEndX;
@@ -129,6 +132,10 @@
                 for (var i = 0; i < data.Object.Graph.Nodes.length; i++) {
                     showCircles([{ x: data.Object.Graph.Nodes[i].X, y: data.Object.Graph.Nodes[i].Y, id: data.Object.Graph.Nodes[i].Id }]);
                 }
+
+                if (window.jsinterface) {
+                    window.jsinterface.onFinish();
+                }
             });
 
         };
@@ -145,19 +152,19 @@
 
     function setStartPoint(PID) {
         if (startPoint) {
-            startPoint.setAttribute("fill", "black");
+            startPoint.setAttribute("fill", pointColor);
             startPoint.setAttribute("r", KreisRadius);
         }
         startPoint = document.getElementById(PID);
 
-        startPoint.setAttribute("fill", "green");
+        startPoint.setAttribute("fill", "blue");
         startPoint.setAttribute("r", 4);
 
         testPath();
     }
     function setEndPoint(PID) {
         if (endPoint) {
-            endPoint.setAttribute("fill", "black");
+            endPoint.setAttribute("fill", pointColor);
             endPoint.setAttribute("r", KreisRadius);
         }
         endPoint = document.getElementById(PID);
@@ -169,6 +176,11 @@
     }
     function testPath() {
         if (startPoint && endPoint) {
+
+            var div = document.getElementById('path');
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+            }
             showPath(startPoint.id, endPoint.id);
         }
     }
@@ -185,11 +197,20 @@
     }
 
     function highlightPoint(PID, color) {
+        if (selectedPoint)
+            selectedPoint.setAttribute("fill", pointColor);
         document.getElementById(PID).setAttribute("fill", color);
+        selectedPoint = document.getElementById(PID);
     }
     function highlightPointR(PID, color, radius) {
+        if (selectedPoint) {
+            selectedPoint.setAttribute("fill", pointColor);
+            selectedPoint.setAttribute("r", KreisRadius);
+        }
         document.getElementById(PID).setAttribute("fill", color);
         document.getElementById(PID).setAttribute("r", radius);
+
+        selectedPoint = document.getElementById(PID);
     }
 
 
@@ -242,31 +263,42 @@
                   .attr("x2", PathAsArray[i + 1].X * rangeEndX)
                   .attr("y2", PathAsArray[i + 1].Y * rangeEndY)
                   .attr("stroke-width", linienDicke)
-                  .attr("stroke", "black");
+				  .attr("fill", pathColor)
+                  .attr("stroke", pathColor);
             }
 
         }
 
-        for (var i = 0; i < PathAsArray.length - 1; i++) {
-
-            if (PathAsArray[i].FloorId == floorID) {
-                // element = PathAsArray[i];
-
-                var pointInPath = d3.select("#path").append("circle");
-                pointInPath.attr("cx", PathAsArray[i].X * rangeEndX)
-              .attr("cy", PathAsArray[i].Y * rangeEndY)
-              .attr("id", PathAsArray[i].Id)
-              .attr("r", KreisRadius);
-                if (i == 0) { pointInPath.attr("fill", "red").attr("r", 4); }
-            }
-        }
+        /*  for (var i = 0; i < PathAsArray.length - 1; i++) {
+  
+              if(PathAsArray[i].FloorId == floorID)
+              {
+                  // element = PathAsArray[i];
+                  
+                  var pointInPath =d3.select("#path").append("circle");
+                  pointInPath.attr("cx", PathAsArray[i].X* rangeEndX)
+                .attr("cy", PathAsArray[i].Y* rangeEndY)
+                .attr("id", PathAsArray[i].Id)
+                .attr("fill", pointColor)
+                .attr("r", KreisRadius);
+                if(i==0) {pointInPath.attr("fill", "red").attr("r", 4);}
+              }
+          }*/
+        var i = 0;
+        var pointInPath = d3.select("#path").append("circle");
+        pointInPath.attr("cx", PathAsArray[i].X * rangeEndX)
+      .attr("cy", PathAsArray[i].Y * rangeEndY)
+      .attr("id", PathAsArray[i].Id)
+      .attr("fill", pointColor)
+      .attr("r", KreisRadius);
+        if (i == 0) { pointInPath.attr("fill", "red").attr("r", 4); }
 
 
         d3.select("#path").append("circle")
       .attr("cx", PathAsArray[PathAsArray.length - 1].X * rangeEndX)
       .attr("cy", PathAsArray[PathAsArray.length - 1].Y * rangeEndY)
       .attr("id", PathAsArray[PathAsArray.length - 1].Id)
-	  .attr("fill", "green").attr("r", 4);
+	  .attr("fill", "blue").attr("r", 4);
 
 
 
@@ -283,9 +315,22 @@
            .attr("cy", CirclesAsArray[i].y * rangeEndY)
            .attr("id", CirclesAsArray[i].id)
            .attr("r", KreisRadius)
+		   .attr("fill", pointColor)
+		   .attr("stroke", "red")
+		   .attr("stroke-width", "10")
+		    .attr("stroke-opacity", "0.0")
+
            .attr("onclick", "circle_click(evt)");
 
         }
+    }
+
+    function zoomOut() {
+        d3.select(".map-layers").attr("transform", "translate(0,0)scale(1)")
+    }
+    function zoomToPoint(PID) {
+        //700  578
+        d3.select(".map-layers").attr("transform", "translate(-" + (655 * 5) + ",-" + (444 * 5) + ")scale(" + 6 + ")")
     }
 
     function resetMap() {
