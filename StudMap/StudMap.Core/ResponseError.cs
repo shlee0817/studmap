@@ -6,6 +6,7 @@
 
         #region General
         DatabaseError = 1,
+        UnknownError = 2,
         #endregion
 
         #region Register

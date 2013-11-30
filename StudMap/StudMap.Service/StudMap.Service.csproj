@@ -180,20 +180,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\CacheConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="CacheObjects\CacheObject.cs" />
-    <Compile Include="CacheObjects\FingerprintCache.cs" />
-    <Compile Include="CacheObjects\MapCache.cs" />
+    <Compile Include="CacheObjects\FingerprintCacheObject.cs" />
+    <Compile Include="CacheObjects\GlobalCacheObject.cs" />
+    <Compile Include="CacheObjects\MapCacheObject.cs" />
+    <Compile Include="CacheObjects\StudMapCache.cs" />
     <Compile Include="Controllers\FingerprintController.cs" />
     <Compile Include="Controllers\MapsController.cs" />
+    <Compile Include="Controllers\StudMapController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\FingerprintService.cs" />
+    <Compile Include="Services\FloorService.cs" />
+    <Compile Include="Services\GraphService.cs" />
+    <Compile Include="Services\InformationService.cs" />
+    <Compile Include="Services\MapService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\ServiceException.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
