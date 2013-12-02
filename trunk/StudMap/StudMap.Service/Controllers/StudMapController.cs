@@ -10,26 +10,25 @@ namespace StudMap.Service.Controllers
 {
     public class StudMapController : ApiController
     {
-        protected void Execute(Action<MapsEntities> func, BaseResponse result)
+        private void ExecuteGeneric<TEntities>(Action<TEntities> func, BaseResponse result) where TEntities : IDisposable,new()
         {
             Execute(() =>
             {
-                using (var entities = new MapsEntities())
+                using (var entities = new TEntities())
                 {
                     func(entities);
                 }
             }, result);
         }
 
+        protected void ExecuteMaps(Action<MapsEntities> func, BaseResponse result)
+        {
+            ExecuteGeneric(func, result);
+        }
+
         protected void ExecuteUsers(Action<UserEntities> func, BaseResponse result)
         {
-            Execute(() =>
-            {
-                using (var entities = new UserEntities())
-                {
-                    func(entities);
-                }
-            }, result);
+            ExecuteGeneric(func, result);
         }
 
         protected void Execute(Action func, BaseResponse result)

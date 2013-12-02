@@ -13,7 +13,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities => FingerprintService.SaveFingerprintForNode(entities, nodeId, fingerprint), result);
+            ExecuteMaps(entities => FingerprintService.SaveFingerprintForNode(entities, nodeId, fingerprint), result);
 
             return result;
         }
@@ -29,7 +29,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<NodeProbability>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.List = FingerprintService.GetNodeProbabiltyForScan(entities, request);
             }, result);

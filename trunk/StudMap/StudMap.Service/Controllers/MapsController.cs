@@ -16,7 +16,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Map>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.Object = MapService.CreateMap(entities, mapName);
             }, result);
@@ -29,7 +29,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities => MapService.DeleteMap(entities, mapId), result);
+            ExecuteMaps(entities => MapService.DeleteMap(entities, mapId), result);
 
             return result;
         }
@@ -56,7 +56,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Floor>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.Object = FloorService.CreateFloor(entities, mapId, name);
             }, result);
@@ -69,7 +69,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities => FloorService.DeleteFloor(entities, floorId), result);
+            ExecuteMaps(entities => FloorService.DeleteFloor(entities, floorId), result);
 
             return result;
         }
@@ -79,7 +79,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<Floor>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.List = FloorService.GetFloorsForMapCached(mapId);
             }, result);
@@ -119,7 +119,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Floor>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.Object = FloorService.UploadFloorImage(entities, floorId, filename);
             }, result);
@@ -136,7 +136,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Graph>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.Object = GraphService.SaveGraphForFloor(entities, floorId, newGraph, deletedGraph);
             }, result);
@@ -149,7 +149,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities => GraphService.DeleteGraphForFloor(entities, floorId), result);
+            ExecuteMaps(entities => GraphService.DeleteGraphForFloor(entities, floorId), result);
 
             return result;
         }
@@ -183,7 +183,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<Node>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.List = GraphService.GetConnectedNodes(entities, nodeId);
             }, result);
@@ -200,7 +200,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<Node>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.List = NavigationService.GetRouteBetweenCached(mapId, startNodeId, endNodeId);
             }, result);
@@ -217,7 +217,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<NodeInformation>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.Object = InformationService.GetNodeInformationForNode(entities, nodeId);
             }, result);
@@ -230,7 +230,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<NodeInformation>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.List = InformationService.GetNodeInformation(entities, mapId, floorId);
             }, result);
@@ -244,7 +244,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<NodeInformation>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 nodeInf.Node = new Node { Id = nodeId };
                 result.Object = InformationService.SaveNodeInformation(entities, nodeInf);
@@ -258,7 +258,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<PoiType>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.List = InformationService.GetPoiTypes(entities);
             }, result);
@@ -271,7 +271,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<RoomAndPoI>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.List = InformationService.GetPoIsForMap(entities, mapId);
             }, result);
@@ -284,7 +284,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<Room>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.List = InformationService.GetRoomsForMap(entities, mapId);
             }, result);
@@ -297,7 +297,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Node>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.Object = InformationService.GetNodeForNFC(entities, mapId, nfcTag);
             }, result);
@@ -310,7 +310,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities => InformationService.SaveNFCForNode(entities, nodeId, nfcTag), result);
+            ExecuteMaps(entities => InformationService.SaveNFCForNode(entities, nodeId, nfcTag), result);
 
             return result;
         }
@@ -320,7 +320,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Node>();
 
-            Execute(entities =>
+            ExecuteMaps(entities =>
             {
                 result.Object = InformationService.GetNodeForQRCode(entities, mapId, qrCode);
             }, result);
@@ -332,7 +332,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities => InformationService.SaveQRCodeForNode(entities, nodeId, qrCode), result);
+            ExecuteMaps(entities => InformationService.SaveQRCodeForNode(entities, nodeId, qrCode), result);
 
             return result;
         }
