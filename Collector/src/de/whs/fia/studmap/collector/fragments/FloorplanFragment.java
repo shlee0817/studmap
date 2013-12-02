@@ -19,11 +19,11 @@ import android.widget.Toast;
 import de.whs.fia.studmap.collector.MainActivity;
 import de.whs.fia.studmap.collector.R;
 import de.whs.fia.studmap.collector.dialogs.ChoicesDialogFragment;
-import de.whs.fia.studmap.collector.tasks.GetNodeForNFCTagTask;
 import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.snippets.NFC;
 import de.whs.studmap.client.core.web.JavaScriptInterface;
 import de.whs.studmap.client.core.web.JavaScriptService;
+import de.whs.studmap.client.tasks.GetNodeForNFCTagTask;
 
 public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 

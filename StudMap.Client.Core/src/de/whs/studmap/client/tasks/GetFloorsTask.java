@@ -1,4 +1,4 @@
-package de.whs.fia.studmap.collector.tasks;
+package de.whs.studmap.client.tasks;
 
 import java.net.ConnectException;
 import java.util.List;

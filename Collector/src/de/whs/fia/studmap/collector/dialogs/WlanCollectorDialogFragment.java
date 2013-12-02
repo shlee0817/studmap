@@ -27,10 +27,10 @@ import de.whs.fia.studmap.collector.data.APsDataSource;
 import de.whs.fia.studmap.collector.data.ScansDataSource;
 import de.whs.fia.studmap.collector.models.AP;
 import de.whs.fia.studmap.collector.models.Scan;
-import de.whs.fia.studmap.collector.tasks.SaveFingerprintForNodeTask;
 import de.whs.studmap.client.core.data.AccessPoint;
 import de.whs.studmap.client.core.data.AccessPointScan;
 import de.whs.studmap.client.core.data.Fingerprint;
+import de.whs.studmap.client.tasks.SaveFingerprintForNodeTask;
 
 /**
  * Enthält alle Funktionen, die in der Ansicht benötigt werden um einen
