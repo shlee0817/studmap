@@ -24,10 +24,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import de.whs.studmap.client.core.data.Constants;
+import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
-import de.whs.studmap.snippets.UserInfo;
 
 public class LoginActivity extends Activity {
 	public static final int REQUEST_ID_REGISTER = 200;

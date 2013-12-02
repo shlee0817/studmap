@@ -19,6 +19,8 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,6 +48,8 @@ import android.widget.Spinner;
 import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.data.Node;
+import de.whs.studmap.client.core.snippets.NFC;
+import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.client.core.web.JavaScriptInterface;
 import de.whs.studmap.client.core.web.JavaScriptService;
 import de.whs.studmap.client.core.web.ResponseError;
@@ -53,7 +57,6 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.scanner.IntentIntegrator;
 import de.whs.studmap.scanner.IntentResult;
-import de.whs.studmap.snippets.UserInfo;
 import de.whs.studmap.web.JavaScriptInterfaceImpl;
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -75,9 +78,10 @@ public class MainActivity extends Activity {
 	private GetDataTask mGetTasks = null;
 	private GetNodeForQrCodeTask mGetNodeForQrCodeTask = null;
 	private LogoutTask mLogoutTask = null;
+	private GetNodeForNFCTagTask mGetNodeForNFCTagTask = null;
 
-	private final int REQUEST_ID_LOGIN = 101;
-	private final int REQUEST_ID_POIS = 102;
+	private final int REQUEST_CODE_LOGIN = 101;
+	private final int REQUEST_CODE_POIS = 102;
 
 	private static WebView mMapWebView;
 
@@ -141,15 +145,16 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public void setTitle(CharSequence title) {
-		getActionBar().setTitle(title);
-	}
-
-	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
 		mDrawerToggle.syncState();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+		handleIntent(intent);
 	}
 
 	@Override
@@ -162,7 +167,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case REQUEST_ID_LOGIN:
+		case REQUEST_CODE_LOGIN:
 			if (resultCode == RESULT_OK) {
 				mUserName = data.getStringExtra(LoginActivity.EXTRA_USERNAME);
 				mLoggedIn = true;
@@ -171,23 +176,23 @@ public class MainActivity extends Activity {
 						getString(R.string.logout));
 			}
 			break;
-		case REQUEST_ID_POIS:
+		case REQUEST_CODE_POIS:
 			if (resultCode == RESULT_OK) {
 				mSelectedNode = data.getParcelableExtra(POIActivity.EXTRA_NODE);
 				changeFloorIfRequired();
 			}
 			break;
-		case IntentIntegrator.REQUEST_CODE: //Return from QR-Scanner
+		case IntentIntegrator.REQUEST_CODE: // Return from QR-Scanner
 			IntentResult result = IntentIntegrator.parseActivityResult(
 					requestCode, resultCode, data);
 			if (result != null) {
 				String scanResult = result.getContents();
 				if (scanResult != null) {
-					if (mGetNodeForQrCodeTask == null){
+					if (mGetNodeForQrCodeTask == null) {
 						showProgress(true);
 						mGetNodeForQrCodeTask = new GetNodeForQrCodeTask(this);
 						mGetNodeForQrCodeTask.execute(scanResult);
-					}					
+					}
 					break;
 				}
 			}
@@ -201,7 +206,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		mUserName = getString(R.string.username);
-		
+
 		mDrawerItems = new ArrayList<String>(Arrays.asList(getResources()
 				.getStringArray(R.array.menue_item_array)));
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -255,7 +260,7 @@ public class MainActivity extends Activity {
 	 * Initialize the custom Action Bar with an Spinner for selecting the floor
 	 * and a text field for searching
 	 */
-	public void initializeActionBar() {
+	private void initializeActionBar() {
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -288,9 +293,9 @@ public class MainActivity extends Activity {
 				mSearchTextView.setText("");
 				mMapWebView.requestFocus();
 				closeKeyboard(view);
-				
+
 				changeFloorIfRequired();
-					
+
 			}
 		});
 
@@ -342,7 +347,8 @@ public class MainActivity extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_main, container,
+					false);
 
 			mMapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
 			mMapWebView.setWebViewClient(new WebViewClient());
@@ -370,17 +376,17 @@ public class MainActivity extends Activity {
 		switch (sel_position) {
 		case LOG_IN_OUT:
 			if (mLoggedIn) {
-				if (mLogoutTask == null){
+				if (mLogoutTask == null) {
 					showProgress(true);
 					mLogoutTask = new LogoutTask(this);
 					mLogoutTask.execute((Void) null);
-				}
-				else 
-					UserInfo.dialog(this, mUserName,getString(R.string.error_logout));
-					
+				} else
+					UserInfo.dialog(this, mUserName,
+							getString(R.string.error_logout));
+
 			} else
 				startActivityForResult(new Intent(this, LoginActivity.class),
-						REQUEST_ID_LOGIN);
+						REQUEST_CODE_LOGIN);
 
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
@@ -392,7 +398,7 @@ public class MainActivity extends Activity {
 
 		case POI:
 			startActivityForResult(new Intent(this, POIActivity.class),
-					REQUEST_ID_POIS);
+					REQUEST_CODE_POIS);
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
 
@@ -412,13 +418,12 @@ public class MainActivity extends Activity {
 		}
 	}
 
-
-	public void closeKeyboard(View view){
+	private void closeKeyboard(View view) {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(),
 				InputMethodManager.HIDE_NOT_ALWAYS);
 	}
-	
+
 	private void getDataFromWebService() {
 		if (mGetTasks != null)
 			return;
@@ -427,12 +432,12 @@ public class MainActivity extends Activity {
 		mGetTasks = new GetDataTask(this);
 		mGetTasks.execute((Void) null);
 	}
-	
-	private void changeFloorIfRequired(){		
+
+	private void changeFloorIfRequired() {
 		Floor currentFloor = (Floor) mFloorSpinner.getSelectedItem();
-		if(mSelectedNode.getFloorID() == currentFloor.getId())
+		if (mSelectedNode.getFloorID() == currentFloor.getId())
 			mJScriptService.sendTarget(mSelectedNode.getNodeID());
-		else{			
+		else {
 			for (int i = 0; i < mFloorList.size(); i++) {
 				Floor tmpFloor = (Floor) mFloorSpinner.getItemAtPosition(i);
 				if (mSelectedNode.getFloorID() == tmpFloor.getId()) {
@@ -440,6 +445,26 @@ public class MainActivity extends Activity {
 					return;
 				}
 			}
+		}
+	}
+
+	private void handleIntent(Intent intent) {
+		String action = intent.getAction();
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)
+				|| NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+
+			Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+			String nfcTag = NFC.BytesToHexString(tag.getId());
+
+			if (mGetNodeForNFCTagTask == null) {
+
+				showProgress(true);
+
+				GetNodeForNFCTagTask mGetNodeForNFCTagTask = new GetNodeForNFCTagTask(
+						this);
+				mGetNodeForNFCTagTask.execute(nfcTag);
+			}
+
 		}
 	}
 
@@ -486,7 +511,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public class GetDataTask extends AsyncTask<Void, Void, Boolean> {
+	private class GetDataTask extends AsyncTask<Void, Void, Boolean> {
 		private Context mContext = null;
 		private boolean bShowDialog = false;
 
@@ -556,8 +581,8 @@ public class MainActivity extends Activity {
 			showProgress(false);
 		}
 	}
-	
-	public class GetNodeForQrCodeTask extends AsyncTask<String, Void, Node> {
+
+	private class GetNodeForQrCodeTask extends AsyncTask<String, Void, Node> {
 		private Context mContext = null;
 		private boolean bShowDialog = false;
 
@@ -569,7 +594,8 @@ public class MainActivity extends Activity {
 		protected Node doInBackground(String... params) {
 
 			try {
-				Node node = Service.getNodeForQRCode(Constants.MAP_ID, params[0]);
+				Node node = Service.getNodeForQRCode(Constants.MAP_ID,
+						params[0]);
 				return node;
 			} catch (WebServiceException e) {
 				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
@@ -616,7 +642,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
+	private class LogoutTask extends AsyncTask<Void, Void, Boolean> {
 		private Context mContext = null;
 		private boolean bShowDialog = false;
 
@@ -661,9 +687,11 @@ public class MainActivity extends Activity {
 
 			if (success) {
 				mLoggedIn = false;
-				mDrawerItems = Arrays.asList(getResources().getStringArray(R.array.menue_item_array));
+				mDrawerItems = Arrays.asList(getResources().getStringArray(
+						R.array.menue_item_array));
 				mUserName = getString(R.string.username);
-				UserInfo.toast(mContext,getString(R.string.logout_successfull), true);
+				UserInfo.toast(mContext,
+						getString(R.string.logout_successfull), true);
 			} else if (bShowDialog)
 				// Present the error from doInBackground to the user
 				UserInfo.dialog(mContext, mUserName,
@@ -676,5 +704,81 @@ public class MainActivity extends Activity {
 			showProgress(false);
 		}
 	}
-	
+
+	private class GetNodeForNFCTagTask extends AsyncTask<String, Void, Node> {
+		private Context mContext = null;
+		private boolean bShowDialog_ConnectionError = false;
+		private boolean bShowDialog_NFCTagDoesNotExist = false;
+
+		public GetNodeForNFCTagTask(Context ctx) {
+			mContext = ctx;
+		}
+
+		@Override
+		protected Node doInBackground(String... params) {
+
+			try {
+				Node node = Service.getNodeForNFCTag(Constants.MAP_ID,
+						params[0]);
+				return node;
+			} catch (WebServiceException e) {
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"GetNodeForNFCTagTask - WebServiceException");
+
+				JSONObject jObject = e.getJsonObject();
+				try {
+					int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
+
+					switch (errorCode) {
+					case ResponseError.DatabaseError:
+						bShowDialog_ConnectionError = true;
+						break;
+					case ResponseError.NFCTagDoesNotExist:
+						bShowDialog_NFCTagDoesNotExist = true;
+						break;
+					}
+				} catch (JSONException ignore) {
+					Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+							"GetNodeForNFCTagTask - Parsing the WebServiceException failed!");
+				}
+			} catch (ConnectException e) {
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"GetNodeForNFCTagTask - ConnectException");
+				bShowDialog_ConnectionError = true;
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final Node node) {
+			mGetNodeForNFCTagTask = null;
+			showProgress(false);
+
+			if (node != null) {
+				String position = getString(R.string.currentPosition) + "\n"
+						+ node.getRoomName() + "\n" + node.getDisplayName();
+				UserInfo.dialog(mContext, mUserName, position,
+						getString(R.string.setAsStart));
+			} else {
+				if (bShowDialog_ConnectionError) {
+					// Present the error from doInBackground to the user
+					UserInfo.dialog(mContext, mUserName,
+							getString(R.string.error_connection));
+				}
+				if (bShowDialog_NFCTagDoesNotExist) {
+					UserInfo.dialog(mContext, mUserName,
+							getString(R.string.error_NfcTagDoesNotExist));
+				}
+
+			}
+
+		}
+
+		@Override
+		protected void onCancelled() {
+			mGetNodeForNFCTagTask = null;
+			showProgress(false);
+		}
+	}
+
 }
