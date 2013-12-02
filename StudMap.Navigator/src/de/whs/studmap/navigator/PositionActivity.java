@@ -28,10 +28,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Node;
+import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
-import de.whs.studmap.snippets.UserInfo;
 
 public class PositionActivity extends Activity {
 	
