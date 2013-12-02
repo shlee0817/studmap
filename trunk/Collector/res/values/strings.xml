@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">StudMap.Collector</string>
+    <string name="app_name">StudMap Collector</string>
     <string name="wlanCollector_ScanTxt">Scannen</string>
     <string name="wlanCollector_SaveTxt">Speichern</string>
     <string name="wlanPositioning_FindMeTxt">Positionieren</string>
