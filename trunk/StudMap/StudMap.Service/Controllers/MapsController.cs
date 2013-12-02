@@ -1,13 +1,8 @@
-﻿using System;
-using System.Data;
-using System.Web.Http;
-using Elmah;
+﻿using System.Web.Http;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Information;
 using StudMap.Core.Maps;
-using StudMap.Data.Entities;
-using NodeInformation = StudMap.Core.Information.NodeInformation;
 using StudMap.Service.Services;
 
 namespace StudMap.Service.Controllers
@@ -34,10 +29,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities =>
-            {
-                MapService.DeleteMap(entities, mapId);
-            }, result);
+            Execute(entities => MapService.DeleteMap(entities, mapId), result);
 
             return result;
         }
@@ -77,10 +69,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities =>
-            {
-                FloorService.DeleteFloor(entities, floorId);
-            }, result);
+            Execute(entities => FloorService.DeleteFloor(entities, floorId), result);
 
             return result;
         }
@@ -160,10 +149,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities =>
-            {
-                GraphService.DeleteGraphForFloor(entities, floorId);
-            }, result);
+            Execute(entities => GraphService.DeleteGraphForFloor(entities, floorId), result);
 
             return result;
         }
@@ -324,10 +310,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities =>
-            {
-                InformationService.SaveNFCForNode(entities, nodeId, nfcTag);
-            }, result);
+            Execute(entities => InformationService.SaveNFCForNode(entities, nodeId, nfcTag), result);
 
             return result;
         }
@@ -349,10 +332,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities =>
-            {
-                InformationService.SaveQRCodeForNode(entities, nodeId, qrCode);
-            }, result);
+            Execute(entities => InformationService.SaveQRCodeForNode(entities, nodeId, qrCode), result);
 
             return result;
         }

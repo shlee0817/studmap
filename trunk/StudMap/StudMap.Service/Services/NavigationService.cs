@@ -2,11 +2,9 @@
 using QuickGraph.Algorithms.ShortestPath;
 using StudMap.Core;
 using StudMap.Core.Graph;
-using StudMap.Service.App_Start;
 using StudMap.Service.CacheObjects;
 using System;
 using System.Collections.Generic;
-using System.Web;
 
 namespace StudMap.Service.Services
 {
@@ -44,8 +42,7 @@ namespace StudMap.Service.Services
 
                 return routeNodes;
             }
-            else
-                throw new ServiceException(ResponseError.NoRouteFound);
+            throw new ServiceException(ResponseError.NoRouteFound);
         }
 
         public static FloydWarshallAllShortestPathAlgorithm<int, UndirectedEdge<int>> 

@@ -5,7 +5,6 @@ using StudMap.Service.Services;
 using System;
 using System.Data;
 using System.Web.Http;
-using System.Web.Mvc;
 
 namespace StudMap.Service.Controllers
 {
@@ -41,22 +40,17 @@ namespace StudMap.Service.Controllers
             }
             catch (ServiceException ex)
             {
-                result.Status = RespsonseStatus.Error;
-                result.ErrorCode = ex.ErrorCode;
+                result.SetError(ex.ErrorCode);
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             catch (DataException ex)
             {
-                result.Status = RespsonseStatus.Error;
-                result.ErrorCode = ResponseError.DatabaseError;
-                result.ErrorMessage = ex.StackTrace;
+                result.SetError(ResponseError.DatabaseError, ex.StackTrace);
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
             catch (Exception ex)
             {
-                result.Status = RespsonseStatus.Error;
-                result.ErrorCode = ResponseError.UnknownError;
-                result.ErrorMessage = ex.StackTrace;
+                result.SetError(ResponseError.UnknownError, ex.StackTrace);
                 ErrorSignal.FromCurrentContext().Raise(ex);
             }
         }

@@ -1,20 +1,21 @@
-﻿using StudMap.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Information;
 using StudMap.Data;
 using StudMap.Data.Entities;
 using StudMap.Service.CacheObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using NodeInformation = StudMap.Core.Information.NodeInformation;
 
 namespace StudMap.Service.Services
 {
     public class InformationService
     {
-        public static Core.Information.NodeInformation GetNodeInformationForNode(MapsEntities entities, int nodeId)
+        public static NodeInformation GetNodeInformationForNode(MapsEntities entities, int nodeId)
         {
-            Core.Information.NodeInformation result = new Core.Information.NodeInformation();
+            var result = new NodeInformation();
             Nodes node = entities.Nodes.Find(nodeId);
             if (node == null)
                 throw new ServiceException(ResponseError.NodeIdDoesNotExist);
@@ -31,7 +32,7 @@ namespace StudMap.Service.Services
             return Conversions.ToNodeInformation(queriedNodeInformation);
         }
 
-        public static List<Core.Information.NodeInformation> GetNodeInformation(MapsEntities entities, int mapId, int floorId)
+        public static List<NodeInformation> GetNodeInformation(MapsEntities entities, int mapId, int floorId)
         {
             if (!StudMapCache.Global.Maps.ContainsKey(mapId))
                 throw new ServiceException(ResponseError.MapIdDoesNotExist);
@@ -39,13 +40,16 @@ namespace StudMap.Service.Services
                 throw new ServiceException(ResponseError.FloorIdDoesNotExist);
 
             List<Data.Entities.NodeInformation> nodes = entities.NodeInformation
-                .Where(n => n.Nodes.Floors.MapId == mapId && n.Nodes.FloorId == floorId)
-                .ToList();
+                                                                .Where(
+                                                                    n =>
+                                                                    n.Nodes.Floors.MapId == mapId &&
+                                                                    n.Nodes.FloorId == floorId)
+                                                                .ToList();
 
             return nodes.Select(Conversions.ToNodeInformation).ToList();
         }
 
-        public static Core.Information.NodeInformation SaveNodeInformation(MapsEntities entities, Core.Information.NodeInformation inputInfo)
+        public static NodeInformation SaveNodeInformation(MapsEntities entities, NodeInformation inputInfo)
         {
             if (!entities.Nodes.Any(n => n.Id == inputInfo.Node.Id))
                 throw new ServiceException(ResponseError.NodeIdDoesNotExist);
@@ -53,31 +57,31 @@ namespace StudMap.Service.Services
             // Schon vorhandene Nodeinformationen suchen
             Data.Entities.NodeInformation nodeInformation =
                 entities.NodeInformation.FirstOrDefault(x => x.NodeId == inputInfo.Node.Id);
-                        
+
             PoIs poi = CreateOrUpdatePoI(entities, inputInfo.PoI, nodeInformation);
-            nodeInformation = CreateOrUpdateNodeInfo(entities, inputInfo, nodeInformation, poi);
+            CreateOrUpdateNodeInfo(entities, inputInfo, nodeInformation, poi);
 
             return GetNodeInformationForNode(entities, inputInfo.Node.Id);
         }
 
-        private static Data.Entities.NodeInformation CreateOrUpdateNodeInfo(MapsEntities entities, Core.Information.NodeInformation inputInfo, Data.Entities.NodeInformation nodeInformation, PoIs poi)
+        private static void CreateOrUpdateNodeInfo(MapsEntities entities, NodeInformation inputInfo, Data.Entities.NodeInformation nodeInformation, PoIs poi)
         {
-            int? poiId = poi != null ? (int?)poi.Id : null;
+            int? poiId = poi != null ? (int?) poi.Id : null;
             // Wenn es keine NodeInfo gibt, eine Neue anlegen
             if (nodeInformation == null)
             {
-                nodeInformation = entities.NodeInformation.Add(new Data.Entities.NodeInformation
-                {
-                    DisplayName = inputInfo.DisplayName,
-                    RoomName = inputInfo.RoomName,
-                    QRCode = inputInfo.QRCode,
-                    NFCTag = inputInfo.NFCTag,
-                    PoiId = poiId,
-                    NodeId = inputInfo.Node.Id,
-                    CreationTime = DateTime.Now
-                });
+                entities.NodeInformation.Add(new Data.Entities.NodeInformation
+                    {
+                        DisplayName = inputInfo.DisplayName,
+                        RoomName = inputInfo.RoomName,
+                        QRCode = inputInfo.QRCode,
+                        NFCTag = inputInfo.NFCTag,
+                        PoiId = poiId,
+                        NodeId = inputInfo.Node.Id,
+                        CreationTime = DateTime.Now
+                    });
             }
-            // Ansonsten die bestehende NodeInfo aktualisieren
+                // Ansonsten die bestehende NodeInfo aktualisieren
             else
             {
                 nodeInformation.DisplayName = inputInfo.DisplayName;
@@ -87,11 +91,10 @@ namespace StudMap.Service.Services
                 nodeInformation.PoiId = poiId;
             }
             entities.SaveChanges();
-
-            return nodeInformation;
         }
 
-        private static PoIs CreateOrUpdatePoI(MapsEntities entities, PoI inputPoI, Data.Entities.NodeInformation nodeInformation)
+        private static PoIs CreateOrUpdatePoI(MapsEntities entities, PoI inputPoI,
+                                              Data.Entities.NodeInformation nodeInformation)
         {
             if (inputPoI.Type.Id == 0)
                 return null;
@@ -102,17 +105,17 @@ namespace StudMap.Service.Services
 
             inputPoI.Type.Name = poiType.Name;
 
-            PoIs poi = null;
+            PoIs poi;
             // Falls zu dem Knoten noch kein PoI angelegt wurde, einen neuen erstellen
             if (nodeInformation == null || nodeInformation.PoIs == null)
             {
                 poi = entities.PoIs.Add(new PoIs
-                {
-                    TypeId = inputPoI.Type.Id,
-                    Description = inputPoI.Description
-                });
+                    {
+                        TypeId = inputPoI.Type.Id,
+                        Description = inputPoI.Description
+                    });
             }
-            // Ansonsten vorhandenen PoI aktualisieren
+                // Ansonsten vorhandenen PoI aktualisieren
             else
             {
                 poi = entities.PoIs.FirstOrDefault(x => x.Id == nodeInformation.PoiId);
@@ -130,9 +133,8 @@ namespace StudMap.Service.Services
 
         public static IEnumerable<PoiType> GetPoiTypes(MapsEntities entities)
         {
-            var typeList = new List<PoiType>();
+            var typeList = new List<PoiType> {new PoiType {Id = 0, Name = "Kein"}};
             // TODO: Der String "Kein" sollte wahrscheinlich irgendwo in eine Config oder in die DB
-            typeList.Add(new PoiType { Id = 0, Name = "Kein" });
             typeList.AddRange(entities.PoiTypes.ToList().Select(Conversions.ToPoiType));
             return typeList;
         }
@@ -143,7 +145,7 @@ namespace StudMap.Service.Services
                 throw new ServiceException(ResponseError.MapIdDoesNotExist);
 
             return entities.PoisForMap.Where(x => x.MapId == mapId).ToList()
-                .Select(Conversions.ToRoomAndPoI).ToList();
+                           .Select(Conversions.ToRoomAndPoI).ToList();
         }
 
         public static List<Room> GetRoomsForMap(MapsEntities entities, int mapId)
@@ -152,7 +154,7 @@ namespace StudMap.Service.Services
                 throw new ServiceException(ResponseError.MapIdDoesNotExist);
 
             return entities.NodeInformationForMap.Where(x => x.MapId == mapId).ToList()
-                .Select(Conversions.ToRoom).ToList();
+                           .Select(Conversions.ToRoom).ToList();
         }
 
         public static Node GetNodeForNFC(MapsEntities entities, int mapId, string nfcTag)
@@ -168,7 +170,7 @@ namespace StudMap.Service.Services
         public static void SaveNFCForNode(MapsEntities entities, int nodeId, string nfcTag)
         {
             Data.Entities.NodeInformation nodeInformation =
-                        entities.NodeInformation.FirstOrDefault(x => x.Nodes.Id == nodeId);
+                entities.NodeInformation.FirstOrDefault(x => x.Nodes.Id == nodeId);
 
             if (nodeInformation == null)
                 throw new ServiceException(ResponseError.NodeIdDoesNotExist);
@@ -193,7 +195,7 @@ namespace StudMap.Service.Services
 
         public static void SaveQRCodeForNode(MapsEntities entities, int nodeId, string qrCode)
         {
-            var nodeInformation =
+            Data.Entities.NodeInformation nodeInformation =
                 entities.NodeInformation.FirstOrDefault(x => x.Nodes.Id == nodeId);
 
             if (nodeInformation == null)

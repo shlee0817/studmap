@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using MathNet.Numerics.Distributions;
 using StudMap.Data.Entities;
 using StudMap.Service.Services;
@@ -10,18 +7,18 @@ namespace StudMap.Service.CacheObjects
 {
     public class FingerprintCacheObject : CacheObject
     {
-        public int MapID { get; set; }
+        public int MapId { get; set; }
 
         public Dictionary<int, Dictionary<int, Normal>> NodeDistributions { get; set; }
 
         public Dictionary<string, int> MACtoAP { get; set; }
 
-        private const int TIMEOUT = 60;
+        private const int Timeout = 60;
 
         public FingerprintCacheObject(int mapId)
         {
-            TimeoutInMinutes = TIMEOUT;
-            MapID = mapId;
+            TimeoutInMinutes = Timeout;
+            MapId = mapId;
 
             using (var entities = new MapsEntities())
             {

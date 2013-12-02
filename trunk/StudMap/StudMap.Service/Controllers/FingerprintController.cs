@@ -1,15 +1,7 @@
-﻿using System;
-using System.Web.Http;
+﻿using System.Web.Http;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.WLAN;
-using StudMap.Data.Entities;
-using System.Linq;
-using MathNet.Numerics.Distributions;
-using System.Collections.Generic;
-using System.Web;
-using StudMap.Service.App_Start;
-using StudMap.Service.CacheObjects;
 using StudMap.Service.Services;
 
 namespace StudMap.Service.Controllers
@@ -21,10 +13,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new BaseResponse();
 
-            Execute(entities =>
-            {
-                FingerprintService.SaveFingerprintForNode(entities, nodeId, fingerprint);
-            }, result);
+            Execute(entities => FingerprintService.SaveFingerprintForNode(entities, nodeId, fingerprint), result);
 
             return result;
         }

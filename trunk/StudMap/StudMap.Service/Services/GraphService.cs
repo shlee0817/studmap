@@ -195,12 +195,7 @@ namespace StudMap.Service.Services
 
         public static Dictionary<int, Graph> GetAllGraphs(MapsEntities entities, IEnumerable<int> floorIds)
         {
-            Dictionary<int, Graph> result = new Dictionary<int, Graph>();
-            foreach (int floorId in floorIds)
-            {
-                result.Add(floorId, GetGraphForFloor(entities, floorId));
-            }
-            return result;
+            return floorIds.ToDictionary(floorId => floorId, floorId => GetGraphForFloor(entities, floorId));
         }
     }
 }

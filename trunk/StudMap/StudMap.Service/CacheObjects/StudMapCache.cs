@@ -1,9 +1,5 @@
-﻿using StudMap.Core.Maps;
-using StudMap.Data;
-using StudMap.Data.Entities;
+﻿using StudMap.Data.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Caching;
 
@@ -11,7 +7,7 @@ namespace StudMap.Service.CacheObjects
 {
     public class StudMapCache
     {
-        public static GlobalCacheObject Global 
+        public static GlobalCacheObject Global
         {
             get
             {
@@ -48,53 +44,44 @@ namespace StudMap.Service.CacheObjects
         /// <summary>
         /// Globale Daten werden unter diesem Schlüssel gecachet.
         /// </summary>
-        private const string GLOBAL_CACHE_KEY = "Global";
+        private const string GlobalCacheKey = "Global";
 
         /// <summary>
         /// Für jede Map wird ein Cache-Eintrag einglegt, dessen 
         /// Zugriffsschlüssel dem hier definierten Format entspricht.
         /// {0} wird mit der entsprechenden Map-ID ersetzt.
         /// </summary>
-        private const string MAP_CACHE_KEY = "Map:{0}";
+        private const string MapCacheKey = "Map:{0}";
 
         /// <summary>
         /// Für jede Map wird ein Cache-Eintrag einglegt, dessen 
         /// Zugriffsschlüssel dem hier definierten Format entspricht.
         /// {0} wird mit der entsprechenden Map-ID ersetzt.
         /// </summary>
-        private const string FINGERPRINT_CACHE_KEY = "Fingerprint:{0}";
+        private const string FingerprintCacheKey = "Fingerprint:{0}";
 
         private static GlobalCacheObject GetGlobalCache()
         {
-            var cacheObject = (GlobalCacheObject)HttpRuntime.Cache.Get(GLOBAL_CACHE_KEY);
-
-            if (cacheObject == null)
-                cacheObject = (GlobalCacheObject)RegisterObject(GLOBAL_CACHE_KEY,
-                    () => { return new GlobalCacheObject(); });
+            var cacheObject = (GlobalCacheObject)HttpRuntime.Cache.Get(GlobalCacheKey) ??
+                              (GlobalCacheObject)RegisterObject(GlobalCacheKey, () => new GlobalCacheObject());
 
             return cacheObject;
         }
 
         private static MapCacheObject GetMapCache(int mapId)
         {
-            string cacheKey = String.Format(MAP_CACHE_KEY, mapId);
-            var cacheObject = (MapCacheObject)HttpRuntime.Cache.Get(cacheKey);
-
-            if (cacheObject == null)
-                cacheObject = (MapCacheObject)RegisterObject(cacheKey,
-                    () => { return new MapCacheObject(mapId); });
+            string cacheKey = String.Format(MapCacheKey, mapId);
+            var cacheObject = (MapCacheObject)HttpRuntime.Cache.Get(cacheKey) ??
+                              (MapCacheObject)RegisterObject(cacheKey, () => new MapCacheObject(mapId));
 
             return cacheObject;
         }
 
         private static FingerprintCacheObject GetFingerprintCache(int mapId)
         {
-            string cacheKey = String.Format(FINGERPRINT_CACHE_KEY, mapId);
-            var cacheObject = (FingerprintCacheObject)HttpRuntime.Cache.Get(cacheKey);
-
-            if (cacheObject == null)
-                cacheObject = (FingerprintCacheObject)RegisterObject(cacheKey,
-                    () => { return new FingerprintCacheObject(mapId); });
+            string cacheKey = String.Format(FingerprintCacheKey, mapId);
+            var cacheObject = (FingerprintCacheObject)HttpRuntime.Cache.Get(cacheKey) ??
+                              (FingerprintCacheObject)RegisterObject(cacheKey, () => new FingerprintCacheObject(mapId));
 
             return cacheObject;
         }
