@@ -20,7 +20,7 @@ d3.floorplan = function() {
 	maxZoom = 5,
 	xScale = d3.scale.linear(),
 	yScale = d3.scale.linear();
-
+	var zoom = null;
 	function map(g) {
 		var width = xScale.range()[1] - xScale.range()[0],
 			height = yScale.range()[1] - yScale.range()[0];
@@ -61,14 +61,16 @@ d3.floorplan = function() {
 			maplayers.each(function(layer) {
 				d3.select(this).select("g." + layer.id()).datum(data[layer.id()]).call(layer);
 			});
-			
+
+
+			zoom = d3.behavior.zoom().scaleExtent([1, maxZoom])
+				.on("zoom", function() {
+					if (panZoomEnabled) {
+						__set_view(g, d3.event.scale, d3.event.translate);
+					}
+				});
 			// add pan - zoom behavior
-			g.call(d3.behavior.zoom().scaleExtent([1,maxZoom])
-					.on("zoom", function () {
-					    if (panZoomEnabled) {
-							__set_view(g, d3.event.scale, d3.event.translate);
-						}
-					}));
+			g.call(zoom);
 
 		});
 	}
@@ -92,7 +94,13 @@ d3.floorplan = function() {
 		panZoomEnabled = enabled;
 		return map;
 	};
-	
+
+	map.zoom = function (tx, ty, s) {
+	    zoom.scale(s);
+	    zoom.translate([tx, ty]);
+	    __set_view(d3.select('#svgMap'), zoom.scale(), zoom.translate());
+	};
+
 	map.addLayer = function(layer, index) {
 		layer.xScale(xScale);
 		layer.yScale(yScale);
