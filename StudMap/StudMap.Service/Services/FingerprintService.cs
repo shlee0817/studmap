@@ -6,7 +6,6 @@ using StudMap.Service.CacheObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace StudMap.Service.Services
 {
@@ -113,7 +112,7 @@ namespace StudMap.Service.Services
         }
 
         private static List<NodeProbability> CalculateNodeProbabilities(
-            Dictionary<int, Dictionary<int, Normal>> nodeDistributions, Dictionary<int, int> apScans)
+            Dictionary<int, Dictionary<int, Normal>> nodeDistributions, IReadOnlyDictionary<int, int> apScans)
         {
             var nodeProbs = new List<NodeProbability>();
             foreach (var nodeId in nodeDistributions.Keys)

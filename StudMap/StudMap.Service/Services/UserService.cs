@@ -5,7 +5,6 @@ using StudMap.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Helpers;
 
 namespace StudMap.Service.Services
@@ -55,19 +54,16 @@ namespace StudMap.Service.Services
 
         public static List<User> GetActiveUsers(UserEntities entities)
         {
-            var userList = new List<User>();
-            foreach (ActiveUsers activeUser in entities.ActiveUsers)
-                userList.Add(new User
+            return entities.ActiveUsers.Select(activeUser => new User
                 {
                     Name = entities.UserProfile.First(u => u.UserId == activeUser.UserId).UserName
-                });
-            return userList;
+                }).ToList();
         }
 
         /// <summary>
         /// Nach dieser Zeit wird ein aktiver Benutzer als inaktiv erkannt und abgemeldet.
         /// </summary>
-        private const int ACTIVE_USER_TIMEOUT_SECONDS = 15 * 60;
+        private const int ActiveUserTimeoutSeconds = 15 * 60;
 
         public static void CheckActiveUsers()
         {
@@ -75,7 +71,7 @@ namespace StudMap.Service.Services
             {
                 using (var entities = new UserEntities())
                 {
-                    var timeout = DateTime.Now.AddSeconds(-ACTIVE_USER_TIMEOUT_SECONDS);
+                    var timeout = DateTime.Now.AddSeconds(-ActiveUserTimeoutSeconds);
                     var inactiveUsers = entities.ActiveUsers.Where(u => u.LoginDate < timeout);
 
                     entities.ActiveUsers.RemoveRange(inactiveUsers);

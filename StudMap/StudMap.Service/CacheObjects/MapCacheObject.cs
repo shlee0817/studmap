@@ -1,20 +1,17 @@
 ﻿using QuickGraph;
-using QuickGraph.Algorithms;
 using QuickGraph.Algorithms.ShortestPath;
 using StudMap.Core.Graph;
 using StudMap.Core.Maps;
 using StudMap.Data.Entities;
 using StudMap.Service.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace StudMap.Service.CacheObjects
 {
     public class MapCacheObject : CacheObject
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public Dictionary<int, Node> Nodes { get; set; }
 
@@ -26,12 +23,12 @@ namespace StudMap.Service.CacheObjects
 
         public FloydWarshallAllShortestPathAlgorithm<int, UndirectedEdge<int>> PathFinder { get; set; }
 
-        private const int TIMEOUT = 60;
+        private const int Timeout = 60;
 
         public MapCacheObject(int mapId)
         {
-            TimeoutInMinutes = TIMEOUT;
-            ID = mapId;
+            TimeoutInMinutes = Timeout;
+            Id = mapId;
 
             using (var entities = new MapsEntities())
             {
@@ -41,15 +38,15 @@ namespace StudMap.Service.CacheObjects
 
         public void UpdateGraph(MapsEntities entities)
         {
-            Nodes = GraphService.GetNodesDictionary(entities, ID);
-            Edges = GraphService.GetEdgeList(entities, ID);
+            Nodes = GraphService.GetNodesDictionary(entities, Id);
+            Edges = GraphService.GetEdgeList(entities, Id);
             GraphsForFloor = GraphService.GetAllGraphs(entities, Floors.Select(f => f.Id));
             PathFinder = NavigationService.ComputeShortestPaths(Nodes, Edges); 
         }
 
         public void UpdateFloors(MapsEntities entities)
         {
-            Floors = FloorService.GetFloorsForMap(entities, ID);
+            Floors = FloorService.GetFloorsForMap(entities, Id);
         }
 
         private void Update(MapsEntities entities)
