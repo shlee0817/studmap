@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.whs.fia.studmap.collector.R;
-import de.whs.fia.studmap.collector.tasks.SaveNFCTagForNodeTask;
 import de.whs.studmap.client.core.snippets.NFC;
+import de.whs.studmap.client.tasks.SaveNFCTagForNodeTask;
 
 public class NFCReaderDialogFragment extends DialogFragment {
 	

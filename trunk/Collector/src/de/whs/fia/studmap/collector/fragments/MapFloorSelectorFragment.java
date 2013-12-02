@@ -18,10 +18,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import de.whs.fia.studmap.collector.MainActivity;
 import de.whs.fia.studmap.collector.R;
-import de.whs.fia.studmap.collector.tasks.GetFloorsTask;
-import de.whs.fia.studmap.collector.tasks.GetMapsTask;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.data.Map;
+import de.whs.studmap.client.tasks.GetFloorsTask;
+import de.whs.studmap.client.tasks.GetMapsTask;
 
 public class MapFloorSelectorFragment extends Fragment {
 
