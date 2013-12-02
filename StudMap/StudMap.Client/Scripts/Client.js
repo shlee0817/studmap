@@ -10,6 +10,7 @@
     this.endPoint = null;
     this.rangeEndX = 0;
     this.rangeEndY = 0;
+    this.map = null;
     
     //Konstanten
     this.radius = 2;
@@ -49,7 +50,7 @@ StudMapClient.prototype.init = function () {
         var yscale = d3.scale.linear()
             .domain([domainStartY, domainEndY])
             .range([rangeStartY, that.rangeEndY]);
-        var map = d3.floorplan().xScale(xscale).yScale(yscale);
+        that.map = d3.floorplan().xScale(xscale).yScale(yscale);
         var imagelayer = d3.floorplan.imagelayer();
         var mapdata = {};
 
@@ -61,8 +62,8 @@ StudMapClient.prototype.init = function () {
             height: domainEndX,
             width: domainEndY
         }];
-        map.addLayer(imagelayer);
-        svgContainer.datum(mapdata).call(map);
+        that.map.addLayer(imagelayer);
+        svgContainer.datum(mapdata).call(that.map);
 
         d3.select(".map-layers").append("g").attr("id", "circles");
         d3.select(".map-layers").append("g").attr("id", "path");
@@ -257,8 +258,7 @@ StudMapClient.prototype.zoomToNode = function(nodeId) {
     var translateX = cx*(1 - scale);
     var translateY = cy*(1 - scale);
 
-    var transformStr = "translate(" + translateX + ", " + translateY + ")scale(" + scale + ")";
-    d3.select('.map-layers').attr("transform", transformStr);
+    this.map.zoom(translateX, translateY, scale);
 };
 
 StudMapClient.prototype.circle_click = function (event) {
@@ -318,7 +318,7 @@ StudMapClient.prototype.loadAndDrawFloorPlanData = function() {
     this.load("Maps", "GetFloorPlanData", params, function (data) {
 
         if (!data || !data.Object || !data.Object.Graph || !data.Object.Graph.Nodes)
-            return;
+            return null;
         
         var nodes = data.Object.Graph.Nodes;
         for (var i = 0; i < nodes.length; i++) {
