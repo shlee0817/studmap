@@ -8,7 +8,7 @@ import android.widget.Toast;
 public class UserInfo{
 
 	/**
-	 * Blendet eine Dialog-/Messagebox ein.
+	 * Blendet eine Dialog-/Messagebox ein mit dem Button 'OK' ein.
 	 * @param context Context in dem die Benachrichtigung angezeigt werden soll
 	 * @param userName Benutzernamen zur persönlichen Ansprache
 	 * @param message Nachricht, die dem Benutzer angezeigt werden soll
@@ -22,6 +22,7 @@ public class UserInfo{
 	 * @param context Context in dem die Benachrichtigung angezeigt werden soll
 	 * @param userName Benutzernamen zur persönlichen Ansprache
 	 * @param message Nachricht, die dem Benutzer angezeigt werden soll
+	 * @param positiveButton Beschriftung des Buttons unter dem Dialog
 	 */
 	public static void dialog(Context context, String userName, String message, String positiveButton) {
 		AlertDialog ad = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
