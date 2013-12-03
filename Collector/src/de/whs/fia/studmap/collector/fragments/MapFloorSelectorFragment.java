@@ -86,7 +86,8 @@ public class MapFloorSelectorFragment extends Fragment {
 		mTask.execute((Void) null);
 		try {
 			List<Map> maps = mTask.get();
-			mMapsAdapter.addAll(maps);
+			if(maps != null)
+				mMapsAdapter.addAll(maps);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,7 +103,8 @@ public class MapFloorSelectorFragment extends Fragment {
 		mTask.execute((Void) null);
 		try {
 			List<Floor> floors = mTask.get();
-			mFloorsAdapter.addAll(floors);
+			if(floors != null)
+				mFloorsAdapter.addAll(floors);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
