@@ -29,7 +29,6 @@ public class LoginDialogFragment extends DialogFragment implements
 	// UI references
 	private EditText mUsernameView;
 	private EditText mPasswordView;
-	private TextView mLoginStatusMessageView;
 	private OnLoginDialogListener mCallback;
 
 	@Override
@@ -129,7 +128,6 @@ public class LoginDialogFragment extends DialogFragment implements
 		} else {
 			// Show a progress spinner, and execute a background task to
 			// perform the user login attempt.
-			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			// TODO showProgress(true);
 			UserLoginTask mAuthTask = new UserLoginTask(this, mUserName,
 					mPassword);
