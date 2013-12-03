@@ -76,10 +76,7 @@ namespace StudMap.Service.Services
             }
             entities.SaveChanges();
             
-            // TODO: Eventuell ist das hier zu aufwendig
-            //       Kann auch automatisch in gewissen Zeitabständen vorgenommen werden,
-            //       dann sind die Ergebnisse nur nicht direkt messbar
-            StudMapCache.UpdateFingerprints(entities, node.Floors.MapId);
+            StudMapCache.RemoveFingerprint(node.Floors.MapId);
         }
 
         public static List<NodeProbability> GetNodeProbabiltyForScan(MapsEntities entities, LocationRequest request)

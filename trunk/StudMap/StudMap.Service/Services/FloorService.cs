@@ -29,7 +29,7 @@ namespace StudMap.Service.Services
             Floors insertedFloor = entities.Floors.Add(newFloor);
             entities.SaveChanges();
 
-            StudMapCache.UpdateFloors(entities, mapId);
+            StudMapCache.RemoveMap(mapId);
 
             return Conversions.ToFloor(insertedFloor, ServerAdminBasePath);
         }
@@ -43,7 +43,7 @@ namespace StudMap.Service.Services
 
             entities.DeleteFloor(floorId);
 
-            StudMapCache.UpdateFloors(entities, mapId);
+            StudMapCache.RemoveMap(mapId);
         }
 
         public static List<Floor> GetFloorsForMap(MapsEntities entities, int mapId)

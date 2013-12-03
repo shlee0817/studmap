@@ -110,7 +110,7 @@ namespace StudMap.Service.Services
 
             entities.SaveChanges();
 
-            StudMapCache.UpdateGraph(entities, targetFloor.MapId);
+            StudMapCache.RemoveMap(targetFloor.MapId);
             
             return GetGraphForFloor(entities, floorId);
         }
@@ -124,7 +124,7 @@ namespace StudMap.Service.Services
 
             entities.DeleteGraphFromFloor(floorId);
 
-            StudMapCache.UpdateGraph(entities, mapId);
+            StudMapCache.RemoveMap(mapId);
         }
 
         public static Graph GetGraphForFloor(MapsEntities entities, int floorId)
