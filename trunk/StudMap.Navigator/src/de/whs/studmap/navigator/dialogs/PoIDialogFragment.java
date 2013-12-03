@@ -48,7 +48,8 @@ public class PoIDialogFragment extends DialogFragment implements Constants,
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View rootView = inflater.inflate(R.layout.fragment_poi_dialog, null);
-
+		builder.setView(rootView);
+		
 		if (getArguments().containsKey("MapId"))
 			mMapId = getArguments().getInt("MapId");
 

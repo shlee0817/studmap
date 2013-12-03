@@ -17,6 +17,7 @@ public class ImpressumDialogFragment extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View rootView = inflater.inflate(R.layout.fragment_impressum_dialog, null);
+		builder.setView(rootView);
 		
 		WebView impressumWebView = (WebView) rootView.findViewById(R.id.impressum_web_view);
 		impressumWebView.loadUrl("file:///android_asset/impressum/impressum.html");
