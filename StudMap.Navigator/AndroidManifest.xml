@@ -26,42 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="de.whs.studmap.navigator.POIActivity"
-            android:label="@string/title_activity_poi"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" 
-            android:theme="@android:style/Theme.Holo.Light.Dialog.MinWidth">
-        </activity>
-        <activity
-            android:name="de.whs.studmap.navigator.LoginActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.Dialog"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
-        </activity>
-        <activity
-            android:name="de.whs.studmap.navigator.RegisterActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/title_activity_register"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.Dialog"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
-        </activity>
-        <activity
-            android:name="de.whs.studmap.navigator.PositionActivity"
-            android:label="@string/title_activity_position"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.Dialog"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
-        <activity
-            android:name="de.whs.studmap.navigator.ImpressumActivity"
-            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_impressum" >
-        </activity>
     </application>
 
 </manifest>

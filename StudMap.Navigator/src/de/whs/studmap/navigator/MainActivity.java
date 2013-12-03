@@ -10,11 +10,9 @@ import org.json.JSONObject;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -37,10 +35,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -55,16 +52,27 @@ import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.snippets.NFC;
 import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.client.core.web.JavaScriptInterface;
-import de.whs.studmap.client.core.web.JavaScriptService;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
+import de.whs.studmap.client.listener.OnGetFloorsTaskListener;
+import de.whs.studmap.client.listener.OnGetRoomsTaskListener;
+import de.whs.studmap.client.listener.OnLoginDialogListener;
+import de.whs.studmap.client.listener.OnPoIDialogListener;
+import de.whs.studmap.client.listener.OnRegisterDialogListener;
+import de.whs.studmap.client.tasks.GetFloorsTask;
+import de.whs.studmap.client.tasks.GetRoomsTask;
+import de.whs.studmap.fragments.WebViewFragment;
+import de.whs.studmap.navigator.dialogs.ImpressumDialogFragment;
+import de.whs.studmap.navigator.dialogs.LoginDialogFragment;
+import de.whs.studmap.navigator.dialogs.PoIDialogFragment;
+import de.whs.studmap.navigator.dialogs.PositionDialogFragment;
 import de.whs.studmap.scanner.IntentIntegrator;
 import de.whs.studmap.scanner.IntentResult;
-import de.whs.studmap.web.JavaScriptInterfaceImpl;
 
-@SuppressLint("SetJavaScriptEnabled")
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnLoginDialogListener,
+		OnPoIDialogListener, OnRegisterDialogListener, OnGetFloorsTaskListener,
+		OnGetRoomsTaskListener, JavaScriptInterface {
 	// UI References
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -74,12 +82,11 @@ public class MainActivity extends Activity {
 	private AutoCompleteTextView mSearchTextView;
 
 	// vars
-	private boolean mLoggedIn = false;
+	private boolean mIsLoggedIn = false;
 	private boolean isDrawerOpen = false;
 	private List<Floor> mFloorList = new ArrayList<Floor>();
 	private List<Node> mRoomList = new ArrayList<Node>();
 	private List<String> mDrawerItems;
-	private GetDataTask mGetTasks = null;
 	private GetNodeForQrCodeTask mGetNodeForQrCodeTask = null;
 	private LogoutTask mLogoutTask = null;
 	private GetNodeForNFCTagTask mGetNodeForNFCTagTask = null;
@@ -87,27 +94,25 @@ public class MainActivity extends Activity {
 	private PendingIntent pendingIntent;
 	private IntentFilter[] intentFiltersArray;
 	private String[][] techListsArray;
-	
-	private final int REQUEST_CODE_LOGIN = 101;
-	private final int REQUEST_CODE_POIS = 102;
-	private NfcAdapter mNfcAdapter;
 
-	private static WebView mMapWebView;
+	private NfcAdapter mNfcAdapter;
+	private WebViewFragment mWebViewFragment;
+
+	static WebView mMapWebView;
 
 	public static final String MIME_TEXT_PLAIN = "text/plain";
-	public static String mUserName = "";
-	public static JavaScriptService mJScriptService;
+	public String mUserName = "";
 	public static Node mSelectedNode = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		loadActivity();
 		loadWebViewFragment();
 		initializeActionBar();
 		getDataFromWebService();
-		
+
 		setupForegroundDispatchSystem();
 	}
 
@@ -155,9 +160,11 @@ public class MainActivity extends Activity {
 		super.onPause();
 		mNfcAdapter.disableForegroundDispatch(this);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
+
+		// TODO: Warten aufs Abmelden
 		new AsyncTask<Void, Void, Boolean>() {
 
 			@Override
@@ -196,21 +203,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case REQUEST_CODE_LOGIN:
-			if (resultCode == RESULT_OK) {
-				mUserName = data.getStringExtra(LoginActivity.EXTRA_USERNAME);
-				mLoggedIn = true;
-				mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
-				mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
-						getString(R.string.logout));
-			}
-			break;
-		case REQUEST_CODE_POIS:
-			if (resultCode == RESULT_OK) {
-				mSelectedNode = data.getParcelableExtra(POIActivity.EXTRA_NODE);
-				changeFloorIfRequired();
-			}
-			break;
 		case IntentIntegrator.REQUEST_CODE: // Return from QR-Scanner
 			IntentResult result = IntentIntegrator.parseActivityResult(
 					requestCode, resultCode, data);
@@ -279,8 +271,11 @@ public class MainActivity extends Activity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-				
+
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+		// TODO: initialer Start -> Map wählen, nachher über Einstellung
+		// änderbar
 	}
 
 	/**
@@ -301,10 +296,7 @@ public class MainActivity extends Activity {
 		mActionBar.setCustomView(actionBarView);
 
 		// Initialize Search TextView
-		ArrayAdapter<Node> searchAdapter = new ArrayAdapter<Node>(this,
-				android.R.layout.simple_list_item_1, mRoomList);
 		mSearchTextView = (AutoCompleteTextView) findViewById(R.id.actionBarSearch);
-		mSearchTextView.setAdapter(searchAdapter);
 		mSearchTextView.setThreshold(1); // AutoComplete by the first letter
 
 		mSearchTextView.setOnItemClickListener(new OnItemClickListener() {
@@ -339,7 +331,7 @@ public class MainActivity extends Activity {
 				String floorName = floor.toString() + " mit ID: "
 						+ selectedFloorID;
 				UserInfo.toast(getApplicationContext(), floorName, true);
-				loadFloortoMapWebView(selectedFloorID);
+				loadFloorToMap(selectedFloorID);
 			}
 
 			@Override
@@ -349,51 +341,19 @@ public class MainActivity extends Activity {
 	}
 
 	private void loadWebViewFragment() {
-		mJScriptService = new JavaScriptService(this);
 
-		// update the main content by replacing fragments
-		Fragment fragment = new WebViewFragment();
-		Bundle args = new Bundle();
-		fragment.setArguments(args);
+		mWebViewFragment = WebViewFragment.newInstance();
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).commit();
-
+				.replace(R.id.content_frame, mWebViewFragment).commit();
 	}
 
-	/**
-	 * Fragment that appears in the "MainFragment", shows the Map/Image
-	 */
-	public static class WebViewFragment extends Fragment {
-
-		public WebViewFragment() {
-			// Empty constructor required for fragment subclasses
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-
-			mMapWebView = (WebView) rootView.findViewById(R.id.map_web_view);
-			mMapWebView.setWebViewClient(new WebViewClient());
-			JavaScriptInterface jsInterface = new JavaScriptInterfaceImpl(
-					rootView.getContext());
-			mMapWebView.getSettings().setJavaScriptEnabled(true);
-			mMapWebView.addJavascriptInterface(jsInterface, "jsinterface");
-
-			mJScriptService.addWebView(mMapWebView);
-
-			return rootView;
-		}
-	}
-
-	public static void loadFloortoMapWebView(int floorId) {
-		mMapWebView.loadUrl("http://193.175.199.115/StudMapClient/?floorID="
-				+ floorId);
-		mMapWebView.requestFocus();
+	private void loadFloorToMap(int floorId) {
+		if (mWebViewFragment == null)
+			loadWebViewFragment();
+		else
+			mWebViewFragment.setFloorId(floorId);
 	}
 
 	private void onDrawerItemClick(int position) {
@@ -402,30 +362,33 @@ public class MainActivity extends Activity {
 
 		switch (sel_position) {
 		case LOG_IN_OUT:
-			if (mLoggedIn) {
+			if (mIsLoggedIn) {
 				if (mLogoutTask == null) {
 					showProgress(true);
 					mLogoutTask = new LogoutTask(this);
 					mLogoutTask.execute((Void) null);
-				} else
-					UserInfo.dialog(this, mUserName,
-							getString(R.string.error_logout));
+				} else {
 
-			} else
-				startActivityForResult(new Intent(this, LoginActivity.class),
-						REQUEST_CODE_LOGIN);
+					LoginDialogFragment dialog = new LoginDialogFragment();
+					dialog.show(getFragmentManager(), "Login");
+				}
 
+			} else {
+				LoginDialogFragment dialog = new LoginDialogFragment();
+				dialog.show(getFragmentManager(), "Login");
+			}
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
 
 		case RESET_NAV:
-			mJScriptService.resetMap();
+			if (mWebViewFragment != null)
+				mWebViewFragment.resetMap();
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
 
 		case POI:
-			startActivityForResult(new Intent(this, POIActivity.class),
-					REQUEST_CODE_POIS);
+			PoIDialogFragment dialog = PoIDialogFragment.newInstance(Constants.MAP_ID);
+			dialog.show(getFragmentManager(), "PoI Dialog");
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
 
@@ -435,7 +398,8 @@ public class MainActivity extends Activity {
 			break;
 
 		case IMPRESSUM:
-			startActivity(new Intent(this, ImpressumActivity.class));
+			ImpressumDialogFragment impressumDialog = new ImpressumDialogFragment();
+			impressumDialog.show(getFragmentManager(), "Impressum");
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
 		default:
@@ -452,18 +416,18 @@ public class MainActivity extends Activity {
 	}
 
 	private void getDataFromWebService() {
-		if (mGetTasks != null)
-			return;
 
-		showProgress(true);
-		mGetTasks = new GetDataTask(this);
-		mGetTasks.execute((Void) null);
+		GetRoomsTask mGetRoomsTask = new GetRoomsTask(this, Constants.MAP_ID);
+		mGetRoomsTask.execute((Void) null);
+
+		GetFloorsTask mGetFloorsTask = new GetFloorsTask(this, Constants.MAP_ID);
+		mGetFloorsTask.execute((Void) null);
 	}
 
 	private void changeFloorIfRequired() {
 		Floor currentFloor = (Floor) mFloorSpinner.getSelectedItem();
 		if (mSelectedNode.getFloorID() == currentFloor.getId())
-			mJScriptService.sendTarget(mSelectedNode.getNodeID());
+			mWebViewFragment.sendTarget(mSelectedNode.getNodeID());
 		else {
 			for (int i = 0; i < mFloorList.size(); i++) {
 				Floor tmpFloor = (Floor) mFloorSpinner.getItemAtPosition(i);
@@ -535,77 +499,6 @@ public class MainActivity extends Activity {
 			// and hide the relevant UI components.
 			mInitStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mDrawerLayout.setVisibility(show ? View.GONE : View.VISIBLE);
-		}
-	}
-
-	private class GetDataTask extends AsyncTask<Void, Void, Boolean> {
-		private Context mContext = null;
-		private boolean bShowDialog = false;
-
-		public GetDataTask(Context ctx) {
-			mContext = ctx;
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... params) {
-
-			try {
-				mFloorList.clear();
-				mRoomList.clear();
-				mFloorList.addAll(Service.getFloorsForMap(Constants.MAP_ID));
-				mRoomList.addAll(Service.getRoomsForMap(Constants.MAP_ID));
-				return true;
-			} catch (WebServiceException e) {
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-						"GetDataTask - WebServiceException");
-
-				JSONObject jObject = e.getJsonObject();
-				try {
-					int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-
-					switch (errorCode) {
-					case ResponseError.DatabaseError:
-						bShowDialog = true;
-					}
-				} catch (JSONException ignore) {
-					Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-							"GetDataTask - Parsing the WebServiceException failed!");
-				}
-			} catch (ConnectException e) {
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-						"GetDataTask - ConnectException");
-				bShowDialog = true;
-			}
-			return false;
-		}
-
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mGetTasks = null;
-			showProgress(false);
-
-			if (success) {
-				// Fill the Floor Spinner in the Action Bar
-				ArrayAdapter<Floor> floorAdapter = new ArrayAdapter<Floor>(
-						mContext, R.layout.simple_list_item_no_bg_font_white,
-						mFloorList);
-				floorAdapter
-						.setDropDownViewResource(R.layout.simple_list_item_black);
-				mFloorSpinner.setAdapter(floorAdapter);
-
-				int selectedFloorID = ((Floor) mFloorSpinner.getSelectedItem())
-						.getId();
-				loadFloortoMapWebView(selectedFloorID);
-			} else if (bShowDialog)
-				// Present the error from doInBackground to the user
-				UserInfo.dialog(mContext, mUserName,
-						getString(R.string.error_connection));
-		}
-
-		@Override
-		protected void onCancelled() {
-			mGetTasks = null;
-			showProgress(false);
 		}
 	}
 
@@ -713,7 +606,7 @@ public class MainActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
-				mLoggedIn = false;
+				mIsLoggedIn = false;
 				mDrawerItems = Arrays.asList(getResources().getStringArray(
 						R.array.menue_item_array));
 				mUserName = getString(R.string.username);
@@ -807,7 +700,7 @@ public class MainActivity extends Activity {
 			showProgress(false);
 		}
 	}
-	
+
 	private void setupForegroundDispatchSystem() {
 		pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
 				new Intent(this, getClass())
@@ -824,6 +717,87 @@ public class MainActivity extends Activity {
 		intentFiltersArray = new IntentFilter[] { ndef, tdef };
 
 		techListsArray = new String[][] { new String[] { Ndef.class.getName() } };
+	}
+
+	@Override
+	public void onLogin(String userName) {
+
+		this.mUserName = userName;
+		this.mIsLoggedIn = true;
+		mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
+		mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
+				getString(R.string.logout));
+	}
+
+	@Override
+	@JavascriptInterface
+	public void punkt(String nodeId) {
+
+		Bundle args = new Bundle();
+		args.putInt("NodeId", Integer.parseInt(nodeId));
+
+		PositionDialogFragment dialog = new PositionDialogFragment();
+		dialog.setArguments(args);
+		dialog.show(getFragmentManager(), "Positionierungsdialog");
+	}
+
+	@Override
+	@JavascriptInterface
+	public void onFinish() {
+
+		if (mSelectedNode != null && mWebViewFragment != null) {
+			mWebViewFragment.sendTarget(mSelectedNode.getNodeID());
+		}
+	}
+
+	@Override
+	public void onPoISelected(Node node) {
+
+		mSelectedNode = node;
+		changeFloorIfRequired();
+	}
+
+	@Override
+	public void onRegister() {
+
+		// TODO Login View aufrufen
+	}
+
+	@Override
+	public void onGetRoomsSuccess(List<Node> nodes) {
+		mRoomList = nodes;
+		ArrayAdapter<Node> searchAdapter = new ArrayAdapter<Node>(this,
+				android.R.layout.simple_list_item_1, mRoomList);
+		mSearchTextView.setAdapter(searchAdapter);
+	}
+
+	@Override
+	public void onGetRoomsError(int responseError) {
+		// TODO: ErrorHandler
+	}
+
+	@Override
+	public void onGetRoomsCanceled() {
+		// TODO: ggf Wartespinner ausblenden
+	}
+
+	@Override
+	public void onGetFloorsSuccess(List<Floor> floors) {
+		mFloorList = floors;
+		ArrayAdapter<Floor> floorAdapter = new ArrayAdapter<Floor>(this,
+				R.layout.simple_list_item_no_bg_font_white, mFloorList);
+		floorAdapter.setDropDownViewResource(R.layout.simple_list_item_black);
+		mFloorSpinner.setAdapter(floorAdapter);
+	}
+
+	@Override
+	public void onGetFloorsError(int responseError) {
+		// TODO: ErrorHandler
+	}
+
+	@Override
+	public void onGetFloorsCanceled() {
+		// TODO: ggf Wartespinner ausblenden
 	}
 
 }

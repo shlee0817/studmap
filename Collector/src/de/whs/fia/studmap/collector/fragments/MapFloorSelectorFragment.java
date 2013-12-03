@@ -1,7 +1,6 @@
 package de.whs.fia.studmap.collector.fragments;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,10 +19,13 @@ import de.whs.fia.studmap.collector.MainActivity;
 import de.whs.fia.studmap.collector.R;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.data.Map;
+import de.whs.studmap.client.listener.OnGenericTaskListener;
+import de.whs.studmap.client.listener.OnGetFloorsTaskListener;
 import de.whs.studmap.client.tasks.GetFloorsTask;
 import de.whs.studmap.client.tasks.GetMapsTask;
 
-public class MapFloorSelectorFragment extends Fragment {
+public class MapFloorSelectorFragment extends Fragment implements
+		OnGetFloorsTaskListener, OnGenericTaskListener<List<Map>> {
 
 	private ArrayAdapter<Map> mMapsAdapter;
 	private ArrayAdapter<Floor> mFloorsAdapter;
@@ -53,15 +55,15 @@ public class MapFloorSelectorFragment extends Fragment {
 		View rootView = (View) inflater.inflate(
 				R.layout.fragment_mapfloorselector, container, false);
 
-		((MainActivity)getActivity()).openProgressDialog("Lade");
-		
+		((MainActivity) getActivity()).openProgressDialog("Lade");
+
 		initializeSpinner(rootView);
 
 		initializeButton(rootView);
 
 		fillMapSpinner();
-		
-		((MainActivity)getActivity()).closeProgressDialog();
+
+		((MainActivity) getActivity()).closeProgressDialog();
 
 		return rootView;
 	}
@@ -82,36 +84,14 @@ public class MapFloorSelectorFragment extends Fragment {
 
 	private void fillMapSpinner() {
 
-		GetMapsTask mTask = new GetMapsTask();
+		GetMapsTask mTask = new GetMapsTask(this);
 		mTask.execute((Void) null);
-		try {
-			List<Map> maps = mTask.get();
-			if(maps != null)
-				mMapsAdapter.addAll(maps);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	private void fillFloorSpinner(int mapId) {
 
-		GetFloorsTask mTask = new GetFloorsTask(mapId);
+		GetFloorsTask mTask = new GetFloorsTask(this, mapId);
 		mTask.execute((Void) null);
-		try {
-			List<Floor> floors = mTask.get();
-			if(floors != null)
-				mFloorsAdapter.addAll(floors);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	private void initializeButton(View rootView) {
@@ -199,5 +179,44 @@ public class MapFloorSelectorFragment extends Fragment {
 				mSelectedFloor = null;
 			}
 		});
+	}
+
+	@Override
+	public void onGetFloorsSuccess(List<Floor> floors) {
+		if (floors != null)
+			mFloorsAdapter.addAll(floors);
+	}
+
+	@Override
+	public void onGetFloorsError(int responseError) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onGetFloorsCanceled() {
+		// TODO Auto-generated method stub
+
+	}
+
+	//GetMapsTask
+	@Override
+	public void onSuccess(List<Map> maps) {
+		if (maps != null)
+			mMapsAdapter.addAll(maps);
+	}
+
+	//GetMapsTask
+	@Override
+	public void onError(int responseError) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//GetMapsTask
+	@Override
+	public void onCanceled() {
+		// TODO Auto-generated method stub
+		
 	}
 }
