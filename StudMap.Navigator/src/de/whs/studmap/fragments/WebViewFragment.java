@@ -20,8 +20,9 @@ public class WebViewFragment extends Fragment {
 	private WebView mMapWebView;
 	private JavaScriptService mJScriptService;
 	
-	private final String mUrl = "http://193.175.199.115/StudMapClient";
+	private final String mUrl = "http://193.175.199.115/StudMapClient/Home/Floorplan";
 	
+	private int mMapId;
 	private int mFloorId;
 	
 	
@@ -29,9 +30,12 @@ public class WebViewFragment extends Fragment {
 		// Empty constructor required for fragment subclasses
 	}
 
-	public static WebViewFragment newInstance() {
+	public static WebViewFragment newInstance(int mapId) {
 
+		Bundle args = new Bundle();
+		args.putInt("MapId", mapId);
 		WebViewFragment f = new WebViewFragment();
+		f.setArguments(args);
 		return f;
 	}
 	
@@ -48,6 +52,9 @@ public class WebViewFragment extends Fragment {
 		
 		mJScriptService = new JavaScriptService(getActivity());
 		mJScriptService.addWebView(mMapWebView);
+		
+		if(getArguments() != null && getArguments().containsKey("MapId"))
+			this.mMapId = getArguments().getInt("MapId");
 		
 		if(this.mFloorId > 0){
 
@@ -75,7 +82,7 @@ public class WebViewFragment extends Fragment {
 	}
 	
 	private void loadFloor() {
-		mMapWebView.loadUrl(mUrl + "/?floorID="
+		mMapWebView.loadUrl(mUrl + "/?mapId=" + mMapId + "&floorID="
 				+ mFloorId);
 		mMapWebView.requestFocus();
 	}

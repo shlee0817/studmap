@@ -1,7 +1,5 @@
 package de.whs.fia.studmap.collector.fragments;
 
-import java.util.concurrent.ExecutionException;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
@@ -23,9 +21,11 @@ import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.snippets.NFC;
 import de.whs.studmap.client.core.web.JavaScriptInterface;
 import de.whs.studmap.client.core.web.JavaScriptService;
+import de.whs.studmap.client.listener.OnGetNodeForNFCTagTaskListener;
 import de.whs.studmap.client.tasks.GetNodeForNFCTagTask;
 
-public class FloorplanFragment extends Fragment implements JavaScriptInterface {
+public class FloorplanFragment extends Fragment implements JavaScriptInterface,
+		OnGetNodeForNFCTagTaskListener {
 
 	private int mapId;
 	private int floorId;
@@ -52,15 +52,15 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 		rootView = (View) inflater.inflate(R.layout.fragment_flooplan,
 				container, false);
 
-		((MainActivity)getActivity()).openProgressDialog("Lade");
-		
+		((MainActivity) getActivity()).openProgressDialog("Lade");
+
 		this.mapId = getArguments().getInt("mapId");
 		this.floorId = getArguments().getInt("floorId");
 
 		initializeWebView();
 
-		((MainActivity)getActivity()).closeProgressDialog();
-		
+		((MainActivity) getActivity()).closeProgressDialog();
+
 		return rootView;
 	}
 
@@ -83,7 +83,8 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 		jsService = new JavaScriptService(getActivity());
 		jsService.addWebView(webView);
 
-		webView.loadUrl("http://193.175.199.115/StudMapClient/?floorID=" + floorId);
+		webView.loadUrl("http://193.175.199.115/StudMapClient/?floorID="
+				+ floorId);
 		webView.requestFocus();
 	}
 
@@ -101,30 +102,9 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 
 			} else {
 
-				GetNodeForNFCTagTask mTask = new GetNodeForNFCTagTask(mapId, nfcTag);
-				mTask.execute((Void)null);
-				try {
-					Node n = mTask.get();
-					if(n != null){
-						if(n.getFloorID() == floorId){
-
-							jsService.sendTarget(n.getNodeID());
-						}else{
-							Toast.makeText(rootView.getContext(), "NFC Tag ist im System aber nicht auf dieser Ebene.",
-									Toast.LENGTH_SHORT).show();
-						}
-					}else{
-
-						Toast.makeText(rootView.getContext(), "NFC Tag ist nicht im System.",
-								Toast.LENGTH_SHORT).show();
-					}
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				GetNodeForNFCTagTask mTask = new GetNodeForNFCTagTask(this,
+						mapId, nfcTag);
+				mTask.execute((Void) null);
 			}
 		}
 	}
@@ -146,6 +126,32 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface {
 	@Override
 	@JavascriptInterface
 	public void onFinish() {
-		
+
+	}
+
+	@Override
+	public void onGetNodeForNFCTagSuccess(Node node) {
+
+		if (node.getFloorID() == floorId) {
+
+			jsService.sendTarget(node.getNodeID());
+		} else {
+			Toast.makeText(rootView.getContext(),
+					"NFC Tag ist im System aber nicht auf dieser Ebene.",
+					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@Override
+	public void onGetNodeForNFCTagError(int responseError) {
+
+		Toast.makeText(rootView.getContext(), "NFC Tag ist nicht im System.",
+				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onGetNodeForNFCTagCanceled() {
+		// TODO Auto-generated method stub
+
 	}
 }
