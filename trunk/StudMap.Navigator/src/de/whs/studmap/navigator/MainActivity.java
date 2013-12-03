@@ -16,11 +16,15 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentFilter.MalformedMimeTypeException;
 import android.content.res.Configuration;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -80,11 +84,17 @@ public class MainActivity extends Activity {
 	private LogoutTask mLogoutTask = null;
 	private GetNodeForNFCTagTask mGetNodeForNFCTagTask = null;
 
+	private PendingIntent pendingIntent;
+	private IntentFilter[] intentFiltersArray;
+	private String[][] techListsArray;
+	
 	private final int REQUEST_CODE_LOGIN = 101;
 	private final int REQUEST_CODE_POIS = 102;
+	private NfcAdapter mNfcAdapter;
 
 	private static WebView mMapWebView;
 
+	public static final String MIME_TEXT_PLAIN = "text/plain";
 	public static String mUserName = "";
 	public static JavaScriptService mJScriptService;
 	public static Node mSelectedNode = null;
@@ -92,7 +102,13 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		loadActivity();
+		loadWebViewFragment();
+		initializeActionBar();
+		getDataFromWebService();
+		
+		setupForegroundDispatchSystem();
 	}
 
 	@Override
@@ -127,6 +143,19 @@ public class MainActivity extends Activity {
 			super.onBackPressed();
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		mNfcAdapter.enableForegroundDispatch(this, pendingIntent,
+				intentFiltersArray, techListsArray);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		mNfcAdapter.disableForegroundDispatch(this);
+	}
+	
 	@Override
 	protected void onDestroy() {
 		new AsyncTask<Void, Void, Boolean>() {
@@ -250,10 +279,8 @@ public class MainActivity extends Activity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		loadWebViewFragment();
-		initializeActionBar();
-		getDataFromWebService();
+				
+		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 	}
 
 	/**
@@ -779,6 +806,24 @@ public class MainActivity extends Activity {
 			mGetNodeForNFCTagTask = null;
 			showProgress(false);
 		}
+	}
+	
+	private void setupForegroundDispatchSystem() {
+		pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+				new Intent(this, getClass())
+						.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
+		IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+		ndef.addCategory(Intent.CATEGORY_DEFAULT);
+		try {
+			ndef.addDataType(MIME_TEXT_PLAIN);
+		} catch (MalformedMimeTypeException e) {
+			throw new RuntimeException("fail", e);
+		}
+		IntentFilter tdef = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
+		intentFiltersArray = new IntentFilter[] { ndef, tdef };
+
+		techListsArray = new String[][] { new String[] { Ndef.class.getName() } };
 	}
 
 }
