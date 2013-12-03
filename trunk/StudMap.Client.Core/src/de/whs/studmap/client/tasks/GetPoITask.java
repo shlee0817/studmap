@@ -1,6 +1,7 @@
 package de.whs.studmap.client.tasks;
 
 import java.net.ConnectException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -9,19 +10,21 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 import de.whs.studmap.client.core.data.Constants;
-import de.whs.studmap.client.core.data.Map;
+import de.whs.studmap.client.core.data.PoI;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGenericTaskListener;
 
-public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
+public class GetPoITask extends AsyncTask<Void, Void, Boolean> implements
+		Constants {
 
-	private OnGenericTaskListener<List<Map>> mCallback;
-	private List<Map> mMaps;
+	private int mapId;
+	private List<PoI> mPoIs = new ArrayList<PoI>();
+	private OnGenericTaskListener<List<PoI>> mCallback;
 
-	public GetMapsTask(OnGenericTaskListener<List<Map>> listener) {
-
+	public GetPoITask(OnGenericTaskListener<List<PoI>> listener, int mapId) {
+		this.mapId = mapId;
 		this.mCallback = listener;
 	}
 
@@ -29,26 +32,26 @@ public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
 	protected Boolean doInBackground(Void... params) {
 
 		try {
-			mMaps = Service.getMaps();
-			if (mMaps == null || mMaps.size() == 0)
-				return false;
+			List<PoI> pois = Service.getPoIsForMap(mapId);
+			if (pois != null)
+				mPoIs.addAll(pois);
 			return true;
 		} catch (WebServiceException e) {
-			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-					"GetDataTask - WebServiceException");
 
+			Log.d(LOG_TAG_POI__ACTIVITY, "GetDataTask - WebServiceException");
 			JSONObject jObject = e.getJsonObject();
+
 			try {
+
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
 				mCallback.onError(errorCode);
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+				Log.d(LOG_TAG_POI__ACTIVITY,
 						"GetDataTask - Parsing the WebServiceException failed!");
 			}
 		} catch (ConnectException e) {
-			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-					"GetDataTask - ConnectException");
-			mCallback.onError(ResponseError.UnknownError);
+
+			mCallback.onError(ResponseError.DatabaseError);
 		}
 		return false;
 	}
@@ -57,7 +60,7 @@ public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
 	protected void onPostExecute(final Boolean success) {
 
 		if (success) {
-			mCallback.onSuccess(mMaps);
+			mCallback.onSuccess(mPoIs);
 		} else {
 			mCallback.onError(ResponseError.UnknownError);
 		}
@@ -68,4 +71,5 @@ public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
 
 		mCallback.onCanceled();
 	}
+
 }

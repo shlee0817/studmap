@@ -9,28 +9,30 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 import de.whs.studmap.client.core.data.Constants;
-import de.whs.studmap.client.core.data.Map;
+import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
-import de.whs.studmap.client.listener.OnGenericTaskListener;
+import de.whs.studmap.client.listener.OnGetRoomsTaskListener;
 
-public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
+public class GetRoomsTask extends AsyncTask<Void, Void, Boolean> {
 
-	private OnGenericTaskListener<List<Map>> mCallback;
-	private List<Map> mMaps;
+	private int mMapId;
+	private OnGetRoomsTaskListener mCallback;
+	private List<Node> mNodes;
 
-	public GetMapsTask(OnGenericTaskListener<List<Map>> listener) {
+	public GetRoomsTask(OnGetRoomsTaskListener listener, int mapId) {
 
 		this.mCallback = listener;
+		this.mMapId = mapId;
 	}
 
 	@Override
 	protected Boolean doInBackground(Void... params) {
 
 		try {
-			mMaps = Service.getMaps();
-			if (mMaps == null || mMaps.size() == 0)
+			mNodes = Service.getRoomsForMap(mMapId);
+			if (mNodes == null || mNodes.size() == 0)
 				return false;
 			return true;
 		} catch (WebServiceException e) {
@@ -40,7 +42,7 @@ public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
 			JSONObject jObject = e.getJsonObject();
 			try {
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onError(errorCode);
+				mCallback.onGetRoomsError(errorCode);
 			} catch (JSONException ignore) {
 				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
 						"GetDataTask - Parsing the WebServiceException failed!");
@@ -48,7 +50,7 @@ public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
 		} catch (ConnectException e) {
 			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
 					"GetDataTask - ConnectException");
-			mCallback.onError(ResponseError.UnknownError);
+			mCallback.onGetRoomsError(ResponseError.UnknownError);
 		}
 		return false;
 	}
@@ -57,15 +59,15 @@ public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
 	protected void onPostExecute(final Boolean success) {
 
 		if (success) {
-			mCallback.onSuccess(mMaps);
+			mCallback.onGetRoomsSuccess(mNodes);
 		} else {
-			mCallback.onError(ResponseError.UnknownError);
+			mCallback.onGetRoomsError(ResponseError.UnknownError);
 		}
 	}
 
 	@Override
 	protected void onCancelled() {
 
-		mCallback.onCanceled();
+		mCallback.onGetRoomsCanceled();
 	}
 }
