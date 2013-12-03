@@ -1,5 +1,8 @@
 ﻿using MathNet.Numerics.Distributions;
+using QuickGraph;
+using QuickGraph.Algorithms.ShortestPath;
 using StudMap.Core;
+using StudMap.Core.Graph;
 using StudMap.Core.WLAN;
 using StudMap.Data.Entities;
 using StudMap.Service.CacheObjects;
@@ -84,12 +87,28 @@ namespace StudMap.Service.Services
             // Gesammelte WLAN-Fingerprints aus DB auswerten und Verteilung bestimmen
             // Jetzt: gecachet!
             var cache = StudMapCache.Fingerprint(request.MapId);
+            var mapCache = StudMapCache.Map(request.MapId);
+            var previousNode = mapCache.Nodes.ContainsKey(request.PreviousNodeId) ? 
+                mapCache.Nodes[request.PreviousNodeId] : 
+                new Node { Id = 0 };
 
             // AccessPoint-Messung nach APs aufteilen
             var apScans = AnalyseInputScan(request.Scans, cache.MACtoAP);
 
             // W'keit bestimmen, dass RSS-Werte an Knoten gemessen werden
-            var nodeProbs = CalculateNodeProbabilities(cache.NodeDistributions, apScans);
+            Func<int, double> getDistance;
+            if (request.PreviousNodeId == 0)
+                getDistance = nodeId => 1.0;
+            else
+                getDistance = nodeId => {
+                    double distance;
+                    if (mapCache.PathFinder.TryGetDistance(previousNode.Id, nodeId, out distance))
+                        return distance;
+                    else
+                        return -1;
+                };
+
+            var nodeProbs = CalculateNodeProbabilities(cache.NodeDistributions, apScans, getDistance);
 
             // Absteigend nach W'keit sortieren
             nodeProbs.Sort((m, n) => n.Probabilty.CompareTo(m.Probabilty));
@@ -112,13 +131,15 @@ namespace StudMap.Service.Services
         }
 
         private static List<NodeProbability> CalculateNodeProbabilities(
-            Dictionary<int, Dictionary<int, Normal>> nodeDistributions, IReadOnlyDictionary<int, int> apScans)
+            Dictionary<int, Dictionary<int, Normal>> nodeDistributions, 
+            IReadOnlyDictionary<int, int> apScans, 
+            Func<int, double> getDistance)
         {
-            var nodeProbs = new List<NodeProbability>();
+            var analysedNodes = new List<AnalysedNode>();
             foreach (var nodeId in nodeDistributions.Keys)
             {
                 var apDistributions = nodeDistributions[nodeId];
-                double prob = 1.0;
+                double scanProb = 1.0;
                 int relevantApCount = 0;
                 foreach (var apId in apDistributions.Keys)
                 {
@@ -136,7 +157,7 @@ namespace StudMap.Service.Services
                         double apProb = after - before;
 
                         // In die Gesamtw'keit für den Fingeprint einrechnen
-                        prob *= apProb;
+                        scanProb *= apProb;
                         relevantApCount += 1;
                     }
                 }
@@ -149,7 +170,7 @@ namespace StudMap.Service.Services
                 // Gesamtw'keit berechnen, am aktuellen Knoten, die gemessenen RSS-Werte
                 // für alle AccessPoints vorzufinden
                 // Mathematisch: Geometrisches Mittel über die Einzelw'keiten
-                prob = Math.Pow(prob, 1.0 / relevantApCount);
+                scanProb = Math.Pow(scanProb, 1.0 / relevantApCount);
 
                 // Die hier berechnete bedingte W'keit ist noch "verkehrt herum".
                 // Wir haben berechnet:
@@ -189,13 +210,33 @@ namespace StudMap.Service.Services
                 //  wahrscheinlichsten sind, reicht dies aus.
 
                 // TODO: Wenn p(n) positionsabhängig wird, dann hier verwenden
-                // double nodeProb = 1.0 / nodeDistributions.Count; // Konstant => ignorieren
-                double correctedProb = prob;
+                // double position = 1.0 / nodeDistributions.Count; // Konstant => ignorieren
 
-                var nodeProb = new NodeProbability { NodeId = nodeId, Probabilty = correctedProb };
-                nodeProbs.Add(nodeProb);
+                double distance = getDistance(nodeId);
+                // Wenn es keine Verbindung von dem alten Knoten gibt, dann wird 
+                // der Knoten nicht zurückgeliefert
+                if (distance < 0.0)
+                    continue;
+
+                var analysedNode = new AnalysedNode 
+                { 
+                    NodeId = nodeId, 
+                    ScanProbabilty = scanProb, 
+                    Distance = distance 
+                };
+
+                analysedNodes.Add(analysedNode);
             }
-            return nodeProbs;
+
+            // Summe der Distanzen
+            double sumDistance = analysedNodes.Sum(n => n.Distance);
+            double sumReversedDistance = analysedNodes.Sum(n => sumDistance - n.Distance);
+
+            return analysedNodes.Select(n => new NodeProbability
+            {
+                NodeId = n.NodeId,
+                Probabilty = n.ScanProbabilty * (sumDistance - n.Distance) / sumReversedDistance
+            }).ToList();
         }
     }
 }
