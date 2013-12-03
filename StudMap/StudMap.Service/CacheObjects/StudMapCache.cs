@@ -25,20 +25,19 @@ namespace StudMap.Service.CacheObjects
             return GetFingerprintCache(mapId);
         }
 
-        public static void UpdateFloors(MapsEntities entities, int mapId)
+        public static void RemoveGlobal() 
         {
-            Global.UpdateFloors(entities);
-            Map(mapId).UpdateFloors(entities);
+            RemoveObject(GlobalCacheKey);
         }
 
-        public static void UpdateGraph(MapsEntities entities, int mapId)
+        public static void RemoveMap(int mapId)
         {
-            Map(mapId).UpdateGraph(entities);
+            RemoveObject(String.Format(MapCacheKey, mapId));
         }
 
-        public static void UpdateFingerprints(MapsEntities entities, int mapId)
+        public static void RemoveFingerprint(int mapId)
         {
-            Fingerprint(mapId).Update(entities);
+            RemoveObject(String.Format(FingerprintCacheKey, mapId));
         }
 
         /// <summary>
@@ -91,15 +90,13 @@ namespace StudMap.Service.CacheObjects
             var cacheObject = createObject();
             HttpRuntime.Cache.Insert(key, cacheObject, null,
                 DateTime.Now.AddMinutes(cacheObject.TimeoutInMinutes),
-                Cache.NoSlidingExpiration, CacheItemPriority.High,
-                (k, v, r) =>
-                {
-                    // Wenn das Objekt manuell gelöscht wurde, bedeutet das,
-                    // dass es neu angelegt werden muss, da Daten ungültig sind
-                    if (r == CacheItemRemovedReason.Removed)
-                        RegisterObject(key, createObject);
-                });
+                Cache.NoSlidingExpiration);
             return cacheObject;
+        }
+
+        private static void RemoveObject(string key)
+        {
+            HttpRuntime.Cache.Remove(key);
         }
     }
 }
