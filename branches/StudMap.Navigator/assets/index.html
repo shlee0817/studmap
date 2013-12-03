@@ -1,0 +1,242 @@
+<html><head>
+<meta charset="utf-8">
+<title>Floor Plan</title>
+<!--<script type="text/javascript" src="lib/jquery/jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript" src="lib/jquery/jquery-ui-1.8.21.custom.min.js"></script>-->
+<script type="text/javascript" src="js/d3.v3.min.js"></script>
+<script type="text/javascript" src="js/d3.floorplan.min.js"></script>
+<style type="text/css">
+	/*@import url('lib/jquery/jquery-ui.css');*/
+	@import url('css/d3.floorplan.css');
+	
+	body {
+	  font-size: 14px;
+	  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	  /*margin: 50px auto 20px;
+	  width: 720px;*/
+	  background: #fcfcfc;
+	 /* line-height: 1.45em;*/
+	 margin:0;
+	}
+	a {
+	  color: #555;
+	}
+	a:hover {
+	  color: #000;
+	}
+	ul {
+	  margin: 0 ;
+	  padding: 0;
+	}
+	div.code {
+		border: 1px solid #ccc;
+		background: #eee;
+		/*margin: 10px 0 10px 0;
+		padding: 10px;
+		width: 720px;*/
+	}
+	
+	.map-controls
+	{
+	display:none;
+	}
+</style>
+</head>
+<body style="">
+<!-- <div id="info" style="width:500px;height:60px;position:absolute">Test</div>-->
+<div id="map">
+<svg id="svgMap" height="100%" width="100%"></svg>
+
+</div>
+
+<script id="demo-code" type="text/javascript">
+
+var first=true;
+var x1,x2,y1,y2;
+var KreisRadius=2;
+var linienDicke=2;
+
+
+var xscale = d3.scale.linear()
+               .domain([0,1024])
+               .range([0,500]),
+    yscale = d3.scale.linear()
+               .domain([0,900])
+               .range([0,500]),
+    map = d3.floorplan().xScale(xscale).yScale(yscale),
+    imagelayer = d3.floorplan.imagelayer(),
+    heatmap = d3.floorplan.heatmap(),
+    vectorfield = d3.floorplan.vectorfield(),
+    pathplot = d3.floorplan.pathplot(),
+    overlays = d3.floorplan.overlays().editMode(true),
+    mapdata = {};
+
+mapdata[imagelayer.id()] = [{
+    url: 'maps/RN_Ebene_0.png',
+    x: 0,
+    y: 0,
+    height: 900,
+    width: 1024
+     }];
+
+map.addLayer(imagelayer)
+   .addLayer(heatmap)
+   .addLayer(vectorfield)
+   .addLayer(pathplot)
+   .addLayer(overlays);
+/*
+d3.json("demo-data.json", function(data) {
+	mapdata[heatmap.id()] = data.heatmap;
+	mapdata[overlays.id()] = data.overlays;
+	mapdata[vectorfield.id()] = data.vectorfield;
+	mapdata[pathplot.id()] = data.pathplot;
+	
+	
+});
+*/
+//var svgContainer = d3.select("#map").append("svg").attr("height", "100%").attr("width","100%");
+var svgContainer = d3.select("#svgMap")
+/*d3.select("#map").append("svg")
+		.attr("height", "100%").attr("width","100%")
+		.datum(mapdata).call(map);*/
+		svgContainer.datum(mapdata).call(map);
+		
+		
+	function circle_click(evt) {
+	var circle = evt.target;
+	if(window.jsinterface){
+  
+   
+   
+      window.jsinterface.punkt();
+	}
+	
+	
+	
+	
+		
+		if(circle.r.animVal.value == 2)
+			circle.setAttribute("r",5);
+		else
+			circle.setAttribute("r",2);
+		
+		
+	
+		//alert(circle.cx.animVal.value);
+		/*if(first)
+		{
+			first = false;
+			x1 = circle.cx.animVal.value;
+			y1 = circle.cy.animVal.value;
+		}
+		else
+		{
+			first = true;
+			x2 = circle.cx.animVal.value;
+			y2 = circle.cy.animVal.value;
+			
+			//zeiche linie;
+			d3.select("#lines").append("line")
+                          .attr("x1", x1)
+                         .attr("y1", y1)
+                         .attr("x2", x2)
+                         .attr("y2", y2)
+						 .attr("stroke-width", 5)
+						 .attr("stroke", "black");
+						 
+		}
+		*/
+		
+    }
+		
+		
+		d3.select(".map-layers").append("g").attr("id","lines");
+		d3.select(".map-layers").append("g").attr("id","circles");
+		
+		
+		/*
+		var circle = d3.select("#circles").append("circle")
+                       .attr("cx", 100)
+                       .attr("cy", 50)
+                       .attr("r", 5)
+					   .attr("onclick","circle_click(evt)");
+					   
+					   
+					   var circle2 = d3.select("#circles").append("circle")
+                       .attr("cx", 120)
+                       .attr("cy", 55)
+                       .attr("r", 5)
+					   .attr("onclick","circle_click(evt)");
+					   
+					   d3.select("#circles").append("circle")
+                       .attr("cx", 140)
+                       .attr("cy", 60)
+                       .attr("r", 5)
+					   .attr("onclick","circle_click(evt)");
+					   
+					     d3.select("#circles").append("circle")
+                       .attr("cx", 80)
+                       .attr("cy", 30)
+                       .attr("r", 5)
+					   .attr("onclick","circle_click(evt)");
+					   
+					   */
+					//d3.select("#kreis1").onclick = function() { alert('blah'); };   
+					
+					
+					
+					//showCircles([{x:100,y:100},{x:110,y:110},{x:110,y:100},{x:100,y:110},{x:200,y:110},{x:100,y:210}]);
+				
+					function showPath(PathAsArray)
+					{
+					
+					
+					  if(PathAsArray.length < 2)
+					  return;
+					
+					
+						for (var i = 0; i < PathAsArray.length-1; i++) {
+						 // element = PathAsArray[i];
+						 d3.select("#circles").append("circle")
+                       .attr("cx", PathAsArray[i].x)
+                       .attr("cy", PathAsArray[i].y)
+                       .attr("r", KreisRadius);
+					   
+					   d3.select("#lines").append("line")
+                         .attr("x1",  PathAsArray[i].x)
+                         .attr("y1",  PathAsArray[i].y)
+                         .attr("x2",  PathAsArray[i+1].x)
+                         .attr("y2",  PathAsArray[i+1].y)
+						 .attr("stroke-width", linienDicke)
+						 .attr("stroke", "black");
+					   
+						}
+						 d3.select("#circles").append("circle")
+                       .attr("cx", PathAsArray[PathAsArray.length-1].x)
+                       .attr("cy", PathAsArray[PathAsArray.length-1].y)
+                       .attr("r", KreisRadius);
+						
+						
+					
+					}
+					
+					function showCircles(CirclesAsArray)
+					{
+						for (var i = 0; i < CirclesAsArray.length; i++) {
+						
+						 d3.select("#circles").append("circle")
+                        .attr("cx", CirclesAsArray[i].x)
+                        .attr("cy", CirclesAsArray[i].y)
+                        .attr("r", KreisRadius)
+					    .attr("onclick","circle_click(evt)");
+					 
+					   
+						}
+					}
+		
+</script>
+
+
+
+</body></html>

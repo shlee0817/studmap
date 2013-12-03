@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2013 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<resources>
+
+    <string name="app_name">StudMap Navigator</string>
+
+    <string-array name="menue_item_array">
+        <item>Anmelden</item>
+        <item>Navigation zurücksetzen</item>
+        <item>Point of Interest</item>
+        <item>Einstellungen</item>
+        <item>Über</item>
+        <item></item>
+        <item>Neu Laden</item>
+    </string-array>
+    
+    <string name="logout">Abmelden</string>
+    <string name="username">Lieber Benutzer</string>
+    
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+	<string name="already_logged_in">Du bist schon eingeloggt!</string>
+	<string name="search_field">Suchen</string>
+	<string name="scanForPosition">Position mittels QR-Code bestimmen</string>
+	<string name="searchInMap">Karte durchsuchen</string>
+	
+	<string name="logout_successfull">Erfolgreich abgemeldet!</string>
+	<string name="load_data">Bitte warten&#8230;</string>
+	
+	<string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
+	<string name="error_logout">Beim Logout Versuch ist ein Fehler aufgetreten. Versuche es in einigen Minuten erneut.</string>
+	<string name="error_NfcTagDoesNotExist">Das NFC Tag ist ungültig!</string>
+	
+	<string name="currentPosition">Du bist hier: </string>
+	<string name="setAsStart">Als Startpunkt setzen</string>
+	<string name="positiveButton">OK</string>
+	<string name="negativeButton">Abbrechen</string>
+	
+</resources>

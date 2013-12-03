@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="title_activity_register">Registrieren</string>
+
+    <!-- Strings related to login -->
+    <string name="register_prompt_username">Benutzername</string>
+    <string name="register_prompt_password1">Passwort</string>
+    <string name="register_prompt_password2">Wiederhole dein Passwort</string>
+    <string name="action_register_register">Registrieren</string>
+    <string name="register_progress_registering">Registrieren&#8230;</string>
+    <string name="error_password_match">Die Passwörter stimmen nicht überein</string>
+	<string name="error_username_duplicate">Der Benutzername wird bereits verwendet</string>
+    <string name="register_successful">Registrierung erfolgreich!\nDu kannst dich nun anmelden.</string>
+</resources>
