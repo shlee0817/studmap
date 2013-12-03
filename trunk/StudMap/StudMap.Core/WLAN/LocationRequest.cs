@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StudMap.Core.Graph;
+using System.Collections.Generic;
 
 namespace StudMap.Core.WLAN
 {
@@ -22,5 +23,7 @@ namespace StudMap.Core.WLAN
         public int NodeCount { get; set; }
 
         public IEnumerable<LocationAPScan> Scans { get; set; }
+
+        public int PreviousNodeId { get; set; }
     }
 }

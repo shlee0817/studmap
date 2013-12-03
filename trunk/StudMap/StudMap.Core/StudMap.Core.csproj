@@ -60,6 +60,7 @@
     <Compile Include="BaseResponse.cs" />
     <Compile Include="WLAN\AccessPoint.cs" />
     <Compile Include="WLAN\AccessPointScan.cs" />
+    <Compile Include="WLAN\AnalysedNode.cs" />
     <Compile Include="WLAN\Fingerprint.cs" />
     <Compile Include="WLAN\LocationRequest.cs" />
     <Compile Include="WLAN\NodeProbability.cs" />
