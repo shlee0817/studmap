@@ -2,23 +2,24 @@ package de.whs.studmap.navigator;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.data.Node;
@@ -41,6 +42,7 @@ import de.whs.studmap.client.tasks.GetNodeForNFCTagTask;
 import de.whs.studmap.client.tasks.GetNodeForQrCodeTask;
 import de.whs.studmap.client.tasks.GetRoomsTask;
 import de.whs.studmap.client.tasks.LogoutTask;
+import de.whs.studmap.fragments.PreferencesFragment;
 import de.whs.studmap.fragments.WebViewFragment;
 import de.whs.studmap.navigator.dialogs.ImpressumDialogFragment;
 import de.whs.studmap.navigator.dialogs.LoginDialogFragment;
@@ -74,8 +76,10 @@ public class MainActivity extends BaseMainActivity implements
 		loadWebViewFragment();
 		getDataFromWebService();
 
-		// TODO: initialer Start -> Map wählen, nachher über Einstellung
-		// änderbar
+		// TODO: initialer Start -> Map wählen, nachher über Einstellung änderbar
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		String mapId = sharedPref.getString(getString(R.string.pref_map_key), "3");
+		String hostName = sharedPref.getString(getString(R.string.pref_host_key), "193.175.199.115");
 	}
 
 	@Override
@@ -236,6 +240,12 @@ public class MainActivity extends BaseMainActivity implements
 			impressumDialog.show(getFragmentManager(), "Impressum");
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
+			
+		case PREFERENCES:
+			getFragmentManager().beginTransaction().replace(android.R.id.content, new PreferencesFragment()).commit();
+			mDrawerLayout.closeDrawer(mLeftDrawer);
+			break;
+			
 		default:
 			UserInfo.toast(this, "Auswahl nicht gefunden!", false);
 			break;
@@ -419,8 +429,8 @@ public class MainActivity extends BaseMainActivity implements
 		// TODO Auto-generated method stub
 
 		// Present the error from doInBackground to the user
-		// UserInfo.dialog(mContext, mUserName,
-		// getString(R.string.error_connection));
+		UserInfo.dialog(this, mUserName,
+		getString(R.string.error_connection));
 		showProgress(false);
 	}
 

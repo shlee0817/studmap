@@ -4,7 +4,7 @@ public enum DrawerItemEnum {
 	LOG_IN_OUT,
 	RESET_NAV,
 	POI,
-	SETTINGS,
+	PREFERENCES,
 	IMPRESSUM,
 	EMPTYSLOT1,
 	RELOAD
