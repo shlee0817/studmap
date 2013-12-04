@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preferences">
+
+    <ListPreference
+        android:defaultValue="3"
+        android:key="@string/pref_map_key" 
+        android:title="@string/pref_map"
+        android:summary="@string/pref_map_summary"/>
+
+    <EditTextPreference
+        android:defaultValue="193.175.199.115"
+        android:key="@string/pref_host_key"
+        android:summary="@string/pref_host_summary"
+        android:title="@string/pref_host" />
+
+</PreferenceScreen>
