@@ -33,6 +33,7 @@ import de.whs.studmap.client.listener.OnGetRoomsTaskListener;
 import de.whs.studmap.client.listener.OnLoginDialogListener;
 import de.whs.studmap.client.listener.OnLogoutTaskListener;
 import de.whs.studmap.client.listener.OnPoIDialogListener;
+import de.whs.studmap.client.listener.OnPositionDialogListener;
 import de.whs.studmap.client.listener.OnRegisterDialogListener;
 import de.whs.studmap.client.tasks.GetFloorsTask;
 import de.whs.studmap.client.tasks.GetNodeForNFCTagTask;
@@ -51,7 +52,7 @@ public class MainActivity extends BaseMainActivity implements
 		OnLoginDialogListener, OnPoIDialogListener, OnRegisterDialogListener,
 		OnGetFloorsTaskListener, OnGetRoomsTaskListener,
 		OnGetNodeForQrCodeTaskListener, JavaScriptInterface,
-		OnLogoutTaskListener, OnGetNodeForNFCTagTaskListener {
+		OnLogoutTaskListener, OnGetNodeForNFCTagTaskListener, OnPositionDialogListener {
 
 	// vars
 	private boolean mIsLoggedIn = false;
@@ -61,7 +62,6 @@ public class MainActivity extends BaseMainActivity implements
 
 	private List<Floor> mFloorList = new ArrayList<Floor>();
 	private List<Node> mRoomList = new ArrayList<Node>();
-	private List<String> mDrawerItems;
 
 	private WebViewFragment mWebViewFragment;
 
@@ -438,4 +438,13 @@ public class MainActivity extends BaseMainActivity implements
 		showProgress(false);
 	}
 
+	@Override
+	public void onSetDestination(int nodeId) {
+		mWebViewFragment.sendDestination(nodeId);
+	}
+
+	@Override
+	public void onSetStart(int nodeId) {
+		mWebViewFragment.sendStart(nodeId);		
+	}
 }

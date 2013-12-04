@@ -18,21 +18,21 @@ public class JavaScriptService {
 	
 	//JavaScript Funktionsaufruf: [WebView.loadURL("javaScript:Funktiosnname("param0", "param1",...)");]
 		
-	public void sendTarget(Integer nodeID){
-		runOnUiThread("javascript:zoomOut()");
-		runOnUiThread("javascript:highlightPointR(\"" + nodeID + "\", \"purple\", \"4\")");				
+	public void sendTarget(Integer nodeId){
+		runOnUiThread("javascript:client.zoomToNode(" + nodeId + ")");
+		runOnUiThread("javascript:client.highlightPoint(\"" + nodeId + "\", \"purple\", \"4\")");				
 	}
 	
-	public void sendStart(Integer nodeID){
-		runOnUiThread("javascript:setStartPoint(\"" + nodeID + "\")");
+	public void sendStart(Integer nodeId){
+		runOnUiThread("javascript:client.setStartPoint(\"" + nodeId + "\")");
 	}
 	
-	public void sendDestination(Integer nodeID){
-		runOnUiThread("javascript:setEndPoint(\"" + nodeID + "\")");
+	public void sendDestination(Integer nodeId){
+		runOnUiThread("javascript:client.setEndPoint(\"" + nodeId + "\")");
 	}
 	
 	public void resetMap(){
-		runOnUiThread("javascript:resetMap()");
+		runOnUiThread("javascript:client.resetMap()");
 	}
 	
 	private void runOnUiThread(final String url){

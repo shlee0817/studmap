@@ -71,8 +71,6 @@ public class BaseMainActivity extends Activity {
 		
 		loadActivity();
 		initializeActionBar();
-
-		loadActivity();
 		
 		setupForegroundDispatchSystem();
 	}

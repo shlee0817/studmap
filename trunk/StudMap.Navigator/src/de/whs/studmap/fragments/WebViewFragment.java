@@ -65,8 +65,7 @@ public class WebViewFragment extends Fragment {
 		return rootView;
 	}
 	
-	public void setFloorId(int floorId){
-		
+	public void setFloorId(int floorId) {
 		this.mFloorId = floorId;
 		loadFloor();
 	}
@@ -76,9 +75,17 @@ public class WebViewFragment extends Fragment {
 		mJScriptService.resetMap();
 	}
 	
-	public void sendTarget(int nodeId){
+	public void sendTarget(int nodeId) {
 		
 		mJScriptService.sendTarget(nodeId);
+	}
+	
+	public void sendStart(int nodeId) {
+		mJScriptService.sendStart(nodeId);
+	}
+	
+	public void sendDestination(int nodeId) {
+		mJScriptService.sendDestination(nodeId);
 	}
 	
 	private void loadFloor() {

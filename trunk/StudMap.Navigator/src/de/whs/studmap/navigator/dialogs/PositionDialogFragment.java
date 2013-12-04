@@ -80,7 +80,7 @@ public class PositionDialogFragment extends DialogFragment implements
 					int position, long id) {
 				switch (position) {
 				case 0:
-					mCallback.onSetTarget(mNodeId);
+					mCallback.onSetStart(mNodeId);
 					dismiss();
 					break;
 
