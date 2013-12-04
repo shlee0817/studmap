@@ -197,6 +197,15 @@ namespace StudMap.Admin.Controllers
             return RedirectToAction("Error");
         }
 
+        // Keine Autorisierung erforderlich
+        [HttpGet]
+        public ActionResult NodeInfo(int nodeId)
+        {
+            var mapsCtrl = new MapsController();
+            var result = mapsCtrl.GetFullNodeInformationForNode(nodeId);
+            return View(result);
+        }
+
         #endregion
     }
 }
