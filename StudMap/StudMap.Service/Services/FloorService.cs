@@ -93,13 +93,13 @@ namespace StudMap.Service.Services
         public static string GetFloorplanImage(MapsEntities entities, int floorId)
         {
             Floor floor = GetFloor(entities, floorId);
-            return ServerAdminBasePath + floor.ImageUrl;
+            return floor.ImageUrl;
         }
 
         public static string GetFloorplanImageCached(int floorId)
         {
             Floor floor = GetFloorCached(floorId);
-            return ServerAdminBasePath + floor.ImageUrl;
+            return floor.ImageUrl;
         }
 
         public static Floor UploadFloorImage(MapsEntities entities, int floorId, string filename)
