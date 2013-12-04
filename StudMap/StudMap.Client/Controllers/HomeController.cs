@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using StudMap.Service.Controllers;
+using StudMap.Service.Services;
 
 namespace StudMap.Client.Controllers
 {

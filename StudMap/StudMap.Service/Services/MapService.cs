@@ -47,5 +47,13 @@ namespace StudMap.Service.Services
         {
             return StudMapCache.Global.Maps.ContainsKey(mapId);
         }
+
+        public static Map GetMap(MapsEntities entities, int mapId)
+        {
+            if (MapExists(mapId))
+                return StudMapCache.Global.Maps[mapId];
+            else
+                return new Map();
+        }
     }
 }

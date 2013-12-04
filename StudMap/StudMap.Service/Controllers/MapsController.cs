@@ -238,6 +238,19 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
+        [HttpGet]
+        public ObjectResponse<FullNodeInformation> GetFullNodeInformationForNode(int nodeId)
+        {
+            var result = new ObjectResponse<FullNodeInformation>();
+
+            ExecuteMaps(entities =>
+            {
+                result.Object = InformationService.GetFullNodeInformationForNode(entities, nodeId);
+            }, result);
+
+            return result;
+        }
+
         // TODO: nodeId Parameter entfernen und in nodeInfo setzen?
         [HttpPost]
         public ObjectResponse<NodeInformation> SaveNodeInformation(int nodeId, NodeInformation nodeInf)

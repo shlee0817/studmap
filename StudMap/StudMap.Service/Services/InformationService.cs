@@ -206,5 +206,19 @@ namespace StudMap.Service.Services
             nodeInformation.QRCode = qrCode;
             entities.SaveChanges();
         }
+
+        public static FullNodeInformation GetFullNodeInformationForNode(MapsEntities entities, int nodeId)
+        {
+            var info = GetNodeInformationForNode(entities, nodeId);
+            var floor = FloorService.GetFloor(entities, info.Node.FloorId);
+            var map = MapService.GetMap(entities, floor.MapId);
+
+            return new FullNodeInformation
+            {
+                Map = map,
+                Floor = floor,
+                Info = info
+            };
+        }
     }
 }
