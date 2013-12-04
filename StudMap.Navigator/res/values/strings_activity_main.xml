@@ -29,6 +29,7 @@
         <item>Neu Laden</item>
     </string-array>
     
+    <string name="login">Anmelden</string>
     <string name="logout">Abmelden</string>
     <string name="username">Lieber Benutzer</string>
     
@@ -40,6 +41,7 @@
 	<string name="searchInMap">Karte durchsuchen</string>
 	
 	<string name="logout_successfull">Erfolgreich abgemeldet!</string>
+	<string name="login_successfull">Erfolgreich angemeldet!</string>
 	<string name="load_data">Bitte warten&#8230;</string>
 	
 	<string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>

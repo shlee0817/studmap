@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -303,16 +304,14 @@ public class MainActivity extends BaseMainActivity implements
 			mWebViewFragment.sendTarget(mSelectedNode.getNodeID());
 		}
 	}
-
+	
 	@Override
 	public void onLogin(String userName) {
 
 		this.mUserName = userName;
 		this.mIsLoggedIn = true;
-		mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
-		mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
-				getString(R.string.logout));
-
+		switchLoginLogoutButton();
+		UserInfo.toast(this, getString(R.string.login_successfull), true);
 		showProgress(false);
 	}
 
@@ -391,14 +390,26 @@ public class MainActivity extends BaseMainActivity implements
 	public void onGetNodeForQrCodeCanceled() {
 		showProgress(false);
 	}
+	
+	private void switchLoginLogoutButton() {
+		if (mIsLoggedIn) {
+			mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
+			mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
+					getString(R.string.logout));
+		} else {
+			mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
+			mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
+					getString(R.string.login));
+		}
+		mDrawerListView.invalidateViews();
+	}
 
 	@Override
 	public void onLogoutSuccess() {
 
 		mIsLoggedIn = false;
-		mDrawerItems = Arrays.asList(getResources().getStringArray(
-				R.array.menue_item_array));
-		mUserName = getString(R.string.username);
+
+		switchLoginLogoutButton();
 		UserInfo.toast(this, getString(R.string.logout_successfull), true);
 		showProgress(false);
 	}
@@ -428,11 +439,10 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onGetNodeForNFCTagError(int responseError) {
-		// TODO Auto-generated method stub
-
 		showProgress(false);
+		UserInfo.toastInUiThread(this, "Node für NFC Tag nicht gefunden", Toast.LENGTH_SHORT);
 	}
-
+	
 	@Override
 	public void onGetNodeForNFCTagCanceled() {
 		showProgress(false);

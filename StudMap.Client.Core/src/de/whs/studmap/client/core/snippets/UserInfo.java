@@ -1,5 +1,6 @@
 package de.whs.studmap.client.core.snippets;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -49,5 +50,17 @@ public class UserInfo{
 		int length = length_short ? 0 : 1;
 		Toast.makeText(context, message, length).show();		
 	}	
+	
+	public static void toastInUiThread(final Activity activity,
+			final String message, final int length) {
+		activity.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				Toast.makeText(activity.getApplicationContext(), message,
+						length).show();
+			}
+		});
+	}
 	
 }
