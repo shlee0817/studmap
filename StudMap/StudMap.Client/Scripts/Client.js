@@ -86,7 +86,7 @@ StudMapClient.prototype.setStartPoint = function (nodeId) {
     this.startPoint.setAttribute("fill", "green");
     this.startPoint.setAttribute("r", 4);
 
-    testPath();
+    this.testPath();
 };
 
 StudMapClient.prototype.setEndPoint = function (nodeId) {
@@ -101,7 +101,7 @@ StudMapClient.prototype.setEndPoint = function (nodeId) {
     this.endPoint.setAttribute("fill", "red");
     this.endPoint.setAttribute("r", 4);
 
-    testPath();
+    this.testPath();
 };
 //Setter
 
@@ -109,17 +109,18 @@ StudMapClient.prototype.setEndPoint = function (nodeId) {
 //Zeichnen
 StudMapClient.prototype.showPath = function (startNodeId, endNodeId) {
 
+    var that = this;
     var params = [];
     var map = new Param("mapId", this.mapId);
     var startNode = new Param("startNodeId", startNodeId);
     var endNode = new Param("endNodeId", endNodeId);
-    params.push(map)
-        .push(startNode)
-        .push(endNode);
+    params.push(map);
+    params.push(startNode);
+    params.push(endNode);
     
     this.load("Maps", "GetRouteBetween", params, function (data) {
 
-        drawPath(data.List);
+        that.drawPath(data.List);
         document.getElementById('path').style.display = 'block';
         document.getElementById('circles').style.display = 'none';
     });
@@ -272,8 +273,8 @@ StudMapClient.prototype.circle_click = function (event) {
 
 StudMapClient.prototype.testPath = function () {
 
-    if (startPoint && endPoint) {
-        showPath(startPoint.id, endPoint.id);
+    if (this.startPoint && this.endPoint) {
+        this.showPath(this.startPoint.id, this.endPoint.id);
     }
 };
 
