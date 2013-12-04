@@ -24,3 +24,21 @@ Folgendes JSON-Format ist ein möglicher Kandidat:
   }
 }
 \end{lstlisting}
+
+\section{NFC-Tags}
+\label{NFC-Tags}
+Neben den QR-Tags werden auch NFC-Tags an den Räumen angebracht.
+Auf diese werden aktuell keine Informationen geschrieben. Die
+Knoten werden über die NFC-ID des Chips zugeordnet.
+
+Um Benutzer, die die StudMap-App nicht installiert haben zu
+informieren wird eine URL auf den NFC-Tags gespeichert. Diese
+leitet auf eine Seite mit Informationen über den gescannten Raum
+und einen Link auf unsere Projektseite. In Zukunft kann hier auch
+ein Link auf den Google Play Store hinterlegt werden, um eine
+einfache Installation zu ermöglichen.
+
+Die URL sieht z.B. so aus (für das Aquarium):
+\begin{lstlisting}
+http://193.175.199.115/StudMapAdmin/Admin/NodeInfo?nodeId=847
+\end{lstlisting}
