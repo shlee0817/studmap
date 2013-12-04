@@ -58,7 +58,7 @@ Beispiel:
 \subsection{Graph}
 \label{object:Graph}
 Repräsentiert für ein Stockwerk den entsprechenden Graphen.
-
+% Wird der Graph nicht auf der ganzen Map abgebildet? Wieso also FloorId?
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
 \hline FloorId & ID des Stockwerks, das der entsprechende Graph repräsentiert. \\ 
@@ -128,6 +128,7 @@ Eigenschaften:\\
 \hline NodeId & ID des Knotens an dem sich der Raum befindet. \\ 
 \hline DisplayName & Der Anzeigename für den Raum (z.B. Aquarium) \\ 
 \hline RoomName & Der eigentliche Raumname (z.B. A 2.0.11). \\ 
+\hline FloorId & Id des Floors, auf welchen sich der Room befindet. \\ 
 \hline 
 \end{tabularx} 
 
@@ -136,7 +137,8 @@ Beispiel:
 {
   "NodeId": 12,
   "DisplayName": "Aquarium",
-  "RoomName": "A2.0.11"
+  "RoomName": "A2.0.11",
+  "FloorId": 1
 }
 \end{lstlisting}
 
@@ -208,8 +210,8 @@ Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
 \hline DisplayName & Anzeigename für den Knoten (z.B. Dr. Schulten, Martin). \\ 
 \hline RoomName & Raumname für den Knoten (z.B. B2.0.03). \\ 
-\hline Node & ?? \\ 
-\hline PoI & ?? \\  
+\hline Node & NodeInformation repräsentiert diesen Knoten. \\ 
+\hline PoI & PoI Informationen zu diesem Knoten. \\  
 \hline QRCode & Dem Knoten zugeordnetem QR Code. \\ 
 \hline NFCTag & Dem Knoten zugeordnetem NFC Tag. \\ 
 \hline 
@@ -224,6 +226,46 @@ Beispiel:
   "PoI": {...},
   "QRCode": "",
   "NFCTag": ""
+}
+\end{lstlisting}
+
+\subsection{QRCode}
+\label{object:QRCode}
+Repräsentiert die QRCode-Daten für den Knoten.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline General & Grundsätzliche Informationen zu einem Room. \\ 
+\hline StudMap & Allgemeine Informationen zum Projekt sind in StudMap hinterlegt. \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "General": {...},
+  "StudMap": {...}
+}
+\end{lstlisting}
+
+\subsection{FullNodeInformation}
+\label{object:FullNodeInformation}
+Repräsentiert die für einen Knoten relevanten Daten.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline Map & Informationen zur gesamten Karte. \\ 
+\hline Floor & Repräsentiert die für dieses Stockwerk relevanten Daten. \\ 
+\hline Info & NodeInformation zum aktuellen Knoten. \\ 
+\hline 
+\end{tabularx} 
+
+Beispiel:
+\begin{lstlisting}
+{
+  "Map": {...},
+  "Floor": {...},
+  "Info": {...}
 }
 \end{lstlisting}
 
@@ -291,41 +333,43 @@ Beispiel:
 }
 \end{lstlisting}
 
-\subsection{FloorGraph}
-\label{object:FloorGraph}
-Repräsentiert einen Teilgraph für ein Stockwerk.
 
-Eigenschaften:\\
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline floorId & ID des Stockwerks. \\ 
-\hline graph & Der Teilgraph (s. \nameref{object:Graph}) für das Stockwerk. \\ 
-\hline
-\end{tabularx}
-
-Beispiel: 
-\begin{lstlisting}
-{
-  "floorId": 2,
-  "graph": {...}
-}
-\end{lstlisting}
-
-
-\subsection{NodeInformationWithId}
-\label{object:NodeInformationWithId}
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline nodeId & ID des \nameref{object:Node}. \\ 
-\hline nodeInf & Die Knoteninformation die gespeichert werden soll (s. \nameref{object:NodeInformation}). \\ 
-\hline
-\end{tabularx}
-
-Beispiel: 
-\begin{lstlisting}
-{
-  "nodeId": 12,
-  "nodeInf": {...}
-}
-\end{lstlisting}
+%% Nicht als Klasse im Core-Verzeichnis vorhanden.
+%\subsection{FloorGraph}
+%\label{object:FloorGraph}
+%Repräsentiert einen Teilgraph für ein Stockwerk.
+%
+%Eigenschaften:\\
+%\begin{tabularx}{\textwidth}{|l|X|}
+%\hline floorId & ID des Stockwerks. \\ 
+%\hline graph & Der Teilgraph (s. \nameref{object:Graph}) für das Stockwerk. \\ 
+%\hline
+%\end{tabularx}
+%
+%Beispiel: 
+%\begin{lstlisting}
+%{
+%  "floorId": 2,
+%  "graph": {...}
+%}
+%\end{lstlisting}
+%
+%% Nicht als Klasse im Core-Verzeichnis vorhanden.
+%\subsection{NodeInformationWithId}
+%\label{object:NodeInformationWithId}
+%\begin{tabularx}{\textwidth}{|l|X|}
+%\hline nodeId & ID des \nameref{object:Node}. \\ 
+%\hline nodeInf & Die Knoteninformation die gespeichert werden soll (s. \nameref{object:NodeInformation}). \\ 
+%\hline
+%\end{tabularx}
+%
+%Beispiel: 
+%\begin{lstlisting}
+%{
+%  "nodeId": 12,
+%  "nodeInf": {...}
+%}
+%\end{lstlisting}
 
 
 
@@ -351,6 +395,7 @@ Wir unterscheiden zwischen:
 \subsubsection{ResponseError}
 Ist beim \texttt{ResponseStatus Error} gesetzt. Es werden folgende Fehlerszenarien unterschieden:
 
+\todo{Alle genauen Fehlertypen beschreiben.}
 \textbf{Allgemein:}
 \begin{itemize}
 \item \texttt{001 - DatabaseError}:\\
@@ -438,8 +483,44 @@ GET
 
 Rückgabewert: \nameref{ListResponse}, \nameref{object:Map}
 
+
+\subsection{CreateFloor}
+\label{service:CreateFloor}
+Erstellt einen Floor zu einer Map mit einem sprechenden Namen.
+
+POST
+\url{/api/Maps/CreateFloor?mapId=2&name=Erdgeschoss}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID der Map, zu der ein Floor angelegt wird. \\ 
+\hline name & Sprechender Name des Floors. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Floor}
+
+
+\subsection{DeleteFloor}
+\label{service:DeleteFloor}
+Löscht einen Floor mit der angegebenen ID.
+
+POST
+\url{/api/Maps/DeleteFloor?floorId=3}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline floorId & ID des Floors, der gelöscht werden soll. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{BaseResponse}
+
+\todo{GetFloorsForMap, GetFloor, GetFloorplanImage, UploadFloorImage}
+
 \subsection{SaveGraphForFloor}
 \label{service:SaveGraphForFloor}
+\todo{Im Code mit Übergabeparameter}
 Speichert den Graphen zu einem Stockwerk ab.
 
 POST
@@ -482,21 +563,6 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 
-\subsection{GetNodeInformationForNode}
-\label{service:GetNodeInformationForNode}
-Liefert weitere Informationen zu einem Knoten.
-Diese umfassen Raumnummern, zugeordnete NFC- und QR-Tags, usw.
-
-GET
-\url{/api/Maps/GetNodeInformationForNode?nodeId=12}
-
-Parameter:\\
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline nodeId & ID des Knotens. \\ 
-\hline 
-\end{tabularx} 
-
-Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 
 \subsection{GetFloorPlanData}
 \label{service:GetFloorPlanData}
@@ -513,16 +579,8 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:FloorPlanData}
 
-\subsection{SaveNodeInformation}
-\label{service:SaveNodeInformation}
-Speichert zusätzliche Informationen zu einem Knoten ab.
+\todo{GetConnectedNodes}
 
-POST
-\url{/api/Maps/SaveNodeInformation}
-
-POST Body: \nameref{object:NodeInformationWithId}
-
-Rückgabewert: \nameref{ObjectResponse}, \nameref{object:NodeInformation}
 
 \subsection{GetRouteBetween}
 \label{service:GetRouteBetween}
@@ -540,6 +598,40 @@ Parameter:\\
 \end{tabularx} 
 
 Rückgabewert: \nameref{ListResponse}, \nameref{object:Node}
+
+
+
+\subsection{GetNodeInformationForNode}
+\label{service:GetNodeInformationForNode}
+Liefert weitere Informationen zu einem Knoten.
+Diese umfassen Raumnummern, zugeordnete NFC- und QR-Tags, usw.
+
+GET
+\url{/api/Maps/GetNodeInformationForNode?nodeId=12}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
+
+
+\todo{GetNodeInformation, GetFullNodeInformationForNode}
+
+\subsection{SaveNodeInformation}
+\todo{Im Code mit Parametern}
+\label{service:SaveNodeInformation}
+Speichert zusätzliche Informationen zu einem Knoten ab.
+
+POST
+\url{/api/Maps/SaveNodeInformation}
+
+POST Body: \nameref{object:NodeInformationWithId}
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:NodeInformation}
+
 
 \subsection{GetPoiTypes}
 \label{service:GetPoiTypes}
@@ -596,6 +688,8 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
 
+\todo{SaveNFCForNode}
+
 \subsection{GetNodeForQRCode}
 \label{service:GetNodeForQRCode}
 Sucht auf einer Karte nach einem Knoten mit einem bestimmten QR-Code.
@@ -611,6 +705,8 @@ Parameter:\\
 \end{tabularx} 
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
+
+\todo{SaveQRCodeForNode}
 
 \section{UsersController}
 \label{Webservice_UsersController}
@@ -653,7 +749,7 @@ Rückgabewert: \nameref{BaseResponse}
 Meldet einen angemeldeten Anwender vom System ab.
 
 GET
-\url{http://localhost:1129/api/Users/Logout?userName=test}
+\url{/api/Users/Logout?userName=test}
 
 Parameter:\\
 \begin{tabularx}{\textwidth}{|l|X|}
