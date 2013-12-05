@@ -17,7 +17,7 @@
 d3.floorplan = function() {
 	var layers = [],
 	panZoomEnabled = true,
-	maxZoom = 5,
+	maxZoom = 10,
 	xScale = d3.scale.linear(),
 	yScale = d3.scale.linear();
 	var zoom = null;
