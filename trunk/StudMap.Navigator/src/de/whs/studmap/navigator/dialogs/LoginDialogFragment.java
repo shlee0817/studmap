@@ -3,16 +3,21 @@ package de.whs.studmap.navigator.dialogs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.os.Bundle;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnShowListener;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import de.whs.studmap.client.core.snippets.ErrorHandler;
 import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.listener.OnGenericTaskListener;
@@ -22,6 +27,9 @@ import de.whs.studmap.navigator.R;
 
 public class LoginDialogFragment extends DialogFragment implements
 		OnGenericTaskListener<Void> {
+
+	private ErrorHandler mErrorHandler = null;
+	private ProgressDialog pDialog = null;
 
 	private String mUserName;
 	private String mPassword;
@@ -33,22 +41,53 @@ public class LoginDialogFragment extends DialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		mErrorHandler = new ErrorHandler(getActivity());
+		pDialog = UserInfo.StudmapProgressDialog(getActivity());
+
+		Bundle b = getArguments();
+		if (b != null && b.containsKey("username"))
+			mUserName = getArguments().getString("username");
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View rootView = inflater.inflate(R.layout.fragment_login_dialog, null);
 
-		builder.setView(rootView).setPositiveButton(R.string.action_sign_in,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
+		builder.setView(rootView)
+			.setPositiveButton(R.string.action_sign_in,	null)
+			.setNeutralButton(R.string.action_register, null);
+		
 
+		initFormFields(rootView);
+
+		final AlertDialog mDialog = builder.create();
+		mDialog.setOnShowListener(new OnShowListener() {
+
+			@Override
+			public void onShow(DialogInterface dialog) {
+				Button positiveButton = mDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				Button neutralButton = mDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+				
+				positiveButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
 						attemptLogin();
 					}
 				});
+				
+				neutralButton.setOnClickListener( new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						RegisterDialogFragment registerDialog = new RegisterDialogFragment();
+						registerDialog.show(getFragmentManager(), "Register");
+						dismiss();
+					}
+				});
+			}
+		});
 
-		initFormFields(rootView);
-		return builder.create();
+		return mDialog;
 	}
 
 	@Override
@@ -126,9 +165,7 @@ public class LoginDialogFragment extends DialogFragment implements
 			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Show a progress spinner, and execute a background task to
-			// perform the user login attempt.
-			// TODO showProgress(true);
+			pDialog.show();
 			UserLoginTask mAuthTask = new UserLoginTask(this, mUserName,
 					mPassword);
 			mAuthTask.execute((Void) null);
@@ -137,7 +174,7 @@ public class LoginDialogFragment extends DialogFragment implements
 
 	@Override
 	public void onSuccess(Void object) {
-		// TODO showProgress(true);
+		pDialog.dismiss();
 
 		mCallback.onLogin(mUserName);
 		dismiss();
@@ -145,24 +182,23 @@ public class LoginDialogFragment extends DialogFragment implements
 
 	@Override
 	public void onCanceled() {
-		// TODO Auto-generated method stub
-
+		pDialog.dismiss();
+		mErrorHandler.handle(ResponseError.TaskCancelled);
 	}
 
 	@Override
 	public void onError(int responseError) {
 		switch (responseError) {
-		case ResponseError.DatabaseError:
-
-			UserInfo.dialog(getActivity(), mUserName,
-					getString(R.string.error_connection));
-			break;
-		default:
+		case ResponseError.LoginInvalid:
 			mPasswordView
 					.setError(getString(R.string.error_incorrect_password));
 			mPasswordView.requestFocus();
 			break;
+		default:
+			mErrorHandler.handle(responseError);
+			break;
 		}
+		pDialog.dismiss();
 	}
 
 }

@@ -13,19 +13,21 @@ import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.data.Node;
+import de.whs.studmap.client.core.snippets.ErrorHandler;
 import de.whs.studmap.client.core.snippets.NFC;
 import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.client.core.web.JavaScriptInterface;
+import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGetFloorsTaskListener;
@@ -54,10 +56,13 @@ public class MainActivity extends BaseMainActivity implements
 		OnLoginDialogListener, OnPoIDialogListener, OnRegisterDialogListener,
 		OnGetFloorsTaskListener, OnGetRoomsTaskListener,
 		OnGetNodeForQrCodeTaskListener, JavaScriptInterface,
-		OnLogoutTaskListener, OnGetNodeForNFCTagTaskListener, OnPositionDialogListener {
+		OnLogoutTaskListener, OnGetNodeForNFCTagTaskListener,
+		OnPositionDialogListener {
 
 	// vars
 	private boolean mIsLoggedIn = false;
+	private boolean mWaitGetRoomsOrFloorsTask = false;
+	private ErrorHandler mErrorHandler = null;
 	private String mUserName = "";
 	private Node mSelectedNode = null;
 	private int mMapId = Constants.MAP_ID;
@@ -71,9 +76,9 @@ public class MainActivity extends BaseMainActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		registerListener();
-		loadWebViewFragment();
-		getDataFromWebService();
+		mErrorHandler = new ErrorHandler(this);
+
+		loadActivity();
 
 		// TODO: initialer Start -> Map wählen, nachher über Einstellung änderbar
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -91,18 +96,20 @@ public class MainActivity extends BaseMainActivity implements
 				protected Boolean doInBackground(Void... params) {
 					try {
 						Service.logout(mUserName);
-					} catch (WebServiceException ignore) {
-					} catch (ConnectException ignore) {
+					} catch (WebServiceException e) {
+						Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+								"OnDestroy - Logout - DatabaseError");
+					} catch (ConnectException e) {
+						Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+								"OnDestroy - Logout - Webservice nicht erreichbar");
 					}
 					return true;
 				}
 			}.execute((Void) null).get();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY, e.getMessage());
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY, e.getMessage());
 		}
 		super.onDestroy();
 	}
@@ -115,6 +122,8 @@ public class MainActivity extends BaseMainActivity implements
 					requestCode, resultCode, data);
 			if (result != null) {
 				String scanResult = result.getContents();
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY, "QRScan result - "
+						+ scanResult);
 				if (scanResult != null) {
 					showProgress(true);
 					GetNodeForQrCodeTask mGetNodeForQrCodeTask = new GetNodeForQrCodeTask(
@@ -123,7 +132,8 @@ public class MainActivity extends BaseMainActivity implements
 					break;
 				}
 			}
-			UserInfo.toast(this, "Scan: Es liegt kein Ergebnis vor.", false);
+			UserInfo.toast(this, getString(R.string.error_QRCodeNoResult),
+					false);
 			break;
 		}
 	}
@@ -132,6 +142,12 @@ public class MainActivity extends BaseMainActivity implements
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
 		handleIntent(intent);
+	}
+	
+	private void loadActivity(){
+		registerListener();
+		loadWebViewFragment();
+		getDataFromWebService();
 	}
 
 	private void handleIntent(Intent intent) {
@@ -197,7 +213,7 @@ public class MainActivity extends BaseMainActivity implements
 			}
 		});
 	}
-	
+
 	private void onDrawerItemClick(int position) {
 
 		DrawerItemEnum sel_position = DrawerItemEnum.values()[position];
@@ -206,8 +222,7 @@ public class MainActivity extends BaseMainActivity implements
 		case LOG_IN_OUT:
 			if (mIsLoggedIn) {
 				showProgress(true);
-				LogoutTask mLogoutTask;
-				mLogoutTask = new LogoutTask(this, mUserName);
+				LogoutTask mLogoutTask = new LogoutTask(this, mUserName);
 				mLogoutTask.execute((Void) null);
 
 			} else {
@@ -239,14 +254,7 @@ public class MainActivity extends BaseMainActivity implements
 			impressumDialog.show(getFragmentManager(), "Impressum");
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
-			
-		case PREFERENCES:
-			Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
-	        startActivity(intent);
-			
-			mDrawerLayout.closeDrawer(mLeftDrawer);
-			break;
-			
+
 		default:
 			UserInfo.toast(this, "Auswahl nicht gefunden!", false);
 			break;
@@ -273,6 +281,7 @@ public class MainActivity extends BaseMainActivity implements
 	private void getDataFromWebService() {
 
 		showProgress(true);
+		mWaitGetRoomsOrFloorsTask = true;
 		GetRoomsTask mGetRoomsTask = new GetRoomsTask(this, mMapId);
 		mGetRoomsTask.execute((Void) null);
 
@@ -293,6 +302,19 @@ public class MainActivity extends BaseMainActivity implements
 				}
 			}
 		}
+	}	
+
+	private void switchLoginLogoutButton() {
+		if (mIsLoggedIn) {
+			mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
+			mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
+					getString(R.string.logout));
+		} else {
+			mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
+			mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
+					getString(R.string.login));
+		}
+		mDrawerListView.invalidateViews();
 	}
 
 	@Override
@@ -315,7 +337,7 @@ public class MainActivity extends BaseMainActivity implements
 			mWebViewFragment.sendTarget(mSelectedNode.getNodeID());
 		}
 	}
-	
+
 	@Override
 	public void onLogin(String userName) {
 
@@ -336,8 +358,12 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onRegister() {
+		Bundle args = new Bundle();
+		args.putString("username", "a");
 
-		// TODO Login View aufrufen
+		LoginDialogFragment dialog = new LoginDialogFragment();
+		dialog.setArguments(args);
+		dialog.show(getFragmentManager(), "Login");
 		showProgress(false);
 	}
 
@@ -347,18 +373,26 @@ public class MainActivity extends BaseMainActivity implements
 		ArrayAdapter<Node> searchAdapter = new ArrayAdapter<Node>(this,
 				android.R.layout.simple_list_item_1, mRoomList);
 		mSearchTextView.setAdapter(searchAdapter);
-		showProgress(false);
+
+		if (!mWaitGetRoomsOrFloorsTask)
+			showProgress(false);
+		mWaitGetRoomsOrFloorsTask = false;
 	}
 
 	@Override
 	public void onGetRoomsError(int responseError) {
-		// TODO: ErrorHandler
-		showProgress(false);
+		mErrorHandler.handle(responseError);
+		if (!mWaitGetRoomsOrFloorsTask)
+			showProgress(false);
+		mWaitGetRoomsOrFloorsTask = false;
 	}
 
 	@Override
 	public void onGetRoomsCanceled() {
-		showProgress(false);
+		mErrorHandler.handle(ResponseError.TaskCancelled);
+		if (!mWaitGetRoomsOrFloorsTask)
+			showProgress(false);
+		mWaitGetRoomsOrFloorsTask = false;
 	}
 
 	@Override
@@ -368,18 +402,27 @@ public class MainActivity extends BaseMainActivity implements
 				R.layout.simple_list_item_no_bg_font_white, mFloorList);
 		floorAdapter.setDropDownViewResource(R.layout.simple_list_item_black);
 		mFloorSpinner.setAdapter(floorAdapter);
-		showProgress(false);
+
+		if (!mWaitGetRoomsOrFloorsTask)
+			showProgress(false);
+		mWaitGetRoomsOrFloorsTask = false;
 	}
 
 	@Override
 	public void onGetFloorsError(int responseError) {
-		// TODO: ErrorHandler
-		showProgress(false);
+		mErrorHandler.handle(responseError);
+
+		if (!mWaitGetRoomsOrFloorsTask)
+			showProgress(false);
+		mWaitGetRoomsOrFloorsTask = false;
 	}
 
 	@Override
 	public void onGetFloorsCanceled() {
-		showProgress(false);
+		mErrorHandler.handle(ResponseError.TaskCancelled);
+		if (!mWaitGetRoomsOrFloorsTask)
+			showProgress(false);
+		mWaitGetRoomsOrFloorsTask = false;
 	}
 
 	@Override
@@ -392,27 +435,14 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onGetNodeForQrCodeError(int responseError) {
-		// TODO Auto-generated method stub
+		mErrorHandler.handle(responseError);
 		showProgress(false);
-
 	}
 
 	@Override
 	public void onGetNodeForQrCodeCanceled() {
+		mErrorHandler.handle(ResponseError.TaskCancelled);
 		showProgress(false);
-	}
-	
-	private void switchLoginLogoutButton() {
-		if (mIsLoggedIn) {
-			mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
-			mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
-					getString(R.string.logout));
-		} else {
-			mDrawerItems.remove(DrawerItemEnum.LOG_IN_OUT.ordinal());
-			mDrawerItems.add(DrawerItemEnum.LOG_IN_OUT.ordinal(),
-					getString(R.string.login));
-		}
-		mDrawerListView.invalidateViews();
 	}
 
 	@Override
@@ -427,16 +457,13 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onLogoutError(int responseError) {
-		// TODO Auto-generated method stub
-
-		// Present the error from doInBackground to the user
-		UserInfo.dialog(this, mUserName,
-		getString(R.string.error_connection));
+		mErrorHandler.handle(responseError);
 		showProgress(false);
 	}
 
 	@Override
 	public void onLogoutCanceled() {
+		mErrorHandler.handle(ResponseError.TaskCancelled);
 		showProgress(false);
 	}
 
@@ -450,12 +477,13 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onGetNodeForNFCTagError(int responseError) {
+		mErrorHandler.handle(responseError);
 		showProgress(false);
-		UserInfo.toastInUiThread(this, "Node für NFC Tag nicht gefunden", Toast.LENGTH_SHORT);
 	}
-	
+
 	@Override
 	public void onGetNodeForNFCTagCanceled() {
+		mErrorHandler.handle(ResponseError.TaskCancelled);
 		showProgress(false);
 	}
 
@@ -466,6 +494,6 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onSetStart(int nodeId) {
-		mWebViewFragment.sendStart(nodeId);		
+		mWebViewFragment.sendStart(nodeId);
 	}
 }

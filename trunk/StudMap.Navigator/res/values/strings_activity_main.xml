@@ -47,6 +47,7 @@
 	<string name="error_connection">Der Webservice ist nicht erreichbar oder funktioniert nicht einwandfrei!</string>
 	<string name="error_logout">Beim Logout Versuch ist ein Fehler aufgetreten. Versuche es in einigen Minuten erneut.</string>
 	<string name="error_NfcTagDoesNotExist">Das NFC Tag ist ungültig!</string>
+	<string name="error_QRCodeNoResult">Scan ist fehlgeschlagen.</string>
 	
 	<string name="currentPosition">Du bist hier: </string>
 	<string name="setAsStart">Als Startpunkt setzen</string>
