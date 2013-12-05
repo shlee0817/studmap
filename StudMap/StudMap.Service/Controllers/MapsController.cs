@@ -50,15 +50,15 @@ namespace StudMap.Service.Controllers
         #endregion
 
         #region Floor
-
+        
         [HttpPost]
-        public ObjectResponse<Floor> CreateFloor(int mapId, string name = "")
+        public ObjectResponse<Floor> CreateFloor(int mapId, string name, string imageUrl)
         {
             var result = new ObjectResponse<Floor>();
 
             ExecuteMaps(entities =>
             {
-                result.Object = FloorService.CreateFloor(entities, mapId, name);
+                result.Object = FloorService.CreateFloor(entities, mapId, name, imageUrl);
             }, result);
 
             return result;
@@ -114,31 +114,18 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpPost]
-        public ObjectResponse<Floor> UploadFloorImage(int floorId, string filename)
-        {
-            var result = new ObjectResponse<Floor>();
-
-            ExecuteMaps(entities =>
-            {
-                result.Object = FloorService.UploadFloorImage(entities, floorId, filename);
-            }, result);
-
-            return result;
-        }
-
         #endregion
 
         #region Layer: Graph
 
         [HttpPost]
-        public ObjectResponse<Graph> SaveGraphForFloor(int floorId, Graph newGraph, Graph deletedGraph)
+        public ObjectResponse<Graph> SaveGraphForFloor(SaveGraphRequest request)
         {
             var result = new ObjectResponse<Graph>();
 
             ExecuteMaps(entities =>
             {
-                result.Object = GraphService.SaveGraphForFloor(entities, floorId, newGraph, deletedGraph);
+                result.Object = GraphService.SaveGraphForFloor(entities, request);
             }, result);
 
             return result;
@@ -251,15 +238,13 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        // TODO: nodeId Parameter entfernen und in nodeInfo setzen?
         [HttpPost]
-        public ObjectResponse<NodeInformation> SaveNodeInformation(int nodeId, NodeInformation nodeInf)
+        public ObjectResponse<NodeInformation> SaveNodeInformation(NodeInformation nodeInf)
         {
             var result = new ObjectResponse<NodeInformation>();
 
             ExecuteMaps(entities =>
             {
-                nodeInf.Node = new Node { Id = nodeId };
                 result.Object = InformationService.SaveNodeInformation(entities, nodeInf);
             }, result);
 

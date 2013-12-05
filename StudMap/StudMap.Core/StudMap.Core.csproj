@@ -43,6 +43,7 @@
     <Compile Include="Graph\FloorPlanData.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\Node.cs" />
+    <Compile Include="Graph\SaveGraphRequest.cs" />
     <Compile Include="Information\FullNodeInformation.cs" />
     <Compile Include="Information\NodeInformation.cs" />
     <Compile Include="Information\PoI.cs" />

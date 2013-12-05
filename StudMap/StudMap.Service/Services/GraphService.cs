@@ -12,9 +12,9 @@ namespace StudMap.Service.Services
 {
     public class GraphService
     {
-        public static Graph SaveGraphForFloor(MapsEntities entities, int floorId, Graph newGraph, Graph deletedGraph)
+        public static Graph SaveGraphForFloor(MapsEntities entities, SaveGraphRequest request)
         {
-            Floors targetFloor = entities.Floors.Find(floorId);
+            Floors targetFloor = entities.Floors.Find(request.FloorId);
             if (targetFloor == null)
                 throw new ServiceException(ResponseError.FloorIdDoesNotExist);
 
@@ -30,21 +30,21 @@ namespace StudMap.Service.Services
 
 
             // Zu entfernende Knoten und Kanten löschen
-            if (deletedGraph.Nodes != null)
+            if (request.DeletedGraph.Nodes != null)
             {
                 foreach (Nodes node in
-                    deletedGraph.Nodes.Select(dNode => entities.Nodes.FirstOrDefault(x => x.Id == dNode.Id))
+                    request.DeletedGraph.Nodes.Select(dNode => entities.Nodes.FirstOrDefault(x => x.Id == dNode.Id))
                     .Where(node => node != null))
                 {
                     entities.Nodes.Remove(node);
                 }
             }
 
-            if (deletedGraph.Edges != null)
+            if (request.DeletedGraph.Edges != null)
             {
                 foreach (
                     Edges edge in
-                        deletedGraph.Edges.Select(
+                        request.DeletedGraph.Edges.Select(
                             dEdge =>
                             entities.Edges.FirstOrDefault(
                                 x => x.NodeStartId == dEdge.StartNodeId && x.NodeEndId == dEdge.EndNodeId))
@@ -58,13 +58,13 @@ namespace StudMap.Service.Services
             var nodeIdMap = new Dictionary<int, int>();
 
             // Nodes in den Floor hinzufügen
-            if (newGraph.Nodes != null)
+            if (request.NewGraph.Nodes != null)
             {
-                foreach (Node node in newGraph.Nodes)
+                foreach (Node node in request.NewGraph.Nodes)
                 {
                     var newNode = new Nodes
                     {
-                        FloorId = floorId,
+                        FloorId = request.FloorId,
                         X = node.X,
                         Y = node.Y,
                         CreationTime = DateTime.Now
@@ -76,9 +76,9 @@ namespace StudMap.Service.Services
             }
 
             // Edges im Graph hinzufügen
-            if (newGraph.Edges != null)
+            if (request.NewGraph.Edges != null)
             {
-                foreach (Edge edge in newGraph.Edges)
+                foreach (Edge edge in request.NewGraph.Edges)
                 {
                     int nodeIdMapStartNodeId;
                     if (nodeIdMap.ContainsKey(edge.StartNodeId))
@@ -112,7 +112,7 @@ namespace StudMap.Service.Services
 
             StudMapCache.RemoveMap(targetFloor.MapId);
             
-            return GetGraphForFloor(entities, floorId);
+            return GetGraphForFloor(entities, request.FloorId);
         }
 
         public static void DeleteGraphForFloor(MapsEntities entities, int floorId)

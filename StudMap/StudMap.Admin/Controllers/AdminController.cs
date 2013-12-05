@@ -66,16 +66,13 @@ namespace StudMap.Admin.Controllers
         [HttpPost]
         public ActionResult CreateFloor(int mapId, Floor floor, HttpPostedFileBase data)
         {
+            string filename = _serverUploadFolder + "\\Floors\\" + data.FileName;
+            data.SaveAs(filename);
+
             var mapsCtrl = new MapsController();
-            ObjectResponse<Floor> response = mapsCtrl.CreateFloor(floor.MapId, floor.Name);
+            ObjectResponse<Floor> response = mapsCtrl.CreateFloor(floor.MapId, floor.Name,
+                "Images/Floors/" + data.FileName);
 
-            if (response.Status == RespsonseStatus.Ok && data != null)
-            {
-                string filename = _serverUploadFolder + "\\Floors\\" + data.FileName;
-                data.SaveAs(filename);
-
-                mapsCtrl.UploadFloorImage(response.Object.Id, "Images/Floors/" + data.FileName);
-            }
             ViewBag.MapId = mapId;
             return response.Status != RespsonseStatus.Error ? RedirectToAction("Index") : RedirectToAction("Error");
         }
@@ -103,7 +100,13 @@ namespace StudMap.Admin.Controllers
         public JsonResult SaveGraphForMap(int floorId, Graph newGraph, Graph deletedGraph)
         {
             var mapsCtrl = new MapsController();
-            ObjectResponse<Graph> floor = mapsCtrl.SaveGraphForFloor(floorId, newGraph, deletedGraph);
+            var request = new SaveGraphRequest
+            {
+                FloorId = floorId,
+                NewGraph = newGraph,
+                DeletedGraph = deletedGraph
+            };
+            ObjectResponse<Graph> floor = mapsCtrl.SaveGraphForFloor(request);
             return Json(floor, JsonRequestBehavior.AllowGet);
         }
 
@@ -118,7 +121,8 @@ namespace StudMap.Admin.Controllers
                                                       Description = poiDescription,
                                                       Type = new PoiType {Id = poiTypeId}
                                                   }, displayName, roomName, qrCode, nfcTag);
-            ObjectResponse<NodeInformation> tmp = mapsCtrl.SaveNodeInformation(nodeId, nodeInf);
+            nodeInf.Node = new Node { Id = nodeId };
+            ObjectResponse<NodeInformation> tmp = mapsCtrl.SaveNodeInformation(nodeInf);
             return Json(tmp, JsonRequestBehavior.AllowGet);
         }
 
