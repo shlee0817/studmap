@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_search_txt">Suchen</string>
+    <string name="search_hint_txt">In Räumen suchen</string>
+    <string name="description_studmapicon">StudMapIcon</string>
+    <string name="menu_reload">Neu laden</string>
+</resources>

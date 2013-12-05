@@ -123,7 +123,7 @@ public class PoIDialogFragment extends DialogFragment implements Constants,
 	public void onSuccess(List<PoI> object) {
 
 		mListAdapter = new ArrayAdapter<PoI>(getActivity(),
-				R.layout.simple_list_item_white, object);
+				android.R.layout.simple_list_item_1, object);
 		mListView.setAdapter(mListAdapter);
 	}
 

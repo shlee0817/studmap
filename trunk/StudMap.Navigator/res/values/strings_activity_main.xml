@@ -18,16 +18,6 @@
 <resources>
 
     <string name="app_name">StudMap Navigator</string>
-
-    <string-array name="menue_item_array">
-        <item>Anmelden</item>
-        <item>Navigation zurücksetzen</item>
-        <item>Point of Interest</item>
-        <item>Einstellungen</item>
-        <item>Über</item>
-        <item></item>
-        <item>Neu Laden</item>
-    </string-array>
     
     <string name="login">Anmelden</string>
     <string name="logout">Abmelden</string>

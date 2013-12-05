@@ -1,5 +1,7 @@
 package de.whs.studmap.client.core.data;
 
+import com.google.gson.Gson;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -41,6 +43,16 @@ public class Node implements Parcelable {
 		return roomName + "-" + displayName;
 	}
 
+	public String toJson() {
+		
+		return new Gson().toJson(this);
+	}
+	
+	public static Node fromJson(String node) {
+		
+		return new Gson().fromJson(node, Node.class);
+	}
+	
 	public int getFloorID() {
 		return floorID;
 	}

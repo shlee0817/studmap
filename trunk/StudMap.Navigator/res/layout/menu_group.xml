@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_group_text"
+    android:layout_width="wrap_content"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_marginLeft="8dp"
+    android:background="@xml/item_selector"
+    android:fontFamily="sans-serif-light"
+    android:gravity="left"
+    android:padding="8dp"
+    android:textAlignment="textEnd"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textColor="@color/white"
+    android:textSize="@dimen/menu_group_size"
+    android:textStyle="normal" >
+
+</CheckedTextView>
