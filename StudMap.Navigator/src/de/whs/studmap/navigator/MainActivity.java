@@ -18,10 +18,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
 import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Floor;
-import de.whs.studmap.client.core.data.Map;
 import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.snippets.ErrorHandler;
 import de.whs.studmap.client.core.snippets.NFC;
@@ -43,7 +43,7 @@ import de.whs.studmap.client.tasks.GetNodeForNFCTagTask;
 import de.whs.studmap.client.tasks.GetNodeForQrCodeTask;
 import de.whs.studmap.client.tasks.LogoutTask;
 import de.whs.studmap.fragments.InitialSetupFragment;
-import de.whs.studmap.fragments.InitialSetupFragment.OnMapSelectedListener;
+import de.whs.studmap.fragments.PreferencesFragment;
 import de.whs.studmap.fragments.WebViewFragment;
 import de.whs.studmap.navigator.dialogs.ImpressumDialogFragment;
 import de.whs.studmap.navigator.dialogs.LoginDialogFragment;
@@ -57,13 +57,14 @@ public class MainActivity extends BaseMainActivity implements
 		OnGetFloorsTaskListener, OnGetNodeForQrCodeTaskListener,
 		JavaScriptInterface, OnLogoutTaskListener,
 		OnGetNodeForNFCTagTaskListener, OnPositionDialogListener,
-		OnMenuItemListener, OnMapSelectedListener {
+		OnMenuItemListener {
 
 	// vars
 	private boolean mWaitGetRoomsOrFloorsTask = false;
 	private ErrorHandler mErrorHandler = null;
 	private String mUserName = "";
 	private Node mSelectedNode = null;
+	private boolean mSetAsStart = false;
 	private int mMapId = Constants.MAP_ID;
 	private int mFloorId;
 
@@ -78,34 +79,19 @@ public class MainActivity extends BaseMainActivity implements
 		loadWebViewFragment();
 		getDataFromWebService();
 		mErrorHandler = new ErrorHandler(this);
-		
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean isFirstStart = sharedPref.getBoolean(getString(R.string.pref_first_time), true);
-		
 		// TODO hostName verwenden!
 		// String hostName = sharedPref.getString(getString(R.string.pref_host_key), "193.175.199.115");
-		
-		
 		if (isFirstStart) {
-			sharedPref.edit().putBoolean(getString(R.string.pref_first_time), false).commit();
-			new InitialSetupFragment().show(getFragmentManager(), "InitialSetup");
+		sharedPref.edit().putBoolean(getString(R.string.pref_first_time), false).commit();
+		new InitialSetupFragment().show(getFragmentManager(), "InitialSetup");
 		}
-		else {		
-			String mapId = sharedPref.getString(getString(R.string.pref_map_key), "3");
-			mMapId = Integer.parseInt(mapId);
-			
-			loadActivity();
-		}		
-	}
-	
-	@Override
-	public void onMapSelected(Map map) {
-		mMapId = map.getId();
-		
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		settings.edit().putString(getString(R.string.pref_map_key), "" + mMapId).commit();
-		
+		else {	
+		String mapId = sharedPref.getString(getString(R.string.pref_map_key), "3");
+		mMapId = Integer.parseInt(mapId);
 		loadActivity();
+		}	
 	}
 
 	@Override
@@ -165,8 +151,31 @@ public class MainActivity extends BaseMainActivity implements
 		setIntent(intent);
 		handleIntent(intent);
 	}
-	
-	private void loadActivity(){
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// The action bar home/up action should open or close the drawer.
+		// ActionBarDrawerToggle will take care of this.
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+
+		// Handle action buttons
+		if (item.getItemId() == R.id.action_scan) {
+
+			IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+			scanIntegrator.initiateScan();
+			return false;
+		} else if (item.getItemId() == R.id.menu_reload) {
+
+			loadActivity();
+			mDrawerLayout.closeDrawer(mLeftDrawer);
+			return false;
+		} else
+			return super.onOptionsItemSelected(item);
+	}
+
+	private void loadActivity() {
 		loadWebViewFragment();
 		getDataFromWebService();
 
@@ -199,9 +208,12 @@ public class MainActivity extends BaseMainActivity implements
 			mGetNodeForNFCTagTask.execute((Void) null);
 		} else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
-			
-			mSelectedNode = Node.fromJson(query);
-			changeFloorIfRequired();
+
+			Node selectedNode = Node.fromJson(query);
+			if (selectedNode != null)
+				SetNodeAndChangeFloorIfRequired(selectedNode, false);
+			else
+				UserInfo.toast(this, "Der Knoten existiert nicht!",false);
 		}
 	}
 
@@ -230,7 +242,10 @@ public class MainActivity extends BaseMainActivity implements
 		mGetFloorsTask.execute((Void) null);
 	}
 
-	private void changeFloorIfRequired() {
+	private void SetNodeAndChangeFloorIfRequired(Node selectedNode,
+			Boolean setAsStart) {
+		mSelectedNode = selectedNode;
+		mSetAsStart = setAsStart;
 
 		int selectedNodeId = mSelectedNode.getNodeID();
 		int selectedFloorId = mSelectedNode.getFloorID();
@@ -241,7 +256,7 @@ public class MainActivity extends BaseMainActivity implements
 			mMenuFragment.selectFloorItem(selectedFloorId);
 			mWebViewFragment.sendTarget(selectedNodeId);
 		}
-	}	
+	}
 
 	@Override
 	@JavascriptInterface
@@ -260,7 +275,11 @@ public class MainActivity extends BaseMainActivity implements
 	public void onFinish() {
 
 		if (mSelectedNode != null && mWebViewFragment != null) {
-			mWebViewFragment.sendTarget(mSelectedNode.getNodeID());
+
+			if (mSetAsStart)
+				mWebViewFragment.sendStart(mSelectedNode.getNodeID());
+			else
+				mWebViewFragment.sendTarget(mSelectedNode.getNodeID());
 		}
 	}
 
@@ -275,9 +294,7 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onPoISelected(Node node) {
-
-		mSelectedNode = node;
-		changeFloorIfRequired();
+		SetNodeAndChangeFloorIfRequired(node, false);
 		showProgress(false);
 	}
 
@@ -291,7 +308,6 @@ public class MainActivity extends BaseMainActivity implements
 			loadFloorToMap(mFloorList.get(0).getId());
 			mMenuFragment.setLoadedMap(null, mFloorList);
 		}
-
 
 		if (!mWaitGetRoomsOrFloorsTask)
 			showProgress(false);
@@ -317,9 +333,7 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onGetNodeForQrCodeSuccess(Node node) {
-
-		mSelectedNode = node;
-		changeFloorIfRequired();
+		SetNodeAndChangeFloorIfRequired(node, true);
 		showProgress(false);
 	}
 
@@ -358,8 +372,7 @@ public class MainActivity extends BaseMainActivity implements
 	@Override
 	public void onGetNodeForNFCTagSuccess(Node node) {
 
-		mSelectedNode = node;
-		changeFloorIfRequired();
+		SetNodeAndChangeFloorIfRequired(node, true);
 		showProgress(false);
 	}
 
@@ -416,11 +429,11 @@ public class MainActivity extends BaseMainActivity implements
 			impressumDialog.show(getFragmentManager(), "Impressum");
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 		} else if (itemName.equals(getString(R.string.menu_settings))) {
-			Intent preferenceIntent = new Intent(MainActivity.this, PreferencesActivity.class);
-			startActivity(preferenceIntent);
-			
+
+			getFragmentManager().beginTransaction()
+					.replace(android.R.id.content, new PreferencesFragment())
+					.commit();
 			mDrawerLayout.closeDrawer(mLeftDrawer);
-			
 		} else {
 		}
 	}
