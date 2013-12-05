@@ -31,6 +31,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.scanner.IntentIntegrator;
 
 public class BaseMainActivity extends Activity {
@@ -65,11 +66,10 @@ public class BaseMainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		pDialog = new ProgressDialog(this);
-		pDialog.setCancelable(false);
-		pDialog.setMessage("Bitte warten...");
+		pDialog = UserInfo.StudmapProgressDialog(this);
+		pDialog.setIcon(R.drawable.ic_launcher);
 		
-		loadActivity();
+		loadBaseActivity();
 		initializeActionBar();
 		
 		setupForegroundDispatchSystem();
@@ -136,7 +136,7 @@ public class BaseMainActivity extends Activity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	protected void loadActivity() {
+	protected void loadBaseActivity() {
 		setContentView(R.layout.activity_main);
 
 		mDrawerItems = new ArrayList<String>(Arrays.asList(getResources()

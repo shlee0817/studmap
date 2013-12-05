@@ -4,15 +4,19 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnShowListener;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import de.whs.studmap.client.core.snippets.ErrorHandler;
 import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.listener.OnGenericTaskListener;
@@ -28,6 +32,8 @@ public class RegisterDialogFragment extends DialogFragment implements
 		OnGenericTaskListener<Void> {
 
 	private OnRegisterDialogListener mCallback;
+	private ErrorHandler mErrorHandler = null;
+	private ProgressDialog pDialog = null;
 
 	// Values for email and password at the time of the login attempt.
 	private String mUsername;
@@ -38,10 +44,11 @@ public class RegisterDialogFragment extends DialogFragment implements
 	private EditText mUsernameView;
 	private EditText mPasswordView1;
 	private EditText mPasswordView2;
-	private TextView mRegisterStatusMessageView;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		mErrorHandler = new ErrorHandler(getActivity());
+		pDialog = UserInfo.StudmapProgressDialog(getActivity());
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -49,15 +56,44 @@ public class RegisterDialogFragment extends DialogFragment implements
 				null);
 
 		builder.setView(rootView).setPositiveButton(
-				R.string.action_register_register,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
+				R.string.action_register_register, null);
 
+		initFormFields(rootView);
+
+		final AlertDialog mDialog = builder.create();
+		mDialog.setOnShowListener(new OnShowListener() {
+
+			@Override
+			public void onShow(DialogInterface dialog) {
+				Button b = mDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				b.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
 						attemptRegister();
 					}
 				});
+			}
+		});
 
+		return mDialog;
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception
+		try {
+			mCallback = (OnRegisterDialogListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnRegisterDialogListener");
+		}
+	}
+
+	private void initFormFields(View rootView) {
 		// Set up the login form.
 		mUsernameView = (EditText) rootView
 				.findViewById(R.id.register_username);
@@ -79,22 +115,6 @@ public class RegisterDialogFragment extends DialogFragment implements
 						return false;
 					}
 				});
-
-		return builder.create();
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception
-		try {
-			mCallback = (OnRegisterDialogListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnRegisterDialogListener");
-		}
 	}
 
 	public void attemptRegister() {
@@ -143,8 +163,7 @@ public class RegisterDialogFragment extends DialogFragment implements
 		} else {
 			// Show a progress spinner, and execute a background task to
 			// perform the user login attempt.
-			mRegisterStatusMessageView
-					.setText(R.string.register_progress_registering);
+			pDialog.show();
 			UserRegisterTask mAuthTask = new UserRegisterTask(this, mUsername,
 					mPassword1);
 			mAuthTask.execute((Void) null);
@@ -152,30 +171,40 @@ public class RegisterDialogFragment extends DialogFragment implements
 	}
 
 	@Override
-	public void onError(int responseError) {
-
+	public void onError(int responseError) {	
 		switch (responseError) {
-		case ResponseError.DatabaseError:
-			UserInfo.dialog(getActivity(), mUsername,
-					getString(R.string.error_connection));
-			break;
 		case ResponseError.UserNameDuplicate:
 			mUsernameView
 					.setError(getString(R.string.error_username_duplicate));
 			mUsernameView.requestFocus();
 			break;
+
+		case ResponseError.UserNameInvalid:
+			mUsernameView.setError(getString(R.string.error_invalid_username));
+			mUsernameView.requestFocus();
+			break;
+			
+		case ResponseError.PasswordInvalid:
+			mPasswordView1.setError(getString(R.string.error_invalid_password));
+			mPasswordView1.requestFocus();
+			break;
+			
+		default:
+			mErrorHandler.handle(responseError);
 		}
+		pDialog.dismiss();
 	}
 
 	@Override
 	public void onCanceled() {
-		// TODO Auto-generated method stub
-
+		pDialog.dismiss();
+		mErrorHandler.handle(ResponseError.TaskCancelled);
 	}
 
 	@Override
 	public void onSuccess(Void arg0) {
-
+		pDialog.dismiss();
 		mCallback.onRegister();
+		dismiss();
 	}
 }
