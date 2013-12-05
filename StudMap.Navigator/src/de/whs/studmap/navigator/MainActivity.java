@@ -260,17 +260,6 @@ public class MainActivity extends BaseMainActivity implements
 	}
 
 	@Override
-	public void onRegister(String username) {
-		Bundle args = new Bundle();
-		args.putString("username", username);
-
-		LoginDialogFragment dialog = new LoginDialogFragment();
-		dialog.setArguments(args);
-		dialog.show(getFragmentManager(), "Login");
-		showProgress(false);
-	}
-
-	@Override
 	public void onGetFloorsSuccess(List<Floor> floors) {
 
 		mFloorList = floors;
@@ -425,5 +414,17 @@ public class MainActivity extends BaseMainActivity implements
 		UserInfo.toast(getApplicationContext(), floorName, true);
 		loadFloorToMap(selectedFloorID);
 		mDrawerLayout.closeDrawer(mLeftDrawer);
+	}
+
+	@Override
+	public void onRegister(String username) {
+
+		Bundle args = new Bundle();
+		args.putString("username", username);
+
+		LoginDialogFragment dialog = new LoginDialogFragment();
+		dialog.setArguments(args);
+		dialog.show(getFragmentManager(), "Login");
+		showProgress(false);
 	}
 }
