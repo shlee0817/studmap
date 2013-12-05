@@ -34,7 +34,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name="de.whs.studmap.navigator.PreferencesActivity"></activity>
+        <activity android:name="PreferencesActivity"></activity>
 
         <provider
             android:name="de.whs.studmap.navigator.RoomsSuggestionsProvider"
