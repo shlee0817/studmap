@@ -42,7 +42,6 @@ import de.whs.studmap.client.tasks.GetNodeForNFCTagTask;
 import de.whs.studmap.client.tasks.GetNodeForQrCodeTask;
 import de.whs.studmap.client.tasks.GetRoomsTask;
 import de.whs.studmap.client.tasks.LogoutTask;
-import de.whs.studmap.fragments.PreferencesFragment;
 import de.whs.studmap.fragments.WebViewFragment;
 import de.whs.studmap.navigator.dialogs.ImpressumDialogFragment;
 import de.whs.studmap.navigator.dialogs.LoginDialogFragment;
@@ -242,7 +241,9 @@ public class MainActivity extends BaseMainActivity implements
 			break;
 			
 		case PREFERENCES:
-			getFragmentManager().beginTransaction().replace(android.R.id.content, new PreferencesFragment()).commit();
+			Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
+	        startActivity(intent);
+			
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			break;
 			
