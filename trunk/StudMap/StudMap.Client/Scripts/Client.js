@@ -8,18 +8,20 @@
     //Private Variablen
     this.startPoint = null;
     this.endPoint = null;
+    this.highlightedPoint = null;
     this.rangeEndX = 0;
     this.rangeEndY = 0;
     this.map = null;
+    this.pathList = null;
     
     //Konstanten
     this.radius = 2;
     this.selectedRadius = 4;
     this.lineThickness = 2;
-    this.strokeColor = "black";
-    this.startNodeColor = "red";
-    this.endNodeColor = "green";
-    this.nodeColor = "black";
+    this.strokeColor = "#83c32d";
+    this.startNodeColor = "blue";
+    this.endNodeColor = "red";
+    this.nodeColor = "#83c32d";
 }
 
 //Initialisierung
@@ -78,12 +80,12 @@ StudMapClient.prototype.init = function () {
 StudMapClient.prototype.setStartPoint = function (nodeId) {
 
     if (this.startPoint) {
-        this.startPoint.setAttribute("fill", "black");
+        this.startPoint.setAttribute("fill", "#83c32d");
         this.startPoint.setAttribute("r", this.radius);
     }
     this.startPoint = document.getElementById(nodeId);
 
-    this.startPoint.setAttribute("fill", "green");
+    this.startPoint.setAttribute("fill", "blue");
     this.startPoint.setAttribute("r", 4);
 
     this.testPath();
@@ -92,7 +94,7 @@ StudMapClient.prototype.setStartPoint = function (nodeId) {
 StudMapClient.prototype.setEndPoint = function (nodeId) {
 
     if (this.endPoint) {
-        this.endPoint.setAttribute("fill", "black");
+        this.endPoint.setAttribute("fill", "#83c32d");
         this.endPoint.setAttribute("r", this.radius);
     }
 
@@ -109,6 +111,9 @@ StudMapClient.prototype.setEndPoint = function (nodeId) {
 //Zeichnen
 StudMapClient.prototype.showPath = function (startNodeId, endNodeId) {
 
+
+    this.clearPath();
+
     var that = this;
     var params = [];
     var map = new Param("mapId", this.mapId);
@@ -119,7 +124,7 @@ StudMapClient.prototype.showPath = function (startNodeId, endNodeId) {
     params.push(endNode);
     
     this.load("Maps", "GetRouteBetween", params, function (data) {
-
+        this.pathList = data.List;
         that.drawPath(data.List);
         document.getElementById('path').style.display = 'block';
         document.getElementById('circles').style.display = 'none';
@@ -133,8 +138,17 @@ StudMapClient.prototype.highlightPoint = function (nodeId, color) {
 
 StudMapClient.prototype.highlightPoint = function (nodeId, color, radius) {
 
+    if (this.highlightedPoint)
+    {
+        this.highlightedPoint.attr("fill", "#83c32d")
+        .attr("r", 2);
+    }
+
+
     $('#' + nodeId).attr("fill", color)
         .attr("r", radius);
+
+    this.highlightedPoint = $('#' + nodeId);
 };
 
 // {"List":[{"Id":966,"X":0.3787,"Y":0.1263,"FloorId":1012},{"Id":967,"X":0.3689,"Y":0.1059,"FloorId":1012}],"Status":1,"ErrorCode":0,"ErrorMessage":""}
@@ -183,6 +197,9 @@ StudMapClient.prototype.showCircles = function (circlesAsArray) {
             nodeId: circlesAsArray[i].id
         }, this.circle_click);
     }
+    if (window.jsinterface) {
+        window.jsinterface.onFinish();
+    }
 };
 
 StudMapClient.prototype.drawCircle = function(el, x, y, id, r, fill) {
@@ -192,6 +209,7 @@ StudMapClient.prototype.drawCircle = function(el, x, y, id, r, fill) {
         .attr("cy", y * this.rangeEndY)
         .attr("id", id)
         .attr("stroke", "transparent")
+        .attr("fill", "#83c32d")
         .attr("stroke-width", 5)
         .attr("r", r);
     if (fill)
@@ -218,12 +236,12 @@ StudMapClient.prototype.drawLine = function(el, x1, y1, x2, y2) {
 //Delete and Clear
 StudMapClient.prototype.clearPath = function () {
 
-    $('#path').remove();
+    $('#path').empty();
 };
 
 StudMapClient.prototype.clearMap = function () {
 
-    $('#circles').remove();
+    $('#circles').empty();
 };
 
 StudMapClient.prototype.resetMap = function () {

@@ -15,10 +15,7 @@
 	body {
 	  font-size: 14px;
 	  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-	  /*margin: 50px auto 20px;
-	  width: 720px;*/
 	  background: #fcfcfc;
-	 /* line-height: 1.45em;*/
 	 margin:0;
 	}
 	a {
@@ -34,9 +31,6 @@
 	div.code {
 		border: 1px solid #ccc;
 		background: #eee;
-		/*margin: 10px 0 10px 0;
-		padding: 10px;
-		width: 720px;*/
 	}
 	
 	.map-controls
@@ -78,16 +72,9 @@
 
     d3.json("http://193.175.199.115/StudMapService/api/Maps/GetFloorPlanImage/?floorid=" + floorID, function (data) {
 
-        //var newImg = new Image();
-        //newImg.src =  data.Object;
-
         var newImg = new Image();
         newImg.onload = function () {
 
-
-            /*var height = newImg.height;
-            var width = newImg.width;
-            alert ('The image size is '+width+'*'+height);*/
 
             imageWidth = newImg.width;
             imageHeight = newImg.height;
@@ -96,8 +83,7 @@
             height = imageHeight / imageWidth * width;
             rangeEndX = width; //window.innerWidth;
             rangeEndY = height; //window.innerHeight;
-            //3837 × 3371
-            //4549 × 3216
+           
             var xscale = d3.scale.linear()
                         .domain([domainStartX, domainEndX])
                         .range([rangeStartX, rangeEndX]),
@@ -123,7 +109,7 @@
             map.addLayer(imagelayer);
             svgContainer.datum(mapdata).call(map);
 
-            //d3.select(".map-layers").append("g").attr("id", "lines");
+        
             d3.select(".map-layers").append("g").attr("id", "circles");
             d3.select(".map-layers").append("g").attr("id", "path");
 
@@ -247,9 +233,6 @@
     }
 
     function drawPath(PathAsArray) {
-        // {"List":[{"Id":966,"X":0.3787,"Y":0.1263,"FloorId":1012},{"Id":967,"X":0.3689,"Y":0.1059,"FloorId":1012}],"Status":1,"ErrorCode":0,"ErrorMessage":""}
-
-
         if (PathAsArray.length < 2)
             return;
 
@@ -269,21 +252,7 @@
 
         }
 
-        /*  for (var i = 0; i < PathAsArray.length - 1; i++) {
-  
-              if(PathAsArray[i].FloorId == floorID)
-              {
-                  // element = PathAsArray[i];
-                  
-                  var pointInPath =d3.select("#path").append("circle");
-                  pointInPath.attr("cx", PathAsArray[i].X* rangeEndX)
-                .attr("cy", PathAsArray[i].Y* rangeEndY)
-                .attr("id", PathAsArray[i].Id)
-                .attr("fill", pointColor)
-                .attr("r", KreisRadius);
-                if(i==0) {pointInPath.attr("fill", "red").attr("r", 4);}
-              }
-          }*/
+   
         var i = 0;
         var pointInPath = d3.select("#path").append("circle");
         pointInPath.attr("cx", PathAsArray[i].X * rangeEndX)
@@ -329,8 +298,22 @@
         d3.select(".map-layers").attr("transform", "translate(0,0)scale(1)")
     }
     function zoomToPoint(PID) {
-        //700  578
-        d3.select(".map-layers").attr("transform", "translate(-" + (655 * 5) + ",-" + (444 * 5) + ")scale(" + 6 + ")")
+       
+
+        var node = document.getElementById(PID);;
+
+        if (node.length < 1)
+            return;
+
+        var scale = 5;
+        var cx = node.attr("cx") * 1;
+        var cy = node.attr("cy") * 1;
+        var translateX = cx * (1 - scale);
+        var translateY = cy * (1 - scale);
+
+        var transformStr = "translate(" + translateX + ", " + translateY + ")scale(" + scale + ")";
+        d3.select('.map-layers').attr("transform", transformStr);
+       
     }
 
     function resetMap() {
