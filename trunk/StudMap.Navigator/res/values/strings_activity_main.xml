@@ -17,7 +17,7 @@
 
 <resources>
 
-    <string name="app_name">StudMap Navigator</string>
+    <string name="app_name">StudMap</string>
     
     <string name="login">Anmelden</string>
     <string name="logout">Abmelden</string>

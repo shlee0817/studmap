@@ -13,5 +13,6 @@
     <dimen name="mapfloorselector_textSize">18dp</dimen>
     <dimen name="choicesdialog_imageMargin">4dp</dimen>
     <dimen name="mapfloorselector_spinner_padding">18dp</dimen>
+    <dimen name="initial_setup_padding">4dp</dimen>
 
 </resources>

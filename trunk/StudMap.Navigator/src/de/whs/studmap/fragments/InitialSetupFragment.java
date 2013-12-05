@@ -3,16 +3,17 @@ package de.whs.studmap.fragments;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 import de.whs.studmap.client.core.data.Map;
@@ -42,20 +43,36 @@ public class InitialSetupFragment extends DialogFragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		View rootView = (View) inflater.inflate(
-				R.layout.fragment_initial_setup, container, false);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View rootView = inflater.inflate(R.layout.fragment_initial_setup, null);
+		builder.setTitle(getString(R.string.initialSetup_title));
+		builder.setCancelable(false);
+		builder.setPositiveButton(R.string.intialSetup_start_txt, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
 
-		getDialog().setTitle(getString(R.string.initialSetup_title));
-		setCancelable(false);
+				if (mSelectedMap == null) {
+					Toast.makeText(getActivity(),
+							"Es wird eine Map für Messungen benötigt!",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+
+				mCallback.onMapSelected(mSelectedMap);
+				dismiss();
+			}
+		});
+		
+		builder.setView(rootView);
 		
 		initializeSpinner(rootView);
-		initializeButton(rootView);
 		fillMapSpinner();
 
-		return rootView;
+		return builder.create();
 	}
 
 	@Override
@@ -76,27 +93,6 @@ public class InitialSetupFragment extends DialogFragment implements
 
 		GetMapsTask mTask = new GetMapsTask(this);
 		mTask.execute((Void) null);
-	}
-
-	private void initializeButton(View rootView) {
-		Button loadFloorplanBtn = (Button) rootView
-				.findViewById(R.id.initialSetup_LoadBtn_id);
-		loadFloorplanBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (mSelectedMap == null) {
-					Toast.makeText(getActivity(),
-							"Es wird eine Map für Messungen benötigt!",
-							Toast.LENGTH_LONG).show();
-					return;
-				}
-
-				mCallback.onMapSelected(mSelectedMap);
-				getDialog().dismiss();
-			}
-		});
 	}
 
 	private void initializeSpinner(View rootView) {

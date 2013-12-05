@@ -45,7 +45,6 @@ import de.whs.studmap.client.tasks.GetNodeForQrCodeTask;
 import de.whs.studmap.client.tasks.LogoutTask;
 import de.whs.studmap.fragments.InitialSetupFragment;
 import de.whs.studmap.fragments.InitialSetupFragment.OnMapSelectedListener;
-import de.whs.studmap.fragments.PreferencesFragment;
 import de.whs.studmap.fragments.WebViewFragment;
 import de.whs.studmap.navigator.dialogs.ImpressumDialogFragment;
 import de.whs.studmap.navigator.dialogs.LoginDialogFragment;
@@ -223,6 +222,8 @@ public class MainActivity extends BaseMainActivity implements
 				SetNodeAndChangeFloorIfRequired(selectedNode, false);
 			else
 				UserInfo.toast(this, "Der Knoten existiert nicht!", false);
+			
+			mSearchView.onActionViewCollapsed();
 		}
 	}
 
@@ -441,7 +442,7 @@ public class MainActivity extends BaseMainActivity implements
 		} else if (itemName.equals(getString(R.string.menu_settings))) {
 			Intent preferenceIntent = new Intent(MainActivity.this,
 					PreferencesActivity.class);
-			startActivity(preferenceIntent);
+			startActivityForResult(preferenceIntent,0);
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 		}
 	}
