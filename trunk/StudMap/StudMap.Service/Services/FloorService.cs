@@ -14,7 +14,7 @@ namespace StudMap.Service.Services
         // TODO: Auslagern in Config oder so...
         private const string ServerAdminBasePath = "http://193.175.199.115/StudMapAdmin/";
 
-        public static Floor CreateFloor(MapsEntities entities, int mapId, string name)
+        public static Floor CreateFloor(MapsEntities entities, int mapId, string name, string imageUrl)
         {
             if (!MapService.MapExists(mapId))
                 throw new ServiceException(ResponseError.MapIdDoesNotExist);
@@ -23,7 +23,7 @@ namespace StudMap.Service.Services
             {
                 MapId = mapId,
                 Name = name,
-                ImageUrl = "",
+                ImageUrl = imageUrl,
                 CreationTime = DateTime.Now
             };
             Floors insertedFloor = entities.Floors.Add(newFloor);
