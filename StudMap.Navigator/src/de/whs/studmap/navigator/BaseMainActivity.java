@@ -50,6 +50,8 @@ public class BaseMainActivity extends Activity {
 	protected DrawerLayout mDrawerLayout;
 	protected FrameLayout mLeftDrawer;
 	protected MenuFragment mMenuFragment;
+
+	protected SearchView mSearchView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +74,12 @@ public class BaseMainActivity extends Activity {
 		// Get the SearchView and set the searchable configuration
 	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	    MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
-	    SearchView searchView = (SearchView)searchMenuItem.getActionView();
+	    mSearchView = (SearchView)searchMenuItem.getActionView();
 	    // Assumes current activity is the searchable activity
-	    if(searchView != null){
+	    if(mSearchView != null){
 
-		    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-		    searchView.setIconifiedByDefault(true); 
+		    mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		    mSearchView.setIconifiedByDefault(true); 
 	    }
 		
 		return super.onCreateOptionsMenu(menu);
@@ -174,7 +176,7 @@ public class BaseMainActivity extends Activity {
 		mActionBar.setDisplayHomeAsUpEnabled(true);
 		mActionBar.setDisplayShowCustomEnabled(true);
 		mActionBar.setHomeButtonEnabled(true);
-		mActionBar.setTitle("");			
+		mActionBar.setTitle(getString(R.string.app_name));			
 	}
 	
 	protected void closeKeyboard(View view) {

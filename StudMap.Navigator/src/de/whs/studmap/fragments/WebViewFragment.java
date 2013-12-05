@@ -68,24 +68,29 @@ public class WebViewFragment extends Fragment {
 	public void setFloorId(int floorId) {
 		this.mFloorId = floorId;
 		loadFloor();
+		mMapWebView.requestFocus();
 	}
 	
 	public void resetMap(){
 		
 		mJScriptService.resetMap();
+		mMapWebView.requestFocus();
 	}
 	
 	public void sendTarget(int nodeId) {
 		
 		mJScriptService.sendTarget(nodeId);
+		mMapWebView.requestFocus();
 	}
 	
 	public void sendStart(int nodeId) {
 		mJScriptService.sendStart(nodeId);
+		mMapWebView.requestFocus();
 	}
 	
 	public void sendDestination(int nodeId) {
 		mJScriptService.sendDestination(nodeId);
+		mMapWebView.requestFocus();
 	}
 	
 	private void loadFloor() {
