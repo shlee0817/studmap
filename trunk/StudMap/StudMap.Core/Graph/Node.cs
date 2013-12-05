@@ -9,5 +9,7 @@
         public decimal Y { get; set; }
 
         public int FloorId { get; set; }
+
+        public bool HasInformation { get; set; }
     }
 }

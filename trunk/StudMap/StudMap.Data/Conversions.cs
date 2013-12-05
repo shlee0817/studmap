@@ -47,7 +47,8 @@ namespace StudMap.Data
                 Id = dbNode.Id,
                 X = dbNode.X,
                 Y = dbNode.Y,
-                FloorId = dbNode.FloorId
+                FloorId = dbNode.FloorId,
+                HasInformation = dbNode.NodeInformation.Any()
             };
         }
 
