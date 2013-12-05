@@ -80,7 +80,7 @@ public class MainActivity extends BaseMainActivity implements
 		mErrorHandler = new ErrorHandler(this);
 		
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		boolean isFirstStart = sharedPref.getBoolean(getString(R.string.pref_first_time), false);
+		boolean isFirstStart = sharedPref.getBoolean(getString(R.string.pref_first_time), true);
 		
 		// TODO hostName verwenden!
 		// String hostName = sharedPref.getString(getString(R.string.pref_host_key), "193.175.199.115");
