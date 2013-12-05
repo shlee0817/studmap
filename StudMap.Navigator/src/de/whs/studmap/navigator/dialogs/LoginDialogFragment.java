@@ -44,10 +44,6 @@ public class LoginDialogFragment extends DialogFragment implements
 		mErrorHandler = new ErrorHandler(getActivity());
 		pDialog = UserInfo.StudmapProgressDialog(getActivity());
 
-		Bundle b = getArguments();
-		if (b != null && b.containsKey("username"))
-			mUserName = getArguments().getString("username");
-
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View rootView = inflater.inflate(R.layout.fragment_login_dialog, null);
@@ -107,7 +103,6 @@ public class LoginDialogFragment extends DialogFragment implements
 	private void initFormFields(View rootView) {
 		// Set up the login form.
 		mUsernameView = (EditText) rootView.findViewById(R.id.userName);
-		mUsernameView.setText(mUserName);
 
 		mPasswordView = (EditText) rootView.findViewById(R.id.password);
 		mPasswordView
@@ -122,6 +117,13 @@ public class LoginDialogFragment extends DialogFragment implements
 						return false;
 					}
 				});
+		
+		Bundle b = getArguments();
+		if (b != null && b.containsKey("username")){
+			mUserName = getArguments().getString("username");
+			mPasswordView.requestFocus();
+		}
+		mUsernameView.setText(mUserName);
 	}
 
 	/**

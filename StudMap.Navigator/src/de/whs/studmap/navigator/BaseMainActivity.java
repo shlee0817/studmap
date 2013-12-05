@@ -52,7 +52,6 @@ public class BaseMainActivity extends Activity {
 	protected boolean isDrawerOpen = false;
 
 	// UI References
-	protected WebView mMapWebView;
 	protected ActionBar mActionBar;
 	protected ActionBarDrawerToggle mDrawerToggle;
 	protected DrawerLayout mDrawerLayout;
