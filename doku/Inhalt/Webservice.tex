@@ -59,8 +59,7 @@ Beispiel:
 
 \subsection{Graph}
 \label{object:Graph}
-Repräsentiert für ein Stockwerk den entsprechenden Graphen.
-% Wird der Graph nicht auf der ganzen Map abgebildet? Wieso also FloorId?
+Repräsentiert für ein Stockwerk den entsprechenden Teilgraphen.
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
 \hline FloorId & ID des Stockwerks, das der entsprechende Graph repräsentiert. \\ 
@@ -336,44 +335,26 @@ Beispiel:
 \end{lstlisting}
 
 
-%% Nicht als Klasse im Core-Verzeichnis vorhanden.
-%\subsection{FloorGraph}
-%\label{object:FloorGraph}
-%Repräsentiert einen Teilgraph für ein Stockwerk.
-%
-%Eigenschaften:\\
-%\begin{tabularx}{\textwidth}{|l|X|}
-%\hline floorId & ID des Stockwerks. \\ 
-%\hline graph & Der Teilgraph (s. \nameref{object:Graph}) für das Stockwerk. \\ 
-%\hline
-%\end{tabularx}
-%
-%Beispiel: 
-%\begin{lstlisting}
-%{
-%  "floorId": 2,
-%  "graph": {...}
-%}
-%\end{lstlisting}
-%
-%% Nicht als Klasse im Core-Verzeichnis vorhanden.
-%\subsection{NodeInformationWithId}
-%\label{object:NodeInformationWithId}
-%\begin{tabularx}{\textwidth}{|l|X|}
-%\hline nodeId & ID des \nameref{object:Node}. \\ 
-%\hline nodeInf & Die Knoteninformation die gespeichert werden soll (s. \nameref{object:NodeInformation}). \\ 
-%\hline
-%\end{tabularx}
-%
-%Beispiel: 
-%\begin{lstlisting}
-%{
-%  "nodeId": 12,
-%  "nodeInf": {...}
-%}
-%\end{lstlisting}
+\subsection{SaveGraphRequest}
+\label{object:SaveGraphRequest}
+Repräsentiert die Änderungen an dem Teilgraph für ein Stockwerk.
 
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline FloorId & ID des Stockwerks. \\ 
+\hline NewGraph & Der hinzugefügte Teilgraph (s. \nameref{object:Graph}). \\ 
+\hline DeletedGraph & Der gelöschte Teilgraph (s. \nameref{object:Graph}). \\ 
+\hline
+\end{tabularx}
 
+Beispiel: 
+\begin{lstlisting}
+{
+  "FloorId": 2,
+  "NewGraph": {...},
+  "DeletedGraph": {...}
+}
+\end{lstlisting}
 
 \section{Rückgabe Objekte}
 
@@ -382,9 +363,12 @@ Beispiel:
 Allgemeine Rückgabe vom Service, die einen Status und ggf. einen Fehler enthält. Die Daten werden im JSON Format zurück gegeben.
 
 \textbf{Beispiel:}
-\begin{verbatim}
-{ "Status":1, "ErrorCode":0 }
-\end{verbatim}
+\begin{lstlisting}
+{
+  "Status":1, 
+  "ErrorCode":0
+}
+\end{lstlisting}
 
 \subsubsection{ResponseStatus}
 Wir unterscheiden zwischen:
@@ -465,16 +449,26 @@ Das NFC-Tag ist bereits einem anderen Knoten zugeordnet.
 Eine generische Klasse die \nameref{BaseResponse} um ein Feld \texttt{Object} erweitert, indem die Nutzdaten gespeichert werden.
 
 Beispiel:
-\todo{ObjectResponse als JSON String einfügen}
+\begin{lstlisting}
+{
+  "Status": 1, 
+  "ErrorCode": 0,
+  "Object": {...}
+}
+\end{lstlisting}
 
 \subsection{ListResponse}
 \label{ListResponse}
 Eine generische Klasse die \nameref{BaseResponse} um eine Liste \texttt{List} erweitert, indem Nutzdaten in Form einer Collection gespeichert werden.
 
 Beispiel:
-\begin{verbatim}
-{"List":[],"Status":1,"ErrorCode":0}
-\end{verbatim}
+\begin{lstlisting}
+{
+  "Status": 1, 
+  "ErrorCode": 0,
+  "List": [...]
+}
+\end{lstlisting}
 
 \section{MapsController}
 
@@ -550,17 +544,59 @@ Parameter:\\
 
 Rückgabewert: \nameref{BaseResponse}
 
-\todo{GetFloorsForMap, GetFloor, GetFloorplanImage, UploadFloorImage}
+\subsection{GetFloorsForMap}
+\label{service:GetFloorsForMap}
+Liefert alle Stockwerke einer Karte.
+
+GET
+\url{/api/Maps/GetFloorsForMap?mapId=2}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID des Karte, von der die Stockwerke abgefragt werden sollen. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ListResponse}, \nameref{object:Floor}
+
+\subsection{GetFloor}
+\label{service:GetFloor}
+Liefert Informationen zu einem Stockwerk.
+
+GET
+\url{/api/Maps/GetFloor?floorId=3}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline floorId & ID des Stockwerks. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Floor}
+
+\subsection{GetFloorplanImage}
+\label{service:GetFloorplanImage}
+Liefert die URL des Bilds zu einem Stockwerk.
+
+GET
+\url{/api/Maps/GetFloorplanImage?floorId=3}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline floorId & ID des Stockwerks. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: String
 
 \subsection{SaveGraphForFloor}
 \label{service:SaveGraphForFloor}
-\todo{Im Code mit Übergabeparameter}
 Speichert den Graphen zu einem Stockwerk ab.
 
 POST
 \url{/api/Maps/SaveGraphForFloor}
 
-POST Body: \nameref{object:FloorGraph}
+POST Body: \nameref{object:SaveGraphRequest}
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 
@@ -655,14 +691,13 @@ Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 \todo{GetNodeInformation, GetFullNodeInformationForNode}
 
 \subsection{SaveNodeInformation}
-\todo{Im Code mit Parametern}
 \label{service:SaveNodeInformation}
 Speichert zusätzliche Informationen zu einem Knoten ab.
 
 POST
 \url{/api/Maps/SaveNodeInformation}
 
-POST Body: \nameref{object:NodeInformationWithId}
+POST Body: \nameref{object:NodeInformation}
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:NodeInformation}
 
