@@ -72,10 +72,10 @@ public interface Constants {
 		 
 		 //Log tags
 		 static final String LOG_TAG_WEBSERVICE = "WebService";
-		 static final String LOG_TAG_POI__ACTIVITY = "PoI Activity";
+		 static final String LOG_TAG_POI__ACTIVITY = "PoI Dialog";
 		 static final String LOG_TAG_MAIN_ACTIVITY = "Main Activity";
-		 static final String LOG_TAG_LOGIN_ACTIVITY = "Login Activity";
-		 static final String LOG_TAG_REGISTER_ACTIVITY = "Register Activity";
-		 static final String LOG_TAG_POSITION_ACTIVITY = "Position_Activity";
+		 static final String LOG_TAG_LOGIN_DIALOG = "Login Dialog";
+		 static final String LOG_TAG_REGISTER_DIALOG = "Register Dialog";
+		 static final String LOG_TAG_POSITION_ACTIVITY = "Position Dialog";
 		
 }

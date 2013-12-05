@@ -13,7 +13,7 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGenericTaskListener;
 
-public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
+public class UserRegisterTask extends AsyncTask<Void, Void, Integer> {
 
 	private String mUsername;
 	private String mPassword;
@@ -28,44 +28,41 @@ public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
-			boolean result = Service.register(mUsername, mPassword);
-			if (result)
-				return result;
-			else
-				throw new ConnectException();
+			Service.register(mUsername, mPassword);
+			return ResponseError.None;
 		} catch (WebServiceException e) {
-			Log.d(Constants.LOG_TAG_REGISTER_ACTIVITY,
+			Log.d(Constants.LOG_TAG_REGISTER_DIALOG,
 					"UserRegisterTask - WebServiceException");
 			JSONObject jObject = e.getJsonObject();
 
 			try {
+				Log.d(Constants.LOG_TAG_REGISTER_DIALOG,
+						"UserRegisterTask - WebServiceException");
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onError(errorCode);
+				return errorCode;
 				
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_REGISTER_ACTIVITY,
+				Log.e(Constants.LOG_TAG_REGISTER_DIALOG,
 						"UserRegisterTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		} catch (ConnectException e) {
-			Log.d(Constants.LOG_TAG_REGISTER_ACTIVITY,
+			Log.e(Constants.LOG_TAG_REGISTER_DIALOG,
 					"UserRegisterTask - ConnectException");
-			mCallback.onError(ResponseError.UnknownError);
+			return ResponseError.ConnectionError;
 		}
-		return false;
 	}
 
 	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		 if (success) {
-			 mCallback.onSuccess(null);
-		 }
-		 else{
-			 mCallback.onError(ResponseError.UnknownError);
-		 }
+		 if (result == ResponseError.None) 
+			 mCallback.onSuccess((Void)null);
+		 else
+			 mCallback.onError(result);
 	}
 
 	@Override

@@ -14,7 +14,7 @@ import de.whs.studmap.client.listener.OnGetNodeForNFCTagTaskListener;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class GetNodeForNFCTagTask extends AsyncTask<Void, Void, Boolean> {
+public class GetNodeForNFCTagTask extends AsyncTask<Void, Void, Integer> {
 
 	private int mapId;
 	private String nfcTag;
@@ -28,38 +28,41 @@ public class GetNodeForNFCTagTask extends AsyncTask<Void, Void, Boolean> {
 	}
 	
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
 			mNode = Service.getNodeForNFCTag(mapId, nfcTag);
-			if(mNode == null)
-				return false;
-			return true;
+			if(mNode == null){
+				return ResponseError.UnknownError;
+			}
+			return ResponseError.None;
 		} catch (ConnectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+					"GetNodeForQrCodeTask - ConnectException");
+			return ResponseError.ConnectionError;
 		} catch (WebServiceException e) {
+			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+					"GetNodeForQrCodeTask - WebServiceException");
 			
 			JSONObject jObject = e.getJsonObject();
 			try {
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onGetNodeForNFCTagError(errorCode);
+				return errorCode;
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+				Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
 						"GetNodeForQrCodeTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		}
-		return false;
 	}
 	
 	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		if (success) {
+		if (result == ResponseError.None)
 			mCallback.onGetNodeForNFCTagSuccess(mNode);
-		} else {
-			mCallback.onGetNodeForNFCTagError(ResponseError.UnknownError);
-		}
+		else
+			mCallback.onGetNodeForNFCTagError(result);
 	}
 
 	@Override

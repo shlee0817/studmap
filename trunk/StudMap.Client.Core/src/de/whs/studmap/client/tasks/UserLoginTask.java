@@ -13,59 +13,60 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGenericTaskListener;
 
-public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
 
 	private String mUserName;
 	private String mPassword;
 
-	private OnGenericTaskListener<Void> mLoginListener;
+	private OnGenericTaskListener<Void> mCallback;
 
 	public UserLoginTask(OnGenericTaskListener<Void> loginListener,
 			String userName, String password) {
 		this.mUserName = userName;
 		this.mPassword = password;
-		this.mLoginListener = loginListener;
+		this.mCallback = loginListener;
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
-			boolean result = Service.login(mUserName, mPassword);
-			return result;
+			Service.login(mUserName, mPassword);
+			return ResponseError.None;
 		} catch (WebServiceException e) {
-			Log.d(Constants.LOG_TAG_LOGIN_ACTIVITY,
+			Log.d(Constants.LOG_TAG_LOGIN_DIALOG,
 					"UserLoginTask - WebServiceException");
 			JSONObject jObject = e.getJsonObject();
 
 			try {
+				Log.d(Constants.LOG_TAG_LOGIN_DIALOG,
+						"UserLoginTask - WebserviceException");
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-
-				mLoginListener.onError(errorCode);
+				return errorCode;
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_LOGIN_ACTIVITY,
+				Log.e(Constants.LOG_TAG_LOGIN_DIALOG,
 						"UserLoginTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		} catch (ConnectException e) {
-			Log.d(Constants.LOG_TAG_LOGIN_ACTIVITY,
+			Log.e(Constants.LOG_TAG_LOGIN_DIALOG,
 					"UserLoginTask - ConnectException");
-			mLoginListener.onError(ResponseError.DatabaseError);
+			 return ResponseError.ConnectionError;
 		}
-		return false;
 	}
 
 	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		if (success)
-			mLoginListener.onSuccess((Void) null);
+		if (ResponseError.None == result )
+			mCallback.onSuccess((Void) null);
 		else
-			mLoginListener.onError(ResponseError.UnknownError);
+			mCallback.onError(result);
 	}
 
 	@Override
 	protected void onCancelled() {
 
-		mLoginListener.onCanceled();
+		mCallback.onCanceled();
 	}
 }

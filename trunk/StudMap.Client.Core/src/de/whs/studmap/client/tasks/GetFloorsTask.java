@@ -3,14 +3,19 @@ package de.whs.studmap.client.tasks;
 import java.net.ConnectException;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.AsyncTask;
+import android.util.Log;
+import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Floor;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGetFloorsTaskListener;
 
-public class GetFloorsTask extends AsyncTask<Void, Void, Boolean> {
+public class GetFloorsTask extends AsyncTask<Void, Void, Integer> {
 
 	private int mapId;
 	private OnGetFloorsTaskListener mCallback;
@@ -23,29 +28,39 @@ public class GetFloorsTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
 			mFloors = Service.getFloorsForMap(mapId);
-			if(mFloors != null && mFloors.size() > 0)
-				return true;
-			return false;
+			if(mFloors == null && mFloors.size() <= 0)
+				return ResponseError.UnknownError;
+			return ResponseError.None;
 		} catch (WebServiceException e) {
-			e.printStackTrace();
+			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+					"GetFloorsTask - WebserviceException");
+			JSONObject jObject = e.getJsonObject();
+			try {
+				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
+				return  errorCode;
+			} catch (JSONException ignore) {
+				Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"GetNodeForQrCodeTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
+			}
 		} catch (ConnectException e) {
-			e.printStackTrace();
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+					"GetFloorsTask - ConnectException");
+			return ResponseError.ConnectionError;
 		}
-		return false;
 	}
 
 	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		if (success) {
+		if (result == ResponseError.None) 
 			mCallback.onGetFloorsSuccess(mFloors);
-		} else {
-			mCallback.onGetFloorsError(ResponseError.UnknownError);
-		}
+		else
+			mCallback.onGetFloorsError(result);
 	}
 
 	@Override

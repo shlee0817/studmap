@@ -2,9 +2,14 @@ package de.whs.studmap.client.tasks;
 
 import java.net.ConnectException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.os.AsyncTask;
+import android.util.Log;
+import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
-import android.os.AsyncTask;
 
 public class SaveNFCTagForNodeTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -22,10 +27,22 @@ public class SaveNFCTagForNodeTask extends AsyncTask<Void, Void, Boolean> {
 		try {
 			boolean result = Service.SaveNFCTagForNode(nodeId, nfcTag);
 			return result;
-		} catch (WebServiceException e) {
-			e.printStackTrace();
 		} catch (ConnectException e) {
-			e.printStackTrace();
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+					"SaveNFCTagForNodeTask - ConnectException");
+		} catch (WebServiceException e) {
+			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+					"SaveNFCTagForNodeTask - WebServiceException");
+			JSONObject jObject = e.getJsonObject();
+			try {
+				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"SaveNFCTagForNodeTask - " + errorCode);
+			
+			} catch (JSONException ignore) {
+				Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"SaveNFCTagForNodeTask - Parsing the WebServiceException failed!");
+			}
 		}
 		return false;
 	}

@@ -16,7 +16,7 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGenericTaskListener;
 
-public class GetPoITask extends AsyncTask<Void, Void, Boolean> implements
+public class GetPoITask extends AsyncTask<Void, Void, Integer> implements
 		Constants {
 
 	private int mapId;
@@ -29,41 +29,40 @@ public class GetPoITask extends AsyncTask<Void, Void, Boolean> implements
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
 			List<PoI> pois = Service.getPoIsForMap(mapId);
-			if (pois != null)
-				mPoIs.addAll(pois);
-			return true;
-		} catch (WebServiceException e) {
+			if (pois == null)
+				return ResponseError.UnknownError;
 
+			mPoIs.addAll(pois);
+			return ResponseError.None;
+		} catch (WebServiceException e) {
 			Log.d(LOG_TAG_POI__ACTIVITY, "GetDataTask - WebServiceException");
 			JSONObject jObject = e.getJsonObject();
 
 			try {
-
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onError(errorCode);
+				return errorCode;
 			} catch (JSONException ignore) {
-				Log.d(LOG_TAG_POI__ACTIVITY,
+				Log.e(LOG_TAG_POI__ACTIVITY,
 						"GetDataTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		} catch (ConnectException e) {
-
-			mCallback.onError(ResponseError.DatabaseError);
+			Log.e(LOG_TAG_POI__ACTIVITY, "GetDataTask - ConnectException");
+			 return ResponseError.ConnectionError;
 		}
-		return false;
 	}
 
 	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		if (success) {
+		if (result == ResponseError.None) 
 			mCallback.onSuccess(mPoIs);
-		} else {
-			mCallback.onError(ResponseError.UnknownError);
-		}
+		else
+			mCallback.onError(result);
 	}
 
 	@Override
