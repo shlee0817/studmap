@@ -204,7 +204,7 @@ public class RegisterDialogFragment extends DialogFragment implements
 	@Override
 	public void onSuccess(Void arg0) {
 		pDialog.dismiss();
-		mCallback.onRegister();
+		mCallback.onRegister(mUsername);
 		dismiss();
 	}
 }

@@ -179,7 +179,6 @@ public class MainActivity extends BaseMainActivity implements
 
 				// clear textview & hide soft keyboard
 				mSearchTextView.setText("");
-				mMapWebView.requestFocus();
 				closeKeyboard(view);
 
 				changeFloorIfRequired();
@@ -357,9 +356,9 @@ public class MainActivity extends BaseMainActivity implements
 	}
 
 	@Override
-	public void onRegister() {
+	public void onRegister(String username) {
 		Bundle args = new Bundle();
-		args.putString("username", "a");
+		args.putString("username", username);
 
 		LoginDialogFragment dialog = new LoginDialogFragment();
 		dialog.setArguments(args);
