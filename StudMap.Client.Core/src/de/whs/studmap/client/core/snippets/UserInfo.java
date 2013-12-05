@@ -47,18 +47,18 @@ public class UserInfo{
 	 * @param message Nachricht, die dem Benutzer angezeigt werden soll
 	 * @param length_short Anzeigedauer. true = kurz | false = lang
 	 */
-	public static void toast(Context context, String message, boolean length_short){
+	public static void toast(Context context, String title, boolean length_short){
 		int length = length_short ? 0 : 1;
-		Toast.makeText(context, message, length).show();		
+		Toast.makeText(context, title, length).show();		
 	}	
 	
 	public static void toastInUiThread(final Activity activity,
-			final String message, final int length) {
+			final String title, final int length) {
 		activity.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				Toast.makeText(activity.getApplicationContext(), message,
+				Toast.makeText(activity.getApplicationContext(), title,
 						length).show();
 			}
 		});
