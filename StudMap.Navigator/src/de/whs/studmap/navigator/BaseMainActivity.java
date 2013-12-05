@@ -1,13 +1,11 @@
 package de.whs.studmap.navigator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -19,18 +17,15 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Spinner;
+import android.widget.FrameLayout;
+import android.widget.SearchView;
+import de.whs.studmap.fragments.MenuFragment;
 import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.scanner.IntentIntegrator;
 
@@ -55,11 +50,8 @@ public class BaseMainActivity extends Activity {
 	protected ActionBar mActionBar;
 	protected ActionBarDrawerToggle mDrawerToggle;
 	protected DrawerLayout mDrawerLayout;
-	protected LinearLayout mLeftDrawer;
-	protected List<String> mDrawerItems;
-	protected Spinner mFloorSpinner;
-	protected AutoCompleteTextView mSearchTextView;
-	protected ListView mDrawerListView;
+	protected FrameLayout mLeftDrawer;
+	protected MenuFragment mMenuFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +62,7 @@ public class BaseMainActivity extends Activity {
 		
 		loadBaseActivity();
 		initializeActionBar();
-		
+				
 		setupForegroundDispatchSystem();
 	}
 	
@@ -78,6 +70,18 @@ public class BaseMainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_activity_actions, menu);
+		
+		// Get the SearchView and set the searchable configuration
+	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+	    SearchView searchView = (SearchView)searchMenuItem.getActionView();
+	    // Assumes current activity is the searchable activity
+	    if(searchView != null){
+
+		    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		    searchView.setIconifiedByDefault(true); 
+	    }
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -91,8 +95,14 @@ public class BaseMainActivity extends Activity {
 
 		// Handle action buttons
 		if (item.getItemId() == R.id.action_scan) {
+			
 			IntentIntegrator scanIntegrator = new IntentIntegrator(this);
 			scanIntegrator.initiateScan();
+			return false;
+		} else if (item.getItemId() == R.id.menu_reload) {
+
+			loadBaseActivity();
+			mDrawerLayout.closeDrawer(mLeftDrawer);
 			return false;
 		} else
 			return super.onOptionsItemSelected(item);
@@ -134,26 +144,24 @@ public class BaseMainActivity extends Activity {
 		// Pass any configuration change to the drawer toggles
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
-
-	protected void loadBaseActivity() {
+	
+	private void loadBaseActivity() {
 		setContentView(R.layout.activity_main);
 
-		mDrawerItems = new ArrayList<String>(Arrays.asList(getResources()
-				.getStringArray(R.array.menue_item_array)));
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerListView = (ListView) findViewById(R.id.left_drawer_listView);
-		mLeftDrawer = (LinearLayout) findViewById(R.id.left_drawer);
+		mLeftDrawer = (FrameLayout) findViewById(R.id.left_drawer);
 		mActionBar = getActionBar();
 
+		mMenuFragment = MenuFragment.newInstance();
+
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.left_drawer, mMenuFragment).commit();
+		
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
-		// set up the drawer's list view with items and click listener
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.simple_list_item_black, mDrawerItems));
-
-		
 
 		// Drawer icon in the actionbar toggles due to the drawer state
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -189,19 +197,7 @@ public class BaseMainActivity extends Activity {
 		mActionBar.setDisplayHomeAsUpEnabled(true);
 		mActionBar.setDisplayShowCustomEnabled(true);
 		mActionBar.setHomeButtonEnabled(true);
-		mActionBar.setTitle("");
-
-		LayoutInflater inflator = (LayoutInflater) this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View actionBarView = inflator.inflate(R.layout.action_bar, null);
-		mActionBar.setCustomView(actionBarView);
-
-		// Initialize Search TextView
-		mSearchTextView = (AutoCompleteTextView) findViewById(R.id.actionBarSearch);
-		mSearchTextView.setThreshold(1); // AutoComplete by the first letter		
-
-		// Get Spinner for selecting the Level in the Action Bar
-		mFloorSpinner = (Spinner) findViewById(R.id.levelSpinner);		
+		mActionBar.setTitle("");			
 	}
 	
 	protected void closeKeyboard(View view) {

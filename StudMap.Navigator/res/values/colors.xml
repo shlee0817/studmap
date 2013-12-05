@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <resources>
+        <color name="menu_bg">#555</color>
+        <color name="white">#fff</color>
+        <color name="menu_divide">#464646</color>
+        <color name="whs_green">#669922</color>
+    </resources>

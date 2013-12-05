@@ -71,7 +71,7 @@ public class PositionDialogFragment extends DialogFragment implements
 		ListView mListView = (ListView) rootView
 				.findViewById(R.id.positionList);
 		ArrayAdapter<String> mListAdapter = new ArrayAdapter<String>(
-				getActivity(), R.layout.simple_list_item_white, items);
+				getActivity(), android.R.layout.simple_list_item_1, items);
 		mListView.setAdapter(mListAdapter);
 
 		mListView.setOnItemClickListener(new OnItemClickListener() {

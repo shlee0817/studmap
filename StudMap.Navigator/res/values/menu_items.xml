@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string name="menu_login">Anmelden</string>
+    <string name="menu_logout">Anmelden</string>
+    <string name="menu_nav_reset">Navigation zurücksetzen</string>
+    <string name="menu_poi">Point of Interest</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="menu_about">Über</string>
+    <integer-array name="menu_items_array">
+        <item >@string/menu_login</item>
+        <item >@string/menu_nav_reset</item>
+        <item >@string/menu_poi</item>
+        <item >@string/menu_settings</item>
+        <item >@string/menu_about</item>
+    </integer-array>
+</resources>
