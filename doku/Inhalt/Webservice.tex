@@ -41,6 +41,7 @@ Eigenschaften:\\
 \hline X & X-Koordinate auf dem Bild des Stockwerks. Wertebereich: 0.0 - 1.0. 0.0 bedeutet linker Bildrand. 1.0 bedeutet rechter Bildrand. \\ 
 \hline Y & Y-Koordinate auf dem Bild des Stockwerks. Wertebereich: 0.0 - 1.0. 0.0 bedeutet oberer Bildrand. 1.0 bedeutet unterer Bildrand. \\ 
 \hline FloorId & ID des Stockwerks auf dem sich der Knoten befindet. \\ 
+\hline HasInformation & true, wenn es Raum- oder PoI-Daten zu dem Knoten gibt. Ansonsten false. \\ 
 \hline 
 \end{tabularx} 
 
@@ -50,7 +51,8 @@ Beispiel:
   "Id": 12,
   "X": 0.45,
   "Y": 0.76,
-  "FloorId": 2
+  "FloorId": 2,
+  "HasInformation": true
 }
 \end{lstlisting}
 
@@ -224,8 +226,8 @@ Beispiel:
   "RoomName": "B2.0.03",
   "Node": {...},
   "PoI": {...},
-  "QRCode": "",
-  "NFCTag": ""
+  "QRCode": "...",
+  "NFCTag": "..."
 }
 \end{lstlisting}
 
@@ -400,6 +402,8 @@ Ist beim \texttt{ResponseStatus Error} gesetzt. Es werden folgende Fehlerszenari
 \begin{itemize}
 \item \texttt{001 - DatabaseError}:\\
 Fehler bei der Ausführung einer Datenbankabfrage.
+\item \texttt{002 - Unknown}:\\
+Unbekannter Fehler.
 \end{itemize}
 
 \textbf{Registrierung:}
@@ -424,6 +428,36 @@ Die Logindaten (Name oder Passwort) sind ungültig.
 Zur angeforderten MapId existiert keine Map.
 \item \texttt{202 - FloorIdDoesNotExist}:\\
 Zur angeforderten FloorId existiert kein Floor.
+\item \texttt{203 - NodeIdDoesNotExist}:\\
+Zur angeforderten NodeId existiert kein Node.
+\end{itemize}
+
+\textbf{Navigation:}
+\begin{itemize}
+\item \texttt{301 - NoRouteFound}:\\
+Es konnte keine Route gefunden werden.
+\item \texttt{302 - StartNodeNotFound}:\\
+Der angegebene Startknoten existiert nicht.
+\item \texttt{303 - EndNodeNotFound}:\\
+Der angegebene Endknoten existiert nicht.
+\end{itemize}
+
+\textbf{Information:}
+\begin{itemize}
+\item \texttt{401 - PoiTypeIdDoesNotExist}:\\
+Zur angegebenen PoiTypeId existiert kein PoiType.
+\item \texttt{402 - NFCTagDoesNotExist}:\\
+Das angegebene NFC-Tag wurde nicht gefunden.
+\item \texttt{403 - QRCodeDosNotExist}:\\
+Der angegebene QR-Code wurde nicht gefunden.
+\item \texttt{404 - PoiDoesNotExist}:\\
+Zur angegebenen PoiId existiert kein PoI.
+\item \texttt{405 - QRCodeIsNullOrEmpty}:\\
+Es wurde kein QR-Code angegeben.
+\item \texttt{406 - NFCTagIsNullOrEmpty}:\\
+Es wurde kein NFC-Tag angegeben.
+\item \texttt{407 - NFCTagAllreadyAssigned}:\\
+Das NFC-Tag ist bereits einem anderen Knoten zugeordnet.
 \end{itemize}
 
 \subsection{ObjectResponse}
