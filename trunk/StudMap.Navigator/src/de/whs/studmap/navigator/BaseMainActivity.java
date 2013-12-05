@@ -26,7 +26,6 @@ import android.widget.FrameLayout;
 import android.widget.SearchView;
 import de.whs.studmap.client.core.snippets.UserInfo;
 import de.whs.studmap.fragments.MenuFragment;
-import de.whs.studmap.scanner.IntentIntegrator;
 
 public class BaseMainActivity extends Activity {
 
@@ -84,28 +83,7 @@ public class BaseMainActivity extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// The action bar home/up action should open or close the drawer.
-		// ActionBarDrawerToggle will take care of this.
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-
-		// Handle action buttons
-		if (item.getItemId() == R.id.action_scan) {
-			
-			IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-			scanIntegrator.initiateScan();
-			return false;
-		} else if (item.getItemId() == R.id.menu_reload) {
-
-			loadBaseActivity();
-			mDrawerLayout.closeDrawer(mLeftDrawer);
-			return false;
-		} else
-			return super.onOptionsItemSelected(item);
-	}
+	
 
 	@Override
 	public void onBackPressed() {
