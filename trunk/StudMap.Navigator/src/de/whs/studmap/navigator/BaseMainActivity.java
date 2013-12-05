@@ -22,11 +22,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
-import de.whs.studmap.fragments.MenuFragment;
 import de.whs.studmap.client.core.snippets.UserInfo;
+import de.whs.studmap.fragments.MenuFragment;
 import de.whs.studmap.scanner.IntentIntegrator;
 
 public class BaseMainActivity extends Activity {

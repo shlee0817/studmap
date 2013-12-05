@@ -400,8 +400,6 @@ public class MainActivity extends BaseMainActivity implements
 					.commit();
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 		} else {
-
-			UserInfo.toast(this, "Auswahl nicht gefunden!", false);
 		}
 	}
 

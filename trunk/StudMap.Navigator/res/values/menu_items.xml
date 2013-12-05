@@ -2,7 +2,7 @@
 <resources>
 
     <string name="menu_login">Anmelden</string>
-    <string name="menu_logout">Anmelden</string>
+    <string name="menu_logout">Abmelden</string>
     <string name="menu_nav_reset">Navigation zurücksetzen</string>
     <string name="menu_poi">Point of Interest</string>
     <string name="menu_settings">Einstellungen</string>
