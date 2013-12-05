@@ -50,7 +50,12 @@ public class Node implements Parcelable {
 	
 	public static Node fromJson(String node) {
 		
-		return new Gson().fromJson(node, Node.class);
+		try{
+			return new Gson().fromJson(node, Node.class);
+		} catch (Exception ex){
+			return null;
+		}
+		
 	}
 	
 	public int getFloorID() {
