@@ -66,6 +66,7 @@ public class MainActivity extends BaseMainActivity implements
 	private String mUserName = "";
 	private Node mSelectedNode = null;
 	private boolean mSetAsStart = false;
+	private boolean mWebViewIsReady = false;
 	private int mMapId = Constants.MAP_ID;
 	private int mFloorId;
 
@@ -254,17 +255,26 @@ public class MainActivity extends BaseMainActivity implements
 
 	private void SetNodeAndChangeFloorIfRequired(Node selectedNode,
 			Boolean setAsStart) {
-		mSelectedNode = selectedNode;
-		mSetAsStart = setAsStart;
 
-		int selectedNodeId = mSelectedNode.getNodeID();
-		int selectedFloorId = mSelectedNode.getFloorID();
-		if (selectedFloorId == mFloorId)
-			mWebViewFragment.sendTarget(selectedNodeId);
-		else {
+		int selectedNodeId = selectedNode.getNodeID();
+		int selectedFloorId = selectedNode.getFloorID();
+		if (selectedFloorId == mFloorId) {
+			if (setAsStart)
+				mWebViewFragment.sendStart(selectedNodeId);
+			else
+				mWebViewFragment.sendTarget(selectedNodeId);
+		} else {
+			mSelectedNode = selectedNode;
+			mSetAsStart = setAsStart;
 			loadFloorToMap(selectedFloorId);
 			mMenuFragment.selectFloorItem(selectedFloorId);
-			mWebViewFragment.sendTarget(selectedNodeId);
+
+			if (mWebViewIsReady) {
+				if (setAsStart)
+					mWebViewFragment.sendStart(selectedNodeId);
+				else
+					mWebViewFragment.sendTarget(selectedNodeId);
+			}
 		}
 	}
 
@@ -286,11 +296,15 @@ public class MainActivity extends BaseMainActivity implements
 
 		if (mSelectedNode != null && mWebViewFragment != null) {
 
-			if (mSetAsStart)
+			if (mSetAsStart) {
+				mSetAsStart = false;
 				mWebViewFragment.sendStart(mSelectedNode.getNodeID());
-			else
+			} else
 				mWebViewFragment.sendTarget(mSelectedNode.getNodeID());
-		}
+			mSelectedNode = null;
+		} else
+			mWebViewIsReady = true;
+
 	}
 
 	@Override
