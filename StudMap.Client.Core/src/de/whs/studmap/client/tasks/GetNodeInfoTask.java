@@ -14,7 +14,7 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGenericTaskListener;
 
-public class GetNodeInfoTask extends AsyncTask<Void, Void, Void> {
+public class GetNodeInfoTask extends AsyncTask<Void, Void, Integer> {
 
 	private Node mNode;
 	private OnGenericTaskListener<Node> mCallback;
@@ -26,58 +26,40 @@ public class GetNodeInfoTask extends AsyncTask<Void, Void, Void> {
 	}
 
 	@Override
-	protected Void doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
 			mNode = Service.getNodeInformationForNode(mNodeId);
+			return ResponseError.None;
 		} catch (WebServiceException e) {
 			Log.d(Constants.LOG_TAG_POSITION_ACTIVITY,
 					"GetNodeInfoTask - WebServiceException");
 			JSONObject jObject = e.getJsonObject();
 
-			try {
-				
+			try {				
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onError(errorCode);
+				return errorCode;
 				
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_POSITION_ACTIVITY,
+				Log.e(Constants.LOG_TAG_POSITION_ACTIVITY,
 						"GetNodeInfoTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		} catch (ConnectException e) {
-			Log.d(Constants.LOG_TAG_POSITION_ACTIVITY,
+			Log.e(Constants.LOG_TAG_POSITION_ACTIVITY,
 					"GetNodeInfoTask - ConnectException");
 
-			mCallback.onError(ResponseError.UnknownError);
+			return ResponseError.ConnectionError;
 		}
-		return null;
 	}
 
 	@Override
-	protected void onPostExecute(final Void param){
-
-		mCallback.onSuccess(mNode);
+	protected void onPostExecute(final Integer result){
+		if (result == ResponseError.None)
+			mCallback.onSuccess(mNode);			
+		else
+			mCallback.onError(result);
 	}
-
-	//
-	// @Override
-	// protected void onPostExecute(final Node node) {
-	//
-	// // mAsynTask = null;
-	// // showProgress(false);
-	// //
-	// // if (node != null) {
-	// // StringBuilder sb = new StringBuilder();
-	// // sb.append(node.getDisplayName());
-	// // sb.append("\n");
-	// // sb.append(getString(R.string.navigationTitle));
-	// // mPositionQuestion.setText(sb.toString());
-	// // } else {
-	// // if (bShowDialog)
-	// // UserInfo.dialog(mContext, mUsername,
-	// // getString(R.string.error_connection));
-	// // }
-	// }
 
 	@Override
 	protected void onCancelled() {

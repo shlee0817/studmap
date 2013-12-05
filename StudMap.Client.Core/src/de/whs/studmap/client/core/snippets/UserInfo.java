@@ -2,6 +2,7 @@ package de.whs.studmap.client.core.snippets;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
@@ -61,6 +62,15 @@ public class UserInfo{
 						length).show();
 			}
 		});
+	}
+	
+	public static ProgressDialog StudmapProgressDialog(Context context){
+		
+		ProgressDialog pDialog = new ProgressDialog(context);
+		pDialog.setCancelable(false);
+		pDialog.setMessage("Bitte warten...");
+		
+		return pDialog;
 	}
 	
 }

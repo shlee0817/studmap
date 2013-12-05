@@ -14,7 +14,7 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGetNodeForQrCodeTaskListener;
 
-public class GetNodeForQrCodeTask extends AsyncTask<Void, Void, Boolean> {
+public class GetNodeForQrCodeTask extends AsyncTask<Void, Void, Integer> {
 
 	private OnGetNodeForQrCodeTaskListener mCallback;
 	private int mMapId;
@@ -29,13 +29,14 @@ public class GetNodeForQrCodeTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
 			mNode = Service.getNodeForQRCode(mMapId, mQRCode);
-			if (mNode != null)
-				return true;
-			return false;
+			if (mNode == null)
+				return ResponseError.UnknownError;
+			
+			return ResponseError.None;
 		} catch (WebServiceException e) {
 			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
 					"GetNodeForQrCodeTask - WebServiceException");
@@ -43,27 +44,25 @@ public class GetNodeForQrCodeTask extends AsyncTask<Void, Void, Boolean> {
 			JSONObject jObject = e.getJsonObject();
 			try {
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onGetNodeForQrCodeError(errorCode);
+				return errorCode;
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+				Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
 						"GetNodeForQrCodeTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		} catch (ConnectException e) {
-			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
 					"GetDataTask - ConnectException");
-			mCallback.onGetNodeForQrCodeError(ResponseError.UnknownError);
+			 return ResponseError.ConnectionError;
 		}
-		return false;
 	}
 
-	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		if (success) {
+		if (result == ResponseError.None)
 			mCallback.onGetNodeForQrCodeSuccess(mNode);
-		} else {
-			mCallback.onGetNodeForQrCodeError(ResponseError.UnknownError);
-		}
+		else
+			mCallback.onGetNodeForQrCodeError(result);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGenericTaskListener;
 
-public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
+public class GetMapsTask extends AsyncTask<Void, Void, Integer> {
 
 	private OnGenericTaskListener<List<Map>> mCallback;
 	private List<Map> mMaps;
@@ -26,41 +26,41 @@ public class GetMapsTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
 			mMaps = Service.getMaps();
-			if (mMaps == null || mMaps.size() == 0)
-				return false;
-			return true;
+			if (mMaps == null || mMaps.size() == 0){
+				return ResponseError.UnknownError;
+			}
+			return ResponseError.None;
 		} catch (WebServiceException e) {
 			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-					"GetDataTask - WebServiceException");
+					"GetMapsTask - WebServiceException");
 
 			JSONObject jObject = e.getJsonObject();
 			try {
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onError(errorCode);
+				return errorCode;
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-						"GetDataTask - Parsing the WebServiceException failed!");
+				Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"GetMapsTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		} catch (ConnectException e) {
-			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-					"GetDataTask - ConnectException");
-			mCallback.onError(ResponseError.UnknownError);
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+					"GetMapsTask - ConnectException");
+			return ResponseError.ConnectionError;
 		}
-		return false;
 	}
 
 	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		if (success) {
+		if (result == ResponseError.None) 
 			mCallback.onSuccess(mMaps);
-		} else {
-			mCallback.onError(ResponseError.UnknownError);
-		}
+		else
+			mCallback.onError(result);
 	}
 
 	@Override

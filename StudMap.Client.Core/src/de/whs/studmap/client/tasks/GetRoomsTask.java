@@ -15,7 +15,7 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnGetRoomsTaskListener;
 
-public class GetRoomsTask extends AsyncTask<Void, Void, Boolean> {
+public class GetRoomsTask extends AsyncTask<Void, Void, Integer> {
 
 	private int mMapId;
 	private OnGetRoomsTaskListener mCallback;
@@ -28,41 +28,39 @@ public class GetRoomsTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
 			mNodes = Service.getRoomsForMap(mMapId);
 			if (mNodes == null || mNodes.size() == 0)
-				return false;
-			return true;
+				return ResponseError.UnknownError;
+			return ResponseError.None;
 		} catch (WebServiceException e) {
 			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-					"GetDataTask - WebServiceException");
+					"GetRoomsTask - WebServiceException");
 
 			JSONObject jObject = e.getJsonObject();
 			try {
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onGetRoomsError(errorCode);
+				return errorCode;
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-						"GetDataTask - Parsing the WebServiceException failed!");
+				Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+						"GetRoomsTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		} catch (ConnectException e) {
-			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
-					"GetDataTask - ConnectException");
-			mCallback.onGetRoomsError(ResponseError.UnknownError);
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
+					"GetRoomsTask - ConnectException");
+			 return ResponseError.ConnectionError;
 		}
-		return false;
 	}
 
-	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		if (success) {
+		if (result == ResponseError.None) 
 			mCallback.onGetRoomsSuccess(mNodes);
-		} else {
-			mCallback.onGetRoomsError(ResponseError.UnknownError);
-		}
+		else
+			mCallback.onGetRoomsError(result);
 	}
 
 	@Override

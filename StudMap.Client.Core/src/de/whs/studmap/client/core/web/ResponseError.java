@@ -1,6 +1,8 @@
 package de.whs.studmap.client.core.web;
 
 public interface ResponseError {
+	public static final int TaskCancelled = -2;
+	public static final int ConnectionError = -1;
 	public static final int None = 0;
 
 	public static final int DatabaseError = 1;

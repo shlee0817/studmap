@@ -13,7 +13,7 @@ import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
 import de.whs.studmap.client.listener.OnLogoutTaskListener;
 
-public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
+public class LogoutTask extends AsyncTask<Void, Void, Integer> {
 
 	private String mUserName;
 	private OnLogoutTaskListener mCallback;
@@ -25,11 +25,11 @@ public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 
 		try {
-			boolean success = Service.logout(mUserName);
-			return success;
+			Service.logout(mUserName);
+			return ResponseError.None;
 		} catch (WebServiceException e) {
 			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
 					"LogoutTask - WebServiceException");
@@ -37,26 +37,25 @@ public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
 			JSONObject jObject = e.getJsonObject();
 			try {
 				int errorCode = jObject.getInt(Service.RESPONSE_ERRORCODE);
-				mCallback.onLogoutError(errorCode);
+				return errorCode;
 			} catch (JSONException ignore) {
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+				Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
 						"LogoutTask - Parsing the WebServiceException failed!");
+				return ResponseError.UnknownError;
 			}
 		} catch (ConnectException e) {
-			Log.d(Constants.LOG_TAG_MAIN_ACTIVITY,
+			Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
 					"LogoutTask - ConnectException");
-			mCallback.onLogoutError(ResponseError.UnknownError);
+			return ResponseError.ConnectionError;
 		}
-		return false;
 	}
 
-	@Override
-	protected void onPostExecute(final Boolean success) {
+	protected void onPostExecute(final Integer result) {
 
-		if (success) {
+		if (result == ResponseError.None) 
 			mCallback.onLogoutSuccess();
-		} else
-			mCallback.onLogoutError(ResponseError.UnknownError);
+		else
+			mCallback.onLogoutError(result);
 	}
 
 	@Override
