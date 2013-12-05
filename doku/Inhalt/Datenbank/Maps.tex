@@ -1,0 +1,125 @@
+\section{Maps}
+\label{sec:Maps}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{./Bilder/MapEntities}
+\caption{Datenbankmodell für die Kartenobjekte}
+\label{fig:MapEntities}
+\end{figure}
+
+\subsection{Maps}
+Für jede Karte wird ein Eintrag in dieser Tabelle erzeugt.
+Zu jeder Karte wird ein frei vergebener Name und der
+Erstellungszeitpunkt gespeichert.
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID der Karte \\ 
+\hline Name 				& NVARCHAR(255)		 & Name der Karte \\ 
+\hline CreationTime 		& DATETIME 			 & Erstellungszeitpunkt\\ 
+\hline 
+\end{tabularx} 
+
+\subsection{Floors}
+Für jedes Stockwerk wird ein Eintrag in dieser Variable angelegt.
+Zu jedem Stockwerk wird ein frei vergebener Name, eine URL auf ein
+Bild des Stockwerks und ein Erstellungszeitpunkt gespeichert.
+Ein Stockwerk ist genau einer Karte zugeordnet
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID des Stockwerks \\
+\hline MapId				& INTEGER (FK)		 & ID der zugeordneten Karte \\  
+\hline Name 				& NVARCHAR(255)		 & Name des Stockwerks \\ 
+\hline ImageUrl				& NVARCHAR(MAX)		 & URL des Bilds \\ 
+\hline CreationTime 		& DATETIME 			 & Erstellungszeitpunkt\\ 
+\hline 
+\end{tabularx} 
+
+\subsection{Graphs}
+Ein Graph beschreibt die Knoten- und Kantenstruktur auf einer Karte.
+Dazu werden alle Kanten mit dem Graphen verknüpft. Über die Kanten
+sind auch die Knoten mit dem indirekt verknüpft.
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID des Graphen \\
+\hline MapId				& INTEGER (FK)		 & ID der zugeordneten Karte \\  
+\hline CreationTime 		& DATETIME 			 & Erstellungszeitpunkt\\ 
+\hline 
+\end{tabularx} 
+
+\subsection{Edges}
+Eine Kante verknüpft zwei Knoten in einem Graphen.
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID der Kante \\
+\hline GraphId				& INTEGER (FK)		 & ID der zugeordneten Graphen \\  
+\hline NodeStartId			& INTEGER (FK)		 & ID des Startknotens \\  
+\hline NodeEndId			& INTEGER (FK)		 & ID des Endknotens \\  
+\hline CreationTime 		& DATETIME 			 & Erstellungszeitpunkt\\ 
+\hline 
+\end{tabularx} 
+
+\subsection{Nodes}
+Die Position eines  Knoten wird durch die Zuordnung zu einem Stockwerk
+und seine X/Y-Koordinaten auf diesem Stockwerk bestimmt. Außerdem wird
+der Erstellungszeitpunkt eines Knotens gespeichert.
+
+Die X- und Y-Koordinaten werden im Bereich 0.0 bis 1.0 gespeichert. 
+Dabei bedeutet 0.0 ganz links (X) oder ganz oben (Y) und 1.0
+ganz rechts (X) bzw. ganz unten (Y) auf dem Bild des Stockwerks.
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID der Knotens \\
+\hline FloorId				& INTEGER (FK)		 & ID der zugeordneten Stockwerks \\  
+\hline X					& DECIMAL(18,17)	 & X-Koordinate auf dem Stockwerk \\  
+\hline Y					& DECIMAL(18,17)	 & Y-Koordinate auf dem Stockwerk \\  
+\hline CreationTime 		& DATETIME 			 & Erstellungszeitpunkt\\ 
+\hline 
+\end{tabularx} 
+
+\subsection{NodeInformation}
+Zu einem Knoten können noch weitere Informationen hinterlegt werden.
+Diese sind optional und werden nur zu wichtigen Knoten wie
+Seminarräumen, Büros und Toiletten. Über die Knoteninformationen
+kann auch ein PoI mit dem Knoten verknüpft werden.
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID der Knoteninformation \\
+\hline NodeId				& INTEGER (FK)		 & ID der zugeordneten Knotens \\  
+\hline DisplayName			& NVARCHAR(50)		 & Name der angezeigt werden soll \\  
+\hline RoomName				& NVARCHAR(255)		 & Offizieller Raumname (z.B. B4.0.1.11) \\  
+\hline QRCode				& NVARCHAR(255)		 & Hinterlegter QR-Code \\ 
+\hline NFCTAG				& NVARCHAR(50)		 & Hinterlegtes NFC-Tag \\ 
+\hline PoiId				& INTEGER (FK)		 & Optionaler zugeordneter PoI \\ 
+\hline CreationTime 		& DATETIME 			 & Erstellungszeitpunkt\\ 
+\hline 
+\end{tabularx} 
+
+\subsection{PoIs}
+Ein PoI (Point of Interest) kategorisiert für den Benutzer relevante Knoten.
+Hier kann z.B. nach Dozentenbüros, Mensa, Bibliothek und Toiletten gefiltert
+werden.
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID der Knotens \\
+\hline TypeId				& INTEGER (FK)		 & ID des PoI-Typs \\  
+\hline Description			& NVARCHAR(MAX)		 & Zusätzliche Beschreibung des PoIs \\  
+\hline 
+\end{tabularx} 
+
+\subsection{PoiTypes}
+Diese Tabelle enthält die möglichen Typen von PoIs.
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID des PoI-Typs \\
+\hline Name					& NVARCHAR(255)		 & Name des PoI-Typs \\  
+\hline 
+\end{tabularx} 
