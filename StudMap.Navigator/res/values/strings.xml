@@ -4,4 +4,8 @@
     <string name="search_hint_txt">In Räumen suchen</string>
     <string name="description_studmapicon">StudMapIcon</string>
     <string name="menu_reload">Neu laden</string>
+    <string name="initialSetup_title">Willkommen bei StudMap</string>
+    <string name="initialSetup_welcome_txt">Vielen Dank, dass Du Dich für unsere App entschieden hast.</string>
+    <string name="initialSetup_map_txt">Bitte wähle Deine Karte aus:</string>
+    <string name="intialSetup_start_txt">App Starten</string>
 </resources>

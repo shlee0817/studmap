@@ -21,6 +21,7 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Floor;
+import de.whs.studmap.client.core.data.Map;
 import de.whs.studmap.client.core.data.Node;
 import de.whs.studmap.client.core.snippets.ErrorHandler;
 import de.whs.studmap.client.core.snippets.NFC;
@@ -41,7 +42,8 @@ import de.whs.studmap.client.tasks.GetFloorsTask;
 import de.whs.studmap.client.tasks.GetNodeForNFCTagTask;
 import de.whs.studmap.client.tasks.GetNodeForQrCodeTask;
 import de.whs.studmap.client.tasks.LogoutTask;
-import de.whs.studmap.fragments.PreferencesFragment;
+import de.whs.studmap.fragments.InitialSetupFragment;
+import de.whs.studmap.fragments.InitialSetupFragment.OnMapSelectedListener;
 import de.whs.studmap.fragments.WebViewFragment;
 import de.whs.studmap.navigator.dialogs.ImpressumDialogFragment;
 import de.whs.studmap.navigator.dialogs.LoginDialogFragment;
@@ -55,7 +57,7 @@ public class MainActivity extends BaseMainActivity implements
 		OnGetFloorsTaskListener, OnGetNodeForQrCodeTaskListener,
 		JavaScriptInterface, OnLogoutTaskListener,
 		OnGetNodeForNFCTagTaskListener, OnPositionDialogListener,
-		OnMenuItemListener {
+		OnMenuItemListener, OnMapSelectedListener {
 
 	// vars
 	private boolean mWaitGetRoomsOrFloorsTask = false;
@@ -76,27 +78,34 @@ public class MainActivity extends BaseMainActivity implements
 		loadWebViewFragment();
 		getDataFromWebService();
 		mErrorHandler = new ErrorHandler(this);
-
-		loadActivity();
-
-		// TODO: initialer Start -> Map wählen, nachher über Einstellung änderbar
+		
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		String mapId = sharedPref.getString(getString(R.string.pref_map_key), "3");
-		String hostName = sharedPref.getString(getString(R.string.pref_host_key), "193.175.199.115");
-		mMapId = Integer.parseInt(mapId);
-
-		Uri uri = RoomsSuggestionsProvider.CONTENT_URI;
-		ContentResolver cr = getContentResolver();
-		ContentProviderClient cpc = cr.acquireContentProviderClient(uri);
-		if (cpc != null) {
-
-			RoomsSuggestionsProvider provider = (RoomsSuggestionsProvider) cpc
-					.getLocalContentProvider();
-			provider.setMapId(mMapId);
-			cpc.release();
+		boolean isFirstStart = sharedPref.getBoolean(getString(R.string.pref_first_time), false);
+		
+		// TODO hostName verwenden!
+		// String hostName = sharedPref.getString(getString(R.string.pref_host_key), "193.175.199.115");
+		
+		
+		if (isFirstStart) {
+			sharedPref.edit().putBoolean(getString(R.string.pref_first_time), false).commit();
+			new InitialSetupFragment().show(getFragmentManager(), "InitialSetup");
 		}
-
-	    handleIntent(getIntent());
+		else {		
+			String mapId = sharedPref.getString(getString(R.string.pref_map_key), "3");
+			mMapId = Integer.parseInt(mapId);
+			
+			loadActivity();
+		}		
+	}
+	
+	@Override
+	public void onMapSelected(Map map) {
+		mMapId = map.getId();
+		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		settings.edit().putString(getString(R.string.pref_map_key), "" + mMapId).commit();
+		
+		loadActivity();
 	}
 
 	@Override
@@ -160,6 +169,19 @@ public class MainActivity extends BaseMainActivity implements
 	private void loadActivity(){
 		loadWebViewFragment();
 		getDataFromWebService();
+
+		Uri uri = RoomsSuggestionsProvider.CONTENT_URI;
+		ContentResolver cr = getContentResolver();
+		ContentProviderClient cpc = cr.acquireContentProviderClient(uri);
+		if (cpc != null) {
+
+			RoomsSuggestionsProvider provider = (RoomsSuggestionsProvider) cpc
+					.getLocalContentProvider();
+			provider.setMapId(mMapId);
+			cpc.release();
+		}
+
+	    handleIntent(getIntent());
 	}
 
 	private void handleIntent(Intent intent) {
@@ -394,11 +416,11 @@ public class MainActivity extends BaseMainActivity implements
 			impressumDialog.show(getFragmentManager(), "Impressum");
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 		} else if (itemName.equals(getString(R.string.menu_settings))) {
-
-			getFragmentManager().beginTransaction()
-					.replace(android.R.id.content, new PreferencesFragment())
-					.commit();
+			Intent preferenceIntent = new Intent(MainActivity.this, PreferencesActivity.class);
+			startActivity(preferenceIntent);
+			
 			mDrawerLayout.closeDrawer(mLeftDrawer);
+			
 		} else {
 		}
 	}

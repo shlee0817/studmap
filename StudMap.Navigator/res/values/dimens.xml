@@ -6,5 +6,12 @@
     <dimen name="menu_item_size">16dp</dimen>
     <dimen name="menu_group_size">20dp</dimen>
     <dimen name="menu_item_size">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="mapsfloorselector_margin">8dp</dimen>
+    <dimen name="mapfloorselector_spinnerMarginBottom">20dp</dimen>
+    <dimen name="mapfloorselector_textSize">18dp</dimen>
+    <dimen name="choicesdialog_imageMargin">4dp</dimen>
+    <dimen name="mapfloorselector_spinner_padding">18dp</dimen>
 
 </resources>

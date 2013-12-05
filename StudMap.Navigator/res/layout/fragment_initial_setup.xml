@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/initialSetup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/initialSetup_welcome_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/mapsfloorselector_margin"
+        android:text="@string/initialSetup_welcome_txt"
+        android:textSize="@dimen/mapfloorselector_textSize" />
+    
+    <TextView
+        android:id="@+id/initialSetup_map_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/mapsfloorselector_margin"
+        android:text="@string/initialSetup_map_txt"
+        android:textSize="@dimen/mapfloorselector_textSize" />
+
+    <Spinner
+        android:id="@+id/initialSetup_mapSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/mapfloorselector_spinnerMarginBottom" />
+
+    <Button
+        android:id="@+id/initialSetup_LoadBtn_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/intialSetup_start_txt" />
+
+</LinearLayout>
