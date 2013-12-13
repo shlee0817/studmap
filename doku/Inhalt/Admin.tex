@@ -1,10 +1,21 @@
 \chapter{Admin}
-
-% Einleitung unter Kapitel.
+Wesentlicher Bestandteil unseres Projektes war die Administrationsumgebung. Genauer musste eine Anwendung geschaffen werden, die dem jeweiligen Endanwender Navigationsdaten zur Verfügung stellt. Also eine Umgebung, die einen Upload für Kartenmaterial bereitstellt. Des weiteren muss die Administrationsanwendung Features besitzen um Routen zu definieren und Meta-Informationen zu besonderen Örtlichkeiten festhalten zu können. Die Meta-Informationen können durch Points of Interest (PoI) Informationen erweitert werden.\\
+Im folgenden Abschnitt wird zunächst die allgemeine Struktur erläutert und anschließend liegt das Hauptaugenwerk auf der Benutzeroberfläche. Eine ausführliche Bedienungsanleitung der Administrationsumgebung ist im Anhang beigefügt.
 
 \section{Allgemeine Struktur}
+\subsection*{ASP.NET MVC 4}
+Basis unserer Projektstruktur war das \textbf{ASP.NET MVC Framework}, welches ein Web Application Framework ist, und ein Model-View-Controller-Pattern implementiert.\\
+Dies ermöglichte uns, eine Webanwendung zu entwickeln, bei der die Daten (\textit{Model}) gekapselt von der Ausgabe (\textit{View}) und dem \textit{Controller} vorliegen. Die \textit{View} repräsentiert unsere Daten und der \textit{Controller} reagiert auf Zustandsänderungen und ist sozusagen das Bindeglied oder die Schnittstelle zwischen \textit{View} und \textit{Model}.
+\subsection*{Controller}
+\subsubsection*{HomeController}
+Speziell für unser Projekt bedeutet es, dass wir drei Controller angelegt haben. Der Einstiegspunkt unserer Web-Anwendung ist der sogenannte HomeController. Dies ist der Controller, der zum Zuge kommt, sofern die anderen beiden Controller eine Interaktion oder Controller-Aufrufe mit gewissen Parametern nicht unterstützen.
+\subsubsection*{AccountController}
+\subsubsection*{AdminController}
+
+
+
 \section{Benutzeroberfläche}
-\section{Client Spezifisches ?!}
+\section{Admin Spezifisches ?!}
 
 % TODOS:
 % - Funktionsweise
