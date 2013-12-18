@@ -34,6 +34,10 @@ public class PositionDialogFragment extends DialogFragment implements
 
 	private OnPositionDialogListener mCallback;
 
+	private Node mNode;
+
+	private GetNodeInfoTask mAsyncTask;
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -41,7 +45,7 @@ public class PositionDialogFragment extends DialogFragment implements
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View rootView = inflater.inflate(R.layout.fragment_position_dialog,
 				null);
-
+		
 		// Cancel button
 		builder.setView(rootView).setNegativeButton(R.string.cancel_button,
 				new DialogInterface.OnClickListener() {
@@ -52,16 +56,10 @@ public class PositionDialogFragment extends DialogFragment implements
 					}
 				});
 
-		if (getArguments().containsKey("NodeId"))
-			mNodeId = getArguments().getInt("NodeId");
 
 		// UI References
 		mPositionQuestion = (TextView) rootView
 				.findViewById(R.id.position_question);
-
-		// AsyncTask
-		GetNodeInfoTask mAsynTask = new GetNodeInfoTask(this, mNodeId);
-		mAsynTask.execute();
 
 		// Navigation choice
 		List<String> items = new ArrayList<String>();
@@ -80,12 +78,12 @@ public class PositionDialogFragment extends DialogFragment implements
 					int position, long id) {
 				switch (position) {
 				case 0:
-					mCallback.onSetStart(mNodeId);
+					mCallback.onSetStart(mNode);
 					dismiss();
 					break;
 
 				case 1:
-					mCallback.onSetDestination(mNodeId);
+					mCallback.onSetDestination(mNode);
 					dismiss();
 					break;
 				}
@@ -96,6 +94,15 @@ public class PositionDialogFragment extends DialogFragment implements
 	}
 
 	@Override
+	public void onDestroy() {
+		
+		super.onDestroy();
+		
+		if(mAsyncTask != null)
+			mAsyncTask.cancel(true);
+	}
+	
+	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
@@ -103,6 +110,12 @@ public class PositionDialogFragment extends DialogFragment implements
 		// the callback interface. If not, it throws an exception
 		try {
 			mCallback = (OnPositionDialogListener) activity;
+			
+			// AsyncTask
+			if (getArguments().containsKey("NodeId"))
+				mNodeId = getArguments().getInt("NodeId");
+			mAsyncTask = new GetNodeInfoTask(this, mNodeId);
+			mAsyncTask.execute();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnPositionDialogListener");
@@ -112,6 +125,7 @@ public class PositionDialogFragment extends DialogFragment implements
 	@Override
 	public void onSuccess(Node node) {
 
+		mNode = node;
 		if (node != null) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(node.getDisplayName());

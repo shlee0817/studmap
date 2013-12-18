@@ -1,0 +1,75 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/WebViewContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightgray" >
+
+    <WebView
+        android:id="@+id/map_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="32dp" />
+
+    <RelativeLayout
+        android:id="@+id/NavigationInfoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/NavigationInfoMargin"
+        android:background="@xml/container_dropshadow"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="@dimen/NavigationInfoPadding"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:id="@+id/NavigationInfos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/NavigationInfoCloseButton"
+            android:orientation="vertical"
+            android:padding="@dimen/NavigationInfoPadding" >
+
+            <TextView
+                android:id="@+id/NavigationFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:fontFamily="sans-serif-light" />
+
+            <TextView
+                android:id="@+id/NavigationTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:fontFamily="sans-serif-light" />
+
+            <TextView
+                android:id="@+id/NodeInfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:fontFamily="sans-serif-light" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/NavigationInfoCloseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/NavigationInfos"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/NavigationInfos"
+            android:background="@null"
+            android:contentDescription="@string/close_button_descr"
+            android:src="@drawable/ic_action_cancel" />
+
+    </RelativeLayout>
+
+</FrameLayout>

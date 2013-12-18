@@ -6,12 +6,10 @@
         <meta name="viewport" content="width=device-width" />
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         @RenderSection("styles", required: false)
-        @Scripts.Render("~/bundles/modernizr")
     </head>
     <body>
         @RenderBody()
 
-        @Scripts.Render("~/bundles/jquery")
         @RenderSection("scripts", required: false)
     </body>
 </html>

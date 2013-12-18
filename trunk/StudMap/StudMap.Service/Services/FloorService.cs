@@ -1,11 +1,11 @@
-﻿using StudMap.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using StudMap.Core;
 using StudMap.Core.Maps;
 using StudMap.Data;
 using StudMap.Data.Entities;
 using StudMap.Service.CacheObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace StudMap.Service.Services
 {
@@ -20,12 +20,12 @@ namespace StudMap.Service.Services
                 throw new ServiceException(ResponseError.MapIdDoesNotExist);
 
             var newFloor = new Floors
-            {
-                MapId = mapId,
-                Name = name,
-                ImageUrl = imageUrl,
-                CreationTime = DateTime.Now
-            };
+                {
+                    MapId = mapId,
+                    Name = name,
+                    ImageUrl = imageUrl,
+                    CreationTime = DateTime.Now
+                };
             Floors insertedFloor = entities.Floors.Add(newFloor);
             entities.SaveChanges();
 
@@ -53,7 +53,7 @@ namespace StudMap.Service.Services
                 throw new ServiceException(ResponseError.MapIdDoesNotExist);
 
             return entities.Floors.Where(f => f.MapId == mapId).ToList()
-                .Select(f => Conversions.ToFloor(f, ServerAdminBasePath)).ToList();
+                           .Select(f => Conversions.ToFloor(f, ServerAdminBasePath)).ToList();
         }
 
         public static List<Floor> GetFloorsForMapCached(int mapId)
@@ -67,8 +67,8 @@ namespace StudMap.Service.Services
         public static Dictionary<int, Floor> GetAllFloors(MapsEntities entities)
         {
             return entities.Floors.ToList()
-                .Select(f => Conversions.ToFloor(f, ServerAdminBasePath))
-                .ToDictionary(f => f.Id);
+                           .Select(f => Conversions.ToFloor(f, ServerAdminBasePath))
+                           .ToDictionary(f => f.Id);
         }
 
 
@@ -83,10 +83,10 @@ namespace StudMap.Service.Services
 
         public static Floor GetFloorCached(int floorId)
         {
-            var cache = StudMapCache.Global.Floors;
+            Dictionary<int, Floor> cache = StudMapCache.Global.Floors;
             if (!cache.ContainsKey(floorId))
                 throw new ServiceException(ResponseError.FloorIdDoesNotExist);
-            
+
             return cache[floorId];
         }
 
@@ -107,7 +107,7 @@ namespace StudMap.Service.Services
             Floors floor = entities.Floors.FirstOrDefault(x => x.Id == floorId);
             if (floor == null)
                 throw new ServiceException(ResponseError.FloorIdDoesNotExist);
-            
+
             floor.ImageUrl = filename;
             entities.SaveChanges();
 

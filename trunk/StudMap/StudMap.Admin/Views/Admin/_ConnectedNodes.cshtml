@@ -1,5 +1,5 @@
 ﻿@using StudMap.Core.Graph
-@model List<Node>
+@model List<StudMap.Core.Graph.Node>
 @{
     Layout = null;
 }
@@ -9,7 +9,7 @@
     <h3>Verbundene Knoten</h3>
     <div class="table ConnectedNodesTable">
     
-        @foreach (var node in Model)
+        @foreach (Node node in Model)
         {
             <div id="node_@node.Id" class="tableCell">
                 <div class="tableRow">
@@ -30,7 +30,7 @@
             <input id="inputNewEdge" value="" class="contextInputField" />
         </div>
         <div class="tableRow">
-            <button id="addNewEdge" onclick="addNewEdge(@ViewBag.StartNodeId)">Verbinden</button>
+            <button id="addNewEdge" onclick=" addNewEdge(@ViewBag.StartNodeId) ">Verbinden</button>
         </div>
     </div>
 </div>

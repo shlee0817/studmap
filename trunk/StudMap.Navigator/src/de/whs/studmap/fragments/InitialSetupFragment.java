@@ -57,7 +57,7 @@ public class InitialSetupFragment extends DialogFragment implements
 
 				if (mSelectedMap == null) {
 					Toast.makeText(getActivity(),
-							"Es wird eine Map für Messungen benötigt!",
+							Messages.getString("InitialSetupFragment.NoMapErrorText"), //$NON-NLS-1$
 							Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -85,7 +85,7 @@ public class InitialSetupFragment extends DialogFragment implements
 			mCallback = (OnMapSelectedListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnHeadlineSelectedListener");
+					+ Messages.getString("InitialSetupFragment.ListenerNotImplemented")); //$NON-NLS-1$
 		}
 	}
 
@@ -128,8 +128,10 @@ public class InitialSetupFragment extends DialogFragment implements
 	//GetMapsTask
 	@Override
 	public void onSuccess(List<Map> maps) {
-		if (maps != null)
+		if (maps != null){
 			mMapsAdapter.addAll(maps);
+			mMapsAdapter.notifyDataSetChanged();
+		}
 	}
 
 	//GetMapsTask

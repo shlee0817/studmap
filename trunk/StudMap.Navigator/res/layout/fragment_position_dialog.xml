@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/position_form"
     android:layout_width="match_parent"
@@ -6,20 +6,27 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/DialogHeadline"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/whs_lightgreen"
         android:drawableLeft="@drawable/ic_launcher"
         android:gravity="center_vertical"
-        android:paddingLeft="20dp"
+        android:padding="@dimen/dialogHeadlinePadding"
         android:text="@string/navigation"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textIsSelectable="false" >
+
     </TextView>
 
     <TextView
         android:id="@+id/position_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/DialogHeadline"
         android:gravity="center"
         android:paddingTop="20dp"
         android:text="@string/navigationTitle"
@@ -28,6 +35,8 @@
     <ListView
         android:id="@+id/positionList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/position_question" />
 
-</LinearLayout>
+</RelativeLayout>

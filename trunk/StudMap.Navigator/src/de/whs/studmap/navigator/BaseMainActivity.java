@@ -40,6 +40,7 @@ public class BaseMainActivity extends Activity {
 	protected IntentFilter[] intentFiltersArray;
 	protected String[][] techListsArray;
 	protected NfcAdapter mNfcAdapter;
+	protected boolean mNfcSupported = true;
 	
 	//vars
 	protected boolean isDrawerOpen = false;
@@ -63,7 +64,8 @@ public class BaseMainActivity extends Activity {
 		loadBaseActivity();
 		initializeActionBar();
 				
-		setupForegroundDispatchSystem();
+		if(mNfcSupported)
+			setupForegroundDispatchSystem();
 	}
 	
 	@Override
@@ -98,14 +100,16 @@ public class BaseMainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mNfcAdapter.enableForegroundDispatch(this, pendingIntent,
+		if(mNfcSupported)
+			mNfcAdapter.enableForegroundDispatch(this, pendingIntent,
 				intentFiltersArray, techListsArray);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mNfcAdapter.disableForegroundDispatch(this);
+		if(mNfcSupported)
+			mNfcAdapter.disableForegroundDispatch(this);
 	}
 
 	
@@ -164,6 +168,11 @@ public class BaseMainActivity extends Activity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		
+		if (mNfcAdapter == null) {
+            
+			mNfcSupported = false;
+        }
 	}
 
 	/**

@@ -1,0 +1,37 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Impressum</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto">
+    <style>
+        body {
+            font-family: Roboto;
+        }
+    </style>
+</head>
+<body>
+    <div align="center">
+
+        <img alt="icon.png" src="@Url.Content("~/Content/Images/icon.png")">
+        <div>StudMap Navigation</div>
+        <div>Version @ViewContext.Controller.GetType().Assembly.GetName().Version</div>
+        <br />
+        <br />
+
+        <div><b>Projektteam:</b></div>
+        <div>Thomas Buning, Marcus Büscher,</div>
+        <div>Daniel Hardes, Christoph Inhestern</div>
+        <div>Dennis Miller, Fabian Paus,</div>
+        <div>Christian Schlütter</div>
+        <br />
+        <br />
+        <div>&copy; 2013 Westfälische Hochschule</div>
+    </div>
+</body>
+</html>

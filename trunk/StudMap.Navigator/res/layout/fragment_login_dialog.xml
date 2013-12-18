@@ -1,28 +1,47 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/LoginFormContainer"
-    android:orientation="vertical"
-    tools:context=".LoginDialogFragment" >
+    android:id="@+id/WrapperLogin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/userName"
+    <TextView
+        android:id="@+id/DialogHeadline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/prompt_username"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true" />
+        android:background="@color/whs_lightgreen"
+        android:drawableLeft="@drawable/ic_launcher"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dialogHeadlinePadding"
+        android:text="@string/action_sign_in"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textIsSelectable="false" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/prompt_password"
-        android:imeActionId="@+id/login"
-        android:imeActionLabel="@string/action_sign_in"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true" />
+    <LinearLayout
+        style="@style/LoginFormContainer"
+        android:layout_below="@+id/DialogHeadline"
+        android:orientation="vertical"
+        tools:context=".LoginDialogFragment" >
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/userName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_username"
+            android:inputType="text"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_password"
+            android:imeActionId="@+id/login"
+            android:imeActionLabel="@string/action_sign_in"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true" />
+    </LinearLayout>
+
+</RelativeLayout>

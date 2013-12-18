@@ -4,6 +4,7 @@ using System.Linq;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Information;
+using StudMap.Core.Maps;
 using StudMap.Data;
 using StudMap.Data.Entities;
 using StudMap.Service.CacheObjects;
@@ -64,7 +65,8 @@ namespace StudMap.Service.Services
             return GetNodeInformationForNode(entities, inputInfo.Node.Id);
         }
 
-        private static void CreateOrUpdateNodeInfo(MapsEntities entities, NodeInformation inputInfo, Data.Entities.NodeInformation nodeInformation, PoIs poi)
+        private static void CreateOrUpdateNodeInfo(MapsEntities entities, NodeInformation inputInfo,
+                                                   Data.Entities.NodeInformation nodeInformation, PoIs poi)
         {
             int? poiId = poi != null ? (int?) poi.Id : null;
             // Wenn es keine NodeInfo gibt, eine Neue anlegen
@@ -209,16 +211,16 @@ namespace StudMap.Service.Services
 
         public static FullNodeInformation GetFullNodeInformationForNode(MapsEntities entities, int nodeId)
         {
-            var info = GetNodeInformationForNode(entities, nodeId);
-            var floor = FloorService.GetFloor(entities, info.Node.FloorId);
-            var map = MapService.GetMap(entities, floor.MapId);
+            NodeInformation info = GetNodeInformationForNode(entities, nodeId);
+            Floor floor = FloorService.GetFloor(entities, info.Node.FloorId);
+            Map map = MapService.GetMap(entities, floor.MapId);
 
             return new FullNodeInformation
-            {
-                Map = map,
-                Floor = floor,
-                Info = info
-            };
+                {
+                    Map = map,
+                    Floor = floor,
+                    Info = info
+                };
         }
     }
 }

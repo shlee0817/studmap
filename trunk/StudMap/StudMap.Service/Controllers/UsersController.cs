@@ -41,10 +41,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<User>();
 
-            ExecuteUsers(entities =>
-            {
-                result.List = UserService.GetActiveUsers(entities);
-            }, result);
+            ExecuteUsers(entities => { result.List = UserService.GetActiveUsers(entities); }, result);
 
             return result;
         }

@@ -4,13 +4,6 @@ namespace StudMap.Core.Information
 {
     public class NodeInformation
     {
-        public string DisplayName { get; set; }
-        public string RoomName { get; set; }
-        public Node Node { get; set; }
-        public PoI PoI { get; set; }
-        public string QRCode { get; set; }
-        public string NFCTag { get; set; }
-
         public NodeInformation(Node node, string displayName, string roomName, PoI poI, string qrCode, string nfcTag)
         {
             Node = node;
@@ -31,7 +24,8 @@ namespace StudMap.Core.Information
             QRCode = "";
         }
 
-        public NodeInformation(PoI poI, string displayName = "", string roomName = "", string qrCode = "", string nfcTag = "")
+        public NodeInformation(PoI poI, string displayName = "", string roomName = "", string qrCode = "",
+                               string nfcTag = "")
         {
             DisplayName = displayName;
             RoomName = roomName;
@@ -46,5 +40,12 @@ namespace StudMap.Core.Information
             RoomName = roomName;
             PoI = poI;
         }
+
+        public string DisplayName { get; set; }
+        public string RoomName { get; set; }
+        public Node Node { get; set; }
+        public PoI PoI { get; set; }
+        public string QRCode { get; set; }
+        public string NFCTag { get; set; }
     }
 }

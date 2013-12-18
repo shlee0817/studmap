@@ -28,6 +28,10 @@ public class PreferencesFragment extends PreferenceFragment implements OnGeneric
 
 	@Override
 	public void onSuccess(List<Map> maps) {
+		
+		if(maps.size() == 0)
+			return;
+		
 		String[] values = new String[maps.size()];
 		String[] entries = new String[maps.size()];
 		

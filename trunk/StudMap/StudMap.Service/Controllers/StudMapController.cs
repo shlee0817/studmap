@@ -1,24 +1,25 @@
-﻿using Elmah;
+﻿using System;
+using System.Data;
+using System.Web.Http;
+using Elmah;
 using StudMap.Core;
 using StudMap.Data.Entities;
 using StudMap.Service.Services;
-using System;
-using System.Data;
-using System.Web.Http;
 
 namespace StudMap.Service.Controllers
 {
     public class StudMapController : ApiController
     {
-        private void ExecuteGeneric<TEntities>(Action<TEntities> func, BaseResponse result) where TEntities : IDisposable,new()
+        private void ExecuteGeneric<TEntities>(Action<TEntities> func, BaseResponse result)
+            where TEntities : IDisposable, new()
         {
             Execute(() =>
-            {
-                using (var entities = new TEntities())
                 {
-                    func(entities);
-                }
-            }, result);
+                    using (var entities = new TEntities())
+                    {
+                        func(entities);
+                    }
+                }, result);
         }
 
         protected void ExecuteMaps(Action<MapsEntities> func, BaseResponse result)

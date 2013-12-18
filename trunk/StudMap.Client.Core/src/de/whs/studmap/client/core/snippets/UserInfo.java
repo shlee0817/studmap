@@ -12,25 +12,25 @@ public class UserInfo{
 	/**
 	 * Blendet eine Dialog-/Messagebox ein mit dem Button 'OK' ein.
 	 * @param context Context in dem die Benachrichtigung angezeigt werden soll
-	 * @param userName Benutzernamen zur persönlichen Ansprache
+	 * @param title Titel des Dialogs
 	 * @param message Nachricht, die dem Benutzer angezeigt werden soll
 	 */
-	public static void dialog(Context context, String userName, String message){
-		dialog(context, userName, message, "OK");
+	public static void dialog(Context context, String title, String message){
+		dialog(context, title, message, "OK");
 	}
 	
 	/**
 	 * Blendet eine Dialog-/Messagebox ein.
 	 * @param context Context in dem die Benachrichtigung angezeigt werden soll
-	 * @param userName Benutzernamen zur persönlichen Ansprache
+	 * @param title Titel des Dialogs
 	 * @param message Nachricht, die dem Benutzer angezeigt werden soll
 	 * @param positiveButton Beschriftung des Buttons unter dem Dialog
 	 */
-	public static void dialog(Context context, String userName, String message, String positiveButton) {
+	public static void dialog(Context context, String title, String message, String positiveButton) {
 		AlertDialog ad = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
 		ad.setCancelable(false); // This blocks the 'BACK' button
 		ad.setMessage(message);
-		ad.setTitle(userName);
+		ad.setTitle(title);
 		ad.setButton(DialogInterface.BUTTON_POSITIVE, positiveButton,
 				new DialogInterface.OnClickListener() {
 					@Override

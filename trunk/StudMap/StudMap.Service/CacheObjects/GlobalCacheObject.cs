@@ -1,19 +1,15 @@
-﻿using StudMap.Core.Maps;
+﻿using System.Collections.Generic;
+using StudMap.Core.Maps;
 using StudMap.Data.Entities;
 using StudMap.Service.Services;
-using System.Collections.Generic;
 
 namespace StudMap.Service.CacheObjects
 {
     /// <summary>
-    /// Dieses Cache-Objekt enthält globale Daten wie z.B. die Liste aller Karten.
+    ///     Dieses Cache-Objekt enthält globale Daten wie z.B. die Liste aller Karten.
     /// </summary>
     public class GlobalCacheObject : CacheObject
     {
-        public Dictionary<int, Map> Maps { get; set; }
-
-        public Dictionary<int, Floor> Floors { get; set; }
-
         public GlobalCacheObject()
         {
             TimeoutInMinutes = 60;
@@ -23,6 +19,10 @@ namespace StudMap.Service.CacheObjects
                 Update(entities);
             }
         }
+
+        public Dictionary<int, Map> Maps { get; set; }
+
+        public Dictionary<int, Floor> Floors { get; set; }
 
         private void Update(MapsEntities entities)
         {

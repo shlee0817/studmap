@@ -6,22 +6,15 @@
     this.imageUrl = imageUrl;
 
     //Private Variablen
-    this.startPoint = null;
-    this.endPoint = null;
+    this.startPointId = null;
+    this.endPointId = null;
     this.highlightedPoint = null;
-    this.rangeEndX = 0;
-    this.rangeEndY = 0;
     this.map = null;
-    this.pathList = null;
-    
+
     //Konstanten
     this.radius = 2;
-    this.selectedRadius = 4;
-    this.lineThickness = 2;
-    this.strokeColor = "#83c32d";
-    this.startNodeColor = "blue";
-    this.endNodeColor = "red";
-    this.nodeColor = "#83c32d";
+    this.graphLayer = "graph";
+    this.pathPlotLayer = "pathplot";
 }
 
 //Initialisierung
@@ -43,20 +36,25 @@ StudMapClient.prototype.init = function () {
 
         width = window.innerWidth;
         height = imageHeight / imageWidth * width;
-        that.rangeEndX = width;
-        that.rangeEndY = height;
+        var rangeEndX = width;
+        var rangeEndY = height;
 
         var xscale = d3.scale.linear()
             .domain([domainStartX, domainEndX])
-            .range([rangeStartX, that.rangeEndX]);
+            .range([rangeStartX, rangeEndX]);
         var yscale = d3.scale.linear()
             .domain([domainStartY, domainEndY])
-            .range([rangeStartY, that.rangeEndY]);
+            .range([rangeStartY, rangeEndY]);
         that.map = d3.floorplan().xScale(xscale).yScale(yscale);
         var imagelayer = d3.floorplan.imagelayer();
+        var graphlayer = d3.floorplan.graph();
+
+        graphlayer.xScale(xscale);
+        graphlayer.yScale(yscale);
+
+        var pathplotlayer = d3.floorplan.pathplot();
+
         var mapdata = {};
-
-
         mapdata[imagelayer.id()] = [{
             url: that.imageUrl,
             x: 0,
@@ -64,11 +62,14 @@ StudMapClient.prototype.init = function () {
             height: domainEndX,
             width: domainEndY
         }];
-        that.map.addLayer(imagelayer);
-        svgContainer.datum(mapdata).call(that.map);
 
-        d3.select(".map-layers").append("g").attr("id", "circles");
-        d3.select(".map-layers").append("g").attr("id", "path");
+        that.map.addLayer(imagelayer);
+        that.map.addLayer(pathplotlayer);
+        that.map.addLayer(graphlayer);
+        console.log("Layer added");
+
+        svgContainer.datum(mapdata).call(that.map);
+        console.log("Data provided");
 
         that.loadAndDrawFloorPlanData();
     };
@@ -79,183 +80,92 @@ StudMapClient.prototype.init = function () {
 //Setter
 StudMapClient.prototype.setStartPoint = function (nodeId) {
 
-    if (this.startPoint) {
-        this.startPoint.setAttribute("fill", "#83c32d");
-        this.startPoint.setAttribute("r", this.radius);
-    }
-    this.startPoint = document.getElementById(nodeId);
+    this.startPointId = nodeId;
 
-    this.startPoint.setAttribute("fill", "blue");
-    this.startPoint.setAttribute("r", 4);
+    this.highlightPoint(this.startPointId, 3);
 
-    this.testPath();
+    this.showPath();
 };
 
 StudMapClient.prototype.setEndPoint = function (nodeId) {
 
-    if (this.endPoint) {
-        this.endPoint.setAttribute("fill", "#83c32d");
-        this.endPoint.setAttribute("r", this.radius);
-    }
+    this.endPointId = nodeId;
 
-    this.endPoint = document.getElementById(nodeId);
-
-    this.endPoint.setAttribute("fill", "red");
-    this.endPoint.setAttribute("r", 4);
-
-    this.testPath();
+    this.highlightPoint(this.endPointId, 3);
+    
+    this.showPath();
 };
 //Setter
 
 
 //Zeichnen
-StudMapClient.prototype.showPath = function (startNodeId, endNodeId) {
+StudMapClient.prototype.showPath = function () {
 
-
-    this.clearPath();
+    if (!this.startPointId || !this.endPointId)
+        return;
 
     var that = this;
     var params = [];
     var map = new Param("mapId", this.mapId);
-    var startNode = new Param("startNodeId", startNodeId);
-    var endNode = new Param("endNodeId", endNodeId);
+    var startNode = new Param("startNodeId", this.startPointId);
+    var endNode = new Param("endNodeId", this.endPointId);
     params.push(map);
     params.push(startNode);
     params.push(endNode);
-    
+
     this.load("Maps", "GetRouteBetween", params, function (data) {
-        this.pathList = data.List;
-        that.drawPath(data.List);
-        document.getElementById('path').style.display = 'block';
-        document.getElementById('circles').style.display = 'none';
+
+        if (!data || !data.List)
+            return;
+
+        that.changeLayerVisibility(that.graphLayer, true);
+        that.changeLayerVisibility(that.pathPlotLayer, false);
+
+        that.pathList = data.List;
+        that.map.callPathplotLayer(data);
     });
 };
 
-StudMapClient.prototype.highlightPoint = function (nodeId, color) {
+StudMapClient.prototype.highlightPoint = function (nodeId, radius) {
 
-    this.highlightPoint(nodeId, color, this.radius);
-};
-
-StudMapClient.prototype.highlightPoint = function (nodeId, color, radius) {
-
-    if (this.highlightedPoint)
-    {
-        this.highlightedPoint.attr("fill", "#83c32d")
-        .attr("r", 2);
+    if (!radius)
+        radius = this.radius;
+    var className;
+    if (this.highlightedPoint) {
+        className = this.highlightedPoint.attr("class");
+        className = className.replace("highlighted", "");
+        this.highlightedPoint.attr("class", className)
+            .attr("r", this.radius);
     }
 
-
-    $('#' + nodeId).attr("fill", color)
-        .attr("r", radius);
 
     this.highlightedPoint = $('#' + nodeId);
-};
-
-// {"List":[{"Id":966,"X":0.3787,"Y":0.1263,"FloorId":1012},{"Id":967,"X":0.3689,"Y":0.1059,"FloorId":1012}],"Status":1,"ErrorCode":0,"ErrorMessage":""}
-StudMapClient.prototype.drawPath = function (pathAsArray) {
-
-    if (pathAsArray.length < 2)
-        return;
-
-    for (var i = 0; i < pathAsArray.length; i++) {
-
-        if (pathAsArray[i].FloorId == this.floorId) {
-
-            var startNode = pathAsArray[i];
-            
-            //Der letzte Knoten kann nicht mehr verbunden werden
-            if (i < pathAsArray.length - 1) {
-
-                var endNode = pathAsArray[i + 1];
-                //Pfade anlegen
-                this.drawLine("#path", startNode.X, startNode.Y, endNode.X, endNode.Y);
-            }
-            
-            if (i == 0) {
-                //Startknoten markieren
-                this.drawCircle("#path", startNode.X, startNode.Y, startNode.id, this.selectedRadius, this.startNodeColor);
-            } else if (i == pathAsArray.length - 1) {
-                //Endknoten markieren
-                this.drawCircle("#path", startNode.X, startNode.Y, startNode.id, this.selectedRadius, this.endNodeColor);
-            } else {
-                //Zwischenknoten markieren
-                this.drawCircle("#path", startNode.X, startNode.Y, startNode.id, this.radius, null);
-            }
-        }
-
-    }
-};
-
-StudMapClient.prototype.showCircles = function (circlesAsArray) {
-
-    for (var i = 0; i < circlesAsArray.length; i++) {
-
-        var circle = circlesAsArray[i];
-        this.drawCircle("#circles", circle.x, circle.y, circle.id, this.radius, null);
-
-        $('#' + circle.id).on("touchstart", {
-            nodeId: circlesAsArray[i].id
-        }, this.circle_click);
-    }
-    if (window.jsinterface) {
-        window.jsinterface.onFinish();
-    }
-};
-
-StudMapClient.prototype.drawCircle = function(el, x, y, id, r, fill) {
+    className = this.highlightedPoint.attr("class");
+    className += " highlighted";
+    this.highlightedPoint.attr("class", className)
+            .attr("r", radius);
     
-    var circle = d3.select(el).append("circle")
-        .attr("cx", x * this.rangeEndX)
-        .attr("cy", y * this.rangeEndY)
-        .attr("id", id)
-        .attr("stroke", "transparent")
-        .attr("fill", "#83c32d")
-        .attr("stroke-width", 5)
-        .attr("r", r);
-    if (fill)
-        circle.attr("fill", fill);
-
-    return circle;
-};
-
-StudMapClient.prototype.drawLine = function(el, x1, y1, x2, y2) {
-    
-    var line = d3.select(el).append("line")
-              .attr("x1", x1 * this.rangeEndX)
-              .attr("y1", y1 * this.rangeEndY)
-              .attr("x2", x2 * this.rangeEndX)
-              .attr("y2", y2 * this.rangeEndY)
-              .attr("stroke-width", this.lineThickness)
-              .attr("stroke", this.strokeColor);
-
-    return line;
+    this.changeLayerVisibility(this.graphLayer, false);
+    this.changeLayerVisibility(this.pathPlotLayer, true);
 };
 //Zeichnen
 
 
 //Delete and Clear
-StudMapClient.prototype.clearPath = function () {
-
-    $('#path').empty();
-};
-
 StudMapClient.prototype.clearMap = function () {
 
-    $('#circles').empty();
+    $('.pathplot').children().remove();
+    this.changeLayerVisibility(this.graphLayer, false);
+    this.changeLayerVisibility(this.pathPlotLayer, true);
 };
 
 StudMapClient.prototype.resetMap = function () {
 
+    this.startPointId = null;
+    this.endPointId = null;
     this.clearMap();
 
-    this.loadAndDrawFloorPlanData();
-
-    this.startPoint = null;
-    this.endPoint = null;
-
-    this.clearPath();
-
-    $('#circles').show();
+    $('.highlighted').attr("class", "node active").attr("r", 2);
 };
 
 StudMapClient.prototype.resetZoom = function () {
@@ -264,7 +174,7 @@ StudMapClient.prototype.resetZoom = function () {
 };
 //Delete and Clear
 
-StudMapClient.prototype.zoomToNode = function(nodeId) {
+StudMapClient.prototype.zoomToNode = function (nodeId) {
 
     var node = $('#' + nodeId);
 
@@ -274,26 +184,10 @@ StudMapClient.prototype.zoomToNode = function(nodeId) {
     var scale = 5;
     var cx = node.attr("cx") * 1;
     var cy = node.attr("cy") * 1;
-    var translateX = cx*(1 - scale);
-    var translateY = cy*(1 - scale);
+    var translateX = cx * (1 - scale);
+    var translateY = cy * (1 - scale);
 
     this.map.zoom(translateX, translateY, scale);
-};
-
-StudMapClient.prototype.circle_click = function (event) {
-
-    var nodeId = event.data.nodeId;
-
-    if (window.jsinterface) {
-        window.jsinterface.punkt(nodeId);
-    }
-};
-
-StudMapClient.prototype.testPath = function () {
-
-    if (this.startPoint && this.endPoint) {
-        this.showPath(this.startPoint.id, this.endPoint.id);
-    }
 };
 
 StudMapClient.prototype.load = function (controller, method, params, callback) {
@@ -309,51 +203,57 @@ StudMapClient.prototype.load = function (controller, method, params, callback) {
     }
     url += "api/" + controller + "/" + method;
     var paramStr = "";
-    
+
     if (params) {
         paramStr += "?";
         for (var i = 0; i < params.length; i++) {
-            
+
             var param = params[i];
             paramStr += param.key + "=" + param.value;
-            
+
             if (i < params.length - 1) {
                 paramStr += "&";
             }
-         }
+        }
     }
 
     url = url + paramStr;
     d3.json(url, callback);
 };
 
-StudMapClient.prototype.loadAndDrawFloorPlanData = function() {
+StudMapClient.prototype.loadAndDrawFloorPlanData = function () {
 
     var params = [];
     var floorId = new Param("floorid", this.floorId);
     params.push(floorId);
     var that = this;
-    
+
     this.load("Maps", "GetFloorPlanData", params, function (data) {
 
-        if (!data || !data.Object || !data.Object.Graph || !data.Object.Graph.Nodes)
-            return null;
-        
-        var nodes = data.Object.Graph.Nodes;
-        for (var i = 0; i < nodes.length; i++) {
+        if (!data || !data.Object || !data.Object.Nodes)
+            return;
 
-            var node = nodes[i];
-            var circle =
-                [
-                    {
-                        x: node.X,
-                        y: node.Y,
-                        id: node.Id
-                    }];
+        console.log("Data loaded");
+        that.map.callGraphLayer(data.Object.Nodes);
 
-            that.showCircles(circle);
+        if (window.jsinterface) {
+            window.jsinterface.onFinish();
         }
     });
+};
+
+StudMapClient.prototype.changeLayerVisibility = function(layerClass, hide) {
+
+    var el = $("." + layerClass);
+
+    if (!el || el.length === 0)
+        return;
+
+    if (hide)
+        el.hide();
+    else 
+        el.show();
+    
 };
 
 function Param(key, value) {

@@ -28,7 +28,7 @@
         }
         <div class="tableRow">
             <select id="inputPoiTypeId" name="PoI.Type">
-                @foreach(SelectListItem item in selectList)
+                @foreach (SelectListItem item in selectList)
                 {
                     <option @(item.Selected ? "selected=selected" : "") value="@item.Value">@item.Text</option>
                 }

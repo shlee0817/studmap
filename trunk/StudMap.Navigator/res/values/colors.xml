@@ -4,4 +4,6 @@
         <color name="white">#fff</color>
         <color name="menu_divide">#464646</color>
         <color name="whs_green">#669922</color>
+        <color name="whs_lightgreen">#CFE8AE</color>
+        <color name="lightgray">#ECECEC</color>
     </resources>

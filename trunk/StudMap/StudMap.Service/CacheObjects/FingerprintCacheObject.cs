@@ -7,12 +7,6 @@ namespace StudMap.Service.CacheObjects
 {
     public class FingerprintCacheObject : CacheObject
     {
-        public int MapId { get; set; }
-
-        public Dictionary<int, Dictionary<int, Normal>> NodeDistributions { get; set; }
-
-        public Dictionary<string, int> MACtoAP { get; set; }
-
         private const int Timeout = 60;
 
         public FingerprintCacheObject(int mapId)
@@ -25,6 +19,12 @@ namespace StudMap.Service.CacheObjects
                 Update(entities);
             }
         }
+
+        public int MapId { get; set; }
+
+        public Dictionary<int, Dictionary<int, Normal>> NodeDistributions { get; set; }
+
+        public Dictionary<string, int> MACtoAP { get; set; }
 
         public void Update(MapsEntities entities)
         {

@@ -1,16 +1,14 @@
 ﻿@using StudMap.Core
-@using StudMap.Core.Maps
-@model ObjectResponse<Floor>
+@model ObjectResponse<StudMap.Core.Maps.Floor>
 @{
     ViewBag.Title = "FloorPlan";
 }
 
 @section scripts{
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-2.0.3.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/floorplan.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/imagelayer.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/Client.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-2.0.3.min.js")"> </script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/d3.v3.min.js")"> </script>
+
+    @Scripts.Render("~/bundles/StudMapClient")
     <script type="text/javascript">
         var client = new StudMapClient('@Model.Object.MapId', '@Model.Object.Id', '@Model.Object.ImageUrl');
         client.init();
@@ -29,5 +27,5 @@ else
 {
     <div id="map">
         <svg id="svgMap" height="100%" width="100%"></svg>
-    </div>    
+    </div>
 }

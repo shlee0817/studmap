@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using StudMap.Core;
@@ -6,7 +7,6 @@ using StudMap.Core.Graph;
 using StudMap.Core.Information;
 using StudMap.Core.Maps;
 using StudMap.Service.Controllers;
-using System.Linq;
 
 namespace StudMap.Admin.Controllers
 {
@@ -25,7 +25,7 @@ namespace StudMap.Admin.Controllers
             }
             else
                 ViewBag.PartialViewName = partialViewName;
-            
+
             return View("Index", viewModel);
         }
 
@@ -51,7 +51,9 @@ namespace StudMap.Admin.Controllers
             var mapsCtrl = new MapsController();
             BaseResponse response = mapsCtrl.DeleteMap(id);
             ListResponse<Map> maps = mapsCtrl.GetMaps();
-            return response.Status == RespsonseStatus.Error ? (ActionResult)RedirectToAction("Error") : View("_Maps", maps);
+            return response.Status == RespsonseStatus.Error
+                       ? (ActionResult) RedirectToAction("Error")
+                       : View("_Maps", maps);
         }
 
         [Authorize(Roles = "Admins")]
@@ -71,7 +73,7 @@ namespace StudMap.Admin.Controllers
 
             var mapsCtrl = new MapsController();
             ObjectResponse<Floor> response = mapsCtrl.CreateFloor(floor.MapId, floor.Name,
-                "Images/Floors/" + data.FileName);
+                                                                  "Images/Floors/" + data.FileName);
 
             ViewBag.MapId = mapId;
             return response.Status != RespsonseStatus.Error ? RedirectToAction("Index") : RedirectToAction("Error");
@@ -83,7 +85,9 @@ namespace StudMap.Admin.Controllers
             var mapsCtrl = new MapsController();
             BaseResponse response = mapsCtrl.DeleteFloor(floorId);
             ListResponse<Floor> floors = mapsCtrl.GetFloorsForMap(mapId);
-            return response.Status == RespsonseStatus.Error ? (ActionResult)RedirectToAction("Error") : View("_Floors", floors);
+            return response.Status == RespsonseStatus.Error
+                       ? (ActionResult) RedirectToAction("Error")
+                       : View("_Floors", floors);
         }
 
         [Authorize(Roles = "Admins")]
@@ -101,11 +105,11 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             var request = new SaveGraphRequest
-            {
-                FloorId = floorId,
-                NewGraph = newGraph,
-                DeletedGraph = deletedGraph
-            };
+                {
+                    FloorId = floorId,
+                    NewGraph = newGraph,
+                    DeletedGraph = deletedGraph
+                };
             ObjectResponse<Graph> floor = mapsCtrl.SaveGraphForFloor(request);
             return Json(floor, JsonRequestBehavior.AllowGet);
         }
@@ -117,11 +121,13 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
             var nodeInf = new NodeInformation(new PoI
-                                                  {
-                                                      Description = poiDescription,
-                                                      Type = new PoiType {Id = poiTypeId}
-                                                  }, displayName, roomName, qrCode, nfcTag);
-            nodeInf.Node = new Node { Id = nodeId };
+                {
+                    Description = poiDescription,
+                    Type = new PoiType {Id = poiTypeId}
+                }, displayName, roomName, qrCode, nfcTag)
+                {
+                    Node = new Node {Id = nodeId}
+                };
             ObjectResponse<NodeInformation> tmp = mapsCtrl.SaveNodeInformation(nodeInf);
             return Json(tmp, JsonRequestBehavior.AllowGet);
         }
@@ -130,7 +136,7 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
 
-            ObjectResponse<FloorPlanData> result = mapsCtrl.GetFloorPlanData(id);
+            ObjectResponse<Graph> result = mapsCtrl.GetFloorPlanData(id);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -180,11 +186,11 @@ namespace StudMap.Admin.Controllers
                 typId = nodeInformation.Object.PoI.Type.Id;
 
             ViewBag.PoiTypes = mapsCtrl.GetPoiTypes().List.Select(x => new SelectListItem
-            {
-                Selected = (x.Id == typId),
-                Text = x.Name,
-                Value = x.Id.ToString(CultureInfo.InvariantCulture)
-            });
+                {
+                    Selected = (x.Id == typId),
+                    Text = x.Name,
+                    Value = x.Id.ToString(CultureInfo.InvariantCulture)
+                });
             return PartialView("_NodeInformation", nodeInformation.Object);
         }
 
@@ -206,7 +212,7 @@ namespace StudMap.Admin.Controllers
         public ActionResult NodeInfo(int nodeId)
         {
             var mapsCtrl = new MapsController();
-            var result = mapsCtrl.GetFullNodeInformationForNode(nodeId);
+            ObjectResponse<FullNodeInformation> result = mapsCtrl.GetFullNodeInformationForNode(nodeId);
             return View(result);
         }
 
