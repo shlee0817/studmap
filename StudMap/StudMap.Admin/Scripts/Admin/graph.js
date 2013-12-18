@@ -1,7 +1,7 @@
 ﻿var deletedEdges = [];
 var newEdges = [];
 
-d3.floorplan.graph = function () {
+d3.floorplan.graph = function() {
     var x = d3.scale.linear(),
         y = d3.scale.linear(),
         id = "fp-graph-" + new Date().valueOf(),
@@ -146,7 +146,7 @@ d3.floorplan.graph = function () {
         newEdges = [];
         $.ajax({
             url: window.basePath + 'Admin/GetConnectedNodes?nodeId=' + nodeId,
-            success: function (result) {
+            success: function(result) {
                 $("#NodeInformationDialog").html(result);
                 $('#NodeInformationDialog').dialog({
                     dialogClass: "no-close",
@@ -155,7 +155,7 @@ d3.floorplan.graph = function () {
                     autoHeight: true,
                     title: "Verbundene Knoten (" + nodeId + ")",
                     buttons: {
-                        Speichern: function () {
+                        Speichern: function() {
 
                             var obj = {
                                 floorId: floorId,
@@ -177,13 +177,13 @@ d3.floorplan.graph = function () {
                                 contentType: "application/json; charset=utf-8",
                                 dataType: "json",
                                 type: "post",
-                                success: function () {
+                                success: function() {
                                     init(window.imageUrl);
                                 }
                             });
                             $(this).dialog("close");
                         },
-                        Abbrechen: function () {
+                        Abbrechen: function() {
                             $(this).dialog("close");
                         }
                     }
@@ -192,7 +192,7 @@ d3.floorplan.graph = function () {
         });
     }
 
-    graph.start = function () {
+    graph.start = function() {
 
         var displayLinks = [], displayNodes = [];
         for (var i = 0; i < links.length; i++) {
@@ -207,21 +207,21 @@ d3.floorplan.graph = function () {
         }
 
 
-        link = link.data(displayLinks, function (d) { return d.source.id + "-" + d.target.id; });
+        link = link.data(displayLinks, function(d) { return d.source.id + "-" + d.target.id; });
         link.enter().insert("path", ".node").attr("class", "link").attr("d", function(d) {
             return "M" + d.target.x + "," + d.target.y + "L" + d.source.x + "," + d.source.y;
         });
         link.exit().remove();
 
-        node = node.data(displayNodes, function (d) { return d.id; });
+        node = node.data(displayNodes, function(d) { return d.id; });
         // Node create
         node.enter()
             .append("circle")
             .attr("class", function() { return "node"; })
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; })
-            .attr("r", function () { return 4; })
-            .on('mousedown', function (d) {
+            .attr("r", function() { return 4; })
+            .on('mousedown', function(d) {
 
                 if (d3.event.shiftKey) {
                     connectFloorsDialog(d.id);
@@ -268,7 +268,7 @@ d3.floorplan.graph = function () {
                 }
             }).on("contextmenu", function(d) {
                 d3.event.preventDefault();
-                
+
                 //Zu neuen Knoten können noch keine Informationen hinterlegt werden
                 if (d.type == "new")
                     return;
@@ -298,8 +298,8 @@ d3.floorplan.graph = function () {
                                         roomName: roomName,
                                         poiTypeId: poiTypeId,
                                         poiDescription: poiDescription,
-                                        qrCode : qrCode,
-                                        nfcTag : nfcTag
+                                        qrCode: qrCode,
+                                        nfcTag: nfcTag
                                     };
 
                                     $.ajax({
@@ -408,10 +408,9 @@ function init(imageUrl) {
             .addLayer(pathplot)
             .addLayer(graph);
 
-        d3.json(window.basePath + "Admin/GetFloorPlanData/" + floorId, function (data) {
+        d3.json(window.basePath + "Admin/GetFloorPlanData/" + floorId, function(data) {
 
-            mapdata[pathplot.id()] = data.Object.Pathplot;
-            mapdata[graph.id()] = data.Object.Graph;
+            mapdata[graph.id()] = data.Object;
 
             d3.select("#floorplan").append("svg")
                 .attr("width", width)
@@ -491,7 +490,7 @@ function deleteEdge(startNodeId, endNodeId) {
 
 function addNewEdge(startNodeId) {
     var endNodeId = $('#inputNewEdge').val();
-    
+
     var edge = {
         "StartNodeId": startNodeId,
         "EndNodeId": endNodeId
@@ -501,9 +500,9 @@ function addNewEdge(startNodeId) {
 
     $("div#node_new").prepend(
         "<div id=\"node_" + endNodeId + "\" class=\"tableColumn\">" +
-        "Knoten " + endNodeId + " " +
-        "<button onclick=\"deleteEdge(" + startNodeId + ", " + endNodeId + ");\">X</button>" +
-        "</div>"
+            "Knoten " + endNodeId + " " +
+            "<button onclick=\"deleteEdge(" + startNodeId + ", " + endNodeId + ");\">X</button>" +
+            "</div>"
     );
 }
 

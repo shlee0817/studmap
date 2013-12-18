@@ -11,13 +11,12 @@ namespace StudMap.Core.Graph
     {
         public Pathplot Pathplot { get; set; }
         public Graph Graph { get; set; }
-        
     }
 
     public class Pathplot
     {
-        public string Id = "flt-1";
         public string Classes = "planned";
-        public List<Node> Points = new List<Node>(); 
+        public string Id = "flt-1";
+        public List<Node> Points = new List<Node>();
     }
 }

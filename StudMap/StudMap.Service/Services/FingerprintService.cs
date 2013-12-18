@@ -1,14 +1,12 @@
-﻿using MathNet.Numerics.Distributions;
-using QuickGraph;
-using QuickGraph.Algorithms.ShortestPath;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using MathNet.Numerics.Distributions;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.WLAN;
 using StudMap.Data.Entities;
 using StudMap.Service.CacheObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace StudMap.Service.Services
 {
@@ -17,13 +15,13 @@ namespace StudMap.Service.Services
         public static Dictionary<int, Dictionary<int, Normal>> ComputeNodeDistribution(MapsEntities entities)
         {
             var nodeDistributions = new Dictionary<int, Dictionary<int, Normal>>();
-            foreach (var dist in entities.RSSDistribution)
+            foreach (RSSDistribution dist in entities.RSSDistribution)
             {
                 if (!nodeDistributions.ContainsKey(dist.NodeId))
                     nodeDistributions.Add(dist.NodeId, new Dictionary<int, Normal>());
 
                 nodeDistributions[dist.NodeId].Add(dist.AccessPointId,
-                    Normal.WithMeanStdDev(dist.AvgRSS ?? 0, dist.StDevRSS ?? 0.0));
+                                                   Normal.WithMeanStdDev(dist.AvgRSS ?? 0, dist.StDevRSS ?? 0.0));
             }
             return nodeDistributions;
         }
@@ -41,41 +39,41 @@ namespace StudMap.Service.Services
             if (fingerprint.AccessPointScans == null || !fingerprint.AccessPointScans.Any())
                 return;
 
-            var node = entities.Nodes.Find(nodeId);
+            Nodes node = entities.Nodes.Find(nodeId);
             if (node == null)
                 throw new ServiceException(ResponseError.NodeIdDoesNotExist);
-            
+
             // Fingerprint in DB einfügen
-            var fingerprints = entities.Fingerprints.Add(new Fingerprints 
-            {
-                NodeId = node.Id
-            });
+            Fingerprints fingerprints = entities.Fingerprints.Add(new Fingerprints
+                {
+                    NodeId = node.Id
+                });
             entities.SaveChanges();
-            
-            
-            foreach (var apScan in fingerprint.AccessPointScans)
+
+
+            foreach (AccessPointScan apScan in fingerprint.AccessPointScans)
             {
                 // Fehlenden AccessPoint ggf. anlegen
-                var ap = entities.AccessPoints.FirstOrDefault(x => x.MAC == apScan.AccessPoint.MAC);
+                AccessPoints ap = entities.AccessPoints.FirstOrDefault(x => x.MAC == apScan.AccessPoint.MAC);
                 if (ap == null)
                 {
                     ap = entities.AccessPoints.Add(new AccessPoints
-                    {
-                        MAC = apScan.AccessPoint.MAC
-                    });
+                        {
+                            MAC = apScan.AccessPoint.MAC
+                        });
                     entities.SaveChanges();
                 }
-                
+
                 // Einzelmessung speichern
                 entities.AccessPointScans.Add(new AccessPointScans
-                {
-                    AccessPointId = ap.Id,
-                    RecievedSignalStrength = apScan.ReceivedSignalStrength,
-                    FingerprintId = fingerprints.Id
-                });
+                    {
+                        AccessPointId = ap.Id,
+                        RecievedSignalStrength = apScan.ReceivedSignalStrength,
+                        FingerprintId = fingerprints.Id
+                    });
             }
             entities.SaveChanges();
-            
+
             StudMapCache.RemoveFingerprint(node.Floors.MapId);
         }
 
@@ -83,29 +81,30 @@ namespace StudMap.Service.Services
         {
             // Gesammelte WLAN-Fingerprints aus DB auswerten und Verteilung bestimmen
             // Jetzt: gecachet!
-            var cache = StudMapCache.Fingerprint(request.MapId);
-            var mapCache = StudMapCache.Map(request.MapId);
-            var previousNode = mapCache.Nodes.ContainsKey(request.PreviousNodeId) ? 
-                mapCache.Nodes[request.PreviousNodeId] : 
-                new Node { Id = 0 };
+            FingerprintCacheObject cache = StudMapCache.Fingerprint(request.MapId);
+            MapCacheObject mapCache = StudMapCache.Map(request.MapId);
+            Node previousNode = mapCache.Nodes.ContainsKey(request.PreviousNodeId)
+                                    ? mapCache.Nodes[request.PreviousNodeId]
+                                    : new Node {Id = 0};
 
             // AccessPoint-Messung nach APs aufteilen
-            var apScans = AnalyseInputScan(request.Scans, cache.MACtoAP);
+            Dictionary<int, int> apScans = AnalyseInputScan(request.Scans, cache.MACtoAP);
 
             // W'keit bestimmen, dass RSS-Werte an Knoten gemessen werden
             Func<int, double> getDistance;
             if (request.PreviousNodeId == 0)
                 getDistance = nodeId => 1.0;
             else
-                getDistance = nodeId => {
-                    double distance;
-                    if (mapCache.PathFinder.TryGetDistance(previousNode.Id, nodeId, out distance))
-                        return distance;
-                    else
-                        return -1;
-                };
+                getDistance = nodeId =>
+                    {
+                        double distance;
+                        if (mapCache.PathFinder.TryGetDistance(previousNode.Id, nodeId, out distance))
+                            return distance;
+                        else
+                            return -1;
+                    };
 
-            var nodeProbs = CalculateNodeProbabilities(cache.NodeDistributions, apScans, getDistance);
+            List<NodeProbability> nodeProbs = CalculateNodeProbabilities(cache.NodeDistributions, apScans, getDistance);
 
             // Absteigend nach W'keit sortieren
             nodeProbs.Sort((m, n) => n.Probabilty.CompareTo(m.Probabilty));
@@ -115,10 +114,11 @@ namespace StudMap.Service.Services
             return nodeProbs.GetRange(0, count);
         }
 
-        private static Dictionary<int, int> AnalyseInputScan(IEnumerable<LocationAPScan> scans, Dictionary<string, int> macToAp)
+        private static Dictionary<int, int> AnalyseInputScan(IEnumerable<LocationAPScan> scans,
+                                                             Dictionary<string, int> macToAp)
         {
             var apScans = new Dictionary<int, int>();
-            foreach (var scan in scans)
+            foreach (LocationAPScan scan in scans)
             {
                 int apId;
                 if (macToAp.TryGetValue(scan.MAC, out apId))
@@ -128,17 +128,17 @@ namespace StudMap.Service.Services
         }
 
         private static List<NodeProbability> CalculateNodeProbabilities(
-            Dictionary<int, Dictionary<int, Normal>> nodeDistributions, 
-            IReadOnlyDictionary<int, int> apScans, 
+            Dictionary<int, Dictionary<int, Normal>> nodeDistributions,
+            IReadOnlyDictionary<int, int> apScans,
             Func<int, double> getDistance)
         {
             var analysedNodes = new List<AnalysedNode>();
-            foreach (var nodeId in nodeDistributions.Keys)
+            foreach (int nodeId in nodeDistributions.Keys)
             {
-                var apDistributions = nodeDistributions[nodeId];
+                Dictionary<int, Normal> apDistributions = nodeDistributions[nodeId];
                 double scanProb = 1.0;
                 int relevantApCount = 0;
-                foreach (var apId in apDistributions.Keys)
+                foreach (int apId in apDistributions.Keys)
                 {
                     int scannedValue;
                     // Befindet sich der in der DB hinterlegte AP im aktuellen Fingerprint?
@@ -146,7 +146,7 @@ namespace StudMap.Service.Services
                     {
                         // Wenn ja, dann kann die W'keit für den gemessenen
                         // Wert aus der Normalverteilung bestimmt werden
-                        var dist = apDistributions[apId];
+                        Normal dist = apDistributions[apId];
                         double before = dist.CumulativeDistribution(scannedValue - 0.5);
                         double after = dist.CumulativeDistribution(scannedValue + 0.5);
 
@@ -167,7 +167,7 @@ namespace StudMap.Service.Services
                 // Gesamtw'keit berechnen, am aktuellen Knoten, die gemessenen RSS-Werte
                 // für alle AccessPoints vorzufinden
                 // Mathematisch: Geometrisches Mittel über die Einzelw'keiten
-                scanProb = Math.Pow(scanProb, 1.0 / relevantApCount);
+                scanProb = Math.Pow(scanProb, 1.0/relevantApCount);
 
                 // Die hier berechnete bedingte W'keit ist noch "verkehrt herum".
                 // Wir haben berechnet:
@@ -215,12 +215,12 @@ namespace StudMap.Service.Services
                 if (distance < 0.0)
                     continue;
 
-                var analysedNode = new AnalysedNode 
-                { 
-                    NodeId = nodeId, 
-                    ScanProbabilty = scanProb, 
-                    Distance = distance 
-                };
+                var analysedNode = new AnalysedNode
+                    {
+                        NodeId = nodeId,
+                        ScanProbabilty = scanProb,
+                        Distance = distance
+                    };
 
                 analysedNodes.Add(analysedNode);
             }
@@ -230,10 +230,10 @@ namespace StudMap.Service.Services
             double sumReversedDistance = analysedNodes.Sum(n => sumDistance - n.Distance);
 
             return analysedNodes.Select(n => new NodeProbability
-            {
-                NodeId = n.NodeId,
-                Probabilty = n.ScanProbabilty * (sumDistance - n.Distance) / sumReversedDistance
-            }).ToList();
+                {
+                    NodeId = n.NodeId,
+                    Probabilty = n.ScanProbabilty*(sumDistance - n.Distance)/sumReversedDistance
+                }).ToList();
         }
     }
 }

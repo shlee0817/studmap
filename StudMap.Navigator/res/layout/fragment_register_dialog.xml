@@ -1,36 +1,63 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/LoginFormContainer"
-    android:orientation="vertical" >
+    android:id="@+id/Wrapper"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/register_username"
+    <TextView
+        android:id="@+id/DialogHeadline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/register_prompt_username"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true" />
+        android:background="@color/whs_lightgreen"
+        android:drawableLeft="@drawable/ic_launcher"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dialogHeadlinePadding"
+        android:text="@string/title_activity_register"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textIsSelectable="false" />
 
-    <EditText
-        android:id="@+id/register_password1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/register_prompt_password1"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true" />
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        style="@style/LoginFormContainer"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/DialogHeadline"
+        android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/register_password2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/register_prompt_password2"
-        android:imeActionId="@+id/register"
-        android:imeActionLabel="@string/action_register_register"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true" />
+        <EditText
+            android:id="@+id/register_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/register_prompt_username"
+            android:inputType="text"
+            android:maxLines="1"
+            android:singleLine="true" >
 
-</LinearLayout>
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/register_password1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/register_prompt_password1"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/register_password2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/register_prompt_password2"
+            android:imeActionId="@+id/register"
+            android:imeActionLabel="@string/action_register_register"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -194,7 +194,8 @@ public class LoginDialogFragment extends DialogFragment implements
 		case ResponseError.LoginInvalid:
 			mPasswordView
 					.setError(getString(R.string.error_incorrect_password));
-			mPasswordView.requestFocus();
+			mUsernameView
+					.setError(getString(R.string.error_incorrect_username));
 			break;
 		default:
 			mErrorHandler.handle(responseError);

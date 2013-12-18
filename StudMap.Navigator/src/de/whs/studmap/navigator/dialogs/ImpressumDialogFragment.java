@@ -20,7 +20,7 @@ public class ImpressumDialogFragment extends DialogFragment {
 		builder.setView(rootView);
 		
 		WebView impressumWebView = (WebView) rootView.findViewById(R.id.impressum_web_view);
-		impressumWebView.loadUrl("file:///android_asset/impressum/impressum.html");
+		impressumWebView.loadUrl("http://193.175.199.115/StudMapClient/Home/Impressum");
 		
 		return builder.create();
 	}

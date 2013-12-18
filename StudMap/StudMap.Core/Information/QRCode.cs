@@ -2,14 +2,14 @@
 {
     public class QRCode
     {
-        public General General { get; set; }
-        public StudMap StudMap { get; set; }
-
         public QRCode()
         {
             General = new General();
             StudMap = new StudMap();
         }
+
+        public General General { get; set; }
+        public StudMap StudMap { get; set; }
     }
 
     public class General
@@ -20,7 +20,7 @@
 
     public class StudMap
     {
-        public int NodeId { get; set; }
         public string Url = "http://code.google.com/p/studmap";
+        public int NodeId { get; set; }
     }
 }

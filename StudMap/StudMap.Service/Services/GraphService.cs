@@ -1,12 +1,12 @@
-﻿using StudMap.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Core.Maps;
 using StudMap.Data;
 using StudMap.Data.Entities;
 using StudMap.Service.CacheObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace StudMap.Service.Services
 {
@@ -22,10 +22,10 @@ namespace StudMap.Service.Services
             if (graph == null)
             {
                 entities.Graphs.Add(new Graphs
-                {
-                    MapId = targetFloor.MapId,
-                    CreationTime = DateTime.Now
-                });
+                    {
+                        MapId = targetFloor.MapId,
+                        CreationTime = DateTime.Now
+                    });
             }
 
 
@@ -34,7 +34,7 @@ namespace StudMap.Service.Services
             {
                 foreach (Nodes node in
                     request.DeletedGraph.Nodes.Select(dNode => entities.Nodes.FirstOrDefault(x => x.Id == dNode.Id))
-                    .Where(node => node != null))
+                           .Where(node => node != null))
                 {
                     entities.Nodes.Remove(node);
                 }
@@ -48,7 +48,7 @@ namespace StudMap.Service.Services
                             dEdge =>
                             entities.Edges.FirstOrDefault(
                                 x => x.NodeStartId == dEdge.StartNodeId && x.NodeEndId == dEdge.EndNodeId))
-                                    .Where(edge => edge != null))
+                               .Where(edge => edge != null))
                 {
                     entities.Edges.Remove(edge);
                 }
@@ -63,12 +63,12 @@ namespace StudMap.Service.Services
                 foreach (Node node in request.NewGraph.Nodes)
                 {
                     var newNode = new Nodes
-                    {
-                        FloorId = request.FloorId,
-                        X = node.X,
-                        Y = node.Y,
-                        CreationTime = DateTime.Now
-                    };
+                        {
+                            FloorId = request.FloorId,
+                            X = node.X,
+                            Y = node.Y,
+                            CreationTime = DateTime.Now
+                        };
                     entities.Nodes.Add(newNode);
                     entities.SaveChanges();
                     nodeIdMap.Add(node.Id, newNode.Id);
@@ -100,18 +100,18 @@ namespace StudMap.Service.Services
 
                     if (graph != null)
                         graph.Edges.Add(new Edges
-                        {
-                            NodeStartId = nodeIdMapStartNodeId,
-                            NodeEndId = nodeIdMapEndNodeId,
-                            CreationTime = DateTime.Now
-                        });
+                            {
+                                NodeStartId = nodeIdMapStartNodeId,
+                                NodeEndId = nodeIdMapEndNodeId,
+                                CreationTime = DateTime.Now
+                            });
                 }
             }
 
             entities.SaveChanges();
 
             StudMapCache.RemoveMap(targetFloor.MapId);
-            
+
             return GetGraphForFloor(entities, request.FloorId);
         }
 
@@ -142,7 +142,8 @@ namespace StudMap.Service.Services
             //       ein Endknoten auf dem geforderten Floor ist?
             //       Erstmal nur Kanten, die komplett auf dem Floor sind zurückgeben
             IQueryable<Edges> edges = entities.Edges.Where(e =>
-                nodeIdArray.Contains(e.NodeStartId) && nodeIdArray.Contains(e.NodeEndId));
+                                                           nodeIdArray.Contains(e.NodeStartId) &&
+                                                           nodeIdArray.Contains(e.NodeEndId));
 
             return Conversions.ToGraph(floorId, nodes, edges);
         }
@@ -178,19 +179,19 @@ namespace StudMap.Service.Services
                 n => connectedNodeIds.Contains(n.Id));
 
             return connectedNodes.ToList()
-                .Select(Conversions.ToNode).ToList();
+                                 .Select(Conversions.ToNode).ToList();
         }
 
         public static List<Edge> GetEdgeList(MapsEntities entities, int mapId)
         {
             return entities.Edges.Where(e => e.Graphs.MapId == mapId).ToList()
-                .Select(Conversions.ToEdge).ToList();
+                           .Select(Conversions.ToEdge).ToList();
         }
 
         public static Dictionary<int, Node> GetNodesDictionary(MapsEntities entities, int mapId)
         {
             return entities.Nodes.Where(n => n.Floors.MapId == mapId).ToList()
-                .Select(Conversions.ToNode).ToDictionary(n => n.Id);
+                           .Select(Conversions.ToNode).ToDictionary(n => n.Id);
         }
 
         public static Dictionary<int, Graph> GetAllGraphs(MapsEntities entities, IEnumerable<int> floorIds)

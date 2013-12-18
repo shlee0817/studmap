@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace StudMap.Core.Maps
 {
     public class Floor

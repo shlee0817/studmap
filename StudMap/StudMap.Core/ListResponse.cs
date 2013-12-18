@@ -6,7 +6,7 @@ namespace StudMap.Core
     {
         public ListResponse()
         {
-            List = new List<Content>();           
+            List = new List<Content>();
         }
 
         public IEnumerable<Content> List { get; set; }

@@ -29,10 +29,8 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<NodeProbability>();
 
-            ExecuteMaps(entities =>
-            {
-                result.List = FingerprintService.GetNodeProbabiltyForScan(entities, request);
-            }, result);
+            ExecuteMaps(entities => { result.List = FingerprintService.GetNodeProbabiltyForScan(entities, request); },
+                        result);
 
             return result;
         }

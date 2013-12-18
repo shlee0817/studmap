@@ -1,16 +1,21 @@
-﻿using Elmah;
-using StudMap.Core;
-using StudMap.Core.Users;
-using StudMap.Data.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Helpers;
+using Elmah;
+using StudMap.Core;
+using StudMap.Core.Users;
+using StudMap.Data.Entities;
 
 namespace StudMap.Service.Services
 {
     public class UserService
     {
+        /// <summary>
+        ///     Nach dieser Zeit wird ein aktiver Benutzer als inaktiv erkannt und abgemeldet.
+        /// </summary>
+        private const int ActiveUserTimeoutSeconds = 15*60;
+
         public static void Register(UserEntities entities, string userName, string password)
         {
             if (ExistsUserAlready(userName, entities))
@@ -33,7 +38,7 @@ namespace StudMap.Service.Services
             if (activeUser != null)
                 activeUser.LoginDate = DateTime.Now;
             else
-                entities.ActiveUsers.Add(new ActiveUsers { UserId = user.UserId, LoginDate = DateTime.Now });
+                entities.ActiveUsers.Add(new ActiveUsers {UserId = user.UserId, LoginDate = DateTime.Now});
 
             entities.SaveChanges();
         }
@@ -60,19 +65,14 @@ namespace StudMap.Service.Services
                 }).ToList();
         }
 
-        /// <summary>
-        /// Nach dieser Zeit wird ein aktiver Benutzer als inaktiv erkannt und abgemeldet.
-        /// </summary>
-        private const int ActiveUserTimeoutSeconds = 15 * 60;
-
         public static void CheckActiveUsers()
         {
             try
             {
                 using (var entities = new UserEntities())
                 {
-                    var timeout = DateTime.Now.AddSeconds(-ActiveUserTimeoutSeconds);
-                    var inactiveUsers = entities.ActiveUsers.Where(u => u.LoginDate < timeout);
+                    DateTime timeout = DateTime.Now.AddSeconds(-ActiveUserTimeoutSeconds);
+                    IQueryable<ActiveUsers> inactiveUsers = entities.ActiveUsers.Where(u => u.LoginDate < timeout);
 
                     entities.ActiveUsers.RemoveRange(inactiveUsers);
                     entities.SaveChanges();
@@ -92,22 +92,22 @@ namespace StudMap.Service.Services
         private static void CreateUserAndAccount(string userName, string password, UserEntities entities)
         {
             UserProfile user = entities.UserProfile.Add(new UserProfile
-            {
-                UserName = userName,
-                webpages_Roles =
-                    new List<webpages_Roles> { entities.webpages_Roles.First(role => role.RoleName == "Users") }
-            });
+                {
+                    UserName = userName,
+                    webpages_Roles =
+                        new List<webpages_Roles> {entities.webpages_Roles.First(role => role.RoleName == "Users")}
+                });
             entities.SaveChanges();
 
             entities.webpages_Membership.Add(new webpages_Membership
-            {
-                UserId = user.UserId,
-                CreateDate = DateTime.Now,
-                IsConfirmed = true,
-                Password = Crypto.HashPassword(password),
-                PasswordSalt = string.Empty,
-                PasswordChangedDate = DateTime.Now,
-            });
+                {
+                    UserId = user.UserId,
+                    CreateDate = DateTime.Now,
+                    IsConfirmed = true,
+                    Password = Crypto.HashPassword(password),
+                    PasswordSalt = string.Empty,
+                    PasswordChangedDate = DateTime.Now,
+                });
             entities.SaveChanges();
         }
     }

@@ -14,5 +14,8 @@
     <dimen name="choicesdialog_imageMargin">4dp</dimen>
     <dimen name="mapfloorselector_spinner_padding">18dp</dimen>
     <dimen name="initial_setup_padding">4dp</dimen>
+    <dimen name="NavigationInfoPadding">6dp</dimen>
+    <dimen name="NavigationInfoMargin">6dp</dimen>
+    <dimen name="dialogHeadlinePadding">12dp</dimen>
 
 </resources>

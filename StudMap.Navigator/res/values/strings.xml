@@ -8,4 +8,5 @@
     <string name="initialSetup_welcome_txt">Vielen Dank, dass Du Dich für unsere App entschieden hast.</string>
     <string name="initialSetup_map_txt">Bitte wähle Deine Karte aus:</string>
     <string name="intialSetup_start_txt">App Starten</string>
+    <string name="close_button_descr">Close Button</string>
 </resources>

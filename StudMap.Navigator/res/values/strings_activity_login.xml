@@ -12,5 +12,6 @@
     <string name="error_invalid_username">Benutzername ist ungültig</string>
     <string name="error_incorrect_password">Passwort ist inkorrekt</string>
     <string name="error_field_required">Dieses Feld ist notwendig</string>
+    <string name="error_incorrect_username">Nutzername ist inkorrekt</string>
     
 </resources>

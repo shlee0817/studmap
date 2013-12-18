@@ -1,10 +1,10 @@
-﻿using QuickGraph;
+﻿using System;
+using System.Collections.Generic;
+using QuickGraph;
 using QuickGraph.Algorithms.ShortestPath;
 using StudMap.Core;
 using StudMap.Core.Graph;
 using StudMap.Service.CacheObjects;
-using System;
-using System.Collections.Generic;
 
 namespace StudMap.Service.Services
 {
@@ -15,7 +15,7 @@ namespace StudMap.Service.Services
             if (!MapService.MapExists(mapId))
                 throw new ServiceException(ResponseError.MapIdDoesNotExist);
 
-            var cache = StudMapCache.Map(mapId);
+            MapCacheObject cache = StudMapCache.Map(mapId);
             Dictionary<int, Node> nodesMap = cache.Nodes;
             if (!nodesMap.ContainsKey(startNodeId))
                 throw new ServiceException(ResponseError.StartNodeNotFound);
@@ -45,7 +45,7 @@ namespace StudMap.Service.Services
             throw new ServiceException(ResponseError.NoRouteFound);
         }
 
-        public static FloydWarshallAllShortestPathAlgorithm<int, UndirectedEdge<int>> 
+        public static FloydWarshallAllShortestPathAlgorithm<int, UndirectedEdge<int>>
             ComputeShortestPaths(Dictionary<int, Node> nodes, IEnumerable<Edge> edges)
         {
             var graph = new AdjacencyGraph<int, UndirectedEdge<int>>();
@@ -76,7 +76,7 @@ namespace StudMap.Service.Services
             // Da Höhe unbekannt einfach irgendwelche Kosten festlegen
             decimal diffZ = endNode.FloorId != startNode.FloorId ? 0.2m : 0m;
 
-            return Math.Sqrt((double)(diffX * diffX + diffY * diffY + diffZ * diffZ));
+            return Math.Sqrt((double) (diffX*diffX + diffY*diffY + diffZ*diffZ));
         }
     }
 }

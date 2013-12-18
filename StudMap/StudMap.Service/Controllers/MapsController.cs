@@ -16,10 +16,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Map>();
 
-            ExecuteMaps(entities =>
-            {
-                result.Object = MapService.CreateMap(entities, mapName);
-            }, result);
+            ExecuteMaps(entities => { result.Object = MapService.CreateMap(entities, mapName); }, result);
 
             return result;
         }
@@ -39,10 +36,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<Map>();
 
-            Execute(() =>
-            {
-                result.List = MapService.GetMapsCached();
-            }, result);
+            Execute(() => { result.List = MapService.GetMapsCached(); }, result);
 
             return result;
         }
@@ -50,16 +44,14 @@ namespace StudMap.Service.Controllers
         #endregion
 
         #region Floor
-        
+
         [HttpPost]
         public ObjectResponse<Floor> CreateFloor(int mapId, string name, string imageUrl)
         {
             var result = new ObjectResponse<Floor>();
 
-            ExecuteMaps(entities =>
-            {
-                result.Object = FloorService.CreateFloor(entities, mapId, name, imageUrl);
-            }, result);
+            ExecuteMaps(entities => { result.Object = FloorService.CreateFloor(entities, mapId, name, imageUrl); },
+                        result);
 
             return result;
         }
@@ -79,10 +71,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<Floor>();
 
-            ExecuteMaps(entities =>
-            {
-                result.List = FloorService.GetFloorsForMapCached(mapId);
-            }, result);
+            ExecuteMaps(entities => { result.List = FloorService.GetFloorsForMapCached(mapId); }, result);
 
             return result;
         }
@@ -92,10 +81,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Floor>();
 
-            Execute(() =>
-            {
-                result.Object = FloorService.GetFloorCached(floorId);
-            }, result);
+            Execute(() => { result.Object = FloorService.GetFloorCached(floorId); }, result);
 
             return result;
         }
@@ -106,10 +92,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<string>();
 
-            Execute(() =>
-            {
-                result.Object = FloorService.GetFloorplanImageCached(floorId);
-            }, result);
+            Execute(() => { result.Object = FloorService.GetFloorplanImageCached(floorId); }, result);
 
             return result;
         }
@@ -123,10 +106,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Graph>();
 
-            ExecuteMaps(entities =>
-            {
-                result.Object = GraphService.SaveGraphForFloor(entities, request);
-            }, result);
+            ExecuteMaps(entities => { result.Object = GraphService.SaveGraphForFloor(entities, request); }, result);
 
             return result;
         }
@@ -146,34 +126,23 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Graph>();
 
-            Execute(() =>
-            {
-                result.Object = GraphService.GetGraphForFloorCached(floorId);
-            }, result);
+            Execute(() => { result.Object = GraphService.GetGraphForFloorCached(floorId); }, result);
 
             return result;
         }
 
         [HttpGet]
-        public ObjectResponse<FloorPlanData> GetFloorPlanData(int floorId)
+        public ObjectResponse<Graph> GetFloorPlanData(int floorId)
         {
-            var floorPlanData = new ObjectResponse<FloorPlanData> { Object = new FloorPlanData() };
             ObjectResponse<Graph> result = GetGraphForFloor(floorId);
-            if (result.Status == RespsonseStatus.Ok)
-            {
-                floorPlanData.Object.Graph = result.Object;
-            }
-            return floorPlanData;
+            return result;
         }
 
         public ListResponse<Node> GetConnectedNodes(int nodeId)
         {
             var result = new ListResponse<Node>();
 
-            ExecuteMaps(entities =>
-            {
-                result.List = GraphService.GetConnectedNodes(entities, nodeId);
-            }, result);
+            ExecuteMaps(entities => { result.List = GraphService.GetConnectedNodes(entities, nodeId); }, result);
 
             return result;
         }
@@ -187,10 +156,9 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<Node>();
 
-            ExecuteMaps(entities =>
-            {
-                result.List = NavigationService.GetRouteBetweenCached(mapId, startNodeId, endNodeId);
-            }, result);
+            ExecuteMaps(
+                entities => { result.List = NavigationService.GetRouteBetweenCached(mapId, startNodeId, endNodeId); },
+                result);
 
             return result;
         }
@@ -204,10 +172,8 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<NodeInformation>();
 
-            ExecuteMaps(entities =>
-            {
-                result.Object = InformationService.GetNodeInformationForNode(entities, nodeId);
-            }, result);
+            ExecuteMaps(
+                entities => { result.Object = InformationService.GetNodeInformationForNode(entities, nodeId); }, result);
 
             return result;
         }
@@ -217,10 +183,8 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<NodeInformation>();
 
-            ExecuteMaps(entities =>
-            {
-                result.List = InformationService.GetNodeInformation(entities, mapId, floorId);
-            }, result);
+            ExecuteMaps(entities => { result.List = InformationService.GetNodeInformation(entities, mapId, floorId); },
+                        result);
 
             return result;
         }
@@ -230,10 +194,9 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<FullNodeInformation>();
 
-            ExecuteMaps(entities =>
-            {
-                result.Object = InformationService.GetFullNodeInformationForNode(entities, nodeId);
-            }, result);
+            ExecuteMaps(
+                entities => { result.Object = InformationService.GetFullNodeInformationForNode(entities, nodeId); },
+                result);
 
             return result;
         }
@@ -243,10 +206,8 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<NodeInformation>();
 
-            ExecuteMaps(entities =>
-            {
-                result.Object = InformationService.SaveNodeInformation(entities, nodeInf);
-            }, result);
+            ExecuteMaps(entities => { result.Object = InformationService.SaveNodeInformation(entities, nodeInf); },
+                        result);
 
             return result;
         }
@@ -256,10 +217,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<PoiType>();
 
-            ExecuteMaps(entities =>
-            {
-                result.List = InformationService.GetPoiTypes(entities);
-            }, result);
+            ExecuteMaps(entities => { result.List = InformationService.GetPoiTypes(entities); }, result);
 
             return result;
         }
@@ -269,10 +227,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<RoomAndPoI>();
 
-            ExecuteMaps(entities =>
-            {
-                result.List = InformationService.GetPoIsForMap(entities, mapId);
-            }, result);
+            ExecuteMaps(entities => { result.List = InformationService.GetPoIsForMap(entities, mapId); }, result);
 
             return result;
         }
@@ -282,10 +237,7 @@ namespace StudMap.Service.Controllers
         {
             var result = new ListResponse<Room>();
 
-            ExecuteMaps(entities =>
-            {
-                result.List = InformationService.GetRoomsForMap(entities, mapId);
-            }, result);
+            ExecuteMaps(entities => { result.List = InformationService.GetRoomsForMap(entities, mapId); }, result);
 
             return result;
         }
@@ -295,10 +247,8 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Node>();
 
-            ExecuteMaps(entities =>
-            {
-                result.Object = InformationService.GetNodeForNFC(entities, mapId, nfcTag);
-            }, result);
+            ExecuteMaps(entities => { result.Object = InformationService.GetNodeForNFC(entities, mapId, nfcTag); },
+                        result);
 
             return result;
         }
@@ -318,10 +268,8 @@ namespace StudMap.Service.Controllers
         {
             var result = new ObjectResponse<Node>();
 
-            ExecuteMaps(entities =>
-            {
-                result.Object = InformationService.GetNodeForQRCode(entities, mapId, qrCode);
-            }, result);
+            ExecuteMaps(entities => { result.Object = InformationService.GetNodeForQRCode(entities, mapId, qrCode); },
+                        result);
 
             return result;
         }

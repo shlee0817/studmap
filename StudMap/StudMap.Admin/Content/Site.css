@@ -25,7 +25,7 @@ a {
 a:link, a:visited,
 a:active, a:hover { color: #333; }
 
-a:hover { background-color: #C7D6CB; } 
+a:hover { background-color: #C7D6CB; }
 
 header, footer, hgroup,
 nav, section { display: block; }
@@ -348,8 +348,8 @@ input, textarea {
 
 textarea {
     font-family: inherit;
-    width: 500px;
     resize: none;
+    width: 500px;
 }
 
 input:focus, textarea:focus { border: 1px solid #D3E7B8; }

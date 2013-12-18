@@ -1,15 +1,15 @@
-﻿using StudMap.Core;
-using System;
+﻿using System;
+using StudMap.Core;
 
 namespace StudMap.Service.Services
 {
     public class ServiceException : Exception
     {
-        public ResponseError ErrorCode { get; set; }
-
         public ServiceException(ResponseError errorCode)
         {
             ErrorCode = errorCode;
         }
+
+        public ResponseError ErrorCode { get; set; }
     }
 }

@@ -1,4 +1,27 @@
 ﻿body {
-	background: #fcfcfc;
-	margin: 0;
+    background: #fcfcfc;
+    margin: 0;
+}
+
+.pathplot path {
+    stroke-width: 8px;
+    stroke: steelblue;
+}
+
+.node {
+    stroke: transparent;
+    stroke-width: 8;
+    
+}
+
+.node.active {
+    fill: #83c32d;
+}
+
+.node.inactive {
+    fill: transparent;
+}
+
+.node.highlighted {
+    fill: #cf1717;
 }

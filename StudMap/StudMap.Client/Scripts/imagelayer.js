@@ -15,61 +15,61 @@
 //
 
 d3.floorplan.imagelayer = function() {
-	var x = d3.scale.linear(),
-	y = d3.scale.linear(),
-	id = "fp-imagelayer-" + new Date().valueOf(),
-	name = "imagelayer";
-	
-	function images(g) {
-		g.each(function(data) {
-			if (! data) return;
-			var g = d3.select(this);
-			
-			var imgs = g.selectAll("image")
-						.data(data, function(img) {return img.url;});
-			
-			imgs.enter().append("image")
-			.attr("xlink:href", function(img) {return img.url;})
-			.style("opacity", 1e-6);
-			
-			imgs.exit().transition().style("opacity",1e-6).remove();
-			
-			imgs.transition()
-			.attr("x", function(img) {return x(img.x);})
-			.attr("y", function(img) {return y(img.y);})
-			.attr("height", function(img) {
-				return y(img.y+img.height) - y(img.y);
-			})
-			.attr("width", function(img) {
-				return x(img.x+img.width) - x(img.x);
-			})
-			.style("opacity", function(img) {
-				return img.opacity || 1.0;
-			});
-		});
-	}
-	
-	images.xScale = function(scale) {
-		if (! arguments.length) return x;
-		x = scale;
-		return images;
-	};
-	
-	images.yScale = function(scale) {
-		if (! arguments.length) return y;
-		y = scale;
-		return images;
-	};
+    var x = d3.scale.linear(),
+        y = d3.scale.linear(),
+        id = "fp-imagelayer-" + new Date().valueOf(),
+        name = "imagelayer";
 
-	images.id = function() {
-		return id;
-	};
-	
-	images.title = function(n) {
-		if (! arguments.length) return name;
-		name = n;
-		return images;
-	};
+    function images(g) {
+        g.each(function(data) {
+            if (!data) return;
+            var g = d3.select(this);
 
-	return images;
+            var imgs = g.selectAll("image")
+                .data(data, function(img) { return img.url; });
+
+            imgs.enter().append("image")
+                .attr("xlink:href", function(img) { return img.url; })
+                .style("opacity", 1e-6);
+
+            imgs.exit().transition().style("opacity", 1e-6).remove();
+
+            imgs.transition()
+                .attr("x", function(img) { return x(img.x); })
+                .attr("y", function(img) { return y(img.y); })
+                .attr("height", function(img) {
+                    return y(img.y + img.height) - y(img.y);
+                })
+                .attr("width", function(img) {
+                    return x(img.x + img.width) - x(img.x);
+                })
+                .style("opacity", function(img) {
+                    return img.opacity || 1.0;
+                });
+        });
+    }
+
+    images.xScale = function(scale) {
+        if (!arguments.length) return x;
+        x = scale;
+        return images;
+    };
+
+    images.yScale = function(scale) {
+        if (!arguments.length) return y;
+        y = scale;
+        return images;
+    };
+
+    images.id = function() {
+        return id;
+    };
+
+    images.title = function(n) {
+        if (!arguments.length) return name;
+        name = n;
+        return images;
+    };
+
+    return images;
 };

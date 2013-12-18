@@ -1,17 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
   <!-- EF Runtime content -->
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="StudMapUsers.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="StudMapUsers.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008"
+              xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator"
+              xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="StudMapUsersStoreContainer">
           <EntitySet Name="ActiveUsers" EntityType="StudMapUsers.Store.ActiveUsers" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="StudMapUsers.Store.UserProfile" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="webpages_Membership" EntityType="StudMapUsers.Store.webpages_Membership" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="webpages_OAuthMembership" EntityType="StudMapUsers.Store.webpages_OAuthMembership" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="webpages_Roles" EntityType="StudMapUsers.Store.webpages_Roles" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="webpages_UsersInRoles" EntityType="StudMapUsers.Store.webpages_UsersInRoles" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_Membership" EntityType="StudMapUsers.Store.webpages_Membership" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="webpages_OAuthMembership" EntityType="StudMapUsers.Store.webpages_OAuthMembership"
+                     store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_Roles" EntityType="StudMapUsers.Store.webpages_Roles" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="webpages_UsersInRoles" EntityType="StudMapUsers.Store.webpages_UsersInRoles"
+                     store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="fk_RoleId" Association="StudMapUsers.Store.fk_RoleId">
             <End Role="webpages_Roles" EntitySet="webpages_Roles" />
             <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
@@ -100,10 +107,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="StudMapModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="StudMapModel" Alias="Self" p1:UseStrongSpatialTypes="false"
+              xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+              xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+              xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="UserEntities" p1:LazyLoadingEnabled="true">
           <EntitySet Name="ActiveUsers" EntityType="StudMapModel.ActiveUsers" />
           <EntitySet Name="UserProfile" EntityType="StudMapModel.UserProfile" />
@@ -129,7 +140,8 @@
           </Key>
           <Property Type="Int32" Name="UserId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="UserName" Nullable="false" MaxLength="56" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="webpages_Roles" Relationship="StudMapModel.webpages_UsersInRoles" FromRole="UserProfile" ToRole="webpages_Roles" />
+          <NavigationProperty Name="webpages_Roles" Relationship="StudMapModel.webpages_UsersInRoles"
+                              FromRole="UserProfile" ToRole="webpages_Roles" />
         </EntityType>
         <EntityType Name="webpages_Membership">
           <Key>
@@ -143,7 +155,8 @@
           <Property Type="Int32" Name="PasswordFailuresSinceLastSuccess" Nullable="false" />
           <Property Type="String" Name="Password" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="PasswordChangedDate" Precision="3" />
-          <Property Type="String" Name="PasswordSalt" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PasswordSalt" Nullable="false" MaxLength="128" FixedLength="false"
+                    Unicode="true" />
           <Property Type="String" Name="PasswordVerificationToken" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="PasswordVerificationTokenExpirationDate" Precision="3" />
         </EntityType>
@@ -153,7 +166,8 @@
             <PropertyRef Name="ProviderUserId" />
           </Key>
           <Property Type="String" Name="Provider" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ProviderUserId" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ProviderUserId" Nullable="false" MaxLength="100" FixedLength="false"
+                    Unicode="true" />
           <Property Type="Int32" Name="UserId" Nullable="false" />
         </EntityType>
         <EntityType Name="webpages_Roles">
@@ -162,13 +176,14 @@
           </Key>
           <Property Type="Int32" Name="RoleId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="RoleName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="UserProfile" Relationship="StudMapModel.webpages_UsersInRoles" FromRole="webpages_Roles" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile" Relationship="StudMapModel.webpages_UsersInRoles"
+                              FromRole="webpages_Roles" ToRole="UserProfile" />
         </EntityType>
         <Association Name="webpages_UsersInRoles">
           <End Type="StudMapModel.webpages_Roles" Role="webpages_Roles" Multiplicity="*" />
           <End Type="StudMapModel.UserProfile" Role="UserProfile" Multiplicity="*" />
         </Association>
-        </Schema>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -194,7 +209,8 @@
           <EntitySetMapping Name="webpages_Membership">
             <EntityTypeMapping TypeName="StudMapModel.webpages_Membership">
               <MappingFragment StoreEntitySet="webpages_Membership">
-                <ScalarProperty Name="PasswordVerificationTokenExpirationDate" ColumnName="PasswordVerificationTokenExpirationDate" />
+                <ScalarProperty Name="PasswordVerificationTokenExpirationDate"
+                                ColumnName="PasswordVerificationTokenExpirationDate" />
                 <ScalarProperty Name="PasswordVerificationToken" ColumnName="PasswordVerificationToken" />
                 <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
                 <ScalarProperty Name="PasswordChangedDate" ColumnName="PasswordChangedDate" />
@@ -225,7 +241,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="webpages_UsersInRoles" TypeName="StudMapModel.webpages_UsersInRoles" StoreEntitySet="webpages_UsersInRoles">
+          <AssociationSetMapping Name="webpages_UsersInRoles" TypeName="StudMapModel.webpages_UsersInRoles"
+                                 StoreEntitySet="webpages_UsersInRoles">
             <EndProperty Name="UserProfile">
               <ScalarProperty Name="UserId" ColumnName="UserId" />
             </EndProperty>

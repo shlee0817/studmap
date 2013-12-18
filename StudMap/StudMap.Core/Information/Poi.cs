@@ -2,9 +2,6 @@
 {
     public class PoI
     {
-        public PoiType Type { get; set; }
-        public string Description { get; set; }
-
         public PoI()
         {
             Type = new PoiType();
@@ -16,5 +13,8 @@
             Type = type;
             Description = description;
         }
+
+        public PoiType Type { get; set; }
+        public string Description { get; set; }
     }
 }

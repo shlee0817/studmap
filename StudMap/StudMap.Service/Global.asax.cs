@@ -1,11 +1,11 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
+using System.Web.Caching;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using StudMap.Service.App_Start;
-using System.Web.Caching;
-using System;
 using StudMap.Service.Services;
 
 namespace StudMap.Service
@@ -15,6 +15,8 @@ namespace StudMap.Service
 
     public class WebApiApplication : HttpApplication
     {
+        private static CacheItemRemovedCallback _onCacheRemove;
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -24,17 +26,15 @@ namespace StudMap.Service
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            AddTask("CheckActiveUsers", 5 * 60);
+            AddTask("CheckActiveUsers", 5*60);
         }
-
-        private static CacheItemRemovedCallback _onCacheRemove;
 
         private void AddTask(string name, int seconds)
         {
             _onCacheRemove = CacheItemRemoved;
             HttpRuntime.Cache.Insert(name, seconds, null,
-                DateTime.Now.AddSeconds(seconds), Cache.NoSlidingExpiration,
-                CacheItemPriority.NotRemovable, _onCacheRemove);
+                                     DateTime.Now.AddSeconds(seconds), Cache.NoSlidingExpiration,
+                                     CacheItemPriority.NotRemovable, _onCacheRemove);
         }
 
         public void CacheItemRemoved(string key, object value, CacheItemRemovedReason reason)

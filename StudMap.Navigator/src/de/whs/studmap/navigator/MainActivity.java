@@ -9,16 +9,22 @@ import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import de.whs.studmap.client.core.data.Constants;
 import de.whs.studmap.client.core.data.Floor;
@@ -61,12 +67,12 @@ public class MainActivity extends BaseMainActivity implements
 		OnMenuItemListener, OnMapSelectedListener {
 
 	// vars
-	private boolean mWaitGetRoomsOrFloorsTask = false;
 	private ErrorHandler mErrorHandler = null;
-	private String mUserName = "";
+	private String mUserName = ""; //$NON-NLS-1$
 	private Node mSelectedNode = null;
 	private boolean mSetAsStart = false;
 	private boolean mWebViewIsReady = false;
+	private boolean mIsStartUp = false;
 	private int mMapId = Constants.MAP_ID;
 	private int mFloorId;
 
@@ -77,27 +83,47 @@ public class MainActivity extends BaseMainActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if (!isNetworkAvailable()) {
 
-		loadWebViewFragment();
-		getDataFromWebService();
+			UserInfo.dialog(
+					this,
+					Messages.getString("MainActivity.NoDataConnectionHeadline"),  //$NON-NLS-1$
+					Messages.getString("MainActivity.NoDataConnection")); //$NON-NLS-1$
+			return;
+		}
+
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+			
+			getWindow().setFlags(
+			                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+			                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+
+			findViewById(R.id.content_frame).setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
+		
+		
 		mErrorHandler = new ErrorHandler(this);
+
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		boolean isFirstStart = sharedPref.getBoolean(
 				getString(R.string.pref_first_time), true);
+
 		// TODO hostName verwenden!
 		// String hostName =
 		// sharedPref.getString(getString(R.string.pref_host_key),
 		// "193.175.199.115");
+
 		if (isFirstStart) {
 			sharedPref.edit()
 					.putBoolean(getString(R.string.pref_first_time), false)
 					.commit();
 			new InitialSetupFragment().show(getFragmentManager(),
-					"InitialSetup");
+					"InitialSetup"); //$NON-NLS-1$
 		} else {
 			String mapId = sharedPref.getString(
-					getString(R.string.pref_map_key), "3");
+					getString(R.string.pref_map_key), "3"); //$NON-NLS-1$
 			mMapId = Integer.parseInt(mapId);
 			loadActivity();
 		}
@@ -115,10 +141,10 @@ public class MainActivity extends BaseMainActivity implements
 						Service.logout(mUserName);
 					} catch (WebServiceException e) {
 						Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
-								"OnDestroy - Logout - DatabaseError");
+								"OnDestroy - Logout - DatabaseError"); //$NON-NLS-1$
 					} catch (ConnectException e) {
 						Log.e(Constants.LOG_TAG_MAIN_ACTIVITY,
-								"OnDestroy - Logout - Webservice nicht erreichbar");
+								"OnDestroy - Logout - Webservice nicht erreichbar"); //$NON-NLS-1$
 					}
 					return true;
 				}
@@ -139,7 +165,7 @@ public class MainActivity extends BaseMainActivity implements
 					requestCode, resultCode, data);
 			if (result != null) {
 				String scanResult = result.getContents();
-				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY, "QRScan result - "
+				Log.d(Constants.LOG_TAG_MAIN_ACTIVITY, "QRScan result - " //$NON-NLS-1$
 						+ scanResult);
 				if (scanResult != null) {
 					showProgress(true);
@@ -177,7 +203,14 @@ public class MainActivity extends BaseMainActivity implements
 			return false;
 		} else if (item.getItemId() == R.id.menu_reload) {
 
-			loadActivity();
+			mWebViewFragment.reloadMap();
+
+			if (mSelectedNode != null) {
+				if (mWebViewIsReady) {
+
+					SetNodeAndChangeFloorIfRequired(mSelectedNode, false);
+				}
+			}
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 			return false;
 		} else
@@ -185,6 +218,9 @@ public class MainActivity extends BaseMainActivity implements
 	}
 
 	private void loadActivity() {
+
+		showProgress(true);
+		mIsStartUp = true;
 		loadWebViewFragment();
 		getDataFromWebService();
 
@@ -222,8 +258,10 @@ public class MainActivity extends BaseMainActivity implements
 			if (selectedNode != null)
 				SetNodeAndChangeFloorIfRequired(selectedNode, false);
 			else
-				UserInfo.toast(this, "Der Knoten existiert nicht!", false);
-			
+				UserInfo.toast(
+						this,
+						Messages.getString("MainActivity.NodeDoesNotExist"), false); //$NON-NLS-1$
+
 			mSearchView.onActionViewCollapsed();
 		}
 	}
@@ -256,13 +294,12 @@ public class MainActivity extends BaseMainActivity implements
 	private void SetNodeAndChangeFloorIfRequired(Node selectedNode,
 			Boolean setAsStart) {
 
-		int selectedNodeId = selectedNode.getNodeID();
 		int selectedFloorId = selectedNode.getFloorID();
 		if (selectedFloorId == mFloorId) {
 			if (setAsStart)
-				mWebViewFragment.sendStart(selectedNodeId);
+				mWebViewFragment.sendStart(selectedNode);
 			else
-				mWebViewFragment.sendTarget(selectedNodeId);
+				mWebViewFragment.sendTarget(selectedNode);
 		} else {
 			mSelectedNode = selectedNode;
 			mSetAsStart = setAsStart;
@@ -271,11 +308,19 @@ public class MainActivity extends BaseMainActivity implements
 
 			if (mWebViewIsReady) {
 				if (setAsStart)
-					mWebViewFragment.sendStart(selectedNodeId);
+					mWebViewFragment.sendStart(selectedNode);
 				else
-					mWebViewFragment.sendTarget(selectedNodeId);
+					mWebViewFragment.sendTarget(selectedNode);
 			}
 		}
+	}
+
+	private boolean isNetworkAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 	@Override
@@ -283,11 +328,11 @@ public class MainActivity extends BaseMainActivity implements
 	public void punkt(String nodeId) {
 
 		Bundle args = new Bundle();
-		args.putInt("NodeId", Integer.parseInt(nodeId));
+		args.putInt("NodeId", Integer.parseInt(nodeId)); //$NON-NLS-1$
 
 		PositionDialogFragment dialog = new PositionDialogFragment();
 		dialog.setArguments(args);
-		dialog.show(getFragmentManager(), "Positionierungsdialog");
+		dialog.show(getFragmentManager(), "Positionierungsdialog"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -298,13 +343,17 @@ public class MainActivity extends BaseMainActivity implements
 
 			if (mSetAsStart) {
 				mSetAsStart = false;
-				mWebViewFragment.sendStart(mSelectedNode.getNodeID());
+				mWebViewFragment.sendStart(mSelectedNode);
 			} else
-				mWebViewFragment.sendTarget(mSelectedNode.getNodeID());
+				mWebViewFragment.sendTarget(mSelectedNode);
 			mSelectedNode = null;
-		} else
-			mWebViewIsReady = true;
+		} else if (mIsStartUp) {
+			
+			mIsStartUp = false;
+			showProgress(false);
+		}
 
+		mWebViewIsReady = true;
 	}
 
 	@Override
@@ -333,26 +382,24 @@ public class MainActivity extends BaseMainActivity implements
 			mMenuFragment.setLoadedMap(null, mFloorList);
 		}
 
-		if (!mWaitGetRoomsOrFloorsTask)
+		if(!mIsStartUp || mWebViewIsReady) {
+
 			showProgress(false);
-		mWaitGetRoomsOrFloorsTask = false;
+			mIsStartUp = false;
+		}
 	}
 
 	@Override
 	public void onGetFloorsError(int responseError) {
 		mErrorHandler.handle(responseError);
 
-		if (!mWaitGetRoomsOrFloorsTask)
-			showProgress(false);
-		mWaitGetRoomsOrFloorsTask = false;
+		showProgress(false);
 	}
 
 	@Override
 	public void onGetFloorsCanceled() {
 		mErrorHandler.handle(ResponseError.TaskCancelled);
-		if (!mWaitGetRoomsOrFloorsTask)
-			showProgress(false);
-		mWaitGetRoomsOrFloorsTask = false;
+		showProgress(false);
 	}
 
 	@Override
@@ -413,13 +460,13 @@ public class MainActivity extends BaseMainActivity implements
 	}
 
 	@Override
-	public void onSetDestination(int nodeId) {
-		mWebViewFragment.sendDestination(nodeId);
+	public void onSetDestination(Node node) {		
+		mWebViewFragment.sendDestination(node);
 	}
 
 	@Override
-	public void onSetStart(int nodeId) {
-		mWebViewFragment.sendStart(nodeId);
+	public void onSetStart(Node node) {
+		mWebViewFragment.sendStart(node);
 	}
 
 	@Override
@@ -428,7 +475,7 @@ public class MainActivity extends BaseMainActivity implements
 		if (itemName.equals(getString(R.string.menu_login))) {
 
 			LoginDialogFragment dialog = new LoginDialogFragment();
-			dialog.show(getFragmentManager(), "Login");
+			dialog.show(getFragmentManager(), "Login"); //$NON-NLS-1$
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 		} else if (itemName.equals(getString(R.string.menu_logout))) {
 
@@ -445,18 +492,18 @@ public class MainActivity extends BaseMainActivity implements
 		} else if (itemName.equals(getString(R.string.menu_poi))) {
 
 			PoIDialogFragment dialog = PoIDialogFragment.newInstance(mMapId);
-			dialog.show(getFragmentManager(), "PoI Dialog");
+			dialog.show(getFragmentManager(), "PoI Dialog"); //$NON-NLS-1$
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 		} else if (itemName.equals(getString(R.string.menu_about))) {
 
 			ImpressumDialogFragment impressumDialog = new ImpressumDialogFragment();
-			impressumDialog.show(getFragmentManager(), "Impressum");
+			impressumDialog.show(getFragmentManager(), "Impressum"); //$NON-NLS-1$
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 
 		} else if (itemName.equals(getString(R.string.menu_settings))) {
 			Intent preferenceIntent = new Intent(MainActivity.this,
 					PreferencesActivity.class);
-			startActivityForResult(preferenceIntent,0);
+			startActivityForResult(preferenceIntent, 0);
 			mDrawerLayout.closeDrawer(mLeftDrawer);
 		}
 	}
@@ -464,11 +511,7 @@ public class MainActivity extends BaseMainActivity implements
 	@Override
 	public void onFloorChanged(int floorId) {
 
-		int selectedFloorID = floorId;
-
-		String floorName = "Floor mit ID: " + selectedFloorID;
-		UserInfo.toast(getApplicationContext(), floorName, true);
-		loadFloorToMap(selectedFloorID);
+		loadFloorToMap(floorId);
 		mDrawerLayout.closeDrawer(mLeftDrawer);
 	}
 
@@ -476,11 +519,11 @@ public class MainActivity extends BaseMainActivity implements
 	public void onRegister(String username) {
 
 		Bundle args = new Bundle();
-		args.putString("username", username);
+		args.putString("username", username); //$NON-NLS-1$
 
 		LoginDialogFragment dialog = new LoginDialogFragment();
 		dialog.setArguments(args);
-		dialog.show(getFragmentManager(), "Login");
+		dialog.show(getFragmentManager(), "Login"); //$NON-NLS-1$
 		showProgress(false);
 	}
 
@@ -490,8 +533,8 @@ public class MainActivity extends BaseMainActivity implements
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		settings.edit()
-				.putString(getString(R.string.pref_map_key), "" + mMapId)
-				.commit();
+				.putString(getString(R.string.pref_map_key),
+						String.valueOf(mMapId)).commit();
 		loadActivity();
 	}
 }

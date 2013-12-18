@@ -1,57 +1,73 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
   <!-- EF Runtime content -->
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="StudMapModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="StudMapModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008"
+              xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator"
+              xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="StudMapModelStoreContainer">
           <EntitySet Name="AccessPoints" EntityType="StudMapModel.Store.AccessPoints" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="AccessPointScans" EntityType="StudMapModel.Store.AccessPointScans" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AccessPointScans" EntityType="StudMapModel.Store.AccessPointScans" store:Type="Tables"
+                     Schema="dbo" />
           <EntitySet Name="Edges" EntityType="StudMapModel.Store.Edges" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Fingerprints" EntityType="StudMapModel.Store.Fingerprints" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Floors" EntityType="StudMapModel.Store.Floors" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Graphs" EntityType="StudMapModel.Store.Graphs" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Maps" EntityType="StudMapModel.Store.Maps" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="NodeInformation" EntityType="StudMapModel.Store.NodeInformation" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="NodeInformation" EntityType="StudMapModel.Store.NodeInformation" store:Type="Tables"
+                     Schema="dbo" />
           <EntitySet Name="Nodes" EntityType="StudMapModel.Store.Nodes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PoIs" EntityType="StudMapModel.Store.PoIs" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PoiTypes" EntityType="StudMapModel.Store.PoiTypes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.Store.NodeInformationForMap" store:Type="Views" store:Schema="dbo" store:Name="NodeInformationForMap">
-            <DefiningQuery>SELECT 
-      [NodeInformationForMap].[MapId] AS [MapId], 
-      [NodeInformationForMap].[DisplayName] AS [DisplayName], 
-      [NodeInformationForMap].[RoomName] AS [RoomName], 
-      [NodeInformationForMap].[NodeId] AS [NodeId], 
-      [NodeInformationForMap].[FloorId] AS [FloorId]
-      FROM [dbo].[NodeInformationForMap] AS [NodeInformationForMap]</DefiningQuery>
+          <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.Store.NodeInformationForMap"
+                     store:Type="Views" store:Schema="dbo" store:Name="NodeInformationForMap">
+            <DefiningQuery>
+              SELECT
+              [NodeInformationForMap].[MapId] AS [MapId],
+              [NodeInformationForMap].[DisplayName] AS [DisplayName],
+              [NodeInformationForMap].[RoomName] AS [RoomName],
+              [NodeInformationForMap].[NodeId] AS [NodeId],
+              [NodeInformationForMap].[FloorId] AS [FloorId]
+              FROM [dbo].[NodeInformationForMap] AS [NodeInformationForMap]
+            </DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PoisForMap" EntityType="StudMapModel.Store.PoisForMap" store:Type="Views" store:Schema="dbo" store:Name="PoisForMap">
-            <DefiningQuery>SELECT 
-      [PoisForMap].[MapId] AS [MapId], 
-      [PoisForMap].[PoiTypeId] AS [PoiTypeId], 
-      [PoisForMap].[PoiTypeName] AS [PoiTypeName], 
-      [PoisForMap].[PoiId] AS [PoiId], 
-      [PoisForMap].[PoiDescription] AS [PoiDescription], 
-      [PoisForMap].[DisplayName] AS [DisplayName], 
-      [PoisForMap].[RoomName] AS [RoomName], 
-      [PoisForMap].[NodeId] AS [NodeId], 
-      [PoisForMap].[FloorId] AS [FloorId]
-      FROM [dbo].[PoisForMap] AS [PoisForMap]</DefiningQuery>
+          <EntitySet Name="PoisForMap" EntityType="StudMapModel.Store.PoisForMap" store:Type="Views" store:Schema="dbo"
+                     store:Name="PoisForMap">
+            <DefiningQuery>
+              SELECT
+              [PoisForMap].[MapId] AS [MapId],
+              [PoisForMap].[PoiTypeId] AS [PoiTypeId],
+              [PoisForMap].[PoiTypeName] AS [PoiTypeName],
+              [PoisForMap].[PoiId] AS [PoiId],
+              [PoisForMap].[PoiDescription] AS [PoiDescription],
+              [PoisForMap].[DisplayName] AS [DisplayName],
+              [PoisForMap].[RoomName] AS [RoomName],
+              [PoisForMap].[NodeId] AS [NodeId],
+              [PoisForMap].[FloorId] AS [FloorId]
+              FROM [dbo].[PoisForMap] AS [PoisForMap]
+            </DefiningQuery>
           </EntitySet>
-          <EntitySet Name="RSSDistribution" EntityType="StudMapModel.Store.RSSDistribution" store:Type="Views" store:Schema="dbo" store:Name="RSSDistribution">
-            <DefiningQuery>SELECT 
-      [RSSDistribution].[NodeId] AS [NodeId], 
-      [RSSDistribution].[AccessPointId] AS [AccessPointId], 
-      [RSSDistribution].[AvgRSS] AS [AvgRSS], 
-      [RSSDistribution].[StDevRSS] AS [StDevRSS]
-      FROM [dbo].[RSSDistribution] AS [RSSDistribution]</DefiningQuery>
+          <EntitySet Name="RSSDistribution" EntityType="StudMapModel.Store.RSSDistribution" store:Type="Views"
+                     store:Schema="dbo" store:Name="RSSDistribution">
+            <DefiningQuery>
+              SELECT
+              [RSSDistribution].[NodeId] AS [NodeId],
+              [RSSDistribution].[AccessPointId] AS [AccessPointId],
+              [RSSDistribution].[AvgRSS] AS [AvgRSS],
+              [RSSDistribution].[StDevRSS] AS [StDevRSS]
+              FROM [dbo].[RSSDistribution] AS [RSSDistribution]
+            </DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_AccessPointScans_AccessPoints" Association="StudMapModel.Store.FK_AccessPointScans_AccessPoints">
+          <AssociationSet Name="FK_AccessPointScans_AccessPoints"
+                          Association="StudMapModel.Store.FK_AccessPointScans_AccessPoints">
             <End Role="AccessPoints" EntitySet="AccessPoints" />
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
           </AssociationSet>
-          <AssociationSet Name="FK_AccessPointScans_Fingerprints" Association="StudMapModel.Store.FK_AccessPointScans_Fingerprints">
+          <AssociationSet Name="FK_AccessPointScans_Fingerprints"
+                          Association="StudMapModel.Store.FK_AccessPointScans_Fingerprints">
             <End Role="Fingerprints" EntitySet="Fingerprints" />
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
           </AssociationSet>
@@ -386,28 +402,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="sp_DeleteFloor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="sp_DeleteFloor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false"
+                  ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FloorId" Type="int" Mode="In" />
         </Function>
-        <Function Name="sp_DeleteGraphFromFloor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="sp_DeleteGraphFromFloor" Aggregate="false" BuiltIn="false" NiladicFunction="false"
+                  IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FloorId" Type="int" Mode="In" />
         </Function>
-        <Function Name="sp_DeleteMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="sp_DeleteMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false"
+                  ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="MapId" Type="int" Mode="In" />
         </Function>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="StudMapModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="StudMapModel" Alias="Self" p1:UseStrongSpatialTypes="false"
+              xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+              xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+              xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="MapsEntities" p1:LazyLoadingEnabled="true">
           <FunctionImport Name="DeleteFloor">
-          <Parameter Name="FloorId" Mode="In" Type="Int32" />
+            <Parameter Name="FloorId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="DeleteMap">
-          <Parameter Name="MapId" Mode="In" Type="Int32" />
+            <Parameter Name="MapId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="DeleteGraphFromFloor">
-          <Parameter Name="FloorId" Mode="In" Type="Int32" />
+            <Parameter Name="FloorId" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="NodeInformationForMap" EntityType="StudMapModel.NodeInformationForMap" />
           <EntitySet Name="PoisForMap" EntityType="StudMapModel.PoisForMap" />
@@ -423,11 +446,13 @@
           <EntitySet Name="Nodes" EntityType="StudMapModel.Nodes" />
           <EntitySet Name="PoIs" EntityType="StudMapModel.PoIs" />
           <EntitySet Name="PoiTypes" EntityType="StudMapModel.PoiTypes" />
-          <AssociationSet Name="FK_AccessPointScans_AccessPoints" Association="StudMapModel.FK_AccessPointScans_AccessPoints">
+          <AssociationSet Name="FK_AccessPointScans_AccessPoints"
+                          Association="StudMapModel.FK_AccessPointScans_AccessPoints">
             <End Role="AccessPoints" EntitySet="AccessPoints" />
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
           </AssociationSet>
-          <AssociationSet Name="FK_AccessPointScans_Fingerprints" Association="StudMapModel.FK_AccessPointScans_Fingerprints">
+          <AssociationSet Name="FK_AccessPointScans_Fingerprints"
+                          Association="StudMapModel.FK_AccessPointScans_Fingerprints">
             <End Role="Fingerprints" EntitySet="Fingerprints" />
             <End Role="AccessPointScans" EntitySet="AccessPointScans" />
           </AssociationSet>
@@ -471,7 +496,7 @@
             <End Role="PoiTypes" EntitySet="PoiTypes" />
             <End Role="PoIs" EntitySet="PoIs" />
           </AssociationSet>
-          </EntityContainer>
+        </EntityContainer>
         <EntityType Name="NodeInformationForMap">
           <Key>
             <PropertyRef Name="MapId" />
@@ -518,7 +543,8 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="MAC" Nullable="false" MaxLength="12" FixedLength="true" Unicode="false" />
-          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_AccessPoints" FromRole="AccessPoints" ToRole="AccessPointScans" />
+          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_AccessPoints"
+                              FromRole="AccessPoints" ToRole="AccessPointScans" />
         </EntityType>
         <EntityType Name="AccessPointScans">
           <Key>
@@ -528,8 +554,10 @@
           <Property Type="Int32" Name="FingerprintId" Nullable="false" />
           <Property Type="Int32" Name="AccessPointId" Nullable="false" />
           <Property Type="Int32" Name="RecievedSignalStrength" Nullable="false" />
-          <NavigationProperty Name="AccessPoints" Relationship="StudMapModel.FK_AccessPointScans_AccessPoints" FromRole="AccessPointScans" ToRole="AccessPoints" />
-          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="AccessPointScans" ToRole="Fingerprints" />
+          <NavigationProperty Name="AccessPoints" Relationship="StudMapModel.FK_AccessPointScans_AccessPoints"
+                              FromRole="AccessPointScans" ToRole="AccessPoints" />
+          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints"
+                              FromRole="AccessPointScans" ToRole="Fingerprints" />
         </EntityType>
         <EntityType Name="Edges">
           <Key>
@@ -540,7 +568,8 @@
           <Property Type="Int32" Name="NodeStartId" Nullable="false" />
           <Property Type="Int32" Name="NodeEndId" Nullable="false" />
           <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Graphs" Relationship="StudMapModel.FK_Edges_Graphs" FromRole="Edges" ToRole="Graphs" />
+          <NavigationProperty Name="Graphs" Relationship="StudMapModel.FK_Edges_Graphs" FromRole="Edges"
+                              ToRole="Graphs" />
           <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Edges_Nodes" FromRole="Edges" ToRole="Nodes" />
           <NavigationProperty Name="Nodes1" Relationship="StudMapModel.FK_Edges_Nodes1" FromRole="Edges" ToRole="Nodes" />
         </EntityType>
@@ -550,8 +579,10 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="NodeId" Nullable="false" />
-          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints" FromRole="Fingerprints" ToRole="AccessPointScans" />
-          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Fingerprints" ToRole="Nodes" />
+          <NavigationProperty Name="AccessPointScans" Relationship="StudMapModel.FK_AccessPointScans_Fingerprints"
+                              FromRole="Fingerprints" ToRole="AccessPointScans" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Fingerprints"
+                              ToRole="Nodes" />
         </EntityType>
         <EntityType Name="Floors">
           <Key>
@@ -597,8 +628,10 @@
           <Property Type="String" Name="NFCTag" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="PoiId" />
           <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="NodeInformation" ToRole="Nodes" />
-          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_NodeInformation_PoIs" FromRole="NodeInformation" ToRole="PoIs" />
+          <NavigationProperty Name="Nodes" Relationship="StudMapModel.FK_NodeInformation_Nodes"
+                              FromRole="NodeInformation" ToRole="Nodes" />
+          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_NodeInformation_PoIs"
+                              FromRole="NodeInformation" ToRole="PoIs" />
         </EntityType>
         <EntityType Name="Nodes">
           <Key>
@@ -611,9 +644,12 @@
           <Property Type="DateTime" Name="CreationTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Edges" Relationship="StudMapModel.FK_Edges_Nodes" FromRole="Nodes" ToRole="Edges" />
           <NavigationProperty Name="Edges1" Relationship="StudMapModel.FK_Edges_Nodes1" FromRole="Nodes" ToRole="Edges" />
-          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Nodes" ToRole="Fingerprints" />
-          <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Nodes" ToRole="Floors" />
-          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_Nodes" FromRole="Nodes" ToRole="NodeInformation" />
+          <NavigationProperty Name="Fingerprints" Relationship="StudMapModel.FK_Fingerprints_Nodes" FromRole="Nodes"
+                              ToRole="Fingerprints" />
+          <NavigationProperty Name="Floors" Relationship="StudMapModel.FK_Nodes_Floors" FromRole="Nodes"
+                              ToRole="Floors" />
+          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_Nodes"
+                              FromRole="Nodes" ToRole="NodeInformation" />
         </EntityType>
         <EntityType Name="PoIs">
           <Key>
@@ -622,8 +658,10 @@
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="TypeId" Nullable="false" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_PoIs" FromRole="PoIs" ToRole="NodeInformation" />
-          <NavigationProperty Name="PoiTypes" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoIs" ToRole="PoiTypes" />
+          <NavigationProperty Name="NodeInformation" Relationship="StudMapModel.FK_NodeInformation_PoIs"
+                              FromRole="PoIs" ToRole="NodeInformation" />
+          <NavigationProperty Name="PoiTypes" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoIs"
+                              ToRole="PoiTypes" />
         </EntityType>
         <EntityType Name="PoiTypes">
           <Key>
@@ -631,7 +669,8 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoiTypes" ToRole="PoIs" />
+          <NavigationProperty Name="PoIs" Relationship="StudMapModel.FK_PoIs_PoiTypes" FromRole="PoiTypes"
+                              ToRole="PoIs" />
         </EntityType>
         <Association Name="FK_AccessPointScans_AccessPoints">
           <End Type="StudMapModel.AccessPoints" Role="AccessPoints" Multiplicity="1" />
@@ -777,7 +816,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        </Schema>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -785,7 +824,8 @@
         <EntityContainerMapping StorageEntityContainer="StudMapModelStoreContainer" CdmEntityContainer="MapsEntities">
           <FunctionImportMapping FunctionImportName="DeleteFloor" FunctionName="StudMapModel.Store.sp_DeleteFloor" />
           <FunctionImportMapping FunctionImportName="DeleteMap" FunctionName="StudMapModel.Store.sp_DeleteMap" />
-          <FunctionImportMapping FunctionImportName="DeleteGraphFromFloor" FunctionName="StudMapModel.Store.sp_DeleteGraphFromFloor" />
+          <FunctionImportMapping FunctionImportName="DeleteGraphFromFloor"
+                                 FunctionName="StudMapModel.Store.sp_DeleteGraphFromFloor" />
           <EntitySetMapping Name="NodeInformationForMap">
             <EntityTypeMapping TypeName="StudMapModel.NodeInformationForMap">
               <MappingFragment StoreEntitySet="NodeInformationForMap">
@@ -930,7 +970,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          </EntityContainerMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
