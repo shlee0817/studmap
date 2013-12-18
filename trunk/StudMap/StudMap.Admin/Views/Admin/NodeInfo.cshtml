@@ -1,0 +1,55 @@
+﻿@using StudMap.Core;
+@using StudMap.Core.Maps;
+@using StudMap.Core.Information;
+@model ObjectResponse<FullNodeInformation>
+
+@{
+    ViewBag.Title = "Knoteninformationen";
+}
+
+<h2>StudMap</h2>
+<p>
+    Das von Ihnen eingelesene QR-Code oder NFC-Tag hat diese Seite aufgerufen.
+    Die Tags werden von StudMap zur Lokalisierung und Navigation verwendet.
+</p>
+<p>  
+    Folgender Link führt auf die Projektseite: <a href="http://code.google.com/p/studmap">StudMap</a>
+</p>
+
+@if (Model.Status == RespsonseStatus.Error)
+{
+    <h2>Fehler</h2>
+    <p>Es konnten keine Informationen zu dem Knoten gefunden werden.</p>
+}
+else
+{
+    <h2>Position</h2>
+    <table>
+        <tr>
+            <td><b>Karte</b></td>
+            <td>@Model.Object.Map.Name</td>
+        </tr>
+        <tr>
+            <td><b>Stockwerk</b></td>
+            <td>@Model.Object.Floor.Name</td>
+        </tr>
+        <tr>
+            <td><b>Raum</b></td>
+            <td>@Model.Object.Info.DisplayName (@Model.Object.Info.RoomName)</td>
+        </tr>
+        <tr>
+            <td><b>QR-Code</b></td>
+            <td>@Model.Object.Info.QRCode</td>
+        </tr>
+        <tr>
+            <td><b>NFC-Tag</b></td>
+            <td>@Model.Object.Info.NFCTag</td>
+        </tr>
+        <tr>
+            <td><b>Koordinaten</b></td>
+            <td>X: @Model.Object.Info.Node.X, Y: @Model.Object.Info.Node.Y</td>
+        </tr>
+    </table>
+}
+
+
