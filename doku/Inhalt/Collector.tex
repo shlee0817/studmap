@@ -1,11 +1,37 @@
 \chapter{Collector}
 
-% Einleitung unter Kapitel.
+Der Collector ist eine Android-Applikation, die dazu dient, Daten zu vorher vom Administrator definierten Knoten/Punkten zu sammeln und 
+diese entsprechend in der Datenbank zu hinterlegen. Damit ist die Applikation ein Werkzeug der Administratoren und nicht der Endbenutzer. \\
+Mit der Entwicklung des Collectors haben wir eine intensive Recherche betrieben, wie wir eine Indoor-Navigation ermöglichen können.
+Bevor wir das Endergebnis der Collector-Applikation näher erläutern, bieten wir nun einen Überblick über unsere Recherche-Ergebnisse.
+
+%\section{Recherche}
+\input{Inhalt/Research}
+
 
 \section{Allgemeine Struktur}
-\section{Benutzeroberfläche}
-\section{Client Spezifisches ?!}
+\label{cha:Collector}
+Die Collector-Applikation wurde als Android-Applikation umgesetzt. Es wird Android 3.0 auf einem Smartphone vorausgesetzt, um alle Funktionen nutzen können.
+Anhand der Recherche-Ergebnisse haben wir uns entschieden einen Positionserkennung mittels QR-Codes, NFC-Tags und Wlan-Fingerprinting zu implementieren. 
+Dabei werden QR-Codes mittels eines Tools auf dem Server generiert. Es bedarf hierbei keiner weiteren Behandlung durch die Collector-Applikation. 
+Dem gegenüber stehen das Zuordnen von NFC-Tags zu Knoten und das Sammeln von Wlan-Fingerprints durch die Collector-Applikation.
+Zur Erfüllung dieser beiden Aufgaben bietet die Applikation eine schlichte Benutzeroberfläche.
 
-% TODOS:
-% - Forschungsthemen
-% - Funktionsweise
+\section{Benutzeroberfläche}
+\todo{Benutzeroberfläche und Funktionsweise sind mir fremd. Thomas und Fabian, bitte ergänzen.}
+
+\section{Core Bibliothek}
+\label{cha:Core-Bib}
+Wir haben schon früh festgestellt, dass es eine Vielzahl an Strukturen und Funktionalitäten geben wird, 
+die sowohl in der Collector-Applikation als auch in unserer Navigator-Applikation für den Endbenutzer Anwendung finden.
+Dem entsprechend haben wir diese in eine eigene Android-Bibliothek ausgelagert, die wir wiederum in unsere Android-Applikationen einbinden konnten.
+Zu den Kernfunktionalitäten und -Strukturen gehören unter Anderem folgende:
+\begin{itemize}
+\item Grundlegende Definitionen einer Map, eines Floors oder eines Knoten
+\item Konstanten für die Kommunikation mit dem Webservice
+\item Ein Errorhandler für alle grundlegenden Fehler
+\item Snippets zur einfachen Kommunikation mit dem Benutzer mittels Dialogen o.ä.
+\item Abbildung des Webservices zur vereinfachten Nutzung
+\item Javascript-Schnittstellendefinitionen für die Interaktion auf der Karte
+\item Asynchrone Tasks für Webservicekommunikation inkl. entsprechender Listener
+\end{itemize}
