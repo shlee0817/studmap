@@ -17,18 +17,25 @@ Auf dem Server sind folgende Softwarekomponenten installiert:
 
 \section{Einrichtung IIS}
 Der IIS kann sowohl auf einem Windows Server als auch auf einer normalen 
-Windows Installation eingerichtet werden. Dazu muss unter "'Programme"' 
-"'Windows-Features installieren oder deinstallieren"' ausgewählt werden. In 
+Windows Installation eingerichtet werden. Dazu muss unter "`Programme"'
+"`Windows-Features installieren oder deinstallieren"' ausgewählt werden. In 
 dem Dialog kann der IIS  installiert werden. Da wir in unserem Projekt die 
 ASP.NET Technologie verwenden muss diese am IIS installiert werden.\\
 Nach der Installation ist der IIS-Manager installiert worin Webseiten 
 eingerichtet werden können.\\
 Da wir auf dem Server eine normale Windows Installation laufen haben, kann 
 kein Web Deploy aufgespielt werden. Daher müssen in Visual Studio Deployment 
-Packages erstellt werden, welche dann über einen Rechtsklick auf 
-\"StudMap\">\"Bereitstellen\">\"Anwendung importieren\" importiert werden 
+Packages erstellt werden, welche über einen Rechtsklick auf 
+"`StudMap"'>"'Bereitstellen"'>"'Anwendung importieren"' importiert werden 
 können.
 
 \section{Einrichtung SQL Server}
-\todo{Thomas: Ausfuehrung des Initialen Datenbank Script. (Schrittweise?!)}
+Im Projekt wird ein Microsoft SQL Server 2012 verwendet. Da unsere Anwendung 
+auf komplexe Managementfunktionen verzichtet kann auch die kostenlose Express 
+Version genutzt werden.
+
+Der Aufbau der Datenbank kann aus den unten aufgeführten Datenbankskripten 
+hergestellt werden.
+
+\lstinputlisting[language=SQL]{Inhalt/Datenbank/script.sql}
 
