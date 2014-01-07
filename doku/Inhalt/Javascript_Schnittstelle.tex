@@ -1,0 +1,66 @@
+\chapter{Javascript Schnittstelle}
+\label{cha:jsSchnittstelle}
+
+Die Webseite der Webview bietet mehrere Funktionen zur Steuerung der Karte über Javascript Funktionsaufrufe.
+\todo{Irgendwie vielleicht mehr dazu?}
+
+\section{Öffentlich Funktionen}
+Im folgenden werden die Öffentlichen Funktionen der Javascript Schnittstelle beschrieben.
+
+\subsection{setStartPoint(nodeId)}
+\label{object:setStartPoint}
+Setzt einen Startpunkt auf die Karte und markiert diesen in blau.
+Sind Start-und-Endpunkt gesetzt, wird der Weg angezeigt.
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens der Kante. \\ 
+\hline
+\end{tabularx} 
+
+\subsection{setEndPoint(nodeId)}
+\label{object:setEndPoint}
+Setzt einen Endpunkt auf die Karte und markiert diesen in rot.
+Sind Start-und-Endpunkt gesetzt, wird der Weg angezeigt.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens der Kante. \\ 
+\hline
+\end{tabularx} 
+
+\subsection{highlightPoint(nodeId, radius)}
+\label{object:highlightPoint}
+Highlighted den übergebenen Knoten und verändert den Radius.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens der Kante. \\
+\hline radius & Radius den der Knoten haben soll. \\ 
+\hline
+\end{tabularx} 
+
+
+\subsection{clearMap()}
+\label{object:clearMap}
+Setzt alle Elemente auf der Karte zurück.
+
+
+\subsection{resetMap()}
+\label{object:resetMap}
+Setzt alle Elemente auf der Karte und die Start-und-Endpunkte zurück.
+
+
+\subsection{resetZoom()}
+\label{object:resetZoom}
+Zoomt die Karte auf Bildschirmfüllende Größe.
+
+\subsection{zoomToNode(nodeId)}
+\label{object:zoomToNode}
+Zoomt zum übergebenen Knoten.
+
+Eigenschaften:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens der Kante. \\
+\hline
+\end{tabularx} 
+
