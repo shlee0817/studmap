@@ -19,8 +19,7 @@ in den Formaten XML oder JSON. Unser Webservice verwendet im
 Standard das JSON-Format, da es leichtgewichtiger ist und
 somit besser für mobile Clients geeignet ist.
 
-Die Funktionalität teilt sich in drei Bereiche auf. Zum sind
-das die Karten- und Navigationsinformationen, die Benutzerverwaltung
+Die Funktionalität teilt sich in drei Bereiche auf. Das sind die Karten- und Navigationsinformationen, die Benutzerverwaltung
 und das WLAN-Fingerprinting (nur experimentell). Diese Bereiche
 werden in drei Controllern abgebildet. Ein Controller ist eine Klasse
 die Anfragen gegen den Webservice verarbeitet.
@@ -40,7 +39,7 @@ im Anhang dieser Dokumention (siehe \nameref{cha:Webservice}).
 
 \section{Assembly-Schnittstelle}
 Da Anwendungen wie die Admin-Oberfläche und ein Teil der Client-Oberfläche
-immer auf demselben Server laufen, wie der Webservice ist ein Umweg
+immer auf demselben Server laufen wie der Webservice, ist ein Umweg
 über die HTTP-Schnittstelle aufwendiger als notwendig. Daher verwenden
 diese Anwendungen auch die Assembly-Schnittstelle des Webservices.
 Dabei werden die Anfragen direkt an die entsprechenden Controller
