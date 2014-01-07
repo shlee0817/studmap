@@ -626,7 +626,21 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:FloorPlanData}
 
-\todo{Marcus: GetConnectedNodes}
+
+\subsection{GetConnectedNodes}
+\label{service:GetConnectedNodes}
+Liefert die Knoten zurück, die mit dem übergebenen Knoten verbunden sind.
+
+GET
+\url{/api/Maps/GetConnectedNodes?nodeId=1011}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ListResponse}, \nameref{object:Node}
 
 
 \subsection{GetRouteBetween}
@@ -638,14 +652,13 @@ GET
 
 Parameter:\\
 \begin{tabularx}{\textwidth}{|l|X|}
-\hline mapId & ID des Karte, auf der die Route bestimmt werden soll. \\ 
+\hline mapId & ID der Karte, auf der die Route bestimmt werden soll. \\ 
 \hline startNodeId & ID des Startknotens. \\ 
 \hline endNodeId & ID des Zielknotens. \\ 
 \hline 
 \end{tabularx} 
 
 Rückgabewert: \nameref{ListResponse}, \nameref{object:Node}
-
 
 
 \subsection{GetNodeInformationForNode}
@@ -665,7 +678,39 @@ Parameter:\\
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 
 
-\todo{Chris GetNodeInformation, GetFullNodeInformationForNode}
+\subsection{GetFullNodeInformationForNode}
+\label{service:GetFullNodeInformationForNode}
+Liefert alle Informationen zu einem Knoten.
+Diese umfassen die Objekte \nameref{object:Map}, \nameref{object:Floor} und \nameref{object:NodeInformation}.
+
+GET
+\url{/api/Maps/GetFullNodeInformationForNode?nodeId=1011}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ObjectResponse}, \nameref{object:FullNodeInformation}
+
+
+\subsection{GetNodeInformaion}
+\label{service:GetNodeInformaion}
+Liefert Informationen zu allen Knoten auf einem Stockwerk.
+
+GET
+\url{/api/Maps/GetNodeInformaion?mapId=2&floorId=12}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline mapId & ID der Karte. \\ 
+\hline floorId & ID des Stockwerks. \\ 
+\hline 
+\end{tabularx} 
+
+Rückgabewert: \nameref{ListResponse}, \nameref{object:NodeInformation}
+
 
 \subsection{SaveNodeInformation}
 \label{service:SaveNodeInformation}
@@ -734,7 +779,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
 
-\todo{Chris SaveNFCForNode}
+\todo{SaveNFCForNode}
 
 \subsection{GetNodeForQRCode}
 \label{service:GetNodeForQRCode}
@@ -752,7 +797,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
 
-\todo{Chris SaveQRCodeForNode}
+\todo{SaveQRCodeForNode}
 
 \section{UsersController}
 \label{Webservice_UsersController}
