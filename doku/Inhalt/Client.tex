@@ -1,45 +1,45 @@
 \chapter{Client}
-Der Client ist eine Android-Applikation fÃ¼r den Endbenutzer. Es handelt sich hierbei um einen Navigator. 
-Wie jedes handelsÃ¼bliche NavigationsgerÃ¤t beinhaltet auch unsere Applikation eine Karte, in unserem Fall ein GebÃ¤udeplan, 
-da wir uns in unserem Projekt mit Indoor-Navigation beschÃ¤ftigen. DarÃ¼ber hinaus kann man einen Zielpunkt wÃ¤hlen
+Der Client ist eine Android-Applikation für den Endbenutzer. Es handelt sich hierbei um einen Navigator. 
+Wie jedes handelsübliche Navigationsgerät beinhaltet auch unsere Applikation eine Karte, in unserem Fall ein Gebäudeplan, 
+da wir uns in unserem Projekt mit Indoor-Navigation beschäftigen. Darüber hinaus kann man einen Zielpunkt wählen
 und mit Hilfe eines QR-Codes, NFC-Tags oder des Wlans seine Position bestimmen. Sind Start und Zielpunkt bekannt, berechnet der Server
 eine Route und teilt diese dem Client mit, welcher diese daraufhin graphisch auf der Karte zur Anzeige bringt. \\
 Des Weiteren gibt es Suchfunktionen und Auflistungen von besonders interessanten Orten (Points of Interest).
-Zur Benutzung der Wlan-Positionserkennung ist eine Registrierung und Anmeldung an unserem Server von NÃ¶ten.
+Zur Benutzung der Wlan-Positionserkennung ist eine Registrierung und Anmeldung an unserem Server von Nöten.
 
 \section{Allgemeine Struktur}
 Die Navigator-Applikation wurde wie auch der Collector in Android umgesetzt. Es wird mindestens die Version 4.1 vorausgesetzt.
-Es galt folgende Hauptaufgaben zu erfÃ¼llen:
+Es galt folgende Hauptaufgaben zu erfüllen:
 
 \subsection{Positionserkennung}
-Wie bereits im Kapitel \nameref{Collector} beschrieben, haben wir uns fÃ¼r Positionserkennung anhand von QR-Codes, NFC-Tags und Wlan-Fingerprinting entschieden.
-FÃ¼r die Positionserkennung mittels NFC und Wlan greifen wir auf unsere Android-Bibliothek der KernfunktionalitÃ¤ten zurÃ¼ck. WÃ¤hrend fÃ¼r die Interpretation des QR-Codes
+Wie bereits im Kapitel \nameref{Collector} beschrieben, haben wir uns für Positionserkennung anhand von QR-Codes, NFC-Tags und Wlan-Fingerprinting entschieden.
+Für die Positionserkennung mittels NFC und Wlan greifen wir auf unsere Android-Bibliothek der Kernfunktionalitäten zurück. Während für die Interpretation des QR-Codes
 eine Fremd-Applikation zum Einsatz kommt. Diese muss bei der ersten Benutzung gegebenenfalls installiert werden. \\
-Die letztendlich ermittelten Daten interpretieren wir mit Hilfe des Webservices, der wiederum Bestandteil unserer KernfunktionalitÃ¤ten ist.
+Die letztendlich ermittelten Daten interpretieren wir mit Hilfe des Webservices, der wiederum Bestandteil unserer Kernfunktionalitäten ist.
 
 \subsection{Anzeige und Navigation auf einer Karte}
-Wir haben uns fÃ¼r die Benutzung einer freien Bibliothek fÃ¼r Karten entschieden. Nach intensiver Recherche viel unsere Wahl dabei auf die Javascript Bibliothek d3 von \todo {Infos zur Bibliothek}.
-Das hat zur Folge, dass unsere Karte lediglich in einer Website platziert ist, die mittels eine WebView zur Anzeige gebracht wird. Dies hat fÃ¼r uns und den Endbenutzer
-den groÃŸen Vorteil, dass Ã„nderung an der Karte nicht ein Update der Applikation nach sich zieht.
-Mittels einer definierten Schnittstelle lÃ¤sst sich das Javascript aus unserer Android-Applikation heraus bedienen, so dass beispielsweise Positionsermittlungen automatisch 
-auf der Karte nachgehalten werden. Dadurch ist die Navigation bei gewÃ¤hlten Zielpunkt vollstÃ¤ndig.
+Wir haben uns für die Benutzung einer freien Bibliothek für Karten entschieden. Nach intensiver Recherche viel unsere Wahl dabei auf die Javascript Bibliothek d3 von \todo {Infos zur Bibliothek}.
+Das hat zur Folge, dass unsere Karte lediglich in einer Website platziert ist, die mittels eine WebView zur Anzeige gebracht wird. Dies hat für uns und den Endbenutzer
+den großen Vorteil, dass Änderung an der Karte nicht ein Update der Applikation nach sich zieht.
+Mittels einer definierten Schnittstelle lässt sich das Javascript aus unserer Android-Applikation heraus bedienen, so dass beispielsweise Positionsermittlungen automatisch 
+auf der Karte nachgehalten werden. Dadurch ist die Navigation bei gewählten Zielpunkt vollständig.
 
 \subsection{Visuell ansprechende und intuitiv bedienbare Applikation}
-Eine Applikation sollte heute intuitiv bedienbar, Ã¼bersichtlich und ansprechend sein, damit sie gerne und viel benutzt wird. Wir bauen dabei auf moderne MÃ¶glichkeiten des
-Android Betriebssystems. Im folgenden Kapitel werden wir diese nÃ¤her erlÃ¤utern.
+Eine Applikation sollte heute intuitiv bedienbar, übersichtlich und ansprechend sein, damit sie gerne und viel benutzt wird. Wir bauen dabei auf moderne Möglichkeiten des
+Android Betriebssystems. Im folgenden Kapitel werden wir diese näher erläutern.
 
-\section{BenutzeroberflÃ¤che}
-Neben der bereits erwÃ¤hnte WebView mit eine hÃ¼bschen Karte auf Basis der d3 Bibliothek, ist unsere gesamte Applikation in dunklen TÃ¶nen gehalten und bietet klare Linien bei
-einer Highlight-Farbe die dem GrÃ¼n der WestfÃ¤lischen Hochschule sehr nahe kommt. 
-Im Vordergrund der Applikation steht selbstverstÃ¤ndlich die Karte, wÃ¤hrend grundlegende Funktionen wie die Suche oder der Aufruf des QR-Code-Scanners in der Actionbar geboten werden.
-Weitergreifende FunktionalitÃ¤ten wie das Wechseln der Ebene oder Anmelden befinden sich in einem Drawer auf der linken Seite der Applikation, der auf Wunsch in das Bild hinein gezogen
+\section{Benutzeroberfläche}
+Neben der bereits erwähnte WebView mit eine hübschen Karte auf Basis der d3 Bibliothek, ist unsere gesamte Applikation in dunklen Tönen gehalten und bietet klare Linien bei
+einer Highlight-Farbe die dem Grün der Westfälischen Hochschule sehr nahe kommt. 
+Im Vordergrund der Applikation steht selbstverständlich die Karte, während grundlegende Funktionen wie die Suche oder der Aufruf des QR-Code-Scanners in der Actionbar geboten werden.
+Weitergreifende Funktionalitäten wie das Wechseln der Ebene oder Anmelden befinden sich in einem Drawer auf der linken Seite der Applikation, der auf Wunsch in das Bild hinein gezogen
 werden kann. \\
-ZusÃ¤tzliche Fenster wie z.B. die Auflistung der Points of Interest werden grundsÃ¤tzlich in Dialogfenstern zur Anzeige gebracht, was der Ãœbersichtlich und Navigation durch die Applikation zu Gute kommt. Die Suche ist ein besonderes Event, welches in der Actionbar ausgefÃ¼hrt wird und dort die Anzeige verÃ¤ndert, sodass grundsÃ¤tzlich Ordnung in der Applikation herrscht.
-Neben dem intuitiv Design der Applikation ist selbstverstÃ¤ndlich auch die Bedienung der Karte Ã¤uÃŸerst benutzerfreundlich. Neben den bekannten MÃ¶glichkeiten des Multitouch, beispielsweise zum Zoomen, ist auch die Steuerung der Navigation selbsterklÃ¤rend. Einen gewÃ¼nschten Punkt angeklickt, schon kann es los gehen. Optisch ansprechend wird eine Route eingezeichnet und mit der Zielflagge gekennzeichnet.
+Zusätzliche Fenster wie z.B. die Auflistung der Points of Interest werden grundsätzlich in Dialogfenstern zur Anzeige gebracht, was der Übersichtlich und Navigation durch die Applikation zu Gute kommt. Die Suche ist ein besonderes Event, welches in der Actionbar ausgeführt wird und dort die Anzeige verändert, sodass grundsätzlich Ordnung in der Applikation herrscht.
+Neben dem intuitiv Design der Applikation ist selbstverständlich auch die Bedienung der Karte äußerst benutzerfreundlich. Neben den bekannten Möglichkeiten des Multitouch, beispielsweise zum Zoomen, ist auch die Steuerung der Navigation selbsterklärend. Einen gewünschten Punkt angeklickt, schon kann es los gehen. Optisch ansprechend wird eine Route eingezeichnet und mit der Zielflagge gekennzeichnet.
 
 
 % TODOS:
 % - Funktionsweise
 % - UI Aspekte
 % - Android Zeug...
-% - Verweis auf Anhang fÃ¼r Bedienungsanleitung / Installationsanleitung
+% - Verweis auf Anhang für Bedienungsanleitung / Installationsanleitung

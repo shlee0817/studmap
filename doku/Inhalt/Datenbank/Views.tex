@@ -1,0 +1,18 @@
+\section{Views}
+Um kompliziertere Abfragen nicht im Service abhandeln zu müssen, haben
+wir für diese Views in der Datenbank angelegt. Die Views vereinfachen
+meist Joins über mehrere Tabellen.
+
+\subsection{NodeInformationForMap}
+Diese View vereinigt die Informationen zu einem Knoten mit der zugehörigen
+Karte. Es werden nur Knoten berücksichtigt, zu denen ein Raum- oder
+Anzeigename hinterlegt wurde. Siehe \nameref{db:maps:Maps} und \nameref{db:maps:NodeInfo}.
+
+\subsection{PoisForMap}
+In dieser View werden die Knoteninformationen zusätzlich mit denen
+über mögliche PoIs angereichert. Es werden zudem alle Knoten
+herausgefiltert zu denen kein PoI existiert. Siehe \nameref{db:maps:PoIs}.
+
+\subsection{RoomsForMap}
+Ähnlich zu der View NodeInformationForMap liefert diese View allerdings
+nur den Raum- und Anzeigenamen eines Knoten.
