@@ -779,7 +779,6 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
 
-\todo{SaveNFCForNode}
 
 \subsection{GetNodeForQRCode}
 \label{service:GetNodeForQRCode}
@@ -797,7 +796,40 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
 
-\todo{SaveQRCodeForNode}
+
+\subsection{SaveNFCForNode}
+\label{service:SaveNFCForNode}
+Speichert ein NFC-Tag zu einem bestimmten Knoten.
+
+GET
+\url{/api/Maps/SaveNFCForNode?nodeId=1011&nfcTag=46A6CG739ED9}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens. \\ 
+\hline nfcTag & NFC-Tag, der abgespeichert werden soll. \\ 
+\hline 
+\end{tabularx}
+
+Rückgabewert: \nameref{BaseResponse}
+
+
+\subsection{SaveQRCodeForNode}
+\label{service:SaveQRCodeForNode}
+Speichert einen QR-Code zu einem bestimmten Knoten.
+
+GET
+\url{/api/Maps/SaveQRCodeForNode?nodeId=1011&qrCode=46A6CG739ED9}
+
+Parameter:\\
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline nodeId & ID des Knotens. \\ 
+\hline qrCode & QR-Code, der abgespeichert werden soll. \\ 
+\hline 
+\end{tabularx}
+
+Rückgabewert: \nameref{BaseResponse}
+
 
 \section{UsersController}
 \label{Webservice_UsersController}
