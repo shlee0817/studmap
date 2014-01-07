@@ -858,3 +858,19 @@ GET
 \url{/api/Users/GetActiveUsers}
 
 Rückgabewert: \nameref{ListResponse}, \nameref{object:User}
+
+
+\section{Verwendung der Benutzerschnittstelle}
+\label{Verwendung_Benutzerschnittstelle}
+\subsection{Registrierung}
+Bevor sich ein Benutzer am StudMap System anmelden kann, muss er sich zunächst über die Funktion \nameref{service:Register} registrieren.
+
+\subsection{Aktive und inaktive Benutzer}
+Im StudMap System wird zwischen aktiven und inaktiven Benutzern unterschieden. Nachdem sich ein Benutzer am System registriert hat gilt dieser als inaktiv. Über die Funktion \nameref{service:Login} kann er sich am System anmelden und gilt somit als aktiv.
+
+Damit der angemeldete Benutzer auch aktiv bleibt, sollte sich dieser in einem Zeitintervall von fünf Minuten über die Methode \nameref{service:Login} am System aktiv melden. Nach einer Inaktivität von 15 Minuten wird der Benutzer automatisch inaktiv.
+
+Über die Funktion \nameref{service:Logout} kann sich ein Benutzer wieder vom System abmelden und wird somit inaktiv.
+
+\subsection{Aktive Benutzer abfragen}
+Die aktiven Benutzer können über die Funktion \nameref{service:GetActiveUsers} abgefragt werden. Damit die Anzeige der aktiven Benutzer im Client möglichst aktuell ist, sollte diese Abfrage ebenfalls in regelmäßigen Zeitabständen erfolgen.
