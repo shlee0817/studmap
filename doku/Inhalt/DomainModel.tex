@@ -2,7 +2,7 @@
 Durch das Domänenmodell legen wir Begriffe fest, mit denen
 die Kommunikation im Projektteam einfacher wird.
 
-\section{Architektur}
+\section{Anwendungsstruktur}
 
 \subsection{Webservice (StudMap.Service)}
 Stellt Funktionen zur Ablage und Abfrage von Navigationsinformationen und Benutzerdaten öffentlich bereit.
@@ -13,7 +13,7 @@ Weboberfläche zum Anlegen, Bearbeiten von Navigationsinformationen und Benutzerd
 \subsection{Navigations-Client (StudMap.Navigator)}
 App zur Anzeige von Karten und Navigation zwischen Wegpunkten. Wird bedient durch den Anwender.
 
-\subsection{Sammler-Client (StudMap.Collector)}
+\subsection{Collector-Client (StudMap.Collector)}
 App zur Eingabe von Navigationsinformationen. Wird bedient durch Administratoren.
 
 \section{Benutzerrollen}
@@ -22,7 +22,7 @@ App zur Eingabe von Navigationsinformationen. Wird bedient durch Administratoren
 Muss identifiziert sein und verwendet den Navigations-Client.
 
 \subsection{Administrator}
-Verwendet Admin-Oberfläche und den Sammler-Client. Muss registriert sein.
+Verwendet Admin-Oberfläche und den Collector-Client. Muss registriert sein.
 
 \section{Begriffe}
 
