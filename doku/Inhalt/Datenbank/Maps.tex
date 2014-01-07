@@ -1,4 +1,4 @@
-\section{Maps}
+\section{Kartendaten}
 \label{sec:Maps}
 
 \begin{figure}[H]
@@ -15,7 +15,7 @@ Zu jeder Karte wird ein frei vergebener Name und der
 Erstellungszeitpunkt gespeichert.
 
 \begin{tabularx}{\textwidth}{|l|l|X|}
-\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline \textbf{Spaltenname} & \textbf{Datentyp} & \textbf{Bedeutung}  \\ 
 \hline Id 					& INTEGER (PK)		 & ID der Karte \\ 
 \hline Name 				& NVARCHAR(255)		 & Name der Karte \\ 
 \hline CreationTime 		& DATETIME 			 & Erstellungszeitpunkt\\ 
@@ -26,10 +26,10 @@ Erstellungszeitpunkt gespeichert.
 Für jedes Stockwerk wird ein Eintrag in dieser Tabelle angelegt.
 Zu jedem Stockwerk wird ein frei vergebener Name, eine URL auf ein
 Bild des Stockwerks und ein Erstellungszeitpunkt gespeichert.
-Ein Stockwerk ist genau einer Karte zugeordnet
+Ein Stockwerk ist genau einer Karte zugeordnet.
 
 \begin{tabularx}{\textwidth}{|l|l|X|}
-\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline \textbf{Spaltenname} & \textbf{Datentyp} & \textbf{Bedeutung}  \\ 
 \hline Id 					& INTEGER (PK)		 & ID des Stockwerks \\
 \hline MapId				& INTEGER (FK)		 & ID der zugeordneten Karte \\  
 \hline Name 				& NVARCHAR(255)		 & Name des Stockwerks \\ 
@@ -44,7 +44,7 @@ Dazu werden alle Kanten mit dem Graphen verknüpft. Über die Kanten
 sind auch die Knoten mit dem Graphen indirekt verknüpft.
 
 \begin{tabularx}{\textwidth}{|l|l|X|}
-\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline \textbf{Spaltenname} & \textbf{Datentyp} & \textbf{Bedeutung}  \\ 
 \hline Id 					& INTEGER (PK)		 & ID des Graphen \\
 \hline MapId				& INTEGER (FK)		 & ID der zugeordneten Karte \\  
 \hline CreationTime 		& DATETIME 			 & Erstellungszeitpunkt\\ 
@@ -55,7 +55,7 @@ sind auch die Knoten mit dem Graphen indirekt verknüpft.
 Eine Kante verknüpft zwei Knoten in einem Graphen.
 
 \begin{tabularx}{\textwidth}{|l|l|X|}
-\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline \textbf{Spaltenname} & \textbf{Datentyp} & \textbf{Bedeutung}  \\ 
 \hline Id 					& INTEGER (PK)		 & ID der Kante \\
 \hline GraphId				& INTEGER (FK)		 & ID der zugeordneten Graphen \\  
 \hline NodeStartId			& INTEGER (FK)		 & ID des Startknotens \\  
@@ -74,7 +74,7 @@ Dabei bedeutet 0.0 ganz links (X) oder ganz oben (Y) und 1.0
 ganz rechts (X) bzw. ganz unten (Y) auf dem Bild des Stockwerks.
 
 \begin{tabularx}{\textwidth}{|l|l|X|}
-\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline \textbf{Spaltenname} & \textbf{Datentyp} & \textbf{Bedeutung}  \\ 
 \hline Id 					& INTEGER (PK)		 & ID der Knotens \\
 \hline FloorId				& INTEGER (FK)		 & ID der zugeordneten Stockwerks \\  
 \hline X					& DECIMAL(18,17)	 & X-Koordinate auf dem Stockwerk \\  
@@ -87,11 +87,11 @@ ganz rechts (X) bzw. ganz unten (Y) auf dem Bild des Stockwerks.
 \label{db:maps:NodeInfo}
 Zu einem Knoten können noch weitere Informationen hinterlegt werden.
 Diese sind optional und werden nur zu wichtigen Knoten wie
-Seminarräumen, Büros und Toiletten. Über die Knoteninformationen
+Seminarräumen, Büros und Toiletten hinzugefügt. Über die Knoteninformationen
 kann auch ein PoI mit dem Knoten verknüpft werden.
 
 \begin{tabularx}{\textwidth}{|l|l|X|}
-\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline \textbf{Spaltenname} & \textbf{Datentyp} & \textbf{Bedeutung}  \\ 
 \hline Id 					& INTEGER (PK)		 & ID der Knoteninformation \\
 \hline NodeId				& INTEGER (FK)		 & ID der zugeordneten Knotens \\  
 \hline DisplayName			& NVARCHAR(50)		 & Name der angezeigt werden soll \\  
@@ -110,8 +110,8 @@ Hier kann z.B. nach Dozentenbüros, Mensa, Bibliothek und Toiletten gefiltert
 werden.
 
 \begin{tabularx}{\textwidth}{|l|l|X|}
-\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
-\hline Id 					& INTEGER (PK)		 & ID der Knotens \\
+\hline \textbf{Spaltenname} & \textbf{Datentyp} & \textbf{Bedeutung}  \\ 
+\hline Id 					& INTEGER (PK)		 & ID des Knotens \\
 \hline TypeId				& INTEGER (FK)		 & ID des PoI-Typs \\  
 \hline Description			& NVARCHAR(MAX)		 & Zusätzliche Beschreibung des PoIs \\  
 \hline 
@@ -121,7 +121,7 @@ werden.
 Diese Tabelle enthält die möglichen Typen von PoIs.
 
 \begin{tabularx}{\textwidth}{|l|l|X|}
-\hline \textbf{Spaltenname} & \textbf{Datentype} & \textbf{Bedeutung}  \\ 
+\hline \textbf{Spaltenname} & \textbf{Datentyp} & \textbf{Bedeutung}  \\ 
 \hline Id 					& INTEGER (PK)		 & ID des PoI-Typs \\
 \hline Name					& NVARCHAR(255)		 & Name des PoI-Typs \\  
 \hline 

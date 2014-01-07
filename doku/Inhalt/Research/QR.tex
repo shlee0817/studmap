@@ -13,11 +13,11 @@ Rechenleistung benötigt um die QR-Codes zu dekodieren. Des Weiteren wird durch
 eine serverseitige Implementierung vermieden, dass der Nutzer weitere Apps auf 
 seinem Smartphone installieren muss.\\
 Für die Implementierung in den Webservice haben wir uns für die offene 
-Bibliothek \href{http://zxingnet.codeplex.com/}{ZXing.NET} benutzt. Allerdings 
+Bibliothek \href{http://zxingnet.codeplex.com/}{ZXing.NET} entschieden. Allerdings 
 ist uns bei der Implementierung und Testen der Bibliothek direkt aufgefallen, 
 dass die Bilder zuvor am Smartphone verkleinert werden müssen um Bandbreite zu 
-sparen und die Laufzeit der Bibliothek zu verringern. Dadurch wird, obwohl es 
-ein Ziel der serverseitigen Umsetzung war, Rechenleistung benötigt. Darüber 
+sparen und die Laufzeit der Bibliothek zu verringern.Entgegen unserer Absicht wird
+dafür jedoch clientseitig Rechenleistung benötigt. Darüber 
 hinaus mussten wir feststellen, dass die Bibliothek keine zuverlässige 
 Dekodierung der QR-Codes bietet.
 

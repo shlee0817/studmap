@@ -15,10 +15,10 @@ beschäftigt.
 \subsection{Sammeln von WLAN Fingerprints}
 Um später Vergleiche im Client anstellen zu können mussten wir zuerst Daten 
 des Netzwerkes sammeln. Ein Access Point wird dabei eindeutig durch eine 
-\textbf{BSSID} gegenzeichnet und der Client gibt Auskunft über die empfangene 
+\textbf{BSSID} gekennzeichnet und der Client gibt Auskunft über die empfangene 
 Signalstärke (\textbf{RSS \footnote{RSS: received signal strength wird in dBm 
 gemessen.}}), welche beobachtet und aufgezeichnet werden kann.\\
-Ziel dieser Phase war es an möglichsten vielen Punkten in der Hochschule die 
+Ziel dieser Phase war es an möglichst vielen Punkten in der Hochschule die 
 \textit{RSS} zu messen und diese zu einem Punkt auf der Karte der Hochschule 
 zu speichern.\\
 
@@ -29,11 +29,10 @@ besitzt, mussten wir uns eine Möglichkeit der Kalibrierung überlegen. Dazu
 haben wir überlegt, dass der Nutzer zuerst in einer Kalibrierungsphase selbst 
 einen Fingerprint erstellt von einem von uns festgelegten Ort und diesen mit 
 dem von uns gemessenen Fingerprint vergleicht. Dadurch bekommen wir einen 
-Faktor um den das Smartphone des Nutzer von unserem Gerät abweicht. Da wir 
+Faktor um den das Smartphone des Nutzers von unserem Gerät abweicht. Da wir 
 vermuten, dass die WLAN Antennen der Smartphones auch in verschiedenen 
 Bereichen, hohe, mittlere und niedrige Signalstärke, sich stark unterscheiden 
-berechnen wir diesen Faktor für die gerade genannten Bereiche.\\
-Dieser Teilbereich ist in der \textit{StudMap-App} umgesetzt.
+berechnen wir diesen Faktor für die gerade genannten Bereiche.
 
 \subsection{Positionierung mittels WLAN Fingerprints}
 Um die Position eines Nutzers ermitteln zu können muss dieser, wie der 
@@ -41,5 +40,4 @@ Um die Position eines Nutzers ermitteln zu können muss dieser, wie der
 erstellen. Diesen Fingerprint und seine Faktoren, welche während der 
 Kalibrierung ermittelt wurden, schickt der Client zum Server, welcher durch 
 Vergleiche den Standpunkt ermittelt und zurückgibt.\todo{Fabian: Wie werden die FP 
-verglichen.}\\
-Dieses Feature ist auch in der \textit{StudMap-App} umgesetzt.
+verglichen.}

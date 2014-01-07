@@ -3,6 +3,6 @@ Das Löschen von Tabellen kann auf Grund von Fremdschlüsselbeziehungen
 u.U. aufwendig und komplex sein. Daher haben wir für das Löschen
 des Teilgraphen auf einem Stockwerk (sp\_DeleteGraphFromFloor), 
 eines gesamten Stockwerks (sp\_DeleteFloor) und einer gesamten
-Karte (sp\_DeleteMap) Stored Procedures angelegt. Diese Löschen
+Karte (sp\_DeleteMap) Stored Procedures angelegt. Diese löschen
 zunächst alle zugehörigen Einträge in abhängigen Tabellen und
 entfernen dann den Eintrag in der Haupttabelle.

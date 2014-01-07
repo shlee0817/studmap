@@ -1,6 +1,6 @@
 \chapter{Service}
 Der Webservice stellt die Logik für alle Clients bereit. Dies schließt den Navigations-Client,
-den Collector-Client und die Admin-Oberfläche ein. Er kapselt in erster Linie die Datenbankzugriffe
+den Collector-Client und die Admin-Oberfläche mit ein. Er kapselt in erster Linie die Datenbankzugriffe
 und nutzt Caching für häufige Anfragen. Es werden Funktionen zur Benutzerverwaltung
 sowie zur Navigation bereitgestellt.
 
@@ -51,7 +51,6 @@ HTTP-Schnittstelle.
 Die Assembly-Schnittstelle bietet die gleiche Funktionalität wie
 die HTTP-Schnittstelle. Alle Funktionen des Webservice stehen
 als .NET Methoden der entsprechenden Controller-Klasse zur Verfügung.
-Deshalb verzichten wir hier auf eine eigene Dokumention.
 
 \section{Caching}
 Der Webservice nutzt das Caching der HTTP-Laufzeitumgebung, um 
