@@ -1,11 +1,68 @@
 \chapter{Service}
-% Einleitung unter Kapitel.
+Der Webservice stellt die Logik für alle Clients bereit. Dies schließt den Navigations-Client,
+den Collector-Client und die Admin-Oberfläche ein. Er kapselt in erster Linie die Datenbankzugriffe
+und nutzt Caching für häufige Anfragen. Es werden Funktionen zur Benutzerverwaltung
+sowie zur Navigation bereitgestellt.
 
 \section{Allgemeine Struktur}
+Als Grundlage verwendet der Webservice ein ASP.NET Web API
+Projekt\footnote{\url{http://www.asp.net/web-api}}. Der Datenbankzugriff erfolgt
+über das Entitiy Framework von Microsoft\footnote{ 
+\url{http://msdn.microsoft.com/de-de/library/bb399567(v=vs.110).aspx}}.
 
+In einem Web API Projekt können die Funktionen des Webservice
+auf Basis von selbst definierten Datenstrukturen erstellt werden.
+Damit muss sich der Entwickler nicht damit beschäftigen, wie 
+diese Objekte vom Client geliefert werden und in welchem Format
+die Antwort gesendet wird. Das Serialisieren erfolgt meist
+in den Formaten XML oder JSON. Unser Webservice verwendet im
+Standard das JSON-Format, da es leichtgewichtiger ist und
+somit besser für mobile Clients geeignet ist.
 
-% TODOS:
-% - Verwendete Techniken (MVC, ...)
-% - HTTP Schnittstelle (Detail s. Anhang)
-% - Sicherheitsaspekte (HTTPS ?!)
-% - Besonderheit: Server verwendet direkt Assemblies...
+Die Funktionalität teilt sich in drei Bereiche auf. Zum sind
+das die Karten- und Navigationsinformationen, die Benutzerverwaltung
+und das WLAN-Fingerprinting (nur experimentell). Diese Bereiche
+werden in drei Controllern abgebildet. Ein Controller ist eine Klasse
+die Anfragen gegen den Webservice verarbeitet.
+
+\section{HTTP-Schnittstelle}
+Der Webservice bietet eine HTTP-Schnittstelle, die von den Clients
+genutzt wird. Diese bietet Funktionen über die HTTP-Methoden GET
+und POST auf bestimmte URLs an.
+
+Der Client sendet einfache Anfrageparameter über die URL-Query-Parameter (GET).
+Bei komplexeren Anfragen kann er ein JSON-Dokument in den Body der
+Anfrage setzen (POST). Als Antwort erhält er ein
+JSON-Dokument\footnote{Web API unterstützt auch XML, dies wird von unseren Clients allerdings nicht verwendet}.
+
+Eine komplette Referenz der Webservice-Funktionen befindet sich
+im Anhang dieser Dokumention (siehe \nameref{cha:Webservice}).
+
+\section{Assembly-Schnittstelle}
+Da Anwendungen wie die Admin-Oberfläche und ein Teil der Client-Oberfläche
+immer auf demselben Server laufen, wie der Webservice ist ein Umweg
+über die HTTP-Schnittstelle aufwendiger als notwendig. Daher verwenden
+diese Anwendungen auch die Assembly-Schnittstelle des Webservices.
+Dabei werden die Anfragen direkt an die entsprechenden Controller
+gestellt. Das Serialisieren und Deserialisieren der Anfrage- und
+Antwortobjekte entfällt somit. Für dynmaische Anfragen, z.B. in
+Javascript, nutzen diese Anwendungen allerdings weiterhin die
+HTTP-Schnittstelle. 
+
+Die Assembly-Schnittstelle bietet die gleiche Funktionalität wie
+die HTTP-Schnittstelle. Alle Funktionen des Webservice stehen
+als .NET Methoden der entsprechenden Controller-Klasse zur Verfügung.
+Deshalb verzichten wir hier auf eine eigene Dokumention.
+
+\section{Caching}
+Der Webservice nutzt das Caching der HTTP-Laufzeitumgebung, um 
+häufige Abfragen (z.B. allgemeine Karten- und Stockwerkinformationen)
+und komplexe Berechnungen (z.B. Routen zwischen allen Knoten)
+effizienter durchzuführen. Die Cache-Objekte sind nur für ein
+bestimmte Dauer gültig (aktuell ein Stunde) und werden invalidiert,
+falls sich die Stammdaten ändern.
+
+\section{Sicherheit}
+Aus Sicherheitsgründen macht es Sinn die HTTP-Schnittstelle vor
+der Veröffentlichung des Programms auf HTTPS umzustellen, da
+bisher jede Kommunikation unverschlüsselt erfolgt.
