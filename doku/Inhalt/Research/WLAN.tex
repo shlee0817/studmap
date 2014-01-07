@@ -1,4 +1,4 @@
-\subsection{WLAN Fingerprinting}
+\section{WLAN Fingerprinting}
 Bei der Positionierung des Nutzers mittels WLAN haben wir über eine für den 
 Nutzer passive Positionierung recherchiert. Alle anderen 
 Positionierungsmethoden benötigten eine Eingabe des Nutzers. Wir haben hier 
@@ -12,7 +12,7 @@ Lokalisierung auf Raum-Genauigkeit ermöglicht.\\
 Aus all diesen Gründen haben wir uns mit der Positionierung mittels WLAN 
 beschäftigt. 
 
-\subsubsection{Sammeln von WLAN Fingerprints}
+\subsection{Sammeln von WLAN Fingerprints}
 Um später Vergleiche im Client anstellen zu können mussten wir zuerst Daten 
 des Netzwerkes sammeln. Ein Access Point wird dabei eindeutig durch eine 
 \textbf{BSSID} gegenzeichnet und der Client gibt Auskunft über die empfangene 
@@ -21,9 +21,8 @@ gemessen.}}), welche beobachtet und aufgezeichnet werden kann.\\
 Ziel dieser Phase war es an möglichsten vielen Punkten in der Hochschule die 
 \textit{RSS} zu messen und diese zu einem Punkt auf der Karte der Hochschule 
 zu speichern.\\
-\missingfigure{}
 
-\subsubsection{Kalibrierung}
+\subsection{Kalibrierung}
 Da das Sammeln der WLAN Fingerprints mit einem Smartphone realisiert wird und 
 wir davon ausgehen mussten, dass nicht jeder Nutzer das gleiche Smartphone 
 besitzt, mussten wir uns eine Möglichkeit der Kalibrierung überlegen. Dazu 
@@ -36,7 +35,7 @@ Bereichen, hohe, mittlere und niedrige Signalstärke, sich stark unterscheiden
 berechnen wir diesen Faktor für die gerade genannten Bereiche.\\
 Dieser Teilbereich ist in der \textit{StudMap-App} umgesetzt.
 
-\subsubsection{Positionierung mittels WLAN Fingerprints}
+\subsection{Positionierung mittels WLAN Fingerprints}
 Um die Position eines Nutzers ermitteln zu können muss dieser, wie der 
 \textit{Collector} einen Fingerprint des WLANs an seiner aktuellen Position 
 erstellen. Diesen Fingerprint und seine Faktoren, welche während der 
