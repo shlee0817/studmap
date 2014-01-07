@@ -1,5 +1,5 @@
 \chapter{Architektur}
-Die Architektur unseres Projekts sieht an der Benutzeroberfläche neben dem Navigations-Client einen Collector-Client und eine Admin-Oberfläche vor. Im Hintergrund werden die Informationen in einer Datenbank gespeichert und mit Hilfe eines Webservice bereitgestellt.
+Die Architektur unseres Projekts sieht an der Benutzeroberfläche neben dem Navi-gations-Client einen Collector-Client und eine Admin-Oberfläche vor. Die Informationen in einer zentralen Datenbank gespeichert und mit Hilfe eines Webservice bereitgestellt.
 
 \begin{figure}[H]
 \centering
@@ -8,11 +8,21 @@ Die Architektur unseres Projekts sieht an der Benutzeroberfläche neben dem Navig
 \label{fig:Achitektur}
 \end{figure}
 
-Der \textbf{Navigations-Client} ist die Bedienoberfläche des Benutzers. Hier wird die Karte des Gebäudes mit allen Wegpunkten und die Navigation angezeigt. Dem Benutzer werden zusätzlich zur Navigation Komfortfunktionen zur einfacheren und schnelleren Bedienung bereit gestellt.\\
-Mit dem \textbf{Collector-Client} soll der Datenbestand des Projektes fortlaufend erweitert werden. Für die Knoten, bzw. Wegpunkte, können verschiedene, für die Navigation benötigte Informationen hinterlegt werden. Um fehlerhafte Eingaben zu vermeiden wird dieses Tool nicht vom Benutzer, sondern nur von Administratoren eingesetzt.\\
-Die \textbf{Admin-Oberfläche} dient der Verwaltung von Karten und Benutzern. Der Administrator kann alte Karten bearbeiten oder neues Kartenmaterial einstellen. Zu diesen Karten wird hier auch der Graph mit allen Knoten und Kanten erstellt und anschließend verwaltet. Mit der Benutzerverwaltung können neue Benutzer angelegt und vorhandene bearbeitet werden oder aber alte Benutzerkonten gelöscht werden.
+\section{Bestandteile}
+
+Der \textbf{Navigations-Client} ist eine Anwendung für den Benutzers. Hier wird die Karte des Gebäudes mit allen Wegpunkten und die Navigation angezeigt. Dem Benutzer werden zusätzlich zur Navigation Komfortfunktionen zur einfacheren und schnelleren Bedienung bereit gestellt.
+
+Die \textbf{Admin-Oberfläche} dient der Verwaltung von Karten und Benutzern. Der Administrator kann alte Karten bearbeiten oder neues Kartenmaterial einstellen. Zu diesen Karten wird auch der Graph mit allen Knoten und Kanten erstellt und anschließend verwaltet. Mit der Benutzerverwaltung können neue Benutzer angelegt und vorhandene bearbeitet werden oder aber alte Benutzerkonten gelöscht werden.
+
+Mit dem \textbf{Collector-Client} soll der Datenbestand des Projektes fortlaufend erweitert werden. Für die Knoten, bzw. Wegpunkte, können verschiedene, für die Navigation benötigte Informationen hinterlegt werden. Um fehlerhafte Eingaben zu vermeiden wird dieses Tool nicht vom Benutzer, sondern nur von Administratoren eingesetzt.
 
 In der \textbf{Datenbank} werden sämtliche Informationen der Anwendung gespeichert. Sie enthält die Benutzerdaten und das gesamte Kartenmaterial. Das Kartenmaterial umfasst dabei die Kartengrafiken wie auch den zugehörigen Graphen. Über einen \textbf{Webservice} können die Daten abgerufen werden. Dieser stellt Funktionen zur Abfrage und Ablage von Navigations- und Benutzerdaten bereit.
 
-Zu Beginn des Projekts war geplant das Projekt auf Mirosofts Cloud Platform Windows Azzure\footnote{\href{http://www.windowsazure.com/}{http://www.windowsazure.com/}}
-zu hosten. Hier wäre eine gute Kompatibilität mit den von uns genutzten Technologien, sowie eine hohe Erreichbarkeit über eine öffentliche, feste IP-Adresse gegeben. Leider dauerte die Einrichtung für eine studentische Testphase seitens Microsoft zu lange. Alternativ wurde uns ein Server mit einer öffentlichen IP-Adresse an der Hochschule bereitgestellt, auf welchem das System jetzt betrieben wird.
+Alternativ wurde uns ein Server mit einer öffentlichen IP-Adresse an der Hochschule bereitgestellt, auf welchem das System jetzt betrieben wird.
+
+\section{Kommunikation}
+Die externen Kommunikation des Navigations-Clients, Collector-Clients und der Admin-Oberfläche mit dem Webservice basiert auf HTTP. Als Austauschformat wird JSON verwendet.
+Die interne Kommunikation des Webservices mit der Datenbank basiert auf dem Entity-Framework. 
+
+Die westfälische Hochschule hat einen Server mit einer festen IP-Adresse zur Verfügung gestellt. Auf diesem betreiben wir einen IIS 7.5\footnote{\href{http://www.iis.net/}{http://www.iis.net/}} mit unserem Projekt.
+

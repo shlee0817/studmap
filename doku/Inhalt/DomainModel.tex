@@ -1,38 +1,37 @@
 \chapter{Domänenmodell}
 Durch das Domänenmodell legen wir Begriffe fest, mit denen
-die Kommunikation im Projektteam einfacher wird.
+die Kommunikation im Projektteam vereinheitlicht und damit einfacher wird.
 
 \section{Anwendungsstruktur}
 
-\subsection{Webservice (StudMap.Service)}
+\subsection*{Webservice (StudMap.Service)}
 Stellt Funktionen zur Ablage und Abfrage von Navigationsinformationen und Benutzerdaten öffentlich bereit.
 
-\subsection{Admin-Oberfläche (StudMap.Admin)}
+\subsection*{Admin-Oberfläche (StudMap.Admin)}
 Weboberfläche zum Anlegen, Bearbeiten von Navigationsinformationen und Benutzerdaten. Die Weboberfläche kann nur von der Benutzerrolle Administrator bedient werden.
 
-\subsection{Navigations-Client (StudMap.Navigator)}
-App zur Anzeige von Karten und Navigation zwischen Wegpunkten. Wird bedient durch den Anwender.
+\subsection*{Navigations-Client (StudMap.Navigator)}
+Eine Anwendung zur Anzeige von Karten und Navigation zwischen Wegpunkten. Diese wird durch den Anwender bedient.
 
-\subsection{Collector-Client (StudMap.Collector)}
-App zur Eingabe von Navigationsinformationen. Wird bedient durch Administratoren.
-
+\subsection*{Collector-Client (StudMap.Collector)}
+Eine Anwendung zur Eingabe von Navigationsinformationen. Diese wird von Administratoren verwendet.
 \section{Benutzerrollen}
 
-\subsection{Anwender (User)}
-Muss identifiziert sein und verwendet den Navigations-Client.
+\subsection*{Anwender (User)}
+Der Anwender verwendet den Navigations-Client, um die kürzeste Route zu einem gewünschten Ziel zu erhalten.
 
-\subsection{Administrator}
-Verwendet Admin-Oberfläche und den Collector-Client. Muss registriert sein.
+\subsection*{Administrator}
+Verwendet Admin-Oberfläche und den Collector-Client. Dazu muss dieser registriert sein.
 
-\section{Begriffe}
+\section{Grundbegriffe}
 
-\subsection{Karte (Map)}
+\subsection*{Karte (Map)}
 Beschreibt das gesamte Gebäude mit allen Stockwerken.
 
-\subsection{Stockwerk (Floor)}
+\subsection*{Stockwerk (Floor)}
 2-dimensionale Ansicht mit allen Layern der Ebene.
 
-\subsection{Schicht (Layer)}
+\subsection*{Schicht (Layer)}
 Es gibt mehrere Schichten, die jeweils Detailinformationen zu
 einem Stockwerk enthalten.
 
@@ -41,20 +40,19 @@ einem Stockwerk enthalten.
 \item Graph-Layer: Enthält Kanten und Knoten für Routen.
 \item POI-Layer: Zusatzinformationen zu speziellen Orten.
 \item Routen-Layer: Darstellung grafischer Elemente zur Navigation.
-\item Personen-Layer: Darstellung anderer Anwender.
 \end{itemize}
 
-\subsection{Route}
+\subsection*{Route}
 Hat einen Start- und einen Endknoten. Verbindet diese beiden Knoten über Zwischenknoten und Kanten.
 
-\subsection{Graph}
+\subsection*{Graph}
 Gesamtheit aller Knoten und Kanten der Karte (Stockwerk-übergreifend).
 
-\subsection{Knoten (Node)}
-Besteht aus eindeutigem Identifier, X- und Y-Koordinate und Stockwerk. Zu dem Knoten können zusätzliche Informationen hinterlegt werden: Name, Raumnummer, NFC-Tag, QR-Tag, ..., Verweis auf POI.
+\subsection*{Knoten (Node)}
+Besteht aus eindeutigem Identifier, X- und Y-Koordinate und Stockwerk. Zu dem Knoten können zusätzliche Informationen hinterlegt werden: Name, Raumnummer, NFC-Tag, QR-Tag und Verweis auf PoI.
 
-\subsection{Kante (Edge)}
+\subsection*{Kante (Edge)}
 Verbindung zweier Knoten. Bedeutet, dass man von einem Punkt zum anderen laufen kann.
 
-\subsection{Point of Interest (POI)}
+\subsection*{Point of Interest (PoI)}
 Ort besonderen Interesses (z.B. Bibliothek, Mensa, ...)
