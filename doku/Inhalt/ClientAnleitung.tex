@@ -1,3 +1,4 @@
+\newpage
 \section{Client}
 \begin{figure}[H]
 \centering
@@ -5,7 +6,7 @@
 \label{fig:ErsterStart}
 \vspace{-10pt}
 \end{figure}
-Startet ein Benutzer die App erstmalig auf seinem Smartphone, so wird er von einem Willkommen-Dialog begrüßt. In diesem Dialog kann er die Karte auswählen welche er nutzen möchte. Diese Auswahl kann später unter Einstellungen (siehe \ref{Einstellungen}) geändert werden. Zur Zeit steht für StudMap lediglich die Karte für die Westfälische Hochschule am Standort Bocholt zur Verfügung .
+Startet ein Benutzer die App erstmalig auf seinem Smartphone, so wird er von einem Willkommen-Dialog begrüßt. In diesem Dialog kann er die Karte auswählen, welche er nutzen möchte. Diese Auswahl kann später unter Einstellungen (siehe \ref{Einstellungen}) geändert werden. Zur Zeit steht für StudMap lediglich die Karte für die Westfälische Hochschule am Standort Bocholt zur Verfügung.
 
 Nachdem die Auswahl erfolgt ist, wird die Karte geladen und die Applikation startet mit der Anzeige der untersten Ebene (hier Ebene 0).
 \begin{figure}[H]
@@ -18,7 +19,7 @@ Nachdem die Auswahl erfolgt ist, wird die Karte geladen und die Applikation star
 
 
 \subsection{Karte}
-Die Karte wird über verschiedene Touch-Funktionen bedient. So kann mit der bekannten "`Pitch and Zoom"' - Geste in die Karte hinein gezoomt werden.
+Die Karte wird über verschiedene Touch-Funktionen bedient. So kann mit der bekannten "`Pinch-to-Zoom"'-Geste in die Karte hinein bzw. hinaus gezoomt werden.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.3]{./Bilder/ClientGuide/ZoomEbene1.png}
@@ -29,7 +30,7 @@ Die Karte wird über verschiedene Touch-Funktionen bedient. So kann mit der bekan
 \subsubsection{Start-/Zielpunkt wählen}
 \label{ssec:StartZielpunkt}
 
-Um einen Punkt als Start- oder Zielpunkt zu markieren öffnet sich nach der Anwahl eines Punktes ein Dialog mit entsprechenden Auswahlmöglichkeiten.
+Um einen Punkt als Start- oder Zielpunkt zu markieren, öffnet sich nach der Anwahl eines Punktes ein Dialog mit entsprechenden Auswahlmöglichkeiten.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{./Bilder/ClientGuide/StartZiel.png}
@@ -37,7 +38,7 @@ Um einen Punkt als Start- oder Zielpunkt zu markieren öffnet sich nach der Anwah
 \label{fig:StartZielWahl}
 \end{figure}
 
-Markierte Punkte werden zunächst auch vergrößert, rot dargestellt. Der eingeblendete Dialog am Boden der Karte ist jedoch leicht verändert.
+Markierte Punkte werden zunächst vergrößert und rot dargestellt.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{./Bilder/ClientGuide/EinblendungStartpunkt.png}
@@ -46,7 +47,7 @@ Markierte Punkte werden zunächst auch vergrößert, rot dargestellt. Der eingeblen
 \end{figure}
 
 \subsubsection{Navigation}
-Wurde ein Start- oder Zielpunkt gewählt (siehe \nameref{ssec:StartZielpunkt}), wird der nächste gewählte Punkt automatisch zum Ziel-, bzw. Startpunkt, und eine Route eingezeichnet. Start und Ziel bekommen jeweils ein ansprechendes Symbol und unten im Bild ist eine Einblendung über Start und Ziel.
+Wurde ein Start- und ein Zielpunkt gewählt (siehe \nameref{ssec:StartZielpunkt}), wird eine Route automatisch berechnet und eingezeichnet. Start und Ziel bekommen jeweils ein ansprechendes Symbol und unten im Bild ist eine Einblendung über Start und Ziel.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.3]{./Bilder/ClientGuide/Navigation.png}
@@ -62,7 +63,7 @@ Wurde ein Start- oder Zielpunkt gewählt (siehe \nameref{ssec:StartZielpunkt}), w
  \end{center}
  \vspace{-30pt}
 \end{wrapfigure}
-Die Icon in der ActionBar erlauben den Zugriff auf die Suche, die Positionierung und das neu laden der Karte.
+Die Icons in der ActionBar erlauben den Zugriff auf die Suche, die Positionierung und das Neuladen der Karte.
 
 \subsubsection{Suche}
 Bei der Suchfunktion kann über ein Suchfeld, welches sich selbst vervollständigt (\ref{fig:Suchen}, rechtes Bild), ein gesuchter Raum gefunden werden.
@@ -75,7 +76,7 @@ Bei der Suchfunktion kann über ein Suchfeld, welches sich selbst vervollständigt
 \label{fig:Suchen}
 \end{figure}
 
-Wird ein Punkt durch die Suche, oder auch den PoI-Dialog (siehe \nameref{PoIDialog}) markiert, so wird dieser leicht vergrößert und rot dargestellt. Im unteren Bildschirm wird zusätzlich ein Dialog mit den Knoteninformationen eingeblendet.
+Wird ein Punkt durch die Suche oder den PoI-Dialog (siehe \nameref{PoIDialog}) markiert, so wird dieser leicht vergrößert und rot dargestellt. Im unteren Bildschirm wird zusätzlich ein Dialog mit den Knoteninformationen eingeblendet.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.3]{./Bilder/ClientGuide/RaumMarkiert.png}
@@ -84,10 +85,10 @@ Wird ein Punkt durch die Suche, oder auch den PoI-Dialog (siehe \nameref{PoIDial
 \end{figure}
 
 \subsubsection{Positionierung}
-Die Positionierung kann auf zwei Arten erfolgen. Zum einen kann ein NFC-Tag eingescannt werden, dies erfolgt im Hintergrund und es ist keine Benutzeraktion notwendig. Zum anderen kann ein QR-Tag eingescannt werden, wozu zunächst über das entsprechende Icon der Scanner gestartet werden muss.
+Die Positionierung kann auf zwei Arten erfolgen. Zum einen kann ein NFC-Tag eingescannt werden, dies erfolgt im Hintergrund und es ist keine Benutzeraktion notwendig. Zum anderen kann ein QR-Code eingescannt werden, wozu zunächst über das entsprechende Icon der Scanner gestartet werden muss.
 
-\subsubsection{Neu laden}
-Sollte die Karte einmal nicht erreichbar sein oder nur fehlerhaft geladen werden, so kann hier das Laden der Karte manuell gestartet werden.
+\subsubsection{Neuladen}
+Sollte die Karte einmal nicht erreichbar sein oder nur fehlerhaft geladen werden, so kann hier das Laden der Karte manuell angestoßen werden.
 
 \subsection{Menü}
 Über einen Wisch vom linken Rand nach rechts lässt sich das Menü aufrufen.
@@ -120,7 +121,7 @@ In diesem Dialog kann sich der User anmelden oder erstmalig registrieren.
 \label{fig:AnmeldeDialog}
 \end{figure}
 
-\subsubsection{Point of Interest}
+\subsubsection{Points of Interest}
 \label{PoIDialog}
 Der Dialog gibt einen Überblick über interessante Punkte. Über ein Suchfeld lässt sich die Auswahl beschränken.
 \begin{figure}[H]
@@ -128,7 +129,7 @@ Der Dialog gibt einen Überblick über interessante Punkte. Über ein Suchfeld läss
 \includegraphics[scale=0.3]{./Bilder/ClientGuide/PoIDialog.png}
 \hspace{15mm}
 \includegraphics[scale=0.3]{./Bilder/ClientGuide/PoIAutoComplete.png}
-\caption{Point of Interest Dialog}
+\caption{Points of Interest Dialog}
 \label{fig:PoIDialog}
 \end{figure}
 
@@ -141,7 +142,7 @@ Der Dialog gibt einen Überblick über interessante Punkte. Über ein Suchfeld läss
  \end{center}
  \vspace{-20pt}
 \end{wrapfigure}
-In den Einstellungen können die anzuzeigende Karte und die IP-Adresse des Host eingestellt, bzw. geändert, werden.
+In den Einstellungen können die anzuzeigende Karte und die IP-Adresse des Host eingestellt bzw. geändert werden.
 \\\\
 \subsubsection{About}
 \begin{figure}[H]
