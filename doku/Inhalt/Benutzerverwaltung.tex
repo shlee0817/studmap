@@ -14,23 +14,22 @@ sind Webseiten zur Registrierung und für den Login / Logout bereits fertig.
 Für die Benutzerverwaltung verwendet das ASP.NET MVC 4 Projekt folgende Datenbankstruktur:
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\linewidth]{../Bilder/GeneratedUserEntities}
+\includegraphics[scale=0.7]{../Bilder/GeneratedUserEntities}
 \caption{Datenbankstruktur der integrierten Benutzerverwaltung}
 \label{fig:GeneratedUserEntities}
 \end{figure}
 
 Für unser Projekt sind nur die drei Tabellen \texttt{UserProfile}, \texttt{webpages\_Roles} und \texttt{webpages\_Membership} relevant. Wie im Domain Model bereits beschrieben unterscheiden wir zwischen den Benutzerrollen Benutzer und Administrator. Jeder Anwender kann sich in mehreren Benutzerrollen befinden. Zusätzlich sind in der Tabelle \texttt{webpages\_membership} weitere Anwenderdaten wie beispielsweise das Datum der Registrierung das Passwort hinterlegt. Damit ist die Benutzerverwaltung für den Administrationsbereich vollständig.
 
+\begin{wrapfigure}{r}{0.4\textwidth}
+\vspace{-40pt}
+ \begin{center}
+   \includegraphics[scale=0.9]{../Bilder/ActiveUsersEntity}
+ \end{center}
+ \vspace{-30pt}
+\end{wrapfigure}
 
-Um die (beispielsweise über das Smartphone) am System angemeldeten Clients zu verwalten haben wir eine weitere Tabelle \texttt{ActiveUsers} hinzugefügt:
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.7\linewidth]{../Bilder/ActiveUsersEntity}
-\caption{Tabelle ActiveUsers}
-\label{fig:ActiveUsersEntity}
-\end{figure}
-
+Um die (beispielsweise über das Smartphone) am System angemeldeten Clients zu verwalten haben wir eine weitere Tabelle \texttt{ActiveUsers} hinzugefügt.
 
 Für den StudMap Admin genügt die bereits integrierte Benutzerverwaltung. Allerdings benötigen wir noch eine Schnittstelle, damit auch die Web bzw. Smartphone Clients auf die Benutzerverwaltung zugreifen können.
 Siehe dazu Kapitel \nameref{Verwendung_Benutzerschnittstelle}.

@@ -61,6 +61,7 @@ Beispiel:
 \subsubsection{Graph}
 \label{object:Graph}
 Repräsentiert für ein Stockwerk den entsprechenden Teilgraphen.
+
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
 \hline FloorId & ID des Stockwerks, das der entsprechende Graph repräsentiert. \\ 
@@ -108,8 +109,8 @@ Repräsentiert einen \nameref{object:PoI} Typen, wie beispielsweise Mensa oder Bi
 
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
-\hline Id & ID des Poi Typs. \\ 
-\hline Name & Der Name des Poi Tpes (z.B. Mensa). \\ 
+\hline Id & ID des PoI Typs. \\ 
+\hline Name & Der Name des PoI Typs (z.B. Mensa). \\ 
 \hline 
 \end{tabularx} 
 
@@ -194,7 +195,7 @@ Repräsentiert die QRCode-Daten für den Knoten.
 
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
-\hline General & Grundsätzliche Informationen zu einem Room. \\ 
+\hline General & Grundsätzliche Informationen zu einem Raum. \\ 
 \hline StudMap & Allgemeine Informationen zum Projekt sind in StudMap hinterlegt. \\ 
 \hline 
 \end{tabularx} 
@@ -333,7 +334,7 @@ Wir unterscheiden zwischen:
 \begin{itemize}
 \item \texttt{None = 0}: Defaultwert
 \item \texttt{Ok = 1}: Funktion erfolgreich ausgeführt
-\item \texttt{Error = 2} Fehler bei Funktionsausführung
+\item \texttt{Error = 2}: Fehler bei Funktionsausführung
 \end{itemize}
 
 \paragraph{ResponseError}
@@ -510,7 +511,7 @@ GET
 
 Parameter:\\
 \begin{tabularx}{\textwidth}{|l|X|}
-\hline mapId & ID des Karte, von der die Stockwerke abgefragt werden sollen. \\ 
+\hline mapId & ID der Karte, von der die Stockwerke abgefragt werden sollen. \\ 
 \hline 
 \end{tabularx} 
 
