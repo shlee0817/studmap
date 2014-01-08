@@ -1,62 +1,56 @@
 \chapter{Client}
 Der Client ist eine Android-Applikation für den Endbenutzer. Es handelt sich hierbei um einen Navigator. 
 Wie jedes handelsübliche Navigationsgerät beinhaltet auch unsere Applikation eine Karte, in unserem Fall ein Gebäudeplan, 
-da wir uns in unserem Projekt mit Indoor-Navigation beschäftigen. Darüber hinaus kann man einen Zielpunkt wählen
-und mit Hilfe eines QR-Codes, NFC-Tags oder des Wlans seine Position bestimmen. Sind Start und Zielpunkt bekannt, berechnet der Server
-eine Route und teilt diese dem Client mit, welcher diese daraufhin graphisch auf der Karte zur Anzeige bringt. \\
+da wir uns in unserem Projekt mit Indoor-Navigation beschäftigen.
+
+Darüber hinaus kann man einen Zielpunkt wählen
+und mit Hilfe eines QR-Codes, NFC-Tags oder des WLANs (experimentell) seine Position bestimmen. Sind Start und Zielpunkt bekannt, berechnet der Server
+eine Route und teilt diese dem Client mit, welcher diese daraufhin graphisch auf der Karte zur Anzeige bringt.
+
 Des Weiteren gibt es Suchfunktionen und Auflistungen von besonders interessanten Orten (Points of Interest).
-Zur Benutzung der Wlan-Positionserkennung ist eine Registrierung und Anmeldung an unserem Server von Nöten.
+Zur Benutzung der WLAN-Positionserkennung ist eine Registrierung und Anmeldung an unserem Server von Nöten.
 
 \section{Allgemeine Struktur}
 Die Navigator-Applikation wurde wie auch der Collector in Android umgesetzt. Es wird mindestens die Version 4.1 vorausgesetzt.
-Es galt folgende Hauptaufgaben zu erfüllen:
+Es galt folgende Hauptaufgaben zu erfüllen.
 
 \subsection{Positionserkennung}
 Wie bereits im Kapitel \nameref{cha:Collector} beschrieben, haben wir uns für 
-Positionserkennung anhand von QR-Codes, NFC-Tags und Wlan-Fingerprinting 
+Positionserkennung anhand von QR-Codes, NFC-Tags und WLAN-Fingerprinting 
 entschieden.
 Für die Positionserkennung mittels NFC und WLAN greifen wir auf unsere 
 Android-Bibliothek der Kernfunktionalitäten zurück. Während für die 
 Interpretation des QR-Codes
-eine Fremd-Applikation zum Einsatz kommt. Diese muss bei der ersten Benutzung gegebenenfalls installiert werden. \\
+eine Fremd-Applikation zum Einsatz kommt. Diese muss bei der erstmaligen Benutzung gegebenenfalls installiert werden.
+
 Die letztendlich ermittelten Daten interpretieren wir mit Hilfe des Webservices, der wiederum Bestandteil unserer Kernfunktionalitäten ist.
 
 \subsection{Anzeige und Navigation auf einer Karte}
-Wir haben uns für die Benutzung einer freien Bibliothek zur Anzeige von Karten 
-entschieden. Nach intensiver Recherche fiel unsere Wahl dabei auf die 
-Javascript Bibliothek \href{http://dciarletta.github.io/d3-floorplan/}{Floor 
-Plan}. Diese Bibliothek setzt auf der bekannten Javascript Bibliothek 
-\href{http://d3js.org/}{D3.js} auf, die Daten in HTML Dokumenten visualisiert.
-
+Wie im Kapitel \nameref{cha:MapWebview} beschrieben, haben wir uns für die Javascript-Bibliothek \textit{D3} mit dem Plugin \textit{Floor Plan} entschieden, welches die Daten in HTML-Dokumenten visualisiert.
 
 Das hat zur Folge, dass unsere Karte lediglich in einer Website platziert ist, die mittels eine WebView zur Anzeige gebracht wird. Dies hat für uns und den Endbenutzer
-den großen Vorteil, dass Änderung an der Karte nicht ein Update der Applikation nach sich zieht.
-Mittels einer definierten Schnittstelle lässt sich das Javascript aus unserer Android-Applikation heraus bedienen, so dass beispielsweise Positionsermittlungen automatisch 
-auf der Karte nachgehalten werden. Dadurch ist die Navigation bei gewählten Zielpunkt vollständig.
+den großen Vorteil, dass Änderungen an der Karte kein Update der Applikation nach sich ziehen.
+Mittels einer definierten Schnittstelle lässt sich das 
+\nameref{cha:jsSchnittstelle} aus unserer Android-Applikation heraus bedienen, so dass beispielsweise Positionsermittlungen automatisch 
+auf der Karte nachgehalten werden. Bei gewähltem Zielpunkt beginnt die Navigation automatisch.
 
 \subsection{Visuell ansprechende und intuitiv bedienbare Applikation}
 Eine Applikation sollte heute intuitiv bedienbar, übersichtlich und ansprechend sein, damit sie gerne und viel benutzt wird. Wir bauen dabei auf moderne Möglichkeiten des
 Android Betriebssystems. Im folgenden Kapitel werden wir diese näher erläutern.
 
 \section{Benutzeroberfläche}
-Neben der bereits erwähnte WebView mit einer hübschen Karte auf Basis der d3 
+Neben der bereits erwähnten WebView mit einer hübschen Karte auf Basis der \textit{D3} 
 Bibliothek, ist unsere gesamte Applikation in dunklen Tönen gehalten und 
 bietet klare Linien bei
 einer Highlight-Farbe die dem Grün der Westfälischen Hochschule sehr nahe kommt. 
 Im Vordergrund der Applikation steht selbstverständlich die Karte, während grundlegende Funktionen wie die Suche oder der Aufruf des QR-Code-Scanners in der Actionbar geboten werden.
 Weitergreifende Funktionalitäten wie das Wechseln der Ebene oder Anmelden befinden sich in einem Drawer auf der linken Seite der Applikation, der auf Wunsch in das Bild hinein gezogen
-werden kann. \\
+werden kann.
+
 Zusätzliche Fenster wie z.B. die Auflistung der Points of Interest werden 
 grundsätzlich in Dialogfenstern zur Anzeige gebracht, was der 
 Übersichtlichkeit und Navigation durch die Applikation zu Gute kommt. Die 
 Suche ist ein besonderes Event, welches in der Actionbar ausgeführt wird und 
 dort die Anzeige verändert, sodass grundsätzlich Ordnung in der Applikation 
 herrscht.
-Neben dem intuitiv Design der Applikation ist selbstverständlich auch die Bedienung der Karte äußerst benutzerfreundlich. Neben den bekannten Möglichkeiten des Multitouch, beispielsweise zum Zoomen, ist auch die Steuerung der Navigation selbsterklärend. Einen gewünschten Punkt angeklickt, schon kann es los gehen. Optisch ansprechend wird eine Route eingezeichnet und mit der Zielflagge gekennzeichnet.
-
-
-% TODOS:
-% - Funktionsweise
-% - UI Aspekte
-% - Android Zeug...
-% - Verweis auf Anhang für Bedienungsanleitung / Installationsanleitung
+Neben dem intuitiven Design der Applikation ist selbstverständlich auch die Bedienung der Karte äußerst benutzerfreundlich. Darüber hinaus werden die bekannten Möglichkeiten des Multitouch, beispielsweise die Pitch- und Zoom-Geste, unterstützt. Ebenso intuitiv bedienbar ist die Steuerung der Navigation. Einen gewünschten Punkt angeklickt, schon kann es los gehen. Optisch ansprechend wird eine Route eingezeichnet und mit der Zielflagge gekennzeichnet.
