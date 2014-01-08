@@ -1,0 +1,45 @@
+\chapter{WLAN-Fingerprinting}
+
+Bei der Positionierung des Nutzers mittels WLAN haben wir über eine für den 
+Nutzer passive Positionierung recherchiert. Alle anderen 
+Positionierungsmethoden benötigten eine Eingabe des Nutzers. Wir haben hier 
+die Eingabe der Position auf einer Karte und das Einlesen von QR-Codes oder 
+NFC-Tags behandelt. Die Positionierung ermöglicht es allerdings im Hintergrund 
+zu laufen und ohne Eingabe des Nutzers die Position zu bestimmen.\\
+WLAN ist zur Positionierung innerhalb von Gebäuden geeignet, da es zum einen 
+eine weit verbreitete Infrastruktur ist, auf vielen mobilen Plattformen 
+verfügbar ist, Wände durchdringt und Standard WLAN Access Points bereits eine 
+Lokalisierung auf Raum-Genauigkeit ermöglicht.\\
+Aus all diesen Gründen haben wir uns mit der Positionierung mittels WLAN 
+beschäftigt. 
+
+\section{Sammeln von WLAN Fingerprints}
+Um später Vergleiche im Client anstellen zu können mussten wir zuerst Daten 
+des Netzwerkes sammeln. Ein Access Point wird dabei eindeutig durch eine 
+\textbf{BSSID} gekennzeichnet und der Client gibt Auskunft über die empfangene 
+Signalstärke (\textbf{RSS \footnote{RSS: received signal strength wird in dBm 
+gemessen.}}), welche beobachtet und aufgezeichnet werden kann.\\
+Ziel dieser Phase war es an möglichst vielen Punkten in der Hochschule die 
+\textit{RSS} zu messen und diese zu einem Punkt auf der Karte der Hochschule 
+zu speichern.\\
+
+\section{Kalibrierung}
+Da das Sammeln der WLAN Fingerprints mit einem Smartphone realisiert wird und 
+wir davon ausgehen mussten, dass nicht jeder Nutzer das gleiche Smartphone 
+besitzt, mussten wir uns eine Möglichkeit der Kalibrierung überlegen. Dazu 
+haben wir überlegt, dass der Nutzer zuerst in einer Kalibrierungsphase selbst 
+einen Fingerprint erstellt von einem von uns festgelegten Ort und diesen mit 
+dem von uns gemessenen Fingerprint vergleicht. Dadurch bekommen wir einen 
+Faktor um den das Smartphone des Nutzers von unserem Gerät abweicht. Da wir 
+vermuten, dass die WLAN Antennen der Smartphones auch in verschiedenen 
+Bereichen, hohe, mittlere und niedrige Signalstärke, sich stark unterscheiden 
+berechnen wir diesen Faktor für die gerade genannten Bereiche.
+
+\section{Positionierung mittels WLAN Fingerprints}
+Um die Position eines Nutzers ermitteln zu können muss dieser, wie der 
+\textit{Collector} einen Fingerprint des WLANs an seiner aktuellen Position 
+erstellen. Diesen Fingerprint und seine Faktoren, welche während der 
+Kalibrierung ermittelt wurden, schickt der Client zum Server, welcher durch 
+Vergleiche den Standpunkt ermittelt und zurückgibt.
+
+\todo{Fabian: Wie werden die FP verglichen.}

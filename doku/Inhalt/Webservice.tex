@@ -1,4 +1,4 @@
-\chapter{Webservice}
+\section{Webservice}
 \label{cha:Webservice}
 Für den Zugriff auf die Daten stellen wir den Webservice \texttt{StudMap.Service} zur Verfügung.
 Der Webservice besteht dabei aus zwei Schnittstellen in Form von sogenannten Controller Klassen, die jeweils von der Klasse \texttt{ApiController} \footnote{siehe: \href{http://msdn.microsoft.com/en-us/library/system.web.http.apicontroller(v=vs.108).aspx}{MSDN Dokumentation}}  abgeleitet sind:
@@ -9,10 +9,10 @@ Der Webservice besteht dabei aus zwei Schnittstellen in Form von sogenannten Con
 
 Bevor nun die Funktionen der jeweiligen Controller Klasse erläutert werden, folgt eine Übersicht, über die verschiedenen Rückgabe Werte und ihre Bedeutung.
 
-\section{Allgemeine Objekte}
+\subsection{Allgemeine Objekte}
 Im folgenden werden die im Webservice verwendeten Objekte aufgeführt. Für jedes Objekt werden Eigenschaften und die Repräsentation der Daten im JSON-Format aufgelistet.
 
-\subsection{Edge}
+\subsubsection{Edge}
 \label{object:Edge}
 Repräsentiert eine Kante in einem Graphen.
 
@@ -32,7 +32,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{Node}
+\subsubsection{Node}
 \label{object:Node}
 Repräsentiert einen Knoten in einem Graphen.
 
@@ -58,7 +58,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{Graph}
+\subsubsection{Graph}
 \label{object:Graph}
 Repräsentiert für ein Stockwerk den entsprechenden Teilgraphen.
 Eigenschaften:\\
@@ -79,7 +79,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{FloorPlanData}
+\subsubsection{FloorPlanData}
 \label{object:FloorPlanData}
 Repräsentiert Daten die auf einem Bild dargestellt werden können.
 
@@ -97,7 +97,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{Room}
+\subsubsection{Room}
 \label{object:Room}
 Repräsentiert Daten die für einen Raum relevant sind.
 
@@ -121,7 +121,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{PoiType}
+\subsubsection{PoiType}
 \label{object:PoiType}
 Repräsentiert einen \nameref{object:PoI} Typen, wie beispielsweise Mensa oder Bibliothek.
 
@@ -141,7 +141,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{PoI}
+\subsubsection{PoI}
 \label{object:PoI}
 Repräsentiert einen Point Of Interest, wie beispielsweise eine Mensa oder eine Bibliothek.
 
@@ -160,7 +160,7 @@ Beispiel:
 }
 \end{lstlisting}
 
-\subsection{RoomAndPoI}
+\subsubsection{RoomAndPoI}
 \label{object:RoomAndPoI}
 Enthält Informationen zu einem Raum und dem zugeordneten PoI.
 
@@ -180,7 +180,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{NodeInformation}
+\subsubsection{NodeInformation}
 \label{object:NodeInformation}
 Repräsentiert die für einen Knoten relevanten Daten.
 
@@ -207,7 +207,7 @@ Beispiel:
 }
 \end{lstlisting}
 
-\subsection{QRCode}
+\subsubsection{QRCode}
 \label{object:QRCode}
 Repräsentiert die QRCode-Daten für den Knoten.
 
@@ -226,7 +226,7 @@ Beispiel:
 }
 \end{lstlisting}
 
-\subsection{FullNodeInformation}
+\subsubsection{FullNodeInformation}
 \label{object:FullNodeInformation}
 Repräsentiert die für einen Knoten relevanten Daten.
 
@@ -248,7 +248,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{Floor}
+\subsubsection{Floor}
 \label{object:Floor}
 Repräsentiert die für ein Stockwerk relevanten Daten.
 
@@ -274,7 +274,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{Map}
+\subsubsection{Map}
 \label{object:Map}
 Repräsentiert die für eine Karte relevanten Daten.
 
@@ -294,7 +294,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{User}
+\subsubsection{User}
 \label{object:User}
 Repräsentiert die für einen Benutzer relevanten Daten.
 
@@ -312,7 +312,7 @@ Beispiel:
 \end{lstlisting}
 
 
-\subsection{SaveGraphRequest}
+\subsubsection{SaveGraphRequest}
 \label{object:SaveGraphRequest}
 Repräsentiert die Änderungen an dem Teilgraph für ein Stockwerk.
 
@@ -333,9 +333,9 @@ Beispiel:
 }
 \end{lstlisting}
 
-\section{Rückgabe Objekte}
+\subsection{Rückgabe Objekte}
 
-\subsection{BaseResponse}
+\subsubsection{BaseResponse}
 \label{BaseResponse}
 Allgemeine Rückgabe vom Service, die einen Status und ggf. einen Fehler enthält. Die Daten werden im JSON Format zurück gegeben.
 
@@ -347,7 +347,7 @@ Allgemeine Rückgabe vom Service, die einen Status und ggf. einen Fehler enthält.
 }
 \end{lstlisting}
 
-\subsubsection{ResponseStatus}
+\paragraph{ResponseStatus}
 Wir unterscheiden zwischen:
 \begin{itemize}
 \item \texttt{None = 0}: Defaultwert
@@ -355,10 +355,9 @@ Wir unterscheiden zwischen:
 \item \texttt{Error = 2} Fehler bei Funktionsausführung
 \end{itemize}
 
-\subsubsection{ResponseError}
+\paragraph{ResponseError}
 Ist beim \texttt{ResponseStatus Error} gesetzt. Es werden folgende Fehlerszenarien unterschieden:
 
-\todo{Marcus: Alle genauen Fehlertypen beschreiben.}
 \textbf{Allgemein:}
 \begin{itemize}
 \item \texttt{001 - DatabaseError}:\\
@@ -447,9 +446,9 @@ Beispiel:
 }
 \end{lstlisting}
 
-\section{MapsController}
+\subsection{MapsController}
 
-\subsection{CreateMap}
+\subsubsection{CreateMap}
 \label{service:CreateMap}
 Erstellt eine neue Karte mit dem vorgegebenen Namen.
 
@@ -464,7 +463,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Map}
 
-\subsection{DeleteMap}
+\subsubsection{DeleteMap}
 \label{service:DeleteMap}
 Löscht eine Karte mit der angegebenen ID.
 
@@ -479,7 +478,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{BaseResponse}
 
-\subsection{GetMaps}
+\subsubsection{GetMaps}
 \label{service:GetMaps}
 Liefert eine Liste aller Karten zurück.
 
@@ -489,7 +488,7 @@ GET
 Rückgabewert: \nameref{ListResponse}, \nameref{object:Map}
 
 
-\subsection{CreateFloor}
+\subsubsection{CreateFloor}
 \label{service:CreateFloor}
 Erstellt einen Floor zu einer Map mit einem sprechenden Namen.
 
@@ -506,7 +505,7 @@ Parameter:\\
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Floor}
 
 
-\subsection{DeleteFloor}
+\subsubsection{DeleteFloor}
 \label{service:DeleteFloor}
 Löscht einen Floor mit der angegebenen ID.
 
@@ -521,7 +520,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{BaseResponse}
 
-\subsection{GetFloorsForMap}
+\subsubsection{GetFloorsForMap}
 \label{service:GetFloorsForMap}
 Liefert alle Stockwerke einer Karte.
 
@@ -536,7 +535,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{ListResponse}, \nameref{object:Floor}
 
-\subsection{GetFloor}
+\subsubsection{GetFloor}
 \label{service:GetFloor}
 Liefert Informationen zu einem Stockwerk.
 
@@ -551,7 +550,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Floor}
 
-\subsection{GetFloorplanImage}
+\subsubsection{GetFloorplanImage}
 \label{service:GetFloorplanImage}
 Liefert die URL des Bilds zu einem Stockwerk.
 
@@ -566,7 +565,7 @@ Parameter:\\
 
 Rückgabewert: String
 
-\subsection{SaveGraphForFloor}
+\subsubsection{SaveGraphForFloor}
 \label{service:SaveGraphForFloor}
 Speichert den Graphen zu einem Stockwerk ab.
 
@@ -577,7 +576,7 @@ POST Body: \nameref{object:SaveGraphRequest}
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 
-\subsection{DeleteGraphForFloor}
+\subsubsection{DeleteGraphForFloor}
 \label{service:DeleteGraphForFloor}
 Löscht den Teilgraphen auf einem Stockwerk.
 Die Teilgraphen auf anderen Stockwerken werden nicht verändert.
@@ -595,7 +594,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{BaseResponse}
 
-\subsection{GetGraphForFloor}
+\subsubsection{GetGraphForFloor}
 \label{service:GetGraphForFloor}
 Liefert den Teilgraphen für ein Stockwerk.
 
@@ -611,7 +610,7 @@ Parameter:\\
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 
 
-\subsection{GetFloorPlanData}
+\subsubsection{GetFloorPlanData}
 \label{service:GetFloorPlanData}
 Liefert die verschiedenen Schichten auf einem Stockwerk.
 
@@ -627,7 +626,7 @@ Parameter:\\
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:FloorPlanData}
 
 
-\subsection{GetConnectedNodes}
+\subsubsection{GetConnectedNodes}
 \label{service:GetConnectedNodes}
 Liefert die Knoten zurück, die mit dem übergebenen Knoten verbunden sind.
 
@@ -643,7 +642,7 @@ Parameter:\\
 Rückgabewert: \nameref{ListResponse}, \nameref{object:Node}
 
 
-\subsection{GetRouteBetween}
+\subsubsection{GetRouteBetween}
 \label{service:GetRouteBetween}
 Liefert die Route zwischen zwei Knoten, wenn diese existiert.
 
@@ -661,7 +660,7 @@ Parameter:\\
 Rückgabewert: \nameref{ListResponse}, \nameref{object:Node}
 
 
-\subsection{GetNodeInformationForNode}
+\subsubsection{GetNodeInformationForNode}
 \label{service:GetNodeInformationForNode}
 Liefert weitere Informationen zu einem Knoten.
 Diese umfassen Raumnummern, zugeordnete NFC- und QR-Tags, usw.
@@ -678,7 +677,7 @@ Parameter:\\
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
 
 
-\subsection{GetFullNodeInformationForNode}
+\subsubsection{GetFullNodeInformationForNode}
 \label{service:GetFullNodeInformationForNode}
 Liefert alle Informationen zu einem Knoten.
 Diese umfassen die Objekte \nameref{object:Map}, \nameref{object:Floor} und \nameref{object:NodeInformation}.
@@ -695,7 +694,7 @@ Parameter:\\
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:FullNodeInformation}
 
 
-\subsection{GetNodeInformaion}
+\subsubsection{GetNodeInformaion}
 \label{service:GetNodeInformaion}
 Liefert Informationen zu allen Knoten auf einem Stockwerk.
 
@@ -712,7 +711,7 @@ Parameter:\\
 Rückgabewert: \nameref{ListResponse}, \nameref{object:NodeInformation}
 
 
-\subsection{SaveNodeInformation}
+\subsubsection{SaveNodeInformation}
 \label{service:SaveNodeInformation}
 Speichert zusätzliche Informationen zu einem Knoten ab.
 
@@ -724,7 +723,7 @@ POST Body: \nameref{object:NodeInformation}
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:NodeInformation}
 
 
-\subsection{GetPoiTypes}
+\subsubsection{GetPoiTypes}
 \label{service:GetPoiTypes}
 Liefert eine Liste aller Typen von PoIs zurück.
 
@@ -733,7 +732,7 @@ GET
 
 Rückgabewert: \nameref{ListResponse}, \nameref{object:PoiType}
 
-\subsection{GetPoIsForMap}
+\subsubsection{GetPoIsForMap}
 \label{service:GetPoIsForMap}
 Liefert eine Liste aller PoIs auf einer Karte zurück.
 
@@ -748,7 +747,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{ListResponse}, \nameref{object:RoomAndPoI}
 
-\subsection{GetRoomsForMap}
+\subsubsection{GetRoomsForMap}
 \label{service:GetRoomsForMap}
 Liefert eine Liste aller Räume auf einer Karte zurück.
 
@@ -763,7 +762,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{ListResponse}, \nameref{object:Room}
 
-\subsection{GetNodeForNFC}
+\subsubsection{GetNodeForNFC}
 \label{service:GetNodeForNFC}
 Sucht auf einer Karte nach einem Knoten mit einem bestimmten NFC-Tag.
 
@@ -780,7 +779,7 @@ Parameter:\\
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
 
 
-\subsection{GetNodeForQRCode}
+\subsubsection{GetNodeForQRCode}
 \label{service:GetNodeForQRCode}
 Sucht auf einer Karte nach einem Knoten mit einem bestimmten QR-Code.
 
@@ -797,7 +796,7 @@ Parameter:\\
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Node}
 
 
-\subsection{SaveNFCForNode}
+\subsubsection{SaveNFCForNode}
 \label{service:SaveNFCForNode}
 Speichert ein NFC-Tag zu einem bestimmten Knoten.
 
@@ -814,7 +813,7 @@ Parameter:\\
 Rückgabewert: \nameref{BaseResponse}
 
 
-\subsection{SaveQRCodeForNode}
+\subsubsection{SaveQRCodeForNode}
 \label{service:SaveQRCodeForNode}
 Speichert einen QR-Code zu einem bestimmten Knoten.
 
@@ -831,11 +830,11 @@ Parameter:\\
 Rückgabewert: \nameref{BaseResponse}
 
 
-\section{UsersController}
+\subsection{UsersController}
 \label{Webservice_UsersController}
 Der \texttt{UsersController} stellt klassische Funktionen zur Benutzerverwaltung zur Verfügung.
 
-\subsection{Register}
+\subsubsection{Register}
 \label{service:Register}
 Registriert einen neuen Anwender in der Benutzerrolle Benutzer.
 
@@ -851,7 +850,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{BaseResponse}
 
-\subsection{Login}
+\subsubsection{Login}
 \label{service:Login}
 Meldet einen bereits registrierten Anwender am System an.
 
@@ -867,7 +866,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{BaseResponse}
 
-\subsection{Logout}
+\subsubsection{Logout}
 \label{service:Logout}
 Meldet einen angemeldeten Anwender vom System ab.
 
@@ -882,7 +881,7 @@ Parameter:\\
 
 Rückgabewert: \nameref{BaseResponse}
 
-\subsection{GetActiveUsers}
+\subsubsection{GetActiveUsers}
 \label{service:GetActiveUsers}
 Ermittelt eine Liste der aktuell am System angemeldeten Anwender.
 
@@ -892,17 +891,17 @@ GET
 Rückgabewert: \nameref{ListResponse}, \nameref{object:User}
 
 
-\section{Verwendung der Benutzerschnittstelle}
+\subsection{Verwendung der Benutzerschnittstelle}
 \label{Verwendung_Benutzerschnittstelle}
-\subsection{Registrierung}
+\subsubsection{Registrierung}
 Bevor sich ein Benutzer am StudMap System anmelden kann, muss er sich zunächst über die Funktion \nameref{service:Register} registrieren.
 
-\subsection{Aktive und inaktive Benutzer}
+\subsubsection{Aktive und inaktive Benutzer}
 Im StudMap System wird zwischen aktiven und inaktiven Benutzern unterschieden. Nachdem sich ein Benutzer am System registriert hat gilt dieser als inaktiv. Über die Funktion \nameref{service:Login} kann er sich am System anmelden und gilt somit als aktiv.
 
 Damit der angemeldete Benutzer auch aktiv bleibt, sollte sich dieser in einem Zeitintervall von fünf Minuten über die Methode \nameref{service:Login} am System aktiv melden. Nach einer Inaktivität von 15 Minuten wird der Benutzer automatisch inaktiv.
 
 Über die Funktion \nameref{service:Logout} kann sich ein Benutzer wieder vom System abmelden und wird somit inaktiv.
 
-\subsection{Aktive Benutzer abfragen}
+\subsubsection{Aktive Benutzer abfragen}
 Die aktiven Benutzer können über die Funktion \nameref{service:GetActiveUsers} abgefragt werden. Damit die Anzeige der aktiven Benutzer im Client möglichst aktuell ist, sollte diese Abfrage ebenfalls in regelmäßigen Zeitabständen erfolgen.

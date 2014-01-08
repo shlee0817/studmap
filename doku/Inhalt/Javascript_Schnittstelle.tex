@@ -1,11 +1,11 @@
-\chapter{Javascript Schnittstelle}
+\section{Javascript}
 \label{cha:jsSchnittstelle}
 
 Die Javascript Schnittstelle der Karte bietet mehrere Funktionen zur Steuerung. Darunter Methoden zur Veränderung von Punkten, Setzen von Start- und Endpunkten, Zoomen zu Punkten und das Zurücksetzen der Karte.
 
 Im folgenden werden diese hier beschrieben.
 
-\section{setStartPoint(nodeId)}
+\subsection{setStartPoint(nodeId)}
 \label{object:setStartPoint}
 Setzt einen Startpunkt auf die Karte und markiert diesen in blau.
 Sind Start-und-Endpunkt gesetzt, wird der Weg angezeigt.
@@ -15,7 +15,7 @@ Eigenschaften:\\
 \hline
 \end{tabularx} 
 
-\section{setEndPoint(nodeId)}
+\subsection{setEndPoint(nodeId)}
 \label{object:setEndPoint}
 Setzt einen Endpunkt auf die Karte und markiert diesen in rot.
 Sind Start-und-Endpunkt gesetzt, wird der Weg angezeigt.
@@ -26,7 +26,7 @@ Eigenschaften:\\
 \hline
 \end{tabularx} 
 
-\section{highlightPoint(nodeId, radius)}
+\subsection{highlightPoint(nodeId, radius)}
 \label{object:highlightPoint}
 Highlighted den übergebenen Knoten und verändert den Radius.
 
@@ -38,21 +38,21 @@ Eigenschaften:\\
 \end{tabularx} 
 
 
-\section{clearMap()}
+\subsection{clearMap()}
 \label{object:clearMap}
 Setzt alle Elemente auf der Karte zurück.
 
 
-\section{resetMap()}
+\subsection{resetMap()}
 \label{object:resetMap}
 Setzt alle Elemente auf der Karte und die Start-und-Endpunkte zurück.
 
 
-\section{resetZoom()}
+\subsection{resetZoom()}
 \label{object:resetZoom}
 Zoomt die Karte auf Bildschirmfüllende Größe.
 
-\section{zoomToNode(nodeId)}
+\subsection{zoomToNode(nodeId)}
 \label{object:zoomToNode}
 Zoomt zum übergebenen Knoten.
 
