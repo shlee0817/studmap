@@ -460,13 +460,17 @@ public class MainActivity extends BaseMainActivity implements
 	}
 
 	@Override
-	public void onSetDestination(Node node) {		
-		mWebViewFragment.sendDestination(node);
+	public void onSetDestination(Node node) {
+		
+		if(node != null)
+			mWebViewFragment.sendDestination(node);
 	}
 
 	@Override
 	public void onSetStart(Node node) {
-		mWebViewFragment.sendStart(node);
+		
+		if(node != null)		
+			mWebViewFragment.sendStart(node);
 	}
 
 	@Override
