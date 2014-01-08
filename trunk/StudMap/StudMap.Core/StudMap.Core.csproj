@@ -35,7 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graph\Edge.cs" />
-    <Compile Include="Graph\FloorPlanData.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\Node.cs" />
     <Compile Include="Graph\SaveGraphRequest.cs" />
