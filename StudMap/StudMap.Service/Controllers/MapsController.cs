@@ -131,12 +131,12 @@ namespace StudMap.Service.Controllers
             return result;
         }
 
-        [HttpGet]
-        public ObjectResponse<Graph> GetFloorPlanData(int floorId)
-        {
-            ObjectResponse<Graph> result = GetGraphForFloor(floorId);
-            return result;
-        }
+        //[HttpGet]
+        //public ObjectResponse<Graph> GetFloorPlanData(int floorId)
+        //{
+        //    ObjectResponse<Graph> result = GetGraphForFloor(floorId);
+        //    return result;
+        //}
 
         public ListResponse<Node> GetConnectedNodes(int nodeId)
         {

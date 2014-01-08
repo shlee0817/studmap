@@ -228,7 +228,7 @@ StudMapClient.prototype.loadAndDrawFloorPlanData = function () {
     params.push(floorId);
     var that = this;
 
-    this.load("Maps", "GetFloorPlanData", params, function (data) {
+    this.load("Maps", "GetGraphForFloor", params, function (data) {
 
         if (!data || !data.Object || !data.Object.Nodes)
             return;
