@@ -78,25 +78,6 @@ Beispiel:
 }
 \end{lstlisting}
 
-
-\subsubsection{FloorPlanData}
-\label{object:FloorPlanData}
-Repräsentiert Daten die auf einem Bild dargestellt werden können.
-
-Eigenschaften:\\
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline Graph & \\ 
-\hline
-\end{tabularx} 
-
-Beispiel:
-\begin{lstlisting}
-{
-  "Graph": {...}
-}
-\end{lstlisting}
-
-
 \subsubsection{Room}
 \label{object:Room}
 Repräsentiert Daten die für einen Raum relevant sind.
@@ -608,22 +589,6 @@ Parameter:\\
 \end{tabularx} 
 
 Rückgabewert: \nameref{ObjectResponse}, \nameref{object:Graph}
-
-
-\subsubsection{GetFloorPlanData}
-\label{service:GetFloorPlanData}
-Liefert die verschiedenen Schichten auf einem Stockwerk.
-
-GET
-\url{/api/Maps/GetFloorPlanData?floorId=2}
-
-Parameter:\\
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline floorId & ID des Stockwerks. \\ 
-\hline 
-\end{tabularx} 
-
-Rückgabewert: \nameref{ObjectResponse}, \nameref{object:FloorPlanData}
 
 
 \subsubsection{GetConnectedNodes}
