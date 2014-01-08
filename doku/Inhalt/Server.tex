@@ -16,18 +16,25 @@ Auf dem Server sind folgende Softwarekomponenten installiert:
 \end{itemize}
 
 \section{Einrichtung IIS}
-Der IIS kann sowohl auf einem Windows Server als auch auf einer normalen 
-Windows Installation eingerichtet werden. Dazu muss unter "`Programme"'
-"`Windows-Features installieren oder deinstallieren"' ausgewählt werden. In 
-dem Dialog kann der IIS  installiert werden. Da wir in unserem Projekt die 
-ASP.NET Technologie verwenden muss diese am IIS installiert werden.\\
-Nach der Installation ist der IIS-Manager installiert worin Webseiten 
-eingerichtet werden können.\\
-Da wir auf dem Server eine normale Windows Installation laufen haben, kann 
-kein Web Deploy aufgespielt werden. Daher müssen in Visual Studio Deployment 
-Packages erstellt werden, welche über einen Rechtsklick auf 
-"`StudMap"'>"'Bereitstellen"'>"'Anwendung importieren"' importiert werden 
-können.
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\vspace{-20pt}
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{../Bilder/Install_IIS}
+  \end{center}
+  \vspace{-20pt}
+\end{wrapfigure}
+
+Der IIS kann sowohl auf einem Windows Server als auch auf einer normalen Windows Installation eingerichtet werden. Dazu wählt man unter "`Programme"' > "`Windows-Features installieren oder deinstallieren"' aus. Daraufhin öffnet sich ein Dialog (s. Abbildung), indem der IIS zur Installation ausgewählt werden kann.
+
+Nach Abschluss der Installation steht der IIS-Manager zur Verfügung und Webseiten können eingerichtet werden. 
+
+Da auf unserem Server kein Serverbetriebssystem, sondern lediglich ein Standard Windows 
+installiert ist, steht "`Web Deploy"' nicht zur Verfügung. Daher müssen Deployment Pakete
+manuell erstellt und auf dem Server aufgespielt werden. Dazu klickt man in Visual Studio 
+auf den Kontextmenüpunkt "`Veröffentlichen"' des jeweiligen Projektes. Anschließend kann
+das Deployment Package im IIS über einen Rechtsklick auf "`StudMap"'>"'Bereitstellen"'>"'Anwendung importieren"' 
+importiert werden.
 
 \section{Einrichtung SQL Server}
 Im Projekt wird ein Microsoft SQL Server 2012 verwendet. Da unsere Anwendung 
@@ -35,7 +42,4 @@ auf komplexe Managementfunktionen verzichtet kann auch die kostenlose Express
 Version genutzt werden.
 
 Der Aufbau der Datenbank kann aus dem im SVN eingecheckten  
-\href{https://studmap.googlecode.com/svn/database/StudMapDBSkript.sql}{Datenbankskripten}
- 
-hergestellt werden.
-
+\href{https://studmap.googlecode.com/svn/database/StudMapDBSkript.sql}{Datenbankskripten} hergestellt werden.
