@@ -20,7 +20,7 @@ public class JavaScriptService {
 		
 	public void sendTarget(Integer nodeId){
 		runOnUiThread("javascript:client.zoomToNode(" + nodeId + ")");
-		runOnUiThread("javascript:client.highlightPoint(\"" + nodeId + "\", \"purple\", \"4\")");				
+		runOnUiThread("javascript:client.highlightPoint(\"" + nodeId + "\", \"4\")");				
 	}
 	
 	public void sendStart(Integer nodeId){
