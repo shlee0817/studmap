@@ -5,13 +5,13 @@ auf der Karte bestimmt wird. Dazu werden die im Kapitel
 
 \subsection{QR-Codes}
 \label{QR-Tags}
-An den Räumen werden QR-Tags angebracht, die eine Zuordnung 
-zu einem Knoten auf der ermöglicht. Hier ist zu beachten,
-dass die Informationen auf dem QR-Tag auch für andere Anwendungen
-nützlich sein sollen. Deshalb kann hier nicht nur eine Knoten-ID
+An den Räumen werden QR-Codes angebracht, die eine Zuordnung 
+zu einem Knoten auf der Karte ermöglicht. Hier ist zu beachten,
+dass die Informationen in dem QR-Code auch von anderen Anwendungen
+interpretiert werden können. Deshalb kann hier nicht nur eine Knoten-ID
 hinterlegt werden.
 
-Folgendes JSON-Format ist ein möglicher Kandidat:
+Wir haben uns für folgendes JSON-Format entschieden:
 \begin{lstlisting}
 {
   "General": {
@@ -27,11 +27,10 @@ Folgendes JSON-Format ist ein möglicher Kandidat:
 
 \subsection{NFC-Tags}
 \label{NFC-Tags}
-Neben den QR-Tags werden auch NFC-Tags an den Räumen angebracht.
-Auf diese werden aktuell keine Informationen geschrieben. Die
-Knoten werden über die NFC-ID des Chips zugeordnet.
+Neben den QR-Codes werden auch NFC-Tags an den Räumen angebracht.
+Die Knoten werden über die NFC-ID des Chips zugeordnet.
 
-Um Benutzer, die die StudMap-App nicht installiert haben zu
+Um Benutzer, die den Navigations-Client nicht installiert haben, zu
 informieren wird eine URL auf den NFC-Tags gespeichert. Diese
 leitet auf eine Seite mit Informationen über den gescannten Raum
 und einen Link auf unsere Projektseite. In Zukunft kann hier auch

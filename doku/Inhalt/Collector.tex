@@ -1,15 +1,15 @@
 \chapter{Collector}
 \label{cha:Collector}
 
-Die Collector Anwendung wurde als Android-Applikation umgesetzt. Es wird Android 3.0 auf einem Smartphone vorausgesetzt, um alle Funktionen nutzen können.
-Der Collector ist eine Android-Applikation, die dazu dient, Daten zu vorher vom Administrator definierten Knoten/Punkten zu sammeln und 
-diese entsprechend in der Datenbank zu hinterlegen. Damit ist die Applikation ein Werkzeug der Administratoren und nicht der Endbenutzer. \\
-Mit der Entwicklung des Collectors haben wir eine intensive Recherche betrieben, wie wir eine Indoor-Navigation ermöglichen können.
+Die Collector Anwendung wurde als Android-Applikation umgesetzt. Es wird Android in der Version 3.0 auf einem Smartphone vorausgesetzt, um alle Funktionen nutzen können.
+Der Collector dient dazu, Daten zu vorher vom Administrator definierten Knoten zu sammeln und 
+diese in der Datenbank zu hinterlegen. Damit ist die Applikation ein Werkzeug der Administratoren und nicht der Endbenutzer. \\
+Mit der Entwicklung des Collectors haben wir eine intensive Recherche zum Thema Indoor-Navigation betrieben.
 
 \input{Inhalt/Positionsermittlung}
 
 \section{Benutzeroberfläche}
-Anhand der Recherche-Ergebnisse haben wir uns entschieden einen Positionserkennung mittels QR-Codes, NFC-Tags und Wlan-Fingerprinting zu implementieren. 
+Anhand der Recherche-Ergebnisse haben wir uns entschieden, einen Positionserkennung mittels QR-Codes, NFC-Tags und Wlan-Fingerprinting (experimentell) zu implementieren. 
 QR-Codes werden mittels eines Tools auf dem Server generiert. Es bedarf hierbei keiner weiteren Behandlung durch die Collector-Applikation. 
 Dem gegenüber stehen das Zuordnen von NFC-Tags zu Knoten und das Sammeln von Wlan-Fingerprints durch die Collector-Applikation.
 Zur Erfüllung dieser beiden Aufgaben bietet die Applikation eine schlichte Benutzeroberfläche. Eine Bedienungsanleitung der Collector Anwendung befindet sich im Anhang: \nameref{appendix:collector}.
