@@ -1,8 +1,21 @@
 \chapter{Einleitung}
 Im Fach Fortgeschrittene Internetanwendungen haben wir uns im Rahmen einer studentischen Projektarbeit mit dem Thema Navigation und Lokalisierung innerhalb von Gebäuden beschäftigt. Dabei beschränkte sich das Ziel unseres Projekts auf die Navigation im Gebäude der Westfälischen Hochschule am Campus Bocholt.
+
 Dazu stellten wir uns zu Projektbeginn eine Karte des Gebäudes vor, auf der alle möglichen Navigationsziele eingezeichnet sind. Bei der Auswahl eines Navigationsziels sollte nach unseren Vorstellungen eine entsprechende Wegbeschreibung eingeblendet werden, die uns von unserem aktuellen Standpunkt zum gewünschten Ziel führt.
 
 Um dieses Ziel zu erreichen, mussten wir uns mit verschiedenen Problemstellungen auseinandersetzen. Zunächst einmal war es nötig das Gebäude vollständig in unserem System zu erfassen. Zum anderen mussten wir die aktuelle Position innerhalb des Gebäudes ermitteln, um diese ebenfalls auf der Karte abbilden zu können.
+
+\section{Motivation}
+Motiviert durch die Tatsache, dass vor allem ortsunkundige sich nicht im Gebäude der Hochschule zurecht finden, entstand daraufhin die Idee eine Navigationssoftware zu entwickeln. Basieren auf folgenden Anwendungsfällen:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../Bilder/UseCaseDiagram}
+\label{fig:UseCaseDiagram}
+\end{figure}
+
+Neben dem klassischen \textit{Anwender} (Student) der bestimmte Räume und ggf. sogar Personen finden möchte, wollen wir eine Raumsuche Anwendung entwickeln. Da die Hochschule neben klassischen Räumen auch Räume besonderen Interesses hat, sollen Räume wie Mensa oder Bibliothek als "`PoI"' gekennzeichnet werden können. Des Weiteren soll die Möglichkeit bestehen sich von seinem aktuellen Standpunkt dorthin navigieren zu lassen.
+Damit ein solches System funktioniert benötigt dies einen Administrator, der sich um das Kartenmaterial und um die Datenpflege kümmert.
 
 \section{Projektorganisation}
 Als Plattform für unser Projekt verwenden wir Google Code:\\
@@ -10,4 +23,5 @@ Als Plattform für unser Projekt verwenden wir Google Code:\\
 
 Dort nutzen wir das SVN Repository zur Quellcode Ablage und den Issue Tracker zur Verwaltung von Benutzeranforderungen und Fehlern. Wir haben uns in unserem Projekt für eine agile Projektorganisation nach dem Vorbild von Scrum entschieden und den Issue Tracker entsprechend konfiguriert. So stehen uns die Issue Typen User Story, Task und Bug zur Verfügung. Zusätzlich haben wir noch vier Kategorien eingeführt: ProductBacklog, SprintBacklog, OpenBugs und OpenTasks. Mittels der Kategorien können wir die verschiedenen Issues besser strukturieren.
 
-Kurz nach Beginn des Projektes haben wir die Benutzeranforderungen in Form von User Stories angelegt und dem ProductBacklog zugewiesen. Für dieses Projekt haben wir uns auf Sprints mit einer Dauer von jeweils zwei Wochen geeinigt. Zu Beginn eines jeden Sprints haben wir entsprechende User Stories in den SprintBacklog übertragen und abgearbeitet.
+Kurz nach Beginn des Projektes haben wir die Benutzeranforderungen in Form von User Stories\footnote{Siehe \href{https://code.google.com/p/studmap/issues/list?can=1\&q=type=UserStory\&colspec=ID\%20Type\%20Status\%20Priority\%20PartOf\%20Component\%20Owner\%20Summary}{Google Code}}
+angelegt und dem ProductBacklog zugewiesen. Für dieses Projekt haben wir uns auf Sprints mit einer Dauer von jeweils zwei Wochen geeinigt. Zu Beginn eines jeden Sprints haben wir entsprechende User Stories in den SprintBacklog übertragen und abgearbeitet.
