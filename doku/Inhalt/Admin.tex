@@ -1,50 +1,55 @@
 \chapter{Admin}
-Wesentlicher Bestandteil unseres Projektes war die Administrationsumgebung. Genauer musste eine Anwendung geschaffen werden, die dem jeweiligen Endanwender Navigationsdaten zur Verfügung stellt. Also eine Umgebung, die einen Upload für Kartenmaterial bereitstellt. Des Weiteren muss die Administrationsanwendung Features besitzen um Routen zu definieren und Meta-Informationen zu besonderen Örtlichkeiten festhalten zu können. Die Meta-Informationen können durch Points of Interest (PoI) Informationen erweitert werden.\\
-Im folgenden Abschnitt wird zunächst die allgemeine Struktur erläutert und anschließend liegt das Hauptaugenmerk auf der Benutzeroberfläche. Eine ausführliche Bedienungsanleitung der Administrationsumgebung ist im Anhang \ref{Admin-Doku} beigefügt.
+Wesentlicher Bestandteil unseres Projektes war die Administrationsumgebung. Genauer musste eine Anwendung geschaffen werden, in der Navigationsdaten hinterlegt werden können. Des Weiteren muss die Administrationsanwendung Features besitzen um Routen zu definieren und Meta-Informationen zu besonderen Örtlichkeiten festhalten zu können. Die Meta-Informationen können durch Points of Interest (PoI) Daten erweitert werden.\\
+Im folgenden Abschnitt wird zunächst die allgemeine Struktur erläutert und anschließend liegt das Hauptaugenmerk auf der Benutzeroberfläche. Eine ausführliche Bedienungsanleitung der Administrationsumgebung ist im Anhang unter \nameref{Admin-Doku} beigefügt.
 
 \section{Allgemeine Struktur}
 \subsection*{ASP.NET MVC 4}
-Basis unserer Projektstruktur war das \textbf{ASP.NET MVC Framework}, welches ein Web Application Framework ist, und ein Model-View-Controller-Pattern implementiert.\\
-Dies ermöglichte uns, eine Webanwendung zu entwickeln, bei der die Daten (\textit{Model}) gekapselt von der Ausgabe (\textit{View}) und dem \textit{Controller} vorliegen. Die \textit{View} repräsentiert unsere Daten und der \textit{Controller} reagiert auf Zustandsänderungen und ist sozusagen das Bindeglied oder die Schnittstelle zwischen \textit{View} und \textit{Model}.
+Basis unserer Projektstruktur war das 
+\textit{ASP.NET MVC Framework}\footnote{\href{http://www.asp.net/mvc}{http://www.asp.net/mvc}},
+welches ein Web Application Framework ist und ein Model-View-Controller-Pattern implementiert.\\
+Dies ermöglichte uns, eine Webanwendung zu entwickeln, bei der die Daten (\textit{Model}) gekapselt von der Ausgabe (\textit{View}) und dem \textit{Controller} vorliegen. Die \textit{View} präsentiert unsere Daten und der \textit{Controller} reagiert auf Benutzereingaben und ist sozusagen das Bindeglied oder die Schnittstelle zwischen \textit{View} und \textit{Model}.
 
 \subsection{Model}
-\subsubsection*{AccountModels}
-Kapselt die benutzerspezifischen Daten in einem Model zur Authentifizierung von Benutzerprofilen. Dieses Model findet Verwendung beim Registrieren sowie beim LogIn- / LogOut-Verfahren.
-\subsubsection*{AdminModels}
-Model indem der MapName gekapselt vorliegt.
-\subsubsection*{FloorViewModel}
-Dieses Model enthält Daten zu einem Floor. FloorId, MapId und FloorImageFile sind diese Daten.
-\subsubsection*{MapViewModel}
-MapId und Name werden für die MapView in diesem Model gekapselt.
+\subsubsection*{Account}
+Diese Models wurden von MVC automatisch generiert und werden bei
+der Registrierung und der An- und Abmeldung von Benutzern verwendet.
+
+\subsubsection*{Admin}
+Anwendungsspezifische Daten wie Karten, Stockwerke, Knoten, usw. werden
+in selbst definierten Models gekapselt.
 
 \subsection{View}
-Die Views in unserem Projekt wurden in Views die den Account-, den Admin- und den Home-Bereich betreffen unterteilt.
+Die Views in unserem Projekt wurden die Bereiche Account, Admin und Home unterteilt.
 \subsubsection*{Account}
-Enthält html-Seiten zum registrieren, anmelden und verwalten den eigenen Benutzerprofils.
+Enthält HTML-Seiten zum Registrieren, Anmelden und Verwalten des eigenen Benutzerprofils.
 \subsubsection*{Admin}
-Unter dieser Rubrik fallen die Webseiten, mit dem der Administrator Maps, Floors und Knoteninformationen zu einer Map hinzufügen kann. Sozusagen die Arbeitsoberfläche des Administrators.
+Unter diese Rubrik fallen die Webseiten, mit denen der Administrator  Stockwerke und Knoteninformationen zu einer Karte hinzufügen kann. Dies ist die Arbeitsoberfläche des Administrators.
 \subsubsection*{Home}
-Einstiegspunkt oder oberstes Element (Index) unserer Webseite.
+Einstiegspunkt bzw. Index unserer Webseite.
 
 \subsection{Controller}
+In unserem Projekt gibt es drei Controller.
+
 \subsubsection*{HomeController}
-Speziell für unser Projekt bedeutet es, dass wir drei Controller angelegt haben. Der Einstiegspunkt unserer Web-Anwendung ist der sogenannte \textit{HomeController}. Dies ist der Controller, der zum Zuge kommt, sofern die anderen beiden Controller eine Interaktion oder Controller-Aufrufe mit gewissen Parametern nicht unterstützen.
+Der Einstiegspunkt unserer Web-Anwendung ist der sogenannte \textit{HomeController}. Dies ist der Controller, der zum Zuge kommt, sofern die anderen beiden Controller eine Interaktion oder Controller-Aufrufe mit gewissen Parametern nicht unterstützen.
+
 \subsubsection*{AccountController}
 Der \textit{AccountController} verarbeitet die Ereignisse, die vom Registrierungs-, LogIn- und LogOut-Verhalten eines Benutzers ausgelöst werden. Im Fokus stehen hierbei die \textbf{HTTP GET-} und \textbf{HTTP POST-Methoden}, die von der Klasse \textit{AccountController} implementiert werden.
+
 \subsubsection*{AdminController}
-Der \textit{AdminController} reagiert auf Zustandsänderungen, die beim Anlegen, Bearbeiten und Löschen von Datenmaterial in Form von Karten oder Informationen (Meta-Informationen), ausgelöst werden.\\
-Relevante Funktionen sind die Methoden zum erstellen und löschen von Maps und Floors.
-Des weiteren werden über diesen Controller die Routeninformationen als Graph verarbeitet und in einer Datenbank gespeichert. Detailinformationen zu einem Knoten aus einem Graphen verarbeitet dieser Controller und speichert sie ab. Diese Detailinformationen ermöglichen besondere Orte als \textit{Points of Interest} zu kennzeichnen.
+Der \textit{AdminController} reagiert auf Zustandsänderungen, die beim Anlegen, Bearbeiten und Löschen von Datenmaterial in Form von Karten oder Informationen (Meta-Informationen) ausgelöst werden.\\
+Relevante Funktionen sind die Methoden zum Erstellen und Löschen von Karten und Stockwerken.
+Des Weiteren werden über diesen Controller die Routeninformationen als Graph verarbeitet und in einer Datenbank gespeichert. Detailinformationen zu einem Knoten aus einem Graphen verarbeitet dieser Controller und speichert sie ab. Diese Detailinformationen ermöglichen besondere Orte als \textit{Points of Interest} zu kennzeichnen.
 
 \section{Benutzeroberfläche}
-Die Administrator Benutzeroberfläche ist über folgenden Link \\
-\href{URL}{http://193.175.199.115/StudMapAdmin/} erreichbar.
+Die Admin-Oberfläche ist über folgenden Link erreichbar:\\
+\href{http://193.175.199.115/StudMapAdmin/}{http://193.175.199.115/StudMapAdmin/}
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../Bilder/Admin/AdminHome}
 \label{fig:AdminHome}
 \end{figure}
-Der Anwender enthält die Möglichkeit sich anzumelden oder sich zu registrieren.
+Der Anwender hat die Möglichkeit sich anzumelden oder zu registrieren.
 \subsubsection*{Registrieren}
 \href{URL}{http://193.175.199.115/StudMapAdmin/Account/Register}
 \begin{figure}[H]
@@ -52,8 +57,9 @@ Der Anwender enthält die Möglichkeit sich anzumelden oder sich zu registrieren.
 \includegraphics[width=\linewidth]{../Bilder/Admin/AdminRegistrierung}
 \label{fig:AdminRegistrierung}
 \end{figure}
+
 \subsubsection*{Anmelden}
-\href{URL}{http://193.175.199.115/StudMapAdmin/Account/Login}
+\href{http://193.175.199.115/StudMapAdmin/Account/Login}{http://193.175.199.115/StudMapAdmin/Account/Login}
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../Bilder/Admin/AdminAnmelden}
@@ -61,21 +67,25 @@ Der Anwender enthält die Möglichkeit sich anzumelden oder sich zu registrieren.
 \end{figure}
 
 \subsubsection*{Admin}
-Den Einstiegspunkt zum verwalten von Maps finden Sie unter folgenden Link \\
-\href{URL}{http://193.175.199.115/StudMapAdmin/Admin}. Er enthält eine Auflistung aktuell vorhandener Maps. Es  können neue Maps erstellt, bzw. vorhandene entfernt werden.
+Der Einstiegspunkt zum Verwalten von Karten befindet sich unter folgendem Link: \\
+\href{http://193.175.199.115/StudMapAdmin/Admin}{http://193.175.199.115/StudMapAdmin/Admin}\\
+Dieser enthält eine Auflistung aktuell vorhandener Karten. Es  können neue Karten erstellt bzw. vorhandene entfernt werden.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../Bilder/Admin/AdminMaps}
 \label{fig:AdminMaps}
 \end{figure}
-Die Verwaltung der einzelnen Floors zu einer Map werden in der nachfolgenden Grafik gezeigt. Durch einen Klick auf \textit{Anlegen} kann eine neue Floor, mit der zugehörigen Kartengrundlage hinzugefügt werden.
+Die Verwaltung der einzelnen Stockwerke zu einer Karte werden in der nachfolgenden Grafik gezeigt. Durch einen Klick auf \textit{Anlegen} kann eine neues Stockwerk mit der zugehörigen Kartengrundlage hinzugefügt werden.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../Bilder/Admin/AdminFloors}
 \label{fig:AdminFloors}
 \end{figure}
-Der Layer zeigt die Karte und einen gegebenenfalls erstellten Graphen mit Knoten und Kanten zu genau einem Floor an.
-Durch Verwendung spezieller Features kann der Administrator hier einen Graphen erstellen und Knoteninformationen hinterlegen. Des weiteren besteht die Möglichkeit Knoten mit Knoten anderer Floors zu verknüpfen. Basis für eine ergonomische Navigation der Karte ist die JavaScript-Bibliothek D3.
+Unter Layer wird die Karte und ein gegebenenfalls erstellter Graph zu genau einem Stockwerk angezeigt.
+Der Administrator kann hier einen Graphen erstellen und Knoteninformationen hinterlegen. Des Weiteren besteht die Möglichkeit Knoten stockwerkübergreifend zu verknüpfen. Basis für eine ergonomische Navigation der Karte ist die JavaScript-Bibliothek \textit{D3}.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../Bilder/Admin/AdminLayer}
@@ -86,33 +96,29 @@ Durch Verwendung spezieller Features kann der Administrator hier einen Graphen e
 \includegraphics[width=\linewidth]{../Bilder/Admin/AdminNodeInfo}
 \label{fig:AdminNodeInfo}
 \end{figure}
-Über den Button \textit{Abmelden} gelangen Sie zum Index unserer Webseite zurück.
+Über den Schaltfläche \textit{Abmelden} gelangt man zur Hauptseite zurück.
 
 \section{Admin Spezifisches}
-\subsection*{Neuen Benutzer mit Administrator Rechten versehen}
+\subsection{Neuen Benutzer mit Administrator Rechten versehen}
 \label{Administrator Rechte versehen}
-Nachdem ein neuer Benutzer die Registratur erfolgreich abgeschlossen hat, ist dieser im Benutzerprofil noch nicht als Administrator gekennzeichnet. Derzeit ist es so, dass ein Datenbankadministrator in der Tabelle \textit{webpages\_UsersInRoles} den Eintrag von 1 für Users auf 2 für Admins abändern muss. Nur Admins haben die Rechte Maps und Floors zu erstellen, sowie das Kartenmateral mit Metainformationen zu bereichern.
-\subsection*{ELMAH}
-Als Logging Werkzeug haben wir das auf der .NET Plattform sehr verbreitete und OpenSource Tool \textit{ELMAH} eingesetzt. \textit{ELMAH}\footnote{ELMAH steht für "Error Logging Modules and Handlers"} loggt auftretende Fehler und Exceptions. Nach kurzem Installationsaufwand und Konfiguration einer Datenbank, in der die Fehler gespeichert werden, kann das Tool bereits genutzt werden. Genaue Installationsanleitungen findet Sie zu genüge im 
-Internet\footnote{\href{URL}{http://blog.thomasbandt.de/39/2380/de/blog/elmah-mit-aspnet-mvc-nutzen-und-fehler-loggen.html}}. 
-\subsection*{Maintenance Tool}
-Während der Entwicklung des StudMap-Projektes ist es uns aufgefallen, dass wir 
-zur Wartung und Ausführung bestimmter Aufgaben ein einfaches Tool hilfreich 
-wäre. Daher haben wir eine WPF-Anwendung entwickelt, welche die folgenden 
-Aufgaben erledigt.
-\subsubsection*{QR-Codes generieren}
-Eine Möglichkeit der Positionierung innerhalb des StudMap-Projektes ist das 
+Nachdem ein neuer Benutzer die Registrierung erfolgreich abgeschlossen hat, ist dieser im Benutzerprofil noch nicht als Administrator gekennzeichnet. Derzeit ist es so, dass ein Datenbankadministrator in der Tabelle \textit{webpages\_UsersInRoles} den Eintrag von "`1"' für Users auf "`2"' für Admins abändern muss. Nur Administratoren haben die Rechte Maps und Floors zu erstellen, sowie das Kartenmateral mit Meta-Informationen zu bereichern.
+
+\subsection{ELMAH}
+Als Logging Werkzeug haben wir das auf der .NET Plattform sehr verbreitete und OpenSource Tool \textit{ELMAH}\footnote{\href{https://code.google.com/p/elmah/}{https://code.google.com/p/elmah/}} eingesetzt. \textit{ELMAH} loggt auftretende Fehler und Exceptions.
+
+\subsection{Maintenance Tool}
+Während der Entwicklung des StudMap-Projektes ist uns aufgefallen, dass 
+zur Wartung und Ausführung bestimmter Aufgaben ein einfaches Tool hilfreich wäre. Daher haben wir eine WPF-Anwendung entwickelt, die bisher allerdings nur QR-Codes generieren kann.
+
+\subsubsection{QR-Codes generieren}
+Eine Möglichkeit der Positionsermittlung innerhalb des StudMap-Projektes ist das 
 Einlesen von QR-Codes. In diesen QR-Codes stehen die im Kapitel 
-\nameref{QR-Tags} beschriebenen Daten.\\
+\nameref{QR-Tags} beschriebenen Daten.
+
 In der Anwendung werden alle \nameref{object:NodeInformation} ausgelesen und 
-in einer Tabelle angezeigt. Anschließend kann in dieser Tabelle noch nach 
-einem \nameref{object:Floor}, oder dem Namen des Raums gefiltert werden.\\
+in einer Tabelle angezeigt. Anschließend kann in dieser Tabelle nach 
+einem \nameref{object:Floor} oder dem Namen des Raums gefiltert werden.
+
 Abschließend kann für alle ausgewählten Knoten ein QR-Code als PNG generiert 
 werden. Zur Generierung der QR-Codes nutzen wir die Bibliothek 
 \href{http://qrcodenet.codeplex.com/}{QrCode.Net}.
-
-% TODOS:
-% - Funktionsweise (Knoten über zwei Ebenen miteinander verbinden)
-% - UI Aspekte (x)
-% - MVC Web Zeug... (x)
-% - Verweis auf Anhang für Bedienungsanleitung / Installationsanleitung
