@@ -2,10 +2,10 @@
 \label{cha:Core-Bib}
 Wir haben schon früh festgestellt, dass es eine Vielzahl an Strukturen und Funktionalitäten geben wird, 
 die sowohl in der Collector-Applikation als auch in unserer Navigator-Applikation für den Endbenutzer Anwendung finden.
-Dem entsprechend haben wir diese in eine eigene Android-Bibliothek ausgelagert, die wir wiederum in unsere Android-Applikationen einbinden konnten.
-Zu den Kernfunktionalitäten und -Strukturen gehören unter Anderem folgende:
+Dementsprechend haben wir diese in eine eigene Android-Bibliothek ausgelagert, die wir wiederum in unsere Android-Applikationen einbinden konnten.
+Zu den Kernfunktionalitäten und -Strukturen gehören unter anderem folgende:
 \begin{itemize}
-\item Grundlegende Definitionen einer Map, eines Floors oder eines Knoten
+\item Grundlegende Definitionen einer Karte, eines Stockwerks oder eines Knotens
 \item Konstanten für die Kommunikation mit dem Webservice
 \item Ein Errorhandler für alle grundlegenden Fehler
 \item Snippets zur einfachen Kommunikation mit dem Benutzer mittels Dialogen
@@ -16,12 +16,13 @@ Zu den Kernfunktionalitäten und -Strukturen gehören unter Anderem folgende:
 
 \section{Map Webview}
 \label{cha:MapWebview}
-Zur Anzeige der Karte in einem Webview oder einem Browser, nutzen wie die Bibliothek d3 und Floorplan. Dies ermöglicht uns, mithilfe von Pitch und Zoom-Gesten eine Touch Navigation auf der Karte.
+Zur Anzeige der Karte in einer Webview oder einem Browser, nutzen wir die Bibliothek
+\textit{D3.js}\footnote{\href{http://d3js.org/}{http://d3js.org/}}
+und \textit{Floor Plan}\footnote{\href{http://dciarletta.github.io/d3-floorplan/}{http://dciarletta.github.io/d3-floorplan/}}. Dies ermöglicht uns mit Hilfe von Pitch und Zoom-Gesten eine Touch-Navigation auf der Karte.
 
-D3 ist eine Javascript Bibliothek zur anzeige von Graphen und Bildern, die durch das Floorplan Plugin um eine Indoor Komponente erweitert wurde. Dies realisiert d3 über ein SVG Image.
+\textit{D3} ist eine Javascript Bibliothek zur Anzeige von Graphen und Bildern, die durch das \textit{Floor Plan} Plugin um eine Indoor-Komponente erweitert wurde. Dies realisiert \textit{D3} über ein SVG Bild.
 
-Wir haben noch zusätzlich Funktionen ergänzt, die es uns ermöglichen einen Graphen mit Knoten und Kanten  über Kreise und Linien SVG Elemente abzubilden. Andere zusätzliche Funktionalitäten sind die Möglichkeiten Punkte zu highlighten, einen Start und
-Endpunkt zur Navigation zu setzen, zu einem Punkt zu zoomen und die Karte zurück
-zu setzen
+Wir haben zusätzliche Funktionen ergänzt, die es uns ermöglichen, einen Graphen mit Knoten und Kanten  SVG Kreis- und Linienelemente abzubilden. Außerdem gibt es die Möglichkeiten, Punkte zu highlighten, einen Start und
+Endpunkt zur Navigation zu setzen, zu einem Punkt zu zoomen und die Karte zurückzusetzen.
 
-Eine genauere Übersicht über die Schnittstellenbeschreibung ist im Anhang: \nameref{cha:jsSchnittstelle} enthalten.
+Eine genauere Übersicht über die Schnittstellenbeschreibung ist im Anhang \nameref{cha:jsSchnittstelle} enthalten.
