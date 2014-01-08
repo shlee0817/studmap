@@ -1,14 +1,13 @@
 \section{Javascript}
 \label{cha:jsSchnittstelle}
 
-Die Javascript Schnittstelle der Karte bietet mehrere Funktionen zur Steuerung. Darunter Methoden zur Veränderung von Punkten, Setzen von Start- und Endpunkten, Zoomen zu Punkten und das Zurücksetzen der Karte.
-
-Im folgenden werden diese hier beschrieben.
+Die Javascript Schnittstelle der Karte bietet mehrere Funktionen zur Steuerung. Darunter Methoden zur Veränderung von Punkten, Setzen von Start- und Endpunkten, Zoomen zu Punkten und das Zurücksetzen der Karte.<<<<<<s
 
 \subsection{setStartPoint(nodeId)}
 \label{object:setStartPoint}
-Setzt einen Startpunkt auf die Karte und markiert diesen in blau.
-Sind Start-und-Endpunkt gesetzt, wird der Weg angezeigt.
+Setzt einen Startpunkt auf die Karte und markiert diesen in rot.
+Sind Start- und Endpunkt gesetzt, wird der Weg angezeigt.
+
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
 \hline nodeId & ID des Knotens der Kante. \\ 
@@ -18,7 +17,7 @@ Eigenschaften:\\
 \subsection{setEndPoint(nodeId)}
 \label{object:setEndPoint}
 Setzt einen Endpunkt auf die Karte und markiert diesen in rot.
-Sind Start-und-Endpunkt gesetzt, wird der Weg angezeigt.
+Sind Start- und Endpunkt gesetzt, wird der Weg angezeigt.
 
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
@@ -28,7 +27,7 @@ Eigenschaften:\\
 
 \subsection{highlightPoint(nodeId, radius)}
 \label{object:highlightPoint}
-Highlighted den übergebenen Knoten und verändert den Radius.
+Hebt den übergebenen Knoten hervor (Rotfärbung) und verändert den Radius.
 
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
@@ -45,7 +44,7 @@ Setzt alle Elemente auf der Karte zurück.
 
 \subsection{resetMap()}
 \label{object:resetMap}
-Setzt alle Elemente auf der Karte und die Start-und-Endpunkte zurück.
+Setzt alle Elemente auf der Karte sowie die Start- und Endpunkte zurück.
 
 
 \subsection{resetZoom()}
@@ -58,7 +57,7 @@ Zoomt zum übergebenen Knoten.
 
 Eigenschaften:\\
 \begin{tabularx}{\textwidth}{|l|X|}
-\hline nodeId & ID des Knotens der Kante. \\
+\hline nodeId & ID des Knotens der angezeigt werden soll. \\
 \hline
 \end{tabularx} 
 
