@@ -7,7 +7,7 @@ namespace StudMap.Service.CacheObjects
 {
     public class FingerprintCacheObject : CacheObject
     {
-        private const int Timeout = 60;
+        private const int Timeout = 24 * 60;
 
         public FingerprintCacheObject(int mapId)
         {

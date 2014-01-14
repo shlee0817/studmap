@@ -12,7 +12,7 @@ namespace StudMap.Service.CacheObjects
     {
         public GlobalCacheObject()
         {
-            TimeoutInMinutes = 60;
+            TimeoutInMinutes = 24 * 60;
 
             using (var entities = new MapsEntities())
             {
