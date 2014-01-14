@@ -59,8 +59,14 @@ namespace StudMap.Service.Services
             Data.Entities.NodeInformation nodeInformation =
                 entities.NodeInformation.FirstOrDefault(x => x.NodeId == inputInfo.Node.Id);
 
-            PoIs poi = CreateOrUpdatePoI(entities, inputInfo.PoI, nodeInformation);
-            CreateOrUpdateNodeInfo(entities, inputInfo, nodeInformation, poi);
+            if (nodeInformation != null)
+            {
+                PoIs poi = CreateOrUpdatePoI(entities, inputInfo.PoI, nodeInformation);
+                CreateOrUpdateNodeInfo(entities, inputInfo, nodeInformation, poi);
+
+                if (!string.IsNullOrWhiteSpace(inputInfo.DisplayName) || !string.IsNullOrWhiteSpace(inputInfo.RoomName))
+                    StudMapCache.Map(nodeInformation.Nodes.Floors.MapId).Nodes[inputInfo.Node.Id].HasInformation = true;
+            }
 
             return GetNodeInformationForNode(entities, inputInfo.Node.Id);
         }
@@ -68,7 +74,7 @@ namespace StudMap.Service.Services
         private static void CreateOrUpdateNodeInfo(MapsEntities entities, NodeInformation inputInfo,
                                                    Data.Entities.NodeInformation nodeInformation, PoIs poi)
         {
-            int? poiId = poi != null ? (int?) poi.Id : null;
+            int? poiId = poi != null ? (int?)poi.Id : null;
             // Wenn es keine NodeInfo gibt, eine Neue anlegen
             if (nodeInformation == null)
             {
@@ -83,7 +89,7 @@ namespace StudMap.Service.Services
                         CreationTime = DateTime.Now
                     });
             }
-                // Ansonsten die bestehende NodeInfo aktualisieren
+            // Ansonsten die bestehende NodeInfo aktualisieren
             else
             {
                 nodeInformation.DisplayName = inputInfo.DisplayName;
@@ -117,7 +123,7 @@ namespace StudMap.Service.Services
                         Description = inputPoI.Description
                     });
             }
-                // Ansonsten vorhandenen PoI aktualisieren
+            // Ansonsten vorhandenen PoI aktualisieren
             else
             {
                 poi = entities.PoIs.FirstOrDefault(x => x.Id == nodeInformation.PoiId);
@@ -135,7 +141,7 @@ namespace StudMap.Service.Services
 
         public static IEnumerable<PoiType> GetPoiTypes(MapsEntities entities)
         {
-            var typeList = new List<PoiType> {new PoiType {Id = 0, Name = "Kein"}};
+            var typeList = new List<PoiType> { new PoiType { Id = 0, Name = "Kein" } };
             // TODO: Der String "Kein" sollte wahrscheinlich irgendwo in eine Config oder in die DB
             typeList.AddRange(entities.PoiTypes.ToList().Select(Conversions.ToPoiType));
             return typeList;

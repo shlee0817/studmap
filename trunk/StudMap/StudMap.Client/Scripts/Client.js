@@ -103,6 +103,8 @@ StudMapClient.prototype.showPath = function () {
 
     if (!this.startPointId || !this.endPointId)
         return;
+    
+    $('.pathplot').children().remove();
 
     var that = this;
     var params = [];
