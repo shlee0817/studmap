@@ -83,7 +83,7 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface,
 		jsService = new JavaScriptService(getActivity());
 		jsService.addWebView(webView);
 
-		webView.loadUrl("http://193.175.199.115/StudMapClient/?floorID="
+		webView.loadUrl("http://193.175.199.115/StudMapClient/?mapId=" + mapId + "&floorID="
 				+ floorId);
 		webView.requestFocus();
 	}
