@@ -56,7 +56,6 @@ import de.whs.studmap.navigator.dialogs.ImpressumDialogFragment;
 import de.whs.studmap.navigator.dialogs.LoginDialogFragment;
 import de.whs.studmap.navigator.dialogs.PoIDialogFragment;
 import de.whs.studmap.navigator.dialogs.PositionDialogFragment;
-import de.whs.studmap.navigator.models.Navigation;
 import de.whs.studmap.scanner.IntentIntegrator;
 import de.whs.studmap.scanner.IntentResult;
 
@@ -76,8 +75,6 @@ public class MainActivity extends BaseMainActivity implements
 	private boolean mIsStartUp = false;
 	private int mMapId = Constants.MAP_ID;
 	private int mFloorId;
-	
-	private Navigation navigation;
 
 	private List<Floor> mFloorList = new ArrayList<Floor>();
 
@@ -300,7 +297,6 @@ public class MainActivity extends BaseMainActivity implements
 		int selectedFloorId = selectedNode.getFloorID();
 		if (selectedFloorId == mFloorId) {
 			if (setAsStart) {
-				navigation.setStartNode(selectedNode);
 				mWebViewFragment.sendStart(selectedNode);
 			}
 			else
@@ -313,7 +309,6 @@ public class MainActivity extends BaseMainActivity implements
 
 			if (mWebViewIsReady) {
 				if (setAsStart) {
-					navigation.setStartNode(selectedNode);
 					mWebViewFragment.sendStart(selectedNode);
 				}
 				else
@@ -350,7 +345,6 @@ public class MainActivity extends BaseMainActivity implements
 
 			if (mSetAsStart) {
 				mSetAsStart = false;
-				navigation.setStartNode(mSelectedNode);
 				mWebViewFragment.sendStart(mSelectedNode);
 			} else
 				mWebViewFragment.sendTarget(mSelectedNode);
@@ -472,7 +466,6 @@ public class MainActivity extends BaseMainActivity implements
 		
 		if(node != null) {
 			
-			navigation.setEndNode(node);
 			mWebViewFragment.sendDestination(node);
 		}
 	}
@@ -482,7 +475,6 @@ public class MainActivity extends BaseMainActivity implements
 		
 		if(node != null) {
 
-			navigation.setStartNode(node);
 			mWebViewFragment.sendStart(node);
 		}
 	}
