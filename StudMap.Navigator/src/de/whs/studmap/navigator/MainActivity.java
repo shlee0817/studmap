@@ -37,6 +37,7 @@ import de.whs.studmap.client.core.web.JavaScriptInterface;
 import de.whs.studmap.client.core.web.ResponseError;
 import de.whs.studmap.client.core.web.Service;
 import de.whs.studmap.client.core.web.WebServiceException;
+import de.whs.studmap.client.listener.OnGenericTaskListener;
 import de.whs.studmap.client.listener.OnGetFloorsTaskListener;
 import de.whs.studmap.client.listener.OnGetNodeForNFCTagTaskListener;
 import de.whs.studmap.client.listener.OnGetNodeForQrCodeTaskListener;
@@ -48,6 +49,7 @@ import de.whs.studmap.client.listener.OnRegisterDialogListener;
 import de.whs.studmap.client.tasks.GetFloorsTask;
 import de.whs.studmap.client.tasks.GetNodeForNFCTagTask;
 import de.whs.studmap.client.tasks.GetNodeForQrCodeTask;
+import de.whs.studmap.client.tasks.GetNodeInfoTask;
 import de.whs.studmap.client.tasks.LogoutTask;
 import de.whs.studmap.fragments.InitialSetupFragment;
 import de.whs.studmap.fragments.InitialSetupFragment.OnMapSelectedListener;
@@ -406,8 +408,29 @@ public class MainActivity extends BaseMainActivity implements
 
 	@Override
 	public void onGetNodeForQrCodeSuccess(Node node) {
-		SetNodeAndChangeFloorIfRequired(node, true);
-		showProgress(false);
+		
+		GetNodeInfoTask mAsyncTask = new GetNodeInfoTask(new OnGenericTaskListener<Node>() {
+			
+			@Override
+			public void onSuccess(Node object) {
+				
+				SetNodeAndChangeFloorIfRequired(object, true);
+				showProgress(false);
+			}
+			
+			@Override
+			public void onError(int responseError) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onCanceled() {
+				// TODO Auto-generated method stub
+				
+			}
+		}, node.getNodeID());
+		mAsyncTask.execute();
 	}
 
 	@Override
@@ -445,8 +468,28 @@ public class MainActivity extends BaseMainActivity implements
 	@Override
 	public void onGetNodeForNFCTagSuccess(Node node) {
 
-		SetNodeAndChangeFloorIfRequired(node, true);
-		showProgress(false);
+		GetNodeInfoTask mAsyncTask = new GetNodeInfoTask(new OnGenericTaskListener<Node>() {
+			
+			@Override
+			public void onSuccess(Node object) {
+				
+				SetNodeAndChangeFloorIfRequired(object, true);
+				showProgress(false);
+			}
+			
+			@Override
+			public void onError(int responseError) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onCanceled() {
+				// TODO Auto-generated method stub
+				
+			}
+		}, node.getNodeID());
+		mAsyncTask.execute();
 	}
 
 	@Override
