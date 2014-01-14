@@ -136,7 +136,7 @@ namespace StudMap.Admin.Controllers
         {
             var mapsCtrl = new MapsController();
 
-            ObjectResponse<Graph> result = mapsCtrl.GetFloorPlanData(id);
+            ObjectResponse<Graph> result = mapsCtrl.GetGraphForFloor(id);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

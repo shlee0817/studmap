@@ -48,6 +48,7 @@ namespace StudMap.Service.CacheObjects
         public static void RemoveMap(int mapId)
         {
             RemoveObject(String.Format(MapCacheKey, mapId));
+            RemoveGlobal();
         }
 
         public static void RemoveFingerprint(int mapId)
