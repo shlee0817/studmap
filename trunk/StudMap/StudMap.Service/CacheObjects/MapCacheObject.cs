@@ -11,7 +11,7 @@ namespace StudMap.Service.CacheObjects
 {
     public class MapCacheObject : CacheObject
     {
-        private const int Timeout = 60;
+        private const int Timeout = 24 * 60;
 
         public MapCacheObject(int mapId)
         {
