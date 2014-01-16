@@ -361,6 +361,16 @@ public class MainActivity extends BaseMainActivity implements
 	}
 
 	@Override
+	@JavascriptInterface
+	public void onNavigationCompleted() {
+			
+		UserInfo.dialog(this, "Navigation beendet", "Du hast Dein Ziel erreicht.");
+		
+		if(mWebViewFragment != null)
+			mWebViewFragment.closeNaviagtionInfoOverlay();
+	}
+	
+	@Override
 	public void onLogin(String userName) {
 
 		this.mUserName = userName;

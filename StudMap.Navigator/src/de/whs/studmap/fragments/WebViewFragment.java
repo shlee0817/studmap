@@ -93,13 +93,18 @@ public class WebViewFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				mNavigationInfo.setVisibility(View.GONE);
-				mNodeText.setText("");
-				mFromText.setText("");
-				mToText.setText("");
-				resetMap();
+				closeNaviagtionInfoOverlay();
 			}
 		});
+	}
+	
+	public void closeNaviagtionInfoOverlay() {
+		
+		mNavigationInfo.setVisibility(View.GONE);
+		mNodeText.setText("");
+		mFromText.setText("");
+		mToText.setText("");
+		resetMap();
 	}
 
 	public void setFloorId(int floorId) {

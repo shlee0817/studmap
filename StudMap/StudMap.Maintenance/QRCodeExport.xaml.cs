@@ -40,7 +40,7 @@ namespace StudMap.Maintenance
             {
                 Nodes.Clear();
                 var mapsCtrl = new MapsController();
-                var nodeResponse = mapsCtrl.GetNodeInformation(0, 0);
+                var nodeResponse = mapsCtrl.GetNodeInformation(3, 1012);
                 foreach (var node in nodeResponse.List)
                 {
                     Nodes.Add(new QRCodeNode(node));

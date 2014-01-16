@@ -154,4 +154,11 @@ public class FloorplanFragment extends Fragment implements JavaScriptInterface,
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	@JavascriptInterface
+	public void onNavigationCompleted() {
+		// TODO Auto-generated method stub
+		
+	}
 }
