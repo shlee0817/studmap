@@ -104,8 +104,18 @@ StudMapClient.prototype.showPath = function () {
     if (!this.startPointId || !this.endPointId)
         return;
     
-    $('.pathplot').children().remove();
+    if (this.endPointId === this.startPointId) {
 
+        if (window.jsinterface) {
+            window.jsinterface.onNavigationCompleted();
+        }
+        $('.pathplot').children().remove();
+        this.changeLayerVisibility(this.graphLayer, true);
+        this.changeLayerVisibility(this.pathPlotLayer, false);
+        return;
+    }
+
+    $('.pathplot').children().remove();
     var that = this;
     var params = [];
     var map = new Param("mapId", this.mapId);

@@ -9,4 +9,7 @@ public interface JavaScriptInterface {
 	
 	@JavascriptInterface
 	public void onFinish();
+	
+	@JavascriptInterface
+	public void onNavigationCompleted();
 }
